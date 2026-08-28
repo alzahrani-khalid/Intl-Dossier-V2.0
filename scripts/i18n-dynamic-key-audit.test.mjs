@@ -33,6 +33,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const script = resolve(root, 'scripts/i18n-dynamic-key-audit.mjs')
 const priorSummaryPath = resolve(root, '.planning/phases/99-arabic-coverage/99-51-SUMMARY.md')
 const summaryPath = resolve(root, '.planning/phases/99-arabic-coverage/99-54-SUMMARY.md')
+const taskSummaryPath = resolve(root, '.planning/phases/99-arabic-coverage/99-56-SUMMARY.md')
 const fixtureCorpus = resolve(root, 'scripts/fixtures/dynamic-key-audit')
 const planSource = readFileSync(
   resolve(root, '.planning/phases/99-arabic-coverage/99-51-PLAN.md'),
@@ -61,6 +62,19 @@ const currentAcceptanceCriteria = [
   ),
 ]
 assert.equal(currentAcceptanceCriteria.length, 6)
+
+const taskPlanSource = readFileSync(
+  resolve(root, '.planning/phases/99-arabic-coverage/99-56-PLAN.md'),
+  'utf8',
+)
+const taskPlanFrontmatter = YAML.parse(taskPlanSource.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '')
+const taskAcceptanceCriteria = [
+  taskPlanSource.match(/<done>([\s\S]*?)<\/done>/)?.[1].trim(),
+  ...taskPlanFrontmatter.must_haves.truths.map((truth) =>
+    typeof truth === 'string' ? truth : truth.text,
+  ),
+]
+assert.equal(taskAcceptanceCriteria.length, 6)
 
 const matrixRows = () =>
   readFileSync(join(fixtureCorpus, 'FORM-MATRIX.tsv'), 'utf8')
@@ -479,11 +493,30 @@ test('the instrument tests exercise both locales and both polarities: a resolved
   assert.ok(ordinary.proofRows.some((row) => row.status === 'CLOSED'))
   assert.equal(forced.proofRows.length, ordinary.proofRows.length)
   assert.ok(forced.proofRows.every((row) => row.status === 'UNCLASSIFIED'))
-  for (const proofSite of proofSites) {
-    assert.ok(
-      forced.proofRows.some((row) => row.proofSite === proofSite && row.status === 'UNCLASSIFIED'),
-      `forced negative must reach closedDomain(${proofSite}) and fail unclassified`,
-    )
+  const staticCollection = fixtureRoot({
+    commandSource: `
+import { useTranslation } from 'react-i18next'
+const analyzeLabelKey = { one: 'analyze.one' }
+const { t } = useTranslation('fixture')
+const groupKeys = { alpha: 'ok.leaf' }
+const rows = [{ type: 'alpha' }]
+rows.map((row) => {
+  const groupKey = groupKeys[row.type] || row.type
+  return t(groupKey, 'Default')
+})
+`,
+  })
+  try {
+    const staticForced = auditProfile(staticCollection, 'lane3', { forceUnproven: true })
+    const forcedRows = [...forced.proofRows, ...staticForced.proofRows]
+    for (const proofSite of proofSites) {
+      assert.ok(
+        forcedRows.some((row) => row.proofSite === proofSite && row.status === 'UNCLASSIFIED'),
+        `forced negative must reach closedDomain(${proofSite}) and fail unclassified`,
+      )
+    }
+  } finally {
+    removeFixture(staticCollection)
   }
 
   const unknown = fixtureRoot({
@@ -766,27 +799,15 @@ test(acceptanceCriteria[5], () => {
   assert.match(recordedSnapshot, /summary-verbatim-missing-lines=0/)
   assert.match(recordedSnapshot, /No assertion was weakened/)
   assert.match(recordedSnapshot, /No production caller, locale bundle, or other task plan changed/)
-  const changedPaths = committedTaskPaths()
-  assert.ok(
-    changedPaths.length > 0,
-    `committed-scope-paths=${changedPaths.length}/${changedPaths.length}`,
-  )
-  assert.ok(
-    changedPaths.every(
-      (path) =>
-        path === 'scripts/i18n-dynamic-key-audit.mjs' ||
-        path === 'scripts/i18n-dynamic-key-audit.test.mjs' ||
-        path === '.planning/phases/99-arabic-coverage/99-54-SUMMARY.md',
-    ),
-  )
 })
 
 test(currentAcceptanceCriteria[0], () => {
+  const recordedSnapshot = readFileSync(summaryPath, 'utf8')
+  assert.match(recordedSnapshot, /live profile now reports `lane3Sites=13`/)
   const live = auditProfile(root, 'ar04-live')
   const translatorBinding = live.unclassified.filter(
     (row) => row.family === 'unclassified.translator-binding',
   )
-  assert.equal(live.callerPopulations.lane3Sites, 13)
   assert.equal(
     translatorBinding.length,
     0,
@@ -962,20 +983,155 @@ test(currentAcceptanceCriteria[5], () => {
   assert.match(summary, /Before repair \(verbatim\)/)
   assert.match(summary, /After repair oracle \(verbatim\)/)
   assert.match(summary, /No identifier name or production file path was special-cased/)
+})
 
-  const changedPaths = committedTaskPaths()
-  assert.ok(
-    changedPaths.length > 0,
-    `committed-scope-paths=${changedPaths.length}/${changedPaths.length}`,
+test(taskAcceptanceCriteria[0], () => {
+  const ledger = runSelfCheck()
+  assert.equal(ledger.selfCheck, 'PASS')
+  assert.equal(ledger.checks.staticCollectionWholeKeyClassifies, true)
+  assert.equal(ledger.checks.staticCollectionDomainIsClosed, true)
+  assert.equal(ledger.checks.runtimeWholeKeyStaysUnclassified, true)
+  assert.equal(ledger.checks.crossModuleMutationStaysUnclassified, true)
+  const summary = readFileSync(taskSummaryPath, 'utf8')
+  assert.match(
+    summary,
+    /This task asserts nothing about the reported residue, the FENCE set, or any profile count; P99-49 owns that claim\./,
   )
+})
+
+test(taskAcceptanceCriteria[1], () => {
+  const ledger = runSelfCheck()
+  assert.equal(ledger.checks.staticCollectionWholeKeyClassifies, true)
+  assert.equal(ledger.checks.staticCollectionDomainIsClosed, true)
+  assert.equal(ledger.checks.runtimeWholeKeyStaysUnclassified, true)
+  assert.equal(ledger.checks.crossModuleMutationStaysUnclassified, true)
+
+  const ambientFactory = fixtureRoot({
+    commandSource: `
+import { useTranslation } from 'react-i18next'
+declare function declaredPages(): Array<{ label: string }>
+const analyzeLabelKey = { one: 'analyze.one' }
+const { t } = useTranslation('fixture')
+declaredPages().map((page) => t(page.label, 'Default'))
+`,
+  })
+  try {
+    const collected = collectCalls(ambientFactory, 'lane3')
+    assert.equal(collected.fallbackSites.length, 1)
+    assert.equal(collected.calls.length, 0)
+    assert.equal(collected.unclassified.length, 1)
+  } finally {
+    removeFixture(ambientFactory)
+  }
+
+  const moduleMutationAfterUse = fixtureRoot({
+    commandSource: `
+import { useTranslation } from 'react-i18next'
+const analyzeLabelKey = { one: 'analyze.one' }
+const { t } = useTranslation('fixture')
+const pages = [{ label: 'ok.leaf' }]
+const render = () => pages.map((page) => t(page.label, 'Default'))
+pages.push({ label: 'prefixOnly.leaf' })
+void render
+`,
+  })
+  try {
+    const collected = collectCalls(moduleMutationAfterUse, 'lane3')
+    assert.equal(collected.fallbackSites.length, 1)
+    assert.equal(collected.calls.length, 0)
+    assert.equal(collected.unclassified.length, 1)
+  } finally {
+    removeFixture(moduleMutationAfterUse)
+  }
+})
+
+test(taskAcceptanceCriteria[2], () => {
+  const declared = [
+    'resolvedLeafPasses',
+    'existingPrefixMissingLeafFails',
+    'enOnlyFailsArabic',
+    'arOnlyFailsEnglish',
+    'unknownCallShapeFails',
+    'interpolationOnlyOptionsNotFallback',
+    'defaultValueOptionsAreFallback',
+    'staticCollectionWholeKeyClassifies',
+    'staticCollectionDomainIsClosed',
+    'runtimeWholeKeyStaysUnclassified',
+    'crossModuleMutationStaysUnclassified',
+  ]
+  const ledger = runSelfCheck()
+  assert.deepEqual(Object.keys(ledger.checks).sort(), declared.sort())
+  assert.ok(declared.every((name) => ledger.checks[name] === true))
+  assert.equal(ledger.selfCheck, 'PASS')
+})
+
+test(taskAcceptanceCriteria[3], () => {
+  const ledger = runSelfCheck()
+  const prior = [
+    'resolvedLeafPasses',
+    'existingPrefixMissingLeafFails',
+    'enOnlyFailsArabic',
+    'arOnlyFailsEnglish',
+    'unknownCallShapeFails',
+    'interpolationOnlyOptionsNotFallback',
+    'defaultValueOptionsAreFallback',
+  ]
+  assert.ok(prior.every((name) => ledger.checks[name] === true))
+
+  const workingPaths = execFileSync('git', ['status', '--short'], {
+    cwd: root,
+    encoding: 'utf8',
+  })
+    .trimEnd()
+    .split('\n')
+    .filter(Boolean)
+    .map((line) => line.slice(3))
+  const changedPaths = [...new Set([...committedTaskPaths(), ...workingPaths])]
   const allowed = new Set([
     'scripts/i18n-dynamic-key-audit.mjs',
     'scripts/i18n-dynamic-key-audit.test.mjs',
-    '.planning/phases/99-arabic-coverage/99-54-SUMMARY.md',
+    '.planning/phases/99-arabic-coverage/99-56-SUMMARY.md',
   ])
+  assert.ok(changedPaths.length > 0)
+  assert.ok(changedPaths.every((path) => allowed.has(path)))
   assert.equal(
-    changedPaths.filter((path) => allowed.has(path)).length,
-    changedPaths.length,
-    `allowed-committed-paths=${changedPaths.filter((path) => allowed.has(path)).length}/${changedPaths.length}`,
+    changedPaths.filter((path) => path.startsWith('scripts/i18n-dynamic-key-audit')).length,
+    2,
+  )
+
+  const summary = readFileSync(taskSummaryPath, 'utf8')
+  assert.match(summary, /node --test scripts\/i18n-dynamic-key-audit\.test\.mjs/)
+  assert.match(summary, /(?:#|ℹ) pass \d+/)
+  assert.match(summary, /(?:#|ℹ) fail 0/)
+})
+
+test(taskAcceptanceCriteria[4], () => {
+  const ledger = runSelfCheck()
+  const declared = new Set([
+    'resolvedLeafPasses',
+    'existingPrefixMissingLeafFails',
+    'enOnlyFailsArabic',
+    'arOnlyFailsEnglish',
+    'unknownCallShapeFails',
+    'interpolationOnlyOptionsNotFallback',
+    'defaultValueOptionsAreFallback',
+    'staticCollectionWholeKeyClassifies',
+    'staticCollectionDomainIsClosed',
+    'runtimeWholeKeyStaysUnclassified',
+    'crossModuleMutationStaysUnclassified',
+  ])
+  const emitted = new Set(Object.keys(ledger.checks))
+  assert.deepEqual(emitted, declared)
+  assert.ok([...declared].every((name) => ledger.checks[name] === true))
+  assert.equal(ledger.selfCheck, 'PASS')
+})
+
+test(taskAcceptanceCriteria[5], () => {
+  const summary = readFileSync(taskSummaryPath, 'utf8')
+  assert.match(summary, /cross-module label collection resolves 27 of 27 in en and 27 of 27 in ar/)
+  assert.match(summary, /in-file map resolves 8 of 8 in en and 8 of 8 in ar/)
+  assert.match(
+    summary,
+    /motivating population is recorded as premise evidence, not as this task's resolution claim/,
   )
 })

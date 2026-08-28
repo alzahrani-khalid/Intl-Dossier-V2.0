@@ -262,6 +262,56 @@ const bindingContextFor = (root, profileFiles) => {
   return context
 }
 
+const bindingContextForSources = (sources) => {
+  const virtualRoot = resolve('/__i18n-dynamic-key-self-check__')
+  const sourceByFile = new Map(
+    Object.entries(sources).map(([file, source]) => [resolve(virtualRoot, file), source]),
+  )
+  const options = {
+    jsx: ts.JsxEmit.Preserve,
+    module: ts.ModuleKind.ESNext,
+    moduleResolution: ts.ModuleResolutionKind.Bundler,
+    noEmit: true,
+    noLib: true,
+    target: ts.ScriptTarget.Latest,
+    types: [],
+  }
+  const host = ts.createCompilerHost(options)
+  const defaultFileExists = host.fileExists.bind(host)
+  const defaultReadFile = host.readFile.bind(host)
+  const defaultGetSourceFile = host.getSourceFile.bind(host)
+  host.fileExists = (file) => sourceByFile.has(resolve(file)) || defaultFileExists(file)
+  host.readFile = (file) => sourceByFile.get(resolve(file)) ?? defaultReadFile(file)
+  host.getSourceFile = (file, languageVersion, onError, shouldCreateNewSourceFile) => {
+    const source = sourceByFile.get(resolve(file))
+    return source == null
+      ? defaultGetSourceFile(file, languageVersion, onError, shouldCreateNewSourceFile)
+      : ts.createSourceFile(
+          file,
+          source,
+          languageVersion,
+          true,
+          file.endsWith('.tsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
+        )
+  }
+  host.resolveModuleNames = (moduleNames, containingFile) =>
+    moduleNames.map((moduleName) => {
+      if (!moduleName.startsWith('.')) return undefined
+      const stem = resolve(dirname(containingFile), moduleName)
+      const file = [stem, `${stem}.ts`, `${stem}.tsx`].find((candidate) =>
+        sourceByFile.has(resolve(candidate)),
+      )
+      if (file == null) return undefined
+      return {
+        extension: file.endsWith('.tsx') ? ts.Extension.Tsx : ts.Extension.Ts,
+        isExternalLibraryImport: false,
+        resolvedFileName: file,
+      }
+    })
+  const program = ts.createProgram({ rootNames: [...sourceByFile.keys()], options, host })
+  return { root: virtualRoot, program, checker: program.getTypeChecker() }
+}
+
 const symbolAt = (checker, node) => {
   if (node == null) return null
   if (
@@ -1202,11 +1252,293 @@ const unwrapNode = (node) => {
     (ts.isAsExpression(current) ||
       ts.isTypeAssertionExpression(current) ||
       ts.isParenthesizedExpression(current) ||
-      ts.isNonNullExpression(current))
+      ts.isNonNullExpression(current) ||
+      ts.isSatisfiesExpression(current))
   ) {
     current = current.expression
   }
   return current
+}
+
+const resolvedSymbolAt = (context, node) => {
+  let symbol = symbolAt(context.checker, node)
+  if (symbol != null && (symbol.flags & ts.SymbolFlags.Alias) !== 0) {
+    const target = context.checker.getAliasedSymbol(symbol)
+    if (target != null && target !== symbol) symbol = target
+  }
+  return symbol
+}
+
+const functionForCall = (context, call) => {
+  const expression = unwrapNode(call.expression)
+  if (!ts.isIdentifier(expression)) return null
+  const symbol = resolvedSymbolAt(context, expression)
+  for (const declaration of symbol?.declarations ?? []) {
+    if (ts.isFunctionDeclaration(declaration)) return declaration
+    if (ts.isVariableDeclaration(declaration)) {
+      const initializer = unwrapNode(declaration.initializer)
+      if (ts.isArrowFunction(initializer) || ts.isFunctionExpression(initializer)) {
+        return initializer
+      }
+    }
+  }
+  return null
+}
+
+const returnedExpressions = (fn) => {
+  if (fn.body == null) return []
+  if (ts.isArrowFunction(fn) && !ts.isBlock(fn.body)) return [fn.body]
+  if (!ts.isBlock(fn.body)) return []
+  const expressions = []
+  const visit = (node) => {
+    if (node !== fn.body && ts.isFunctionLike(node)) return
+    if (ts.isReturnStatement(node)) {
+      if (node.expression != null) expressions.push(node.expression)
+      return
+    }
+    ts.forEachChild(node, visit)
+  }
+  visit(fn.body)
+  return expressions
+}
+
+const staticObjectMember = (context, expression, memberName, use, seen = new Set()) => {
+  const value = unwrapNode(expression)
+  if (ts.isObjectLiteralExpression(value)) return objectProperty(value, memberName)
+  if (!ts.isIdentifier(value)) return null
+  const symbol = symbolAt(context.checker, value)
+  if (symbol == null || seen.has(symbol)) return null
+  seen.add(symbol)
+  const binding = initializerBinding(context, value, use)
+  if (binding?.stable !== true) return null
+  return staticObjectMember(context, binding.expression, memberName, binding.use ?? use, seen)
+}
+
+const mutationSharesEnclosingFunction = (declaration, mutation, use) => {
+  const declarationFunction = enclosingFunction(declaration)
+  return (
+    declarationFunction != null &&
+    declarationFunction === enclosingFunction(mutation) &&
+    declarationFunction === enclosingFunction(use)
+  )
+}
+
+const pushedCollectionElements = (context, identifier, use) => {
+  const symbol = resolvedSymbolAt(context, identifier)
+  if (symbol == null) return null
+  const declarations = symbol.declarations ?? []
+  const declaration = symbol.valueDeclaration ?? declarations[0] ?? null
+  if (declaration == null) return null
+  const sourceFiles = new Set([
+    identifier.getSourceFile(),
+    declaration.getSourceFile(),
+    ...declarations.map((candidate) => candidate.getSourceFile()),
+  ])
+  const values = []
+  let invalid = false
+  const visit = (node) => {
+    if (invalid) return
+    if (
+      ts.isCallExpression(node) &&
+      ts.isPropertyAccessExpression(node.expression) &&
+      node.expression.name.text === 'push' &&
+      ts.isIdentifier(unwrapNode(node.expression.expression)) &&
+      resolvedSymbolAt(context, unwrapNode(node.expression.expression)) === symbol
+    ) {
+      const sameFunction = mutationSharesEnclosingFunction(declaration, node, use)
+      if (!sameFunction || node.getStart() >= use.getStart() || node.arguments.length === 0) {
+        invalid = true
+      } else {
+        values.push(...node.arguments.map(unwrapNode))
+      }
+      return
+    }
+    ts.forEachChild(node, visit)
+  }
+  for (const sourceFile of sourceFiles) visit(sourceFile)
+  return invalid ? null : values
+}
+
+const staticCollectionElements = (context, expression, use, seen = new Set()) => {
+  const value = unwrapNode(expression)
+  if (value == null) return null
+  if (ts.isArrayLiteralExpression(value)) {
+    const elements = []
+    for (const element of value.elements) {
+      if (ts.isSpreadElement(element)) {
+        const spread = staticCollectionElements(context, element.expression, use, new Set(seen))
+        if (spread == null) return null
+        elements.push(...spread)
+      } else {
+        elements.push(unwrapNode(element))
+      }
+    }
+    return elements
+  }
+  if (ts.isIdentifier(value)) {
+    const symbol = symbolAt(context.checker, value)
+    if (symbol == null || seen.has(symbol)) return null
+    const nextSeen = new Set(seen)
+    nextSeen.add(symbol)
+    const binding = initializerBinding(context, value, use)
+    if (binding?.stable !== true) return null
+    const initial = staticCollectionElements(
+      context,
+      binding.expression,
+      binding.use ?? use,
+      nextSeen,
+    )
+    if (initial == null) return null
+    const pushed = pushedCollectionElements(context, value, use)
+    return pushed == null ? null : [...initial, ...pushed]
+  }
+  if (!ts.isCallExpression(value)) return null
+
+  const callee = unwrapNode(value.expression)
+  if (ts.isIdentifier(callee) && callee.text === 'useMemo') {
+    const callback = unwrapNode(value.arguments[0])
+    if (!ts.isArrowFunction(callback) && !ts.isFunctionExpression(callback)) return null
+    const returns = returnedExpressions(callback)
+    if (returns.length === 0) return null
+    const elements = returns.map((returned) =>
+      staticCollectionElements(context, returned, returned, new Set(seen)),
+    )
+    return elements.some((entry) => entry == null) ? null : elements.flat()
+  }
+  if (ts.isPropertyAccessExpression(callee)) {
+    if (callee.name.text === 'filter' || callee.name.text === 'slice') {
+      return staticCollectionElements(context, callee.expression, value, new Set(seen))
+    }
+    if (callee.name.text === 'flatMap') {
+      const callback = unwrapNode(value.arguments[0])
+      if (!ts.isArrowFunction(callback) && !ts.isFunctionExpression(callback)) return null
+      const parameter = callback.parameters[0]?.name
+      if (!ts.isIdentifier(parameter)) return null
+      const sourceElements = staticCollectionElements(
+        context,
+        callee.expression,
+        value,
+        new Set(seen),
+      )
+      if (sourceElements == null) return null
+      const returns = returnedExpressions(callback)
+      if (returns.length === 0) return null
+      const flattened = []
+      for (const returned of returns) {
+        const projection = unwrapNode(returned)
+        if (
+          !ts.isPropertyAccessExpression(projection) ||
+          !ts.isIdentifier(projection.expression) ||
+          !sameSymbol(context.checker, projection.expression, parameter)
+        ) {
+          return null
+        }
+        for (const element of sourceElements) {
+          const member = staticObjectMember(context, element, projection.name.text, value)
+          if (member == null) return null
+          const projected = staticCollectionElements(context, member, member, new Set(seen))
+          if (projected == null) return null
+          flattened.push(...projected)
+        }
+      }
+      return flattened
+    }
+  }
+
+  const fn = functionForCall(context, value)
+  if (fn == null) return null
+  const returns = returnedExpressions(fn)
+  if (returns.length === 0) return null
+  const elements = returns.map((returned) =>
+    staticCollectionElements(context, returned, returned, new Set(seen)),
+  )
+  return elements.some((entry) => entry == null) ? null : elements.flat()
+}
+
+const staticRecordStringValues = (context, expression, use) => {
+  let value = unwrapNode(expression)
+  if (ts.isIdentifier(value)) {
+    const binding = initializerBinding(context, value, use)
+    if (binding?.stable !== true) return null
+    value = unwrapNode(binding.expression)
+  }
+  if (!ts.isObjectLiteralExpression(value)) return null
+  const values = value.properties.map((property) => {
+    if (!ts.isPropertyAssignment(property)) return null
+    const entry = staticString(context, property.initializer, property)
+    return entry?.stable === true ? entry.value : null
+  })
+  return values.length > 0 && values.every((entry) => entry != null) ? [...new Set(values)] : null
+}
+
+const staticCollectionPropertyValues = (context, expression, property, use) => {
+  const elements = staticCollectionElements(context, expression, use)
+  if (elements == null || elements.length === 0) return null
+  const values = elements.map((element) => {
+    const member = staticObjectMember(context, element, property, use)
+    if (member == null) return null
+    const entry = staticString(context, member, member)
+    return entry?.stable === true ? entry.value : null
+  })
+  if (!values.every((entry) => entry != null)) return null
+  return [...new Set(values)]
+}
+
+const wholeKeySource = (context, expression, use) => {
+  let value = unwrapNode(expression)
+  const seen = new Set()
+  while (value != null) {
+    if (ts.isBinaryExpression(value) && value.operatorToken.kind === ts.SyntaxKind.BarBarToken) {
+      // The runtime fallback tail is deliberately excluded from the proven literal-member domain.
+      value = unwrapNode(value.left)
+      continue
+    }
+    if (!ts.isIdentifier(value)) return value
+    const symbol = symbolAt(context.checker, value)
+    if (symbol == null || seen.has(symbol)) return null
+    seen.add(symbol)
+    const binding = initializerBinding(context, value, use)
+    if (binding?.stable !== true) return null
+    value = unwrapNode(binding.expression)
+    use = binding.use ?? use
+  }
+  return null
+}
+
+const mappedCollectionFor = (context, identifier) => {
+  const symbol = symbolAt(context.checker, identifier)
+  const parameter = symbol?.valueDeclaration ?? symbol?.declarations?.[0] ?? null
+  if (parameter == null || !ts.isParameter(parameter)) return null
+  const callback = parameter.parent
+  const mapCall = callback.parent
+  if (
+    (!ts.isArrowFunction(callback) && !ts.isFunctionExpression(callback)) ||
+    !ts.isCallExpression(mapCall) ||
+    !ts.isPropertyAccessExpression(mapCall.expression) ||
+    mapCall.expression.name.text !== 'map' ||
+    mapCall.arguments[0] !== callback
+  ) {
+    return null
+  }
+  return mapCall.expression.expression
+}
+
+const staticCollectionWholeKeyDomain = ({ bindingContext, node }) => {
+  if (bindingContext == null) return null
+  const first = unwrapNode(node.arguments[0])
+  if (!ts.isIdentifier(first) && !ts.isPropertyAccessExpression(first)) return null
+  const source = wholeKeySource(bindingContext, first, node)
+  if (source == null) return null
+  if (ts.isElementAccessExpression(source)) {
+    return staticRecordStringValues(bindingContext, source.expression, source)
+  }
+  if (ts.isPropertyAccessExpression(source) && ts.isIdentifier(unwrapNode(source.expression))) {
+    const receiver = mappedCollectionFor(bindingContext, unwrapNode(source.expression))
+    return receiver == null
+      ? null
+      : staticCollectionPropertyValues(bindingContext, receiver, source.name.text, source)
+  }
+  return null
 }
 
 const enclosingFunction = (node) => {
@@ -1623,6 +1955,9 @@ const provesRelationshipDomain = ({ source, node, domain }) => {
   )
 }
 
+const provesStaticCollectionWholeKeyDomain = ({ bindingContext, node, domain }) =>
+  sameStrings(staticCollectionWholeKeyDomain({ bindingContext, node }), domain)
+
 const sameBoundExpression = (context, left, right) => {
   const a = unwrapNode(left)
   const b = unwrapNode(right)
@@ -1731,6 +2066,9 @@ const provesClosedDomain = (proofKind, context) => {
   if (proofKind === 'icon-rail-map') return provesConstMap(context, 'defaultItems', 'tooltipKey')
   if (proofKind === 'analytic-template-map') return provesConstMap(context, 'TEMPLATES', 'labelKey')
   if (proofKind === 'analytic-count-switch') return provesCountLineDomain(context)
+  if (proofKind === 'static-literal-collection-whole-key') {
+    return provesStaticCollectionWholeKeyDomain(context)
+  }
   if (proofKind === 'graph-cluster-route') {
     if (
       context.bindingContext != null &&
@@ -1988,6 +2326,24 @@ const classifyCall = ({
       ),
       'lane3.analyticResultView.countLine',
       'closed renderCountLine callers',
+    )
+  }
+
+  const staticCollectionDomain = staticCollectionWholeKeyDomain({ bindingContext, node })
+  if (staticCollectionDomain != null) {
+    return describeDomain(
+      closedDomain(
+        'static-literal-collection-whole-key',
+        staticCollectionDomain,
+        provesClosedDomain('static-literal-collection-whole-key', {
+          node,
+          domain: staticCollectionDomain,
+          bindingContext,
+          forceUnproven,
+        }),
+      ),
+      'lane3.staticLiteralCollectionWholeKey',
+      'static literal collection members; runtime logical-or tail excluded',
     )
   }
 
@@ -2404,6 +2760,82 @@ const runSelfCheck = () => {
     ts.forEachChild(node, visit)
   }
   visit(sf)
+  const staticCollectionSources = {
+    'collection.ts': `
+      export const createFixtureGroups = () => {
+        const groups = [
+          {
+            label: 'navigation.group',
+            items: [{ label: 'navigation.alpha' }, { label: 'navigation.beta' }],
+          },
+        ]
+        groups.push({ items: [{ label: 'navigation.gamma' }] })
+        return groups
+      }
+
+      export const mutatedPages = [{ label: 'navigation.initial' }]
+      mutatedPages.push({ label: 'navigation.pushed' })
+    `,
+    'fixture.tsx': `
+      import { createFixtureGroups, mutatedPages } from './collection'
+      declare function useMemo<T>(factory: () => T, dependencies: unknown[]): T
+      declare function t(key: unknown, fallback: string): unknown
+
+      const groupKeys = { alpha: 'groups.alpha', beta: 'groups.beta' }
+      const rows = [{ type: 'alpha' }, { type: 'beta' }]
+      rows.map((row) => {
+        const groupKey = groupKeys[row.type] || row.type
+        t(groupKey, 'Default')
+      })
+
+      const pages = useMemo(() => {
+        const groups = createFixtureGroups()
+        return groups.flatMap((group) => group.items)
+      }, [])
+      const filteredPages = useMemo(() => pages.filter((page) => page.label), [pages])
+      filteredPages.slice(0, 2).map((page) => t(page.label, 'Default'))
+      mutatedPages.map((mutatedPage) => t(mutatedPage.label, 'Default'))
+
+      function runtimeFixture(runtimeKey: string) {
+        t(runtimeKey, 'Default')
+      }
+    `,
+  }
+  const staticCollectionContext = bindingContextForSources(staticCollectionSources)
+  const staticCollectionFile = staticCollectionContext.program.getSourceFile(
+    resolve(staticCollectionContext.root, 'fixture.tsx'),
+  )
+  const staticClassifications = new Map()
+  if (staticCollectionFile != null) {
+    const fixtureText = staticCollectionSources['fixture.tsx']
+    const classifyFixtureCall = (node) => {
+      if (
+        ts.isCallExpression(node) &&
+        ts.isIdentifier(node.expression) &&
+        node.expression.text === 't'
+      ) {
+        const key = textOf(fixtureText, node.arguments[0])
+        staticClassifications.set(
+          key,
+          classifyCall({
+            root: staticCollectionContext.root,
+            repoPath: 'fixture.tsx',
+            source: fixtureText,
+            node,
+            namespaces: ['fixture'],
+            domains: {},
+            bindingContext: staticCollectionContext,
+          }),
+        )
+      }
+      ts.forEachChild(node, classifyFixtureCall)
+    }
+    classifyFixtureCall(staticCollectionFile)
+  }
+  const inFileCollection = staticClassifications.get('groupKey') ?? null
+  const crossModuleCollection = staticClassifications.get('page.label') ?? null
+  const crossModuleMutation = staticClassifications.get('mutatedPage.label') ?? null
+  const runtimeWholeKey = staticClassifications.get('runtimeKey') ?? null
   const checks = {
     resolvedLeafPasses: resolvedLeaf.en && resolvedLeaf.ar,
     existingPrefixMissingLeafFails: !missingLeaf.en && !missingLeaf.ar,
@@ -2420,6 +2852,18 @@ const runSelfCheck = () => {
       }) == null,
     interpolationOnlyOptionsNotFallback: seen.some((row) => row.interpolationOnly && !row.fallback),
     defaultValueOptionsAreFallback: seen.some((row) => !row.interpolationOnly && row.fallback),
+    staticCollectionWholeKeyClassifies: inFileCollection != null && crossModuleCollection != null,
+    staticCollectionDomainIsClosed:
+      inFileCollection?.closed === true &&
+      sameStrings(inFileCollection.keys, ['groups.alpha', 'groups.beta']) &&
+      crossModuleCollection?.closed === true &&
+      sameStrings(crossModuleCollection.keys, [
+        'navigation.alpha',
+        'navigation.beta',
+        'navigation.gamma',
+      ]),
+    runtimeWholeKeyStaysUnclassified: runtimeWholeKey == null,
+    crossModuleMutationStaysUnclassified: crossModuleMutation == null,
   }
   return { selfCheck: Object.values(checks).every(Boolean) ? 'PASS' : 'FAIL', checks }
 }
