@@ -27,25 +27,25 @@ export function WorkItemTabs({ activeTab, onTabChange, counts }: WorkItemTabsPro
   const tabs = [
     {
       id: 'all',
-      label: t('tabs.all', 'All'),
+      label: t('tabs.all'),
       icon: LayoutList,
       count: counts.all,
     },
     {
       id: 'commitments',
-      label: t('tabs.commitments', 'Commitments'),
+      label: t('tabs.commitments'),
       icon: FileCheck,
       count: counts.commitments,
     },
     {
       id: 'tasks',
-      label: t('tabs.tasks', 'Tasks'),
+      label: t('tabs.tasks'),
       icon: ListChecks,
       count: counts.tasks,
     },
     {
       id: 'intake',
-      label: t('tabs.intake', 'Intake'),
+      label: t('tabs.intake'),
       icon: Inbox,
       count: counts.intake,
     },

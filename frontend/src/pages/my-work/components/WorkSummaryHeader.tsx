@@ -30,7 +30,7 @@ export function WorkSummaryHeader({
   const stats = [
     {
       key: 'active',
-      label: t('stats.totalActive', 'Total Active'),
+      label: t('stats.totalActive'),
       value: summary?.total_active || 0,
       icon: ListTodo,
       color: 'text-accent bg-accent/10 dark:bg-accent/30',
@@ -38,7 +38,7 @@ export function WorkSummaryHeader({
     },
     {
       key: 'overdue',
-      label: t('stats.overdue', 'Overdue'),
+      label: t('stats.overdue'),
       value: summary?.overdue_count || 0,
       icon: AlertTriangle,
       color: 'text-danger bg-danger/10 dark:bg-danger/30',
@@ -46,7 +46,7 @@ export function WorkSummaryHeader({
     },
     {
       key: 'due-today',
-      label: t('stats.dueToday', 'Due Today'),
+      label: t('stats.dueToday'),
       value: summary?.due_today || 0,
       icon: Calendar,
       color: 'text-warning bg-warning/10 dark:bg-warning/30',
@@ -54,7 +54,7 @@ export function WorkSummaryHeader({
     },
     {
       key: 'due-week',
-      label: t('stats.dueThisWeek', 'Due This Week'),
+      label: t('stats.dueThisWeek'),
       value: summary?.due_this_week || 0,
       icon: CalendarDays,
       color: 'text-success bg-success/10 dark:bg-success/30',

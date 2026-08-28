@@ -104,10 +104,10 @@ export function WorkItemList({
       <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
         <AlertDescription className="flex items-center justify-between">
-          <span>{t('error.loading', 'Failed to load work items')}</span>
+          <span>{t('error.loading')}</span>
           <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
             <RefreshCcw className="h-4 w-4 me-2" />
-            {t('error.retry', 'Retry')}
+            {t('error.retry')}
           </Button>
         </AlertDescription>
       </Alert>
@@ -122,9 +122,9 @@ export function WorkItemList({
           <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-4">
             <AlertCircle className="h-6 w-6 text-muted-foreground" />
           </div>
-          <h3 className="font-medium text-lg mb-1">{t('empty.title', 'No work items found')}</h3>
+          <h3 className="font-medium text-lg mb-1">{t('empty.title')}</h3>
           <p className="text-muted-foreground text-sm">
-            {t('empty.description', 'Try adjusting your filters or check back later')}
+            {t('empty.description')}
           </p>
         </CardContent>
       </Card>
@@ -196,7 +196,7 @@ export function WorkItemList({
         {hasMore && !isFetchingMore && (
           <div className="flex justify-center py-4">
             <Button variant="outline" onClick={onLoadMore}>
-              {t('loadMore', 'Load More')}
+              {t('loadMore')}
             </Button>
           </div>
         )}
