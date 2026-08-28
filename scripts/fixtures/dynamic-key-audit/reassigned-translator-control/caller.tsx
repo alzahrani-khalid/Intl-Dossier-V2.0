@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next'
 import { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'
-let factory = useTranslation
-export function Fixture({ runtimeType }: { runtimeType: string }) {
-  const { t } = factory('graph')
 
+export function Fixture({ runtimeType }: { runtimeType: string }) {
+  let translate: (key: string, fallback: string) => string
+  translate = useTranslation('graph').t
+  translate = useTranslation('graph').t
   const key = DOSSIER_CARD_TYPES.includes(runtimeType)
     ? `type.${runtimeType}`
     : 'type.unknown'
-  // @audit-line 7
-  return t(key, runtimeType)
+  return translate(key, runtimeType)
 }
