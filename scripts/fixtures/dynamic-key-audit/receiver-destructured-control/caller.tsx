@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next'
-import * as guards from '@/lib/dossier-type-guards'
-const { DOSSIER_CARD_TYPES: TYPES } = guards
+import { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'
+
 export function Fixture({ runtimeType }: { runtimeType: string }) {
   const { t } = useTranslation('graph')
-
-  const key = TYPES.includes(runtimeType)
+  const plain = t('type.unknown', runtimeType)
+  const { t: tQs } = useTranslation('graph')
+  const key = DOSSIER_CARD_TYPES.includes(runtimeType)
     ? `type.${runtimeType}`
     : 'type.unknown'
-  // @audit-line 7
-  return t(key, runtimeType)
+  return `${plain}${tQs(key, runtimeType)}`
 }

@@ -1,13 +1,10 @@
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from '@/fixture/i18n-export'
 import { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'
-import { GRAPH_NAMESPACE as namespace } from '@/fixture/decoy-namespace-export'
 
 export function Fixture({ runtimeType }: { runtimeType: string }) {
-  const { t } = useTranslation(namespace)
-
+  const { t } = useTranslation('missing')
   const key = DOSSIER_CARD_TYPES.includes(runtimeType)
     ? `type.${runtimeType}`
     : 'type.unknown'
-  // @audit-line 7
   return t(key, runtimeType)
 }

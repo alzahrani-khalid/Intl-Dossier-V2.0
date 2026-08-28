@@ -15,21 +15,31 @@ import { fileURLToPath } from 'node:url'
 
 const corpusRoot = dirname(fileURLToPath(import.meta.url))
 const matrixName = 'FORM-MATRIX.tsv'
-const producerInputs = new Set([
-  matrixName,
-  'generate-fixtures.mjs',
-  'generate-fixtures.test.mjs',
-])
+const producerInputs = new Set([matrixName, 'generate-fixtures.mjs', 'generate-fixtures.test.mjs'])
 const identifiers = new Set(['receiver', 'key', 'namespace', 'translator'])
-const forms = new Set([
-  'direct',
-  'aliased-import',
-  're-export',
-  'destructured',
-  'shadowed',
-  'out-of-scope',
-  'reassigned',
+// This is a closed inventory of JavaScript/TypeScript mechanisms by which a
+// translator reaches a call. Composite forms drill both variants they name.
+// It is intentionally derived independently of the resolver under test.
+const formMechanisms = new Map([
+  ['direct-call', 'CallExpression(PropertyAccessExpression(HookCall, t))'],
+  [
+    'destructuring-command-palette-tsx-431-432',
+    'BindingElement(t), and BindingElement(propertyName=t, name=alias) at CommandPalette.tsx:431-432',
+  ],
+  ['aliased-import', 'ImportSpecifier(propertyName=useTranslation, name=alias)'],
+  ['re-export', 'ExportSpecifier followed by ImportSpecifier'],
+  ['property-access', 'PropertyAccessExpression(translatorObject, t)'],
+  [
+    'parameter-analytic-result-view-tsx-196-205-261-300',
+    'Parameter(ctx) carrying t at AnalyticResultView.tsx:196-205 to calls at :261 and :300',
+  ],
+  [
+    'assignment-and-reassignment',
+    'AssignmentExpression establishing a translator, followed by AssignmentExpression replacing it',
+  ],
+  ['shadowing', 'nested lexical BindingElement shadowing the same translator name'],
 ])
+const forms = new Set(formMechanisms.keys())
 const ruledRoots = new Set(['shared', 'pre-repair', 'generality-membership', 'generality-noproof'])
 
 const parseMatrix = (root = corpusRoot) => {
@@ -100,401 +110,166 @@ const serializeLocale = (name, value) => {
   return body
 }
 
-const route = (receiver = 'DOSSIER_CARD_TYPES', keyName = 'key') => `
-  const ${keyName} = ${receiver}.includes(runtimeType)
-    ? \`type.\${runtimeType}\`
-    : 'type.unknown'`
+const route = (receiver = 'DOSSIER_CARD_TYPES') => [
+  `const key = ${receiver}.includes(runtimeType)`,
+  '  ? `type.${runtimeType}`',
+  "  : 'type.unknown'",
+]
 
-const canonicalImports = `import { useTranslation } from 'react-i18next'
-import { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'`
-
-const caller = ({
-  imports = canonicalImports,
-  before = '',
-  inside = '',
-  receiver = 'DOSSIER_CARD_TYPES',
-  keySetup = route(receiver),
-  namespace = "'graph'",
-  factory = 'useTranslation',
-  key = 'key',
-} = {}) => `${imports}
-${before}
-export function Fixture({ runtimeType }: { runtimeType: string }) {
-${inside.length === 0 ? '' : `  ${inside}\n`}  const { t } = ${factory}(${namespace})
-${keySetup}
-  // @audit-line 7
-  return t(${key}, runtimeType)
-}`
-
+const canonicalDomainImport = "import { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'"
 const fakeFactory =
-  "const useTranslation = (_namespace: string) => ({ t: (key: string) => key })"
+  'export const useTranslation = (_namespace: string) => ({ t: (key: string) => key })'
+
+const targetFor = (identifier, control) => {
+  const target = {
+    imports: [canonicalDomainImport],
+    extras: {},
+    hookModule: 'react-i18next',
+    namespace: "'graph'",
+    setup: route(),
+  }
+  if (identifier === 'receiver' && !control) {
+    target.imports = ["import { DOSSIER_CARD_TYPES } from '@/fixture/decoy-domain'"]
+    target.extras['frontend/src/fixture/decoy-domain.ts'] =
+      "export const DOSSIER_CARD_TYPES = ['country'] as const"
+  } else if (identifier === 'key' && !control) {
+    target.setup = ['const key = `type.${runtimeType}`']
+  } else if (identifier === 'namespace' && !control) {
+    target.namespace = "'missing'"
+  } else if (identifier === 'translator' && !control) {
+    target.hookModule = '@/fixture/decoy-i18n'
+    target.extras['frontend/src/fixture/decoy-i18n.ts'] = fakeFactory
+  }
+  return target
+}
+
+const hookImport = (module, local = 'useTranslation') =>
+  local === 'useTranslation'
+    ? `import { useTranslation } from '${module}'`
+    : `import { useTranslation as ${local} } from '${module}'`
+
+const fixtureProgram = (target, imports, statements, declarations = []) => {
+  const body = statements.flatMap((statement) => statement.split('\n')).map((line) => `  ${line}`)
+  return `${[...new Set([...imports, ...target.imports])].join('\n')}
+${declarations.join('\n')}
+export function Fixture({ runtimeType }: { runtimeType: string }) {
+${body.join('\n')}
+}`
+}
+
+const selectedHook = (target, preferred = 'useTranslation') => ({
+  imports: [hookImport(target.hookModule, preferred)],
+  name: preferred,
+})
+
+const renderForm = (identifier, form, target) => {
+  const setup = target.setup
+  if (form === 'direct-call') {
+    const hook = selectedHook(target)
+    return fixtureProgram(target, hook.imports, [
+      ...setup,
+      `return ${hook.name}(${target.namespace}).t(key, runtimeType)`,
+    ])
+  }
+  if (form === 'destructuring-command-palette-tsx-431-432') {
+    const hook = selectedHook(target)
+    const namespace = identifier === 'translator' ? "'quickswitcher'" : target.namespace
+    return fixtureProgram(target, hook.imports, [
+      `const { t } = ${hook.name}(${namespace})`,
+      "const plain = t('type.unknown', runtimeType)",
+      `const { t: tQs } = ${hook.name}(${namespace})`,
+      ...setup,
+      'return `${plain}${tQs(key, runtimeType)}`',
+    ])
+  }
+  if (form === 'aliased-import') {
+    const hook = selectedHook(target, 'useI18n')
+    return fixtureProgram(target, hook.imports, [
+      `const { t } = ${hook.name}(${target.namespace})`,
+      ...setup,
+      'return t(key, runtimeType)',
+    ])
+  }
+  if (form === 're-export') {
+    const module = target.hookModule === '@/fixture/decoy-i18n' ? './decoy-i18n' : target.hookModule
+    target.extras['frontend/src/fixture/i18n-export.ts'] =
+      `export { useTranslation } from '${module}'`
+    return fixtureProgram(
+      target,
+      [hookImport('@/fixture/i18n-export')],
+      [`const { t } = useTranslation(${target.namespace})`, ...setup, 'return t(key, runtimeType)'],
+    )
+  }
+  if (form === 'property-access') {
+    const hook = selectedHook(target)
+    return fixtureProgram(target, hook.imports, [
+      `const translator = ${hook.name}(${target.namespace})`,
+      ...setup,
+      'return translator.t(key, runtimeType)',
+    ])
+  }
+  if (form === 'parameter-analytic-result-view-tsx-196-205-261-300') {
+    const hook = selectedHook(target)
+    return fixtureProgram(
+      target,
+      hook.imports,
+      [
+        `const { t } = ${hook.name}(${target.namespace})`,
+        ...setup,
+        'return renderType({ t, runtimeType }, key)',
+      ],
+      [
+        'type TFn = (key: string, fallback: string) => string',
+        'function renderType(ctx: { t: TFn; runtimeType: string }, key: string) { const { t, runtimeType } = ctx; return t(key, runtimeType) }',
+      ],
+    )
+  }
+  if (form === 'assignment-and-reassignment') {
+    const hook = selectedHook(target)
+    return fixtureProgram(target, hook.imports, [
+      'let translate: (key: string, fallback: string) => string',
+      `translate = ${hook.name}(${target.namespace}).t`,
+      `translate = ${hook.name}(${target.namespace}).t`,
+      ...setup,
+      'return translate(key, runtimeType)',
+    ])
+  }
+  if (form === 'shadowing') {
+    const imports = [hookImport('react-i18next', 'canonicalUseTranslation')]
+    let chosen = 'canonicalUseTranslation'
+    if (target.hookModule !== 'react-i18next') {
+      chosen = 'selectedUseTranslation'
+      imports.push(hookImport(target.hookModule, chosen))
+    }
+    return fixtureProgram(target, imports, [
+      "const { t: translate } = canonicalUseTranslation('graph')",
+      '{',
+      `  const { t: translate } = ${chosen}(${target.namespace})`,
+      ...setup.map((line) => `  ${line}`),
+      '  return translate(key, runtimeType)',
+      '}',
+    ])
+  }
+  throw new Error(`no language mechanism for matrix cell ${identifier}/${form}`)
+}
 
 const scenarioFor = (identifier, form) => {
-  if (identifier === 'receiver' && form === 'direct') {
-    return {
-      negative: caller({
-        imports: `import { useTranslation } from 'react-i18next'\nimport { DOSSIER_CARD_TYPES } from '@/fixture/decoy-domain'`,
-      }),
-      control: caller(),
-      negativeExtras: {
-        'frontend/src/fixture/decoy-domain.ts':
-          "export const DOSSIER_CARD_TYPES = ['country'] as const",
-      },
-    }
+  const negativeTarget = targetFor(identifier, false)
+  const controlTarget = targetFor(identifier, true)
+  return {
+    negative: renderForm(identifier, form, negativeTarget),
+    control: renderForm(identifier, form, controlTarget),
+    negativeExtras: negativeTarget.extras,
+    controlExtras: controlTarget.extras,
   }
-  if (identifier === 'receiver' && form === 'aliased-import') {
-    return {
-      negative: caller({
-        imports: `import { useTranslation } from 'react-i18next'\nimport { DOSSIER_CARD_TYPES as TYPES } from '@/fixture/decoy-domain'`,
-        receiver: 'TYPES',
-        keySetup: route('TYPES'),
-      }),
-      control: caller({
-        imports: `import { useTranslation } from 'react-i18next'\nimport { DOSSIER_CARD_TYPES as TYPES } from '@/lib/dossier-type-guards'`,
-        receiver: 'TYPES',
-        keySetup: route('TYPES'),
-      }),
-      negativeExtras: {
-        'frontend/src/fixture/decoy-domain.ts':
-          "export const DOSSIER_CARD_TYPES = ['country'] as const",
-      },
-    }
-  }
-  if (identifier === 'receiver' && form === 're-export') {
-    return {
-      negative: caller({
-        imports: `import { useTranslation } from 'react-i18next'\nimport { DOSSIER_CARD_TYPES } from '@/fixture/decoy-domain-export'`,
-      }),
-      control: caller({
-        imports: `import { useTranslation } from 'react-i18next'\nimport { DOSSIER_CARD_TYPES } from '@/fixture/canonical-domain-export'`,
-      }),
-      negativeExtras: {
-        'frontend/src/fixture/decoy-domain-export.ts':
-          "export { DOSSIER_CARD_TYPES } from './decoy-domain'",
-        'frontend/src/fixture/decoy-domain.ts':
-          "export const DOSSIER_CARD_TYPES = ['country'] as const",
-      },
-      controlExtras: {
-        'frontend/src/fixture/canonical-domain-export.ts':
-          "export { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'",
-      },
-    }
-  }
-  if (identifier === 'receiver' && form === 'destructured') {
-    return {
-      negative: caller({
-        imports: `import { useTranslation } from 'react-i18next'\nimport * as guards from '@/fixture/decoy-domain'`,
-        before: 'const { DOSSIER_CARD_TYPES: TYPES } = guards',
-        receiver: 'TYPES',
-        keySetup: route('TYPES'),
-      }),
-      control: caller({
-        imports: `import { useTranslation } from 'react-i18next'\nimport * as guards from '@/lib/dossier-type-guards'`,
-        before: 'const { DOSSIER_CARD_TYPES: TYPES } = guards',
-        receiver: 'TYPES',
-        keySetup: route('TYPES'),
-      }),
-      negativeExtras: {
-        'frontend/src/fixture/decoy-domain.ts':
-          "export const DOSSIER_CARD_TYPES = ['country'] as const",
-      },
-    }
-  }
-  if (identifier === 'receiver' && form === 'shadowed') {
-    return {
-      negative: caller({
-        imports: canonicalImports.replace(
-          'DOSSIER_CARD_TYPES }',
-          'DOSSIER_CARD_TYPES as CANONICAL_TYPES }',
-        ),
-        before: "const DOSSIER_CARD_TYPES = ['country'] as const",
-      }),
-      control: caller(),
-    }
-  }
-  if (identifier === 'receiver' && form === 'out-of-scope') {
-    return {
-      negative: caller({
-        before: '{ const TYPES = DOSSIER_CARD_TYPES; void TYPES }',
-        receiver: 'TYPES',
-        keySetup: route('TYPES'),
-      }),
-      control: caller({
-        before: 'const TYPES = DOSSIER_CARD_TYPES',
-        receiver: 'TYPES',
-        keySetup: route('TYPES'),
-      }),
-    }
-  }
-  if (identifier === 'receiver' && form === 'reassigned') {
-    return {
-      negative: caller({
-        before: "let TYPES = DOSSIER_CARD_TYPES\nTYPES = ['country'] as const",
-        receiver: 'TYPES',
-        keySetup: route('TYPES'),
-      }),
-      control: caller({
-        before: 'let TYPES = DOSSIER_CARD_TYPES',
-        receiver: 'TYPES',
-        keySetup: route('TYPES'),
-      }),
-    }
-  }
-
-  if (identifier === 'key' && form === 'direct') {
-    return {
-      negative: caller({ keySetup: "  const key = `type.${runtimeType}`" }),
-      control: caller(),
-    }
-  }
-  if (identifier === 'key' && form === 'aliased-import') {
-    return {
-      negative: caller({
-        imports: `import { useTranslation } from 'react-i18next'\nimport { routeKey as key } from '@/fixture/decoy-key'`,
-        keySetup: '',
-      }),
-      control: caller({
-        imports: `import { useTranslation } from 'react-i18next'\nimport { routeKey as key } from '@/fixture/canonical-key'`,
-        keySetup: '',
-      }),
-      negativeExtras: {
-        'frontend/src/fixture/decoy-key.ts':
-          "const runtimeType = 'country'\nexport const routeKey = `type.${runtimeType}`",
-      },
-      controlExtras: {
-        'frontend/src/fixture/canonical-key.ts':
-          "import { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'\nconst runtimeType = 'country'\nexport const routeKey = DOSSIER_CARD_TYPES.includes(runtimeType) ? `type.${runtimeType}` : 'type.unknown'",
-      },
-    }
-  }
-  if (identifier === 'key' && form === 're-export') {
-    return {
-      negative: caller({
-        imports: `import { useTranslation } from 'react-i18next'\nimport { routeKey as key } from '@/fixture/decoy-key-export'`,
-        keySetup: '',
-      }),
-      control: caller({
-        imports: `import { useTranslation } from 'react-i18next'\nimport { routeKey as key } from '@/fixture/canonical-key-export'`,
-        keySetup: '',
-      }),
-      negativeExtras: {
-        'frontend/src/fixture/decoy-key-export.ts': "export { routeKey } from './decoy-key'",
-        'frontend/src/fixture/decoy-key.ts':
-          "const runtimeType = 'country'\nexport const routeKey = `type.${runtimeType}`",
-      },
-      controlExtras: {
-        'frontend/src/fixture/canonical-key-export.ts':
-          "export { routeKey } from './canonical-key'",
-        'frontend/src/fixture/canonical-key.ts':
-          "import { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'\nconst runtimeType = 'country'\nexport const routeKey = DOSSIER_CARD_TYPES.includes(runtimeType) ? `type.${runtimeType}` : 'type.unknown'",
-      },
-    }
-  }
-  if (identifier === 'key' && form === 'destructured') {
-    return {
-      negative: caller({
-        keySetup:
-          "  const routes = { key: `type.${runtimeType}` }\n  const { key } = routes",
-      }),
-      control: caller({
-        keySetup: `  const routes = { key: DOSSIER_CARD_TYPES.includes(runtimeType) ? \`type.\${runtimeType}\` : 'type.unknown' }\n  const { key } = routes`,
-      }),
-    }
-  }
-  if (identifier === 'key' && form === 'shadowed') {
-    return {
-      negative: caller({
-        keySetup: `  { const key = DOSSIER_CARD_TYPES.includes(runtimeType) ? \`type.\${runtimeType}\` : 'type.unknown'; void key }\n  const key = \`type.\${runtimeType}\``,
-      }),
-      control: caller(),
-    }
-  }
-  if (identifier === 'key' && form === 'out-of-scope') {
-    return {
-      negative: caller({
-        keySetup: `  { const key = DOSSIER_CARD_TYPES.includes(runtimeType) ? \`type.\${runtimeType}\` : 'type.unknown'; void key }`,
-      }),
-      control: caller(),
-    }
-  }
-  if (identifier === 'key' && form === 'reassigned') {
-    return {
-      negative: caller({
-        keySetup: `  let key = DOSSIER_CARD_TYPES.includes(runtimeType) ? \`type.\${runtimeType}\` : 'type.unknown'\n  key = \`type.\${runtimeType}\``,
-      }),
-      control: caller({
-        keySetup: `  let key = DOSSIER_CARD_TYPES.includes(runtimeType) ? \`type.\${runtimeType}\` : 'type.unknown'`,
-      }),
-    }
-  }
-
-  if (identifier === 'namespace' && form === 'direct') {
-    return { negative: caller({ namespace: "'missing'" }), control: caller() }
-  }
-  if (identifier === 'namespace' && form === 'aliased-import') {
-    return {
-      negative: caller({
-        imports: `${canonicalImports}\nimport { GRAPH_NAMESPACE as namespace } from '@/fixture/decoy-namespace'`,
-        namespace: 'namespace',
-      }),
-      control: caller({
-        imports: `${canonicalImports}\nimport { GRAPH_NAMESPACE as namespace } from '@/fixture/canonical-namespace'`,
-        namespace: 'namespace',
-      }),
-      negativeExtras: {
-        'frontend/src/fixture/decoy-namespace.ts': "export const GRAPH_NAMESPACE = 'missing'",
-      },
-      controlExtras: {
-        'frontend/src/fixture/canonical-namespace.ts': "export const GRAPH_NAMESPACE = 'graph'",
-      },
-    }
-  }
-  if (identifier === 'namespace' && form === 're-export') {
-    return {
-      negative: caller({
-        imports: `${canonicalImports}\nimport { GRAPH_NAMESPACE as namespace } from '@/fixture/decoy-namespace-export'`,
-        namespace: 'namespace',
-      }),
-      control: caller({
-        imports: `${canonicalImports}\nimport { GRAPH_NAMESPACE as namespace } from '@/fixture/canonical-namespace-export'`,
-        namespace: 'namespace',
-      }),
-      negativeExtras: {
-        'frontend/src/fixture/decoy-namespace-export.ts':
-          "export { GRAPH_NAMESPACE } from './decoy-namespace'",
-        'frontend/src/fixture/decoy-namespace.ts': "export const GRAPH_NAMESPACE = 'missing'",
-      },
-      controlExtras: {
-        'frontend/src/fixture/canonical-namespace-export.ts':
-          "export { GRAPH_NAMESPACE } from './canonical-namespace'",
-        'frontend/src/fixture/canonical-namespace.ts': "export const GRAPH_NAMESPACE = 'graph'",
-      },
-    }
-  }
-  if (identifier === 'namespace' && form === 'destructured') {
-    return {
-      negative: caller({
-        before: "const namespaces = { graph: 'missing' }\nconst { graph: namespace } = namespaces",
-        namespace: 'namespace',
-      }),
-      control: caller({
-        before: "const namespaces = { graph: 'graph' }\nconst { graph: namespace } = namespaces",
-        namespace: 'namespace',
-      }),
-    }
-  }
-  if (identifier === 'namespace' && form === 'shadowed') {
-    return {
-      negative: caller({
-        before: "const graphNamespace = 'graph'",
-        namespace: "(() => { const graphNamespace = 'missing'; return graphNamespace })()",
-      }),
-      control: caller({ before: "const graphNamespace = 'graph'", namespace: 'graphNamespace' }),
-    }
-  }
-  if (identifier === 'namespace' && form === 'out-of-scope') {
-    return {
-      negative: caller({
-        before: "{ const graphNamespace = 'graph'; void graphNamespace }",
-        namespace: 'graphNamespace',
-      }),
-      control: caller({ before: "const graphNamespace = 'graph'", namespace: 'graphNamespace' }),
-    }
-  }
-  if (identifier === 'namespace' && form === 'reassigned') {
-    return {
-      negative: caller({
-        before: "let graphNamespace = 'graph'\ngraphNamespace = 'missing'",
-        namespace: 'graphNamespace',
-      }),
-      control: caller({ before: "let graphNamespace = 'graph'", namespace: 'graphNamespace' }),
-    }
-  }
-
-  if (identifier === 'translator' && form === 'direct') {
-    return {
-      negative: caller({
-        imports: `import { useTranslation as realUseTranslation } from 'react-i18next'\nimport { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'`,
-        inside: fakeFactory,
-      }),
-      control: caller(),
-    }
-  }
-  if (identifier === 'translator' && form === 'aliased-import') {
-    return {
-      negative: caller({
-        imports: `import { useTranslation as useI18n } from '@/fixture/decoy-i18n'\nimport { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'`,
-        factory: 'useI18n',
-      }),
-      control: caller({
-        imports: `import { useTranslation as useI18n } from 'react-i18next'\nimport { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'`,
-        factory: 'useI18n',
-      }),
-      negativeExtras: {
-        'frontend/src/fixture/decoy-i18n.ts': normalizeBody(fakeFactory.replace('const ', 'export const ')),
-      },
-    }
-  }
-  if (identifier === 'translator' && form === 're-export') {
-    return {
-      negative: caller({
-        imports: `import { useTranslation } from '@/fixture/decoy-i18n-export'\nimport { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'`,
-      }),
-      control: caller({
-        imports: `import { useTranslation } from '@/fixture/canonical-i18n-export'\nimport { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'`,
-      }),
-      negativeExtras: {
-        'frontend/src/fixture/decoy-i18n-export.ts':
-          "export { useTranslation } from './decoy-i18n'",
-        'frontend/src/fixture/decoy-i18n.ts': fakeFactory.replace('const ', 'export const '),
-      },
-      controlExtras: {
-        'frontend/src/fixture/canonical-i18n-export.ts':
-          "export { useTranslation } from 'react-i18next'",
-      },
-    }
-  }
-  if (identifier === 'translator' && form === 'destructured') {
-    return {
-      negative: caller({
-        imports: `import * as i18n from '@/fixture/decoy-i18n'\nimport { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'`,
-        before: 'const { useTranslation: factory } = i18n',
-        factory: 'factory',
-      }),
-      control: caller({
-        imports: `import * as i18n from 'react-i18next'\nimport { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'`,
-        before: 'const { useTranslation: factory } = i18n',
-        factory: 'factory',
-      }),
-      negativeExtras: {
-        'frontend/src/fixture/decoy-i18n.ts': fakeFactory.replace('const ', 'export const '),
-      },
-    }
-  }
-  if (identifier === 'translator' && form === 'shadowed') {
-    return { negative: caller({ inside: fakeFactory }), control: caller() }
-  }
-  if (identifier === 'translator' && form === 'out-of-scope') {
-    return {
-      negative: caller({
-        before: '{ const factory = useTranslation; void factory }',
-        factory: 'factory',
-      }),
-      control: caller({ before: 'const factory = useTranslation', factory: 'factory' }),
-    }
-  }
-  if (identifier === 'translator' && form === 'reassigned') {
-    return {
-      negative: caller({
-        before: `let factory = useTranslation\nfactory = (_namespace: string) => ({ t: (key: string) => key })`,
-        factory: 'factory',
-      }),
-      control: caller({ before: 'let factory = useTranslation', factory: 'factory' }),
-    }
-  }
-
-  throw new Error(`no derivation for matrix cell ${identifier}/${form}`)
 }
+
+const caller = ({ keySetup = route() } = {}) =>
+  fixtureProgram(
+    targetFor('receiver', true),
+    [hookImport('react-i18next')],
+    ["const { t } = useTranslation('graph')", ...keySetup, 'return t(key, runtimeType)'],
+  )
 
 const putPreRepair = (put) => {
   const base = 'pre-repair/frontend/src'
@@ -631,9 +406,16 @@ t(\`type.\${node.type}\`, node.type)`,
     forum: 'x',
     engagement: 'x',
     type: Object.fromEntries(
-      ['country', 'organization', 'forum', 'engagement', 'topic', 'working_group', 'person', 'elected_official'].map(
-        (key) => [key, 'x'],
-      ),
+      [
+        'country',
+        'organization',
+        'forum',
+        'engagement',
+        'topic',
+        'working_group',
+        'person',
+        'elected_official',
+      ].map((key) => [key, 'x']),
     ),
     relationship: Object.fromEntries(
       [
@@ -670,15 +452,24 @@ t(\`type.\${node.type}\`, node.type)`,
     },
   }
   const localeFiles = {
-    'common.json': { navigation: Object.fromEntries(['dashboard', 'dossiers', 'workflow', 'calendar', 'reports'].map((key) => [key, 'x'])) },
+    'common.json': {
+      navigation: Object.fromEntries(
+        ['dashboard', 'dossiers', 'workflow', 'calendar', 'reports'].map((key) => [key, 'x']),
+      ),
+    },
     'empty-states.json': { list },
-    'engagements.json': { filter: Object.fromEntries(['all', 'meeting', 'travel'].map((key) => [key, 'x'])) },
+    'engagements.json': {
+      filter: Object.fromEntries(['all', 'meeting', 'travel'].map((key) => [key, 'x'])),
+    },
     'graph.json': graph,
     'keyboard-shortcuts.json': {
       quickActions: Object.fromEntries(
-        ['analyzeForumMembership', 'analyzeSharedCommittees', 'analyzeEngagementChains', 'analyzeShortestPath'].map(
-          (key) => [key, 'x'],
-        ),
+        [
+          'analyzeForumMembership',
+          'analyzeSharedCommittees',
+          'analyzeEngagementChains',
+          'analyzeShortestPath',
+        ].map((key) => [key, 'x']),
       ),
     },
     'list-pages.json': {
@@ -737,11 +528,13 @@ const buildCorpus = (cells = parseMatrix()) => {
   )
   put('shared/frontend/src/i18n/en/graph.json', sharedGraph)
   put('shared/frontend/src/i18n/ar/graph.json', sharedGraph)
+  put('shared/frontend/src/i18n/en/quickswitcher.json', sharedGraph)
+  put('shared/frontend/src/i18n/ar/quickswitcher.json', sharedGraph)
 
   put('generality-membership/caller.tsx', caller())
   put(
     'generality-noproof/caller.tsx',
-    caller({ keySetup: "  const key = `type.${runtimeType}`" }),
+    caller({ keySetup: ['const key = `type.${runtimeType}`'] }),
   )
   putPreRepair(put)
 
@@ -785,7 +578,10 @@ const checkCorpus = (root = corpusRoot) => {
   const drift = []
   for (const path of expected.keys()) {
     if (!actual.has(path)) drift.push(`missing ${path}`)
-    else if (actual.get(path) == null || !actual.get(path).equals(Buffer.from(expected.get(path)))) {
+    else if (
+      actual.get(path) == null ||
+      !actual.get(path).equals(Buffer.from(expected.get(path)))
+    ) {
       drift.push(`changed ${path}`)
     }
   }
@@ -844,6 +640,7 @@ export {
   buildCorpus,
   checkCorpus,
   corpusRoot,
+  formMechanisms,
   formatResult,
   inventory,
   parseMatrix,
