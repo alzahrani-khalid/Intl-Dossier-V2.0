@@ -320,7 +320,7 @@ export function MousPage() {
             <div className="p-8 text-center">{t('common:loading')}</div>
           ) : isError ? (
             <div className="p-8 text-center text-destructive" role="alert">
-              {t('common:error.label', { defaultValue: 'Failed to load MoUs' })}
+              {t('common:error.label')}
             </div>
           ) : mous && mous.length > 0 ? (
             <DataTable

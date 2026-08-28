@@ -139,18 +139,10 @@ export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) 
                   <SelectValue placeholder={t('placeholders.enter_value')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="low">
-                    {t('unified-kanban:priority.low', { defaultValue: 'Low' })}
-                  </SelectItem>
-                  <SelectItem value="medium">
-                    {t('unified-kanban:priority.medium', { defaultValue: 'Medium' })}
-                  </SelectItem>
-                  <SelectItem value="high">
-                    {t('unified-kanban:priority.high', { defaultValue: 'High' })}
-                  </SelectItem>
-                  <SelectItem value="urgent">
-                    {t('unified-kanban:priority.urgent', { defaultValue: 'Urgent' })}
-                  </SelectItem>
+                  <SelectItem value="low">{t('unified-kanban:priority.low')}</SelectItem>
+                  <SelectItem value="medium">{t('unified-kanban:priority.medium')}</SelectItem>
+                  <SelectItem value="high">{t('unified-kanban:priority.high')}</SelectItem>
+                  <SelectItem value="urgent">{t('unified-kanban:priority.urgent')}</SelectItem>
                 </SelectContent>
               </Select>
             ) : field.type === 'status' ? (
@@ -162,21 +154,11 @@ export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) 
                   <SelectValue placeholder={t('placeholders.enter_value')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="pending">
-                    {t('tasks-page:status.pending', { defaultValue: 'Pending' })}
-                  </SelectItem>
-                  <SelectItem value="in_progress">
-                    {t('tasks-page:status.in_progress', { defaultValue: 'In Progress' })}
-                  </SelectItem>
-                  <SelectItem value="review">
-                    {t('tasks-page:status.review', { defaultValue: 'Review' })}
-                  </SelectItem>
-                  <SelectItem value="completed">
-                    {t('tasks-page:status.completed', { defaultValue: 'Completed' })}
-                  </SelectItem>
-                  <SelectItem value="cancelled">
-                    {t('tasks-page:status.cancelled', { defaultValue: 'Cancelled' })}
-                  </SelectItem>
+                  <SelectItem value="pending">{t('tasks-page:status.pending')}</SelectItem>
+                  <SelectItem value="in_progress">{t('tasks-page:status.in_progress')}</SelectItem>
+                  <SelectItem value="review">{t('tasks-page:status.review')}</SelectItem>
+                  <SelectItem value="completed">{t('tasks-page:status.completed')}</SelectItem>
+                  <SelectItem value="cancelled">{t('tasks-page:status.cancelled')}</SelectItem>
                 </SelectContent>
               </Select>
             ) : (
@@ -245,7 +227,7 @@ export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) 
                         variant="ghost"
                         size="icon"
                         onClick={() => moveAction(index, index - 1)}
-                        aria-label={t('common:actions.moveUp', { defaultValue: 'Move up' })}
+                        aria-label={t('common:actions.moveUp')}
                         className="h-8 w-8"
                       >
                         <GripVertical className="h-4 w-4 rotate-90" />

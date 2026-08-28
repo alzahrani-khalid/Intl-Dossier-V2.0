@@ -33,10 +33,7 @@ import type {
   IntakePromotionResponse,
   ForumSessionCreateRequest,
 } from '@/types/lifecycle.types'
-import type {
-  EngagementFullProfile,
-  EngagementListResponse,
-} from '@/types/engagement.types'
+import type { EngagementFullProfile, EngagementListResponse } from '@/types/engagement.types'
 
 // ============================================================================
 // Query Keys
@@ -44,10 +41,8 @@ import type {
 
 export const lifecycleKeys = {
   all: ['lifecycle'] as const,
-  history: (engagementId: string) =>
-    [...engagementKeys.all, engagementId, 'lifecycle'] as const,
-  forumSessions: (forumId: string) =>
-    [...engagementKeys.all, 'forum-sessions', forumId] as const,
+  history: (engagementId: string) => [...engagementKeys.all, engagementId, 'lifecycle'] as const,
+  forumSessions: (forumId: string) => [...engagementKeys.all, 'forum-sessions', forumId] as const,
 }
 
 // ============================================================================
@@ -101,13 +96,12 @@ export function useLifecycleTransition(
       void queryClient.invalidateQueries({
         queryKey: lifecycleKeys.history(engagementId),
       })
-      toast.success(t('messages.transitionSuccess', 'Stage transition successful'))
+      toast.success(t('messages.transitionSuccess'))
     },
     onError: (error: Error) => {
       toast.error(
         t('messages.transitionError', {
           error: error.message,
-          defaultValue: 'Failed to transition stage',
         }),
       )
     },
@@ -130,21 +124,18 @@ export function usePromoteIntake(): UseMutationResult<
   const { t } = useTranslation('lifecycle')
 
   return useMutation({
-    mutationFn: async (
-      data: IntakePromotionRequest,
-    ): Promise<IntakePromotionResponse> => {
+    mutationFn: async (data: IntakePromotionRequest): Promise<IntakePromotionResponse> => {
       return promoteIntakeToEngagement(data)
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['intake'] })
       void queryClient.invalidateQueries({ queryKey: engagementKeys.lists() })
-      toast.success(t('messages.promotionSuccess', 'Intake promoted to engagement'))
+      toast.success(t('messages.promotionSuccess'))
     },
     onError: (error: Error) => {
       toast.error(
         t('messages.promotionError', {
           error: error.message,
-          defaultValue: 'Failed to promote intake',
         }),
       )
     },
@@ -167,9 +158,7 @@ export function useCreateForumSession(): UseMutationResult<
   const { t } = useTranslation('lifecycle')
 
   return useMutation({
-    mutationFn: async (
-      data: ForumSessionCreateRequest,
-    ): Promise<EngagementFullProfile> => {
+    mutationFn: async (data: ForumSessionCreateRequest): Promise<EngagementFullProfile> => {
       return createForumSession(data)
     },
     onSuccess: (_data, variables) => {
@@ -177,13 +166,12 @@ export function useCreateForumSession(): UseMutationResult<
       void queryClient.invalidateQueries({
         queryKey: lifecycleKeys.forumSessions(variables.parent_forum_id),
       })
-      toast.success(t('messages.forumSessionCreated', 'Forum session created'))
+      toast.success(t('messages.forumSessionCreated'))
     },
     onError: (error: Error) => {
       toast.error(
         t('messages.forumSessionCreateError', {
           error: error.message,
-          defaultValue: 'Failed to create forum session',
         }),
       )
     },
@@ -197,9 +185,7 @@ export function useCreateForumSession(): UseMutationResult<
 /**
  * Fetches all forum sessions for a given parent forum.
  */
-export function useForumSessions(
-  forumId: string,
-): UseQueryResult<EngagementListResponse, Error> {
+export function useForumSessions(forumId: string): UseQueryResult<EngagementListResponse, Error> {
   return useQuery({
     queryKey: lifecycleKeys.forumSessions(forumId),
     queryFn: async (): Promise<EngagementListResponse> => {

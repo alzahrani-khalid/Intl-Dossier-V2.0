@@ -62,7 +62,7 @@ export function TriggerSelector({
 }: TriggerSelectorProps) {
   const { t } = useTranslation('workflow-automation')
   const { isRTL } = useDirection()
-const eventTriggers = getTriggersByCategory('event')
+  const eventTriggers = getTriggersByCategory('event')
   const timeTriggers = getTriggersByCategory('time')
   const manualTriggers = getTriggersByCategory('manual')
 
@@ -152,9 +152,7 @@ const eventTriggers = getTriggersByCategory('event')
               }
               className="max-w-[200px]"
             />
-            <p className="text-xs text-muted-foreground">
-              {t('help.deadline_days', { defaultValue: 'Days before deadline to trigger' })}
-            </p>
+            <p className="text-xs text-muted-foreground">{t('help.deadline_days')}</p>
           </div>
         </div>
       )}

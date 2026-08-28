@@ -262,7 +262,7 @@ export function DossierPicker({
             disabled={disabled}
           >
             <X className="size-3" />
-            <span className="sr-only">{t('form.clear', 'Clear')}</span>
+            <span className="sr-only">{t('form.clear')}</span>
           </Button>
         </div>
       )}
@@ -290,7 +290,6 @@ export function DossierPicker({
                   className="min-h-6 min-w-6 inline-flex items-center justify-center"
                   aria-label={t('chip.remove', {
                     name: chipName,
-                    defaultValue: `Remove ${chipName}`,
                   })}
                   disabled={disabled}
                 >
@@ -321,9 +320,7 @@ export function DossierPicker({
           >
             <span className="flex items-center gap-2">
               <Search className="size-4 shrink-0" />
-              {selectedDossier
-                ? t('form.changeDossier', 'Change dossier')
-                : placeholder || t('form.selectDossier', 'Select a dossier')}
+              {selectedDossier ? t('form.changeDossier') : placeholder || t('form.selectDossier')}
             </span>
             <ChevronsUpDown className={cn('size-4 shrink-0 opacity-50', isRTL && 'rotate-180')} />
           </Button>
@@ -331,22 +328,20 @@ export function DossierPicker({
         <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
           <Command shouldFilter={false}>
             <CommandInput
-              placeholder={t('form.searchDossiers', 'Search dossiers...')}
+              placeholder={t('form.searchDossiers')}
               value={searchQuery}
               onValueChange={setSearchQuery}
             />
-            <CommandList id={listboxId} aria-label={t('form.dossierResults', 'Dossier results')}>
+            <CommandList id={listboxId} aria-label={t('form.dossierResults')}>
               <CommandEmpty>
                 <div role="status" aria-live="polite">
                   {isSearching ? (
-                    t('form.searching', 'Searching...')
+                    t('form.searching')
                   ) : searchQuery.length < MIN_SEARCH_CHARS ? (
-                    t('form.typeToSearch', 'Type at least 2 characters to search')
+                    t('form.typeToSearch')
                   ) : (
                     <div className="flex flex-col items-center gap-2 py-2">
-                      <span className="text-muted-foreground">
-                        {t('form.noDossiersFound', 'No dossiers found')}
-                      </span>
+                      <span className="text-muted-foreground">{t('form.noDossiersFound')}</span>
                       {allowQuickAdd && searchQuery.length >= MIN_SEARCH_CHARS && (
                         <Button
                           type="button"
@@ -361,7 +356,7 @@ export function DossierPicker({
                           }}
                         >
                           <Plus className="size-4" />
-                          {t('form.createNew', 'Create "{{name}}"', { name: searchQuery })}
+                          {t('form.createNew', { name: searchQuery })}
                         </Button>
                       )}
                     </div>
@@ -371,7 +366,7 @@ export function DossierPicker({
 
               {/* Search results */}
               {searchResults.length > 0 && (
-                <CommandGroup heading={t('form.searchResults', 'Search Results')}>
+                <CommandGroup heading={t('form.searchResults')}>
                   {searchResults.map((dossier) => {
                     const DossierIcon = getDossierTypeIcon(dossier.type)
                     const name = isRTL ? dossier.name_ar || dossier.name_en : dossier.name_en
@@ -421,16 +416,14 @@ export function DossierPicker({
                       className="min-h-11 text-accent-ink"
                     >
                       <Plus className={cn('size-4 shrink-0', 'me-2')} />
-                      <span className="flex-1">
-                        {t('form.createNew', 'Create "{{name}}"', { name: searchQuery })}
-                      </span>
+                      <span className="flex-1">{t('form.createNew', { name: searchQuery })}</span>
                     </CommandItem>
                   </CommandGroup>
                 )}
 
               {/* Recent dossiers (shown when no search query) */}
               {searchQuery.length < MIN_SEARCH_CHARS && recentDossiers.length > 0 && (
-                <CommandGroup heading={t('form.recentDossiers', 'Recent Dossiers')}>
+                <CommandGroup heading={t('form.recentDossiers')}>
                   {recentDossiers
                     .filter((d) => {
                       if (!filterByDossierType) return true

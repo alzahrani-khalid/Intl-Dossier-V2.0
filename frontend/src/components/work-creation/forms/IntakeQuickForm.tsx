@@ -170,11 +170,7 @@ export function IntakeQuickForm({
         onSuccess?.(data)
       },
       onError: (error: unknown) => {
-        toast.error(
-          error instanceof Error
-            ? error.message
-            : t('form.intakeError', 'Failed to create intake request'),
-        )
+        toast.error(error instanceof Error ? error.message : t('form.intakeError'))
       },
     })
   }
@@ -186,7 +182,7 @@ export function IntakeQuickForm({
         {/* Show badge when dossier is provided from props or context */}
         {selectedDossier && (
           <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
-            <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
+            <span className="text-muted-foreground">{t('form.linkedTo')}:</span>
             <DossierContextBadge
               dossierId={selectedDossier.id}
               dossierType={(selectedDossier.type as any) ?? 'country'}
@@ -203,9 +199,7 @@ export function IntakeQuickForm({
         {/* Fallback for dossierId-only case (no full dossier info) */}
         {!selectedDossier && (dossierId || creationContext.dossierId) && (
           <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
-            <span className="text-muted-foreground">
-              {t('form.linkedTo', 'Linked to dossier')}:
-            </span>
+            <span className="text-muted-foreground">{t('form.linkedTo')}:</span>
             <Badge variant="outline">{dossierId || creationContext.dossierId}</Badge>
           </div>
         )}
@@ -217,14 +211,14 @@ export function IntakeQuickForm({
             required
             multiple={false}
             label={t('dossier-context:selector.title')}
-            hint={t('work-creation:form.dossierHint', 'Select the dossier this request relates to')}
+            hint={t('work-creation:form.dossierHint')}
             error={dossierError}
           />
         )}
         {/* Show badge for user-selected dossier */}
         {!hasDossierContext && userSelectedDossiers.length > 0 && userSelectedDossiers[0] && (
           <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
-            <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
+            <span className="text-muted-foreground">{t('form.linkedTo')}:</span>
             <DossierContextBadge
               dossierId={userSelectedDossiers[0].id}
               dossierType={(userSelectedDossiers[0].type as DossierType) ?? 'country'}
@@ -245,28 +239,18 @@ export function IntakeQuickForm({
           name="requestType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
-                {t('intake:form.requestType', 'Request Type')} *
-              </FormLabel>
+              <FormLabel className="text-start block">{t('intake:form.requestType')} *</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="min-h-11">
-                    <SelectValue placeholder={t('intake:form.selectType', 'Select type')} />
+                    <SelectValue placeholder={t('intake:form.selectType')} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="engagement">
-                    {t('intake:requestTypes.engagement', 'Engagement')}
-                  </SelectItem>
-                  <SelectItem value="position">
-                    {t('intake:requestTypes.position', 'Position')}
-                  </SelectItem>
-                  <SelectItem value="mou_action">
-                    {t('intake:requestTypes.mou_action', 'MOU Action')}
-                  </SelectItem>
-                  <SelectItem value="foresight">
-                    {t('intake:requestTypes.foresight', 'Foresight')}
-                  </SelectItem>
+                  <SelectItem value="engagement">{t('intake:requestTypes.engagement')}</SelectItem>
+                  <SelectItem value="position">{t('intake:requestTypes.position')}</SelectItem>
+                  <SelectItem value="mou_action">{t('intake:requestTypes.mou_action')}</SelectItem>
+                  <SelectItem value="foresight">{t('intake:requestTypes.foresight')}</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -280,13 +264,11 @@ export function IntakeQuickForm({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
-                {t('intake:form.title', 'Title')} *
-              </FormLabel>
+              <FormLabel className="text-start block">{t('intake:form.title')} *</FormLabel>
               <FormControl>
                 <Input
                   {...field}
-                  placeholder={t('intake:form.titlePlaceholder', 'Enter request title')}
+                  placeholder={t('intake:form.titlePlaceholder')}
                   className="min-h-11"
                   autoFocus
                 />
@@ -302,13 +284,11 @@ export function IntakeQuickForm({
           name="titleAr"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
-                {t('intake:form.titleAr.label', 'Title (Arabic)')} *
-              </FormLabel>
+              <FormLabel className="text-start block">{t('intake:form.titleAr.label')} *</FormLabel>
               <FormControl>
                 <Input
                   {...field}
-                  placeholder={t('intake:form.titleAr.placeholder', 'موجز طلبك')}
+                  placeholder={t('intake:form.titleAr.placeholder')}
                   className="min-h-11"
                   dir="rtl"
                 />
@@ -324,13 +304,11 @@ export function IntakeQuickForm({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
-                {t('intake:form.description', 'Description')} *
-              </FormLabel>
+              <FormLabel className="text-start block">{t('intake:form.description')} *</FormLabel>
               <FormControl>
                 <Textarea
                   {...field}
-                  placeholder={t('intake:form.descriptionPlaceholder', 'Describe your request')}
+                  placeholder={t('intake:form.descriptionPlaceholder')}
                   className="min-h-24 resize-none"
                 />
               </FormControl>
@@ -346,12 +324,12 @@ export function IntakeQuickForm({
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-start block">
-                {t('intake:form.descriptionAr.label', 'Description (Arabic)')} *
+                {t('intake:form.descriptionAr.label')} *
               </FormLabel>
               <FormControl>
                 <Textarea
                   {...field}
-                  placeholder={t('intake:form.descriptionAr.placeholder', 'صف طلبك')}
+                  placeholder={t('intake:form.descriptionAr.placeholder')}
                   className="min-h-24 resize-none"
                   dir="rtl"
                 />
@@ -367,22 +345,18 @@ export function IntakeQuickForm({
           name="urgency"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
-                {t('intake:form.urgency', 'Urgency')} *
-              </FormLabel>
+              <FormLabel className="text-start block">{t('intake:form.urgency')} *</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="min-h-11">
-                    <SelectValue placeholder={t('intake:form.selectUrgency', 'Select urgency')} />
+                    <SelectValue placeholder={t('intake:form.selectUrgency')} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="low">{t('intake:urgency.low', 'Low')}</SelectItem>
-                  <SelectItem value="medium">{t('intake:urgency.medium', 'Medium')}</SelectItem>
-                  <SelectItem value="high">{t('intake:urgency.high', 'High')}</SelectItem>
-                  <SelectItem value="critical">
-                    {t('intake:urgency.critical', 'Critical')}
-                  </SelectItem>
+                  <SelectItem value="low">{t('intake:urgency.low')}</SelectItem>
+                  <SelectItem value="medium">{t('intake:urgency.medium')}</SelectItem>
+                  <SelectItem value="high">{t('intake:urgency.high')}</SelectItem>
+                  <SelectItem value="critical">{t('intake:urgency.critical')}</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -399,16 +373,16 @@ export function IntakeQuickForm({
             disabled={isPending}
             className="min-h-11 w-full sm:w-auto"
           >
-            {t('actions.cancel', 'Cancel')}
+            {t('actions.cancel')}
           </Button>
           <Button type="submit" disabled={isPending} className="min-h-11 w-full sm:flex-1">
             {isPending ? (
               <>
                 <Loader2 className={`size-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
-                {t('form.creating', 'Creating...')}
+                {t('form.creating')}
               </>
             ) : (
-              t('intake:actions.submitRequest', 'Submit request')
+              t('intake:actions.submitRequest')
             )}
           </Button>
         </div>

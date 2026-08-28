@@ -211,7 +211,7 @@ export function CommitmentQuickForm({
         {/* Show badge when dossier is provided from props or context */}
         {selectedDossier && (
           <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
-            <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
+            <span className="text-muted-foreground">{t('form.linkedTo')}:</span>
             <DossierContextBadge
               dossierId={selectedDossier.id}
               dossierType={(selectedDossier.type as any) ?? 'country'}
@@ -228,7 +228,7 @@ export function CommitmentQuickForm({
         {/* Fallback for dossierId-only case (no full dossier info) */}
         {!selectedDossier && dossierId && (
           <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
-            <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
+            <span className="text-muted-foreground">{t('form.linkedTo')}:</span>
             <Badge variant="outline">{dossierId}</Badge>
           </div>
         )}
@@ -240,14 +240,14 @@ export function CommitmentQuickForm({
             required
             multiple={false}
             label={t('dossier-context:selector.title')}
-            hint={t('form.dossierHint', 'Select the dossier this commitment relates to')}
+            hint={t('form.dossierHint')}
             error={dossierError}
           />
         )}
         {/* Show badge for user-selected dossier */}
         {!hasDossierContext && userSelectedDossiers.length > 0 && userSelectedDossiers[0] && (
           <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
-            <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
+            <span className="text-muted-foreground">{t('form.linkedTo')}:</span>
             <DossierContextBadge
               dossierId={userSelectedDossiers[0].id}
               dossierType={(userSelectedDossiers[0].type as DossierType) ?? 'country'}
@@ -413,16 +413,16 @@ export function CommitmentQuickForm({
             disabled={isPending}
             className="min-h-11 w-full sm:w-auto"
           >
-            {t('actions.cancel', 'Cancel')}
+            {t('actions.cancel')}
           </Button>
           <Button type="submit" disabled={isPending} className="min-h-11 w-full sm:flex-1">
             {isPending ? (
               <>
                 <Loader2 className={`size-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
-                {t('form.creating', 'Creating...')}
+                {t('form.creating')}
               </>
             ) : (
-              t('form.createCommitment', 'Create Commitment')
+              t('form.createCommitment')
             )}
           </Button>
         </div>

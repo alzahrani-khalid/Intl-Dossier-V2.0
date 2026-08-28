@@ -22,7 +22,16 @@ import type {
 } from '../types'
 
 // Re-export types for backward compatibility
-export type { BriefType, BriefStatus, EngagementBrief, EngagementBriefsListResponse, BriefGenerationContext, GenerateBriefParams, LinkBriefParams, BriefsSearchParams }
+export type {
+  BriefType,
+  BriefStatus,
+  EngagementBrief,
+  EngagementBriefsListResponse,
+  BriefGenerationContext,
+  GenerateBriefParams,
+  LinkBriefParams,
+  BriefsSearchParams,
+}
 
 // ============================================================================
 // Query Keys
@@ -88,7 +97,7 @@ export function useGenerateEngagementBrief() {
         queryClient.invalidateQueries({
           queryKey: engagementBriefKeys.list(params.engagementId),
         })
-        toast.success(t('messages.generated', 'Brief generated successfully'))
+        toast.success(t('messages.generated'))
       }
     },
     onError: (error: Error) => {
@@ -109,7 +118,7 @@ export function useLinkBriefToEngagement() {
       queryClient.invalidateQueries({
         queryKey: engagementBriefKeys.list(params.engagementId),
       })
-      toast.success(t('messages.linked', 'Brief linked successfully'))
+      toast.success(t('messages.linked'))
     },
     onError: (error: Error) => {
       toast.error(t('messages.linkError', { error: error.message }))
@@ -129,7 +138,7 @@ export function useUnlinkBriefFromEngagement() {
       queryClient.invalidateQueries({
         queryKey: engagementBriefKeys.list(params.engagementId),
       })
-      toast.success(t('messages.unlinked', 'Brief unlinked successfully'))
+      toast.success(t('messages.unlinked'))
     },
     onError: (error: Error) => {
       toast.error(t('messages.unlinkError', { error: error.message }))
