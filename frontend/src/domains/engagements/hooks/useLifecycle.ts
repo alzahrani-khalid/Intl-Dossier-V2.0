@@ -101,13 +101,12 @@ export function useLifecycleTransition(
       void queryClient.invalidateQueries({
         queryKey: lifecycleKeys.history(engagementId),
       })
-      toast.success(t('messages.transitionSuccess', 'Stage transition successful'))
+      toast.success(t('messages.transitionSuccess'))
     },
     onError: (error: Error) => {
       toast.error(
         t('messages.transitionError', {
           error: error.message,
-          defaultValue: 'Failed to transition stage',
         }),
       )
     },
@@ -138,13 +137,12 @@ export function usePromoteIntake(): UseMutationResult<
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['intake'] })
       void queryClient.invalidateQueries({ queryKey: engagementKeys.lists() })
-      toast.success(t('messages.promotionSuccess', 'Intake promoted to engagement'))
+      toast.success(t('messages.promotionSuccess'))
     },
     onError: (error: Error) => {
       toast.error(
         t('messages.promotionError', {
           error: error.message,
-          defaultValue: 'Failed to promote intake',
         }),
       )
     },
@@ -177,13 +175,12 @@ export function useCreateForumSession(): UseMutationResult<
       void queryClient.invalidateQueries({
         queryKey: lifecycleKeys.forumSessions(variables.parent_forum_id),
       })
-      toast.success(t('messages.forumSessionCreated', 'Forum session created'))
+      toast.success(t('messages.forumSessionCreated'))
     },
     onError: (error: Error) => {
       toast.error(
         t('messages.forumSessionCreateError', {
           error: error.message,
-          defaultValue: 'Failed to create forum session',
         }),
       )
     },

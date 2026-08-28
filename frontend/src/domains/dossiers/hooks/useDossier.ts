@@ -233,11 +233,7 @@ export function useCreateDossier() {
     },
     onError: (error: DossierAPIError) => {
       if (error.status === 409 || error.code === 'DUPLICATE_DOSSIER') {
-        toast.error(
-          t('create.duplicate', {
-            defaultValue: error.message || 'A dossier with this name already exists.',
-          }),
-        )
+        toast.error(t('create.duplicate'))
       } else {
         toast.error(t('create.error', { message: error.message }))
       }

@@ -76,7 +76,7 @@ export function useAISuggestions(
     },
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000),
     meta: {
-      errorMessage: t('entityLinks.aiSuggestions.error', 'Failed to generate AI suggestions'),
+      errorMessage: t('entityLinks.aiSuggestions.error'),
     },
   })
 }
@@ -122,11 +122,8 @@ export function useAcceptAISuggestion(intakeId: string) {
       // Error handling in component (show toast)
     },
     meta: {
-      successMessage: t(
-        'entityLinks.aiSuggestions.accepted',
-        'AI suggestion accepted and link created',
-      ),
-      errorMessage: t('entityLinks.aiSuggestions.acceptError', 'Failed to accept suggestion'),
+      successMessage: t('entityLinks.aiSuggestions.accepted'),
+      errorMessage: t('entityLinks.aiSuggestions.acceptError'),
     },
   })
 }

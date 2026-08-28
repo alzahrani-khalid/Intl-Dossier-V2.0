@@ -132,9 +132,7 @@ export function TimelineZone({
                 className="text-sm font-semibold px-0 mt-1"
                 onClick={(): void => toggleGroup(group)}
               >
-                {isExpanded
-                  ? t('zones.timeline.show_less', { defaultValue: 'Show less' })
-                  : t('zones.timeline.show_all')}
+                {isExpanded ? t('zones.timeline.show_less') : t('zones.timeline.show_all')}
               </Button>
             )}
           </div>

@@ -274,8 +274,8 @@ export function IntakeQueuePage() {
     <div className="space-y-6">
       <PageHeader
         icon={<Inbox className="h-6 w-6" />}
-        title={t('navigation.intakeQueue', 'Intake Queue')}
-        subtitle={t('intake:description', 'Review and classify incoming requests')}
+        title={t('navigation.intakeQueue')}
+        subtitle={t('intake:description')}
         actions={
           <>
             <Button
@@ -284,7 +284,7 @@ export function IntakeQueuePage() {
               className="min-h-9 gap-2"
             >
               <Plus className="size-4" />
-              <span className="hidden sm:inline">{t('intake:createNew', 'New Request')}</span>
+              <span className="hidden sm:inline">{t('intake:createNew')}</span>
               <span className="sm:hidden">+</span>
             </Button>
 
@@ -295,12 +295,12 @@ export function IntakeQueuePage() {
                   <ListFilter className="size-4" />
                   <span className="hidden sm:inline">
                     {filters.statusCategory === 'pending'
-                      ? t('intake:filters.pendingTriage', 'Pending Triage')
+                      ? t('intake:filters.pendingTriage')
                       : filters.statusCategory === 'active'
-                        ? t('intake:filters.active', 'Active')
+                        ? t('intake:filters.active')
                         : filters.statusCategory === 'completed'
-                          ? t('intake:filters.completed', 'Completed')
-                          : t('intake:filters.all', 'All')}
+                          ? t('intake:filters.completed')
+                          : t('intake:filters.all')}
                   </span>
                   {activeFilterCount > 0 && (
                     <Badge variant="secondary" className="size-5 justify-center p-0 text-xs">
@@ -310,15 +310,13 @@ export function IntakeQueuePage() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="w-56">
-                <DropdownMenuLabel>
-                  {t('intake:filters.statusCategory', 'Status')}
-                </DropdownMenuLabel>
+                <DropdownMenuLabel>{t('intake:filters.statusCategory')}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuCheckboxItem
                   checked={filters.statusCategory === 'pending'}
                   onCheckedChange={() => setFilters((f) => ({ ...f, statusCategory: 'pending' }))}
                 >
-                  {t('intake:filters.pendingTriage', 'Pending Triage')}
+                  {t('intake:filters.pendingTriage')}
                   <Badge variant="outline" className="ms-auto">
                     submitted, triaged
                   </Badge>
@@ -327,7 +325,7 @@ export function IntakeQueuePage() {
                   checked={filters.statusCategory === 'active'}
                   onCheckedChange={() => setFilters((f) => ({ ...f, statusCategory: 'active' }))}
                 >
-                  {t('intake:filters.active', 'Active')}
+                  {t('intake:filters.active')}
                   <Badge variant="outline" className="ms-auto">
                     assigned, in_progress
                   </Badge>
@@ -336,7 +334,7 @@ export function IntakeQueuePage() {
                   checked={filters.statusCategory === 'completed'}
                   onCheckedChange={() => setFilters((f) => ({ ...f, statusCategory: 'completed' }))}
                 >
-                  {t('intake:filters.completed', 'Completed')}
+                  {t('intake:filters.completed')}
                   <Badge variant="outline" className="ms-auto">
                     converted, closed
                   </Badge>
@@ -345,7 +343,7 @@ export function IntakeQueuePage() {
                   checked={filters.statusCategory === 'all'}
                   onCheckedChange={() => setFilters((f) => ({ ...f, statusCategory: 'all' }))}
                 >
-                  {t('intake:filters.allTickets', 'All Tickets')}
+                  {t('intake:filters.allTickets')}
                 </DropdownMenuCheckboxItem>
 
                 {activeFilterCount > 0 && (
@@ -358,7 +356,7 @@ export function IntakeQueuePage() {
                       onClick={clearFilters}
                     >
                       <X className="size-4" />
-                      {t('intake:filters.clear', 'Clear filters')}
+                      {t('intake:filters.clear')}
                     </Button>
                   </>
                 )}
@@ -377,7 +375,7 @@ export function IntakeQueuePage() {
                   }
                 }}
               >
-                {t('intake:classifySelected', 'Classify')} ({selectedTickets.length})
+                {t('intake:classifySelected')} ({selectedTickets.length})
               </Button>
             )}
           </>
@@ -488,13 +486,11 @@ export function IntakeQueuePage() {
                           <Badge variant={getPriorityColor(ticket.priority)}>
                             {t(`queue.priority.${ticket.priority}`, {
                               ns: 'intake',
-                              defaultValue: ticket.priority,
                             })}
                           </Badge>
                           <Badge variant={getStatusVariant(ticket.status)} className="text-xs">
                             {t(`queue.status.${ticket.status}`, {
                               ns: 'intake',
-                              defaultValue: ticket.status,
                             })}
                           </Badge>
                           <Badge variant="outline" className="text-xs">
@@ -511,7 +507,7 @@ export function IntakeQueuePage() {
                           <div className="mt-2 rounded-lg border border-primary/20 bg-primary/5 p-3">
                             <p className="mb-1 flex items-center gap-1.5 text-sm font-medium text-foreground">
                               <Bot className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                              {t('intake:aiSuggestion', 'AI Suggestion')}
+                              {t('intake:aiSuggestion')}
                             </p>
                             <p className="text-xs text-muted-foreground">
                               {ticket.ai_suggestion.classification} (
@@ -545,7 +541,7 @@ export function IntakeQueuePage() {
                           handleOpenClassifyDialog(ticket.id)
                         }}
                       >
-                        {t('intake:classify', 'Classify')}
+                        {t('intake:classify')}
                       </Button>
                       <Button
                         variant="ghost"
@@ -556,7 +552,7 @@ export function IntakeQueuePage() {
                           navigate({ to: `/intake/tickets/${ticket.id}` })
                         }}
                       >
-                        {t('common:view', 'View')}
+                        {t('common:view')}
                       </Button>
                     </div>
                   </div>
@@ -571,15 +567,8 @@ export function IntakeQueuePage() {
       <Dialog open={classifyDialogOpen} onOpenChange={setClassifyDialogOpen}>
         <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-xl sm:text-2xl">
-              {t('intake:classifyTicket', 'Classify Ticket')}
-            </DialogTitle>
-            <DialogDescription>
-              {t(
-                'intake:classifyDescription',
-                'Review AI suggestions or manually classify this ticket',
-              )}
-            </DialogDescription>
+            <DialogTitle className="text-xl sm:text-2xl">{t('intake:classifyTicket')}</DialogTitle>
+            <DialogDescription>{t('intake:classifyDescription')}</DialogDescription>
           </DialogHeader>
           {selectedTicketForClassify && (
             <TriagePanel ticketId={selectedTicketForClassify} onSuccess={handleTriageSuccess} />
