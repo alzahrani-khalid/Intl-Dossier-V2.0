@@ -1,3 +1,7 @@
+---
+status: complete
+---
+
 # P99-32 Summary — mask deletion lane 2
 
 ## Outcome
