@@ -321,13 +321,12 @@ export function RelationshipGraphPage() {
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
             {t(
-              'noDossier',
-              'No dossier selected. Please select a dossier to view its relationship graph.',
+              'noDossier'
             )}
           </AlertDescription>
         </Alert>
         <Button variant="outline" asChild>
-          <Link to="/dossiers">{t('browseDossiers', 'Browse dossiers')}</Link>
+          <Link to="/dossiers">{t('browseDossiers')}</Link>
         </Button>
       </div>
     )
@@ -340,8 +339,8 @@ export function RelationshipGraphPage() {
       <div className="space-y-6">
         <PageHeader
           icon={<Sparkles className="h-6 w-6" />}
-          title={t('analyze.mode', 'Analyze')}
-          subtitle={t('description', 'Explore connections between entities')}
+          title={t('analyze.mode')}
+          subtitle={t('description')}
         />
 
         {/* Query picker — primary entity pre-filled from the dossier anchor (D-02) */}
@@ -353,7 +352,7 @@ export function RelationshipGraphPage() {
             <CardContent className="pt-6">
               <div className="flex items-center gap-2 mb-4">
                 <Layers className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium">{t('complexity.label', 'Complexity')}:</span>
+                <span className="text-sm font-medium">{t('complexity.label')}:</span>
                 <Badge
                   variant={
                     analyticData.stats.node_count > 50
@@ -364,25 +363,25 @@ export function RelationshipGraphPage() {
                   }
                 >
                   {analyticData.stats.node_count > 50
-                    ? t('complexity.complex', 'Complex')
+                    ? t('complexity.complex')
                     : analyticData.stats.node_count > 20
-                      ? t('complexity.moderate', 'Moderate')
-                      : t('complexity.simple', 'Simple')}
+                      ? t('complexity.moderate')
+                      : t('complexity.simple')}
                 </Badge>
               </div>
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
                   <div className="text-2xl font-bold">{analyticData.stats.node_count}</div>
-                  <div className="text-xs text-muted-foreground">{t('nodes', 'Entities')}</div>
+                  <div className="text-xs text-muted-foreground">{t('nodes')}</div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold">{analyticData.stats.edge_count}</div>
-                  <div className="text-xs text-muted-foreground">{t('edges', 'Relationships')}</div>
+                  <div className="text-xs text-muted-foreground">{t('edges')}</div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold">{analyticData.stats.query_time_ms}ms</div>
                   <div className="text-xs text-muted-foreground">
-                    {t('queryTime', 'Query time')}
+                    {t('queryTime')}
                   </div>
                 </div>
               </div>
@@ -401,11 +400,11 @@ export function RelationshipGraphPage() {
           <TabsList className="mb-4">
             <TabsTrigger value="list" className="gap-2">
               <List className="h-4 w-4" />
-              {t('analyze.listView', 'List view')}
+              {t('analyze.listView')}
             </TabsTrigger>
             <TabsTrigger value="graph" className="gap-2">
               <Network className="h-4 w-4" />
-              {t('analyze.graphView', 'Graph view')}
+              {t('analyze.graphView')}
             </TabsTrigger>
           </TabsList>
 
@@ -447,8 +446,8 @@ export function RelationshipGraphPage() {
     <div className="space-y-6">
       <PageHeader
         icon={<Network className="h-6 w-6" />}
-        title={t('title', 'Relationship graph')}
-        subtitle={t('description', 'Explore connections between entities')}
+        title={t('title')}
+        subtitle={t('description')}
       />
 
       {/* Controls */}
@@ -457,7 +456,7 @@ export function RelationshipGraphPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <Label htmlFor="maxDegrees" className="mb-2 block">
-                {t('maxDegrees', 'Degrees of separation')}
+                {t('maxDegrees')}
               </Label>
               <Select
                 value={maxDegrees.toString()}
@@ -467,18 +466,18 @@ export function RelationshipGraphPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1">1° {t('degree', 'degree')}</SelectItem>
-                  <SelectItem value="2">2° {t('degrees', 'degrees')}</SelectItem>
-                  <SelectItem value="3">3° {t('degrees', 'degrees')}</SelectItem>
-                  <SelectItem value="4">4° {t('degrees', 'degrees')}</SelectItem>
-                  <SelectItem value="5">5° {t('degrees', 'degrees')}</SelectItem>
+                  <SelectItem value="1">1° {t('degree')}</SelectItem>
+                  <SelectItem value="2">2° {t('degrees')}</SelectItem>
+                  <SelectItem value="3">3° {t('degrees')}</SelectItem>
+                  <SelectItem value="4">4° {t('degrees')}</SelectItem>
+                  <SelectItem value="5">5° {t('degrees')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div>
               <Label htmlFor="relationshipType" className="mb-2 block">
-                {t('relationshipType', 'Relationship type')}
+                {t('relationshipType')}
               </Label>
               <Select
                 value={relationshipType}
@@ -488,7 +487,7 @@ export function RelationshipGraphPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t('allTypes', 'All types')}</SelectItem>
+                  <SelectItem value="all">{t('allTypes')}</SelectItem>
                   {RELATIONSHIP_TYPES.map((type) => (
                     <SelectItem key={type} value={type}>
                       {t(`relationship.${type}`)}
@@ -501,7 +500,7 @@ export function RelationshipGraphPage() {
             <div className="flex items-end">
               <Button onClick={handleRefresh} variant="outline" className="w-full">
                 <Settings className="h-4 w-4 me-2" />
-                {t('refresh', 'Refresh')}
+                {t('refresh')}
               </Button>
             </div>
           </div>
@@ -514,7 +513,7 @@ export function RelationshipGraphPage() {
                 <div className="flex items-center gap-2">
                   <Layers className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm font-medium">
-                    {t('complexity.label', 'Complexity')}:
+                    {t('complexity.label')}:
                   </span>
                   <Badge
                     variant={
@@ -526,14 +525,14 @@ export function RelationshipGraphPage() {
                     }
                   >
                     {graphData.stats.node_count > 50
-                      ? t('complexity.complex', 'Complex')
+                      ? t('complexity.complex')
                       : graphData.stats.node_count > 20
-                        ? t('complexity.moderate', 'Moderate')
-                        : t('complexity.simple', 'Simple')}
+                        ? t('complexity.moderate')
+                        : t('complexity.simple')}
                   </Badge>
                   {graphData.stats.node_count > 20 && (
                     <span className="text-xs text-muted-foreground">
-                      {t('complexity.tip', 'Use clustered layout for complex graphs')}
+                      {t('complexity.tip')}
                     </span>
                   )}
                 </div>
@@ -551,19 +550,19 @@ export function RelationshipGraphPage() {
                       <SelectItem value="basic" className="text-xs">
                         <div className="flex items-center gap-2">
                           <Network className="h-3 w-3" />
-                          {t('basicMode', 'Basic')}
+                          {t('basicMode')}
                         </div>
                       </SelectItem>
                       <SelectItem value="enhanced" className="text-xs">
                         <div className="flex items-center gap-2">
                           <Sparkles className="h-3 w-3" />
-                          {t('enhancedMode', 'Enhanced')}
+                          {t('enhancedMode')}
                         </div>
                       </SelectItem>
                       <SelectItem value="advanced" className="text-xs">
                         <div className="flex items-center gap-2">
                           <Rocket className="h-3 w-3" />
-                          {t('advancedMode', 'Advanced')}
+                          {t('advancedMode')}
                         </div>
                       </SelectItem>
                     </SelectContent>
@@ -574,22 +573,22 @@ export function RelationshipGraphPage() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
                 <div>
                   <div className="text-2xl font-bold">{graphData.stats.node_count}</div>
-                  <div className="text-xs text-muted-foreground">{t('nodes', 'Entities')}</div>
+                  <div className="text-xs text-muted-foreground">{t('nodes')}</div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold">{graphData.stats.edge_count}</div>
-                  <div className="text-xs text-muted-foreground">{t('edges', 'Relationships')}</div>
+                  <div className="text-xs text-muted-foreground">{t('edges')}</div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold">{graphData.stats.max_degree}°</div>
                   <div className="text-xs text-muted-foreground">
-                    {t('maxDegree', 'Max degree')}
+                    {t('maxDegree')}
                   </div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold">{graphData.stats.query_time_ms}ms</div>
                   <div className="text-xs text-muted-foreground">
-                    {t('queryTime', 'Query time')}
+                    {t('queryTime')}
                   </div>
                 </div>
               </div>
@@ -610,7 +609,7 @@ export function RelationshipGraphPage() {
         <Alert variant="destructive" className="mb-6">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            {t('error', 'Failed to load graph data')}: {(error as Error).message}
+            {t('error')}: {(error as Error).message}
           </AlertDescription>
         </Alert>
       )}
@@ -630,11 +629,11 @@ export function RelationshipGraphPage() {
           <TabsList className="mb-4">
             <TabsTrigger value="graph" className="gap-2">
               <Network className="h-4 w-4" />
-              {t('graphView', 'Graph view')}
+              {t('graphView')}
             </TabsTrigger>
             <TabsTrigger value="list" className="gap-2">
               <List className="h-4 w-4" />
-              {t('listView', 'List view')}
+              {t('listView')}
             </TabsTrigger>
           </TabsList>
 
