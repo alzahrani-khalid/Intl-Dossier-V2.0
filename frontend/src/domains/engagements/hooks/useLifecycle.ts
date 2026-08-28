@@ -33,7 +33,10 @@ import type {
   IntakePromotionResponse,
   ForumSessionCreateRequest,
 } from '@/types/lifecycle.types'
-import type { EngagementFullProfile, EngagementListResponse } from '@/types/engagement.types'
+import type {
+  EngagementFullProfile,
+  EngagementListResponse,
+} from '@/types/engagement.types'
 
 // ============================================================================
 // Query Keys
@@ -41,8 +44,10 @@ import type { EngagementFullProfile, EngagementListResponse } from '@/types/enga
 
 export const lifecycleKeys = {
   all: ['lifecycle'] as const,
-  history: (engagementId: string) => [...engagementKeys.all, engagementId, 'lifecycle'] as const,
-  forumSessions: (forumId: string) => [...engagementKeys.all, 'forum-sessions', forumId] as const,
+  history: (engagementId: string) =>
+    [...engagementKeys.all, engagementId, 'lifecycle'] as const,
+  forumSessions: (forumId: string) =>
+    [...engagementKeys.all, 'forum-sessions', forumId] as const,
 }
 
 // ============================================================================
@@ -124,7 +129,9 @@ export function usePromoteIntake(): UseMutationResult<
   const { t } = useTranslation('lifecycle')
 
   return useMutation({
-    mutationFn: async (data: IntakePromotionRequest): Promise<IntakePromotionResponse> => {
+    mutationFn: async (
+      data: IntakePromotionRequest,
+    ): Promise<IntakePromotionResponse> => {
       return promoteIntakeToEngagement(data)
     },
     onSuccess: () => {
@@ -158,7 +165,9 @@ export function useCreateForumSession(): UseMutationResult<
   const { t } = useTranslation('lifecycle')
 
   return useMutation({
-    mutationFn: async (data: ForumSessionCreateRequest): Promise<EngagementFullProfile> => {
+    mutationFn: async (
+      data: ForumSessionCreateRequest,
+    ): Promise<EngagementFullProfile> => {
       return createForumSession(data)
     },
     onSuccess: (_data, variables) => {
@@ -185,7 +194,9 @@ export function useCreateForumSession(): UseMutationResult<
 /**
  * Fetches all forum sessions for a given parent forum.
  */
-export function useForumSessions(forumId: string): UseQueryResult<EngagementListResponse, Error> {
+export function useForumSessions(
+  forumId: string,
+): UseQueryResult<EngagementListResponse, Error> {
   return useQuery({
     queryKey: lifecycleKeys.forumSessions(forumId),
     queryFn: async (): Promise<EngagementListResponse> => {

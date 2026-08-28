@@ -22,16 +22,7 @@ import type {
 } from '../types'
 
 // Re-export types for backward compatibility
-export type {
-  BriefType,
-  BriefStatus,
-  EngagementBrief,
-  EngagementBriefsListResponse,
-  BriefGenerationContext,
-  GenerateBriefParams,
-  LinkBriefParams,
-  BriefsSearchParams,
-}
+export type { BriefType, BriefStatus, EngagementBrief, EngagementBriefsListResponse, BriefGenerationContext, GenerateBriefParams, LinkBriefParams, BriefsSearchParams }
 
 // ============================================================================
 // Query Keys

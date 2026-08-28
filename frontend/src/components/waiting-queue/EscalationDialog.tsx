@@ -211,7 +211,8 @@ export function EscalationDialog({
               )}
             </div>
             <div className="text-xs text-muted-foreground text-start">
-              {t('assignments:waitingQueue.assignmentDetails.assignee')}: {resolvedAssigneeName}
+              {t('assignments:waitingQueue.assignmentDetails.assignee')}:{' '}
+              {resolvedAssigneeName}
             </div>
           </div>
 
@@ -220,9 +221,10 @@ export function EscalationDialog({
             <Alert variant="destructive">
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription className="text-start">
-                {t('assignments:waitingQueue.escalation.noEscalationPathMessage', {
-                  user: resolvedAssigneeName,
-                })}
+                {t(
+                  'assignments:waitingQueue.escalation.noEscalationPathMessage',
+                  { user: resolvedAssigneeName },
+                )}
               </AlertDescription>
             </Alert>
           )}

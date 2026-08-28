@@ -93,9 +93,10 @@ export function ReminderButton({
       toast({
         variant: 'destructive',
         title: t('assignments:waitingQueue.reminder.cooldown.title'),
-        description: t('assignments:waitingQueue.reminder.cooldown.description', {
-          hours: hoursRemaining,
-        }),
+        description: t(
+          'assignments:waitingQueue.reminder.cooldown.description',
+          { hours: hoursRemaining },
+        ),
       })
       return
     }
@@ -124,9 +125,10 @@ export function ReminderButton({
           if (errorCode === 'COOLDOWN_ACTIVE') {
             const hoursRemaining = error?.details?.hours_remaining || 24
             title = t('assignments:waitingQueue.reminder.cooldown.title')
-            description = t('assignments:waitingQueue.reminder.cooldown.description', {
-              hours: hoursRemaining,
-            })
+            description = t(
+              'assignments:waitingQueue.reminder.cooldown.description',
+              { hours: hoursRemaining },
+            )
           } else if (errorCode === 'RATE_LIMIT_EXCEEDED') {
             title = t('assignments:waitingQueue.reminder.rateLimit.title')
             description = t('assignments:waitingQueue.reminder.rateLimit.description')

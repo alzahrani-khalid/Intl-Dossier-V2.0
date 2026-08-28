@@ -62,7 +62,7 @@ export function TriggerSelector({
 }: TriggerSelectorProps) {
   const { t } = useTranslation('workflow-automation')
   const { isRTL } = useDirection()
-  const eventTriggers = getTriggersByCategory('event')
+const eventTriggers = getTriggersByCategory('event')
   const timeTriggers = getTriggersByCategory('time')
   const manualTriggers = getTriggersByCategory('manual')
 
