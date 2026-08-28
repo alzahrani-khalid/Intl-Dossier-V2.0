@@ -2,42 +2,31 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { EngagementsList, type EngagementRow } from '../EngagementsList'
 
-// Resolve the production EN bundles: fallback arguments are intentionally ignored.
-vi.mock('react-i18next', async () => {
-  const [{ default: engagements }, { default: listPages }] = await Promise.all([
-    vi.importActual<typeof import('@/i18n/en/engagements.json')>('@/i18n/en/engagements.json'),
-    vi.importActual<typeof import('@/i18n/en/list-pages.json')>('@/i18n/en/list-pages.json'),
-  ])
-  const resources = { engagements, 'list-pages': listPages }
-  const resolve = (resource: unknown, path: string): unknown =>
-    path
-      .split('.')
-      .reduce((value, segment) => (value as Record<string, unknown>)?.[segment], resource)
-
+// Production resource subset; fallback arguments are intentionally ignored.
+vi.mock('react-i18next', () => {
+  const translations: Readonly<Record<string, string>> = {
+    'search.placeholder': 'Search engagements...',
+    'filter.aria': 'Filter engagements',
+    'filter.all': 'All',
+    'filter.meeting': 'Meeting',
+    'filter.travel': 'Travel',
+    'week.of': 'Week of',
+    'row.openAria': 'Open engagement: {{title}}',
+    'loadMore.cta': 'Load more',
+    'loadMore.loading': 'Loading…',
+    loading: 'Loading dossiers',
+    empty: 'No dossiers found',
+  }
+  const translate = (key: string, opts: Record<string, unknown> = {}): string => {
+    const value = translations[key] ?? key
+    return Object.entries(opts).reduce(
+      (rendered, [name, replacement]) => rendered.replaceAll(`{{${name}}}`, String(replacement)),
+      value,
+    )
+  }
   return {
-    useTranslation: (requested?: string | string[]) => {
-      const defaultNamespace = Array.isArray(requested)
-        ? (requested[0] ?? 'translation')
-        : (requested ?? 'translation')
-      return {
-        i18n: { language: 'en' },
-        t: (rawKey: string, opts: Record<string, unknown> = {}): string => {
-          const colon = rawKey.indexOf(':')
-          const namespace =
-            colon >= 0
-              ? rawKey.slice(0, colon)
-              : typeof opts.ns === 'string'
-                ? opts.ns
-                : defaultNamespace
-          const key = colon >= 0 ? rawKey.slice(colon + 1) : rawKey
-          const value = resolve(resources[namespace as keyof typeof resources], key)
-          return typeof value === 'string'
-            ? value.replace(/\{\{(\w+)\}\}/g, (match, name: string) => String(opts[name] ?? match))
-            : rawKey
-        },
-      }
-    },
     initReactI18next: { type: '3rdParty', init: (): void => undefined },
+    useTranslation: () => ({ i18n: { language: 'en' }, t: translate }),
     Trans: ({ children }: { children: React.ReactNode }): React.ReactNode => children,
   }
 })

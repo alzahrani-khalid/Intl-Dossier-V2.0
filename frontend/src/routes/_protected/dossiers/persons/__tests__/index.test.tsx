@@ -5,43 +5,27 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, cleanup } from '@testing-library/react'
 
-// Resolve the production EN bundles: fallback arguments are intentionally ignored.
-vi.mock('react-i18next', async () => {
-  const [{ default: persons }, { default: listPages }, { default: emptyStates }] =
-    await Promise.all([
-      vi.importActual<typeof import('@/i18n/en/persons.json')>('@/i18n/en/persons.json'),
-      vi.importActual<typeof import('@/i18n/en/list-pages.json')>('@/i18n/en/list-pages.json'),
-      vi.importActual<typeof import('@/i18n/en/empty-states.json')>('@/i18n/en/empty-states.json'),
-    ])
-  const resources = { persons, 'list-pages': listPages, 'empty-states': emptyStates }
-  const resolve = (resource: unknown, path: string): unknown =>
-    path
-      .split('.')
-      .reduce((value, segment) => (value as Record<string, unknown>)?.[segment], resource)
-
+// Production resource subset; fallback arguments are intentionally ignored.
+vi.mock('react-i18next', () => {
   return {
-    useTranslation: (requested?: string | string[]) => {
-      const defaultNamespace = Array.isArray(requested)
-        ? (requested[0] ?? 'translation')
-        : (requested ?? 'translation')
-      return {
-        i18n: { language: 'en' },
-        t: (rawKey: string, opts: Record<string, unknown> = {}): string => {
-          const colon = rawKey.indexOf(':')
-          const namespace =
-            colon >= 0
-              ? rawKey.slice(0, colon)
-              : typeof opts.ns === 'string'
-                ? opts.ns
-                : defaultNamespace
-          const key = colon >= 0 ? rawKey.slice(colon + 1) : rawKey
-          const value = resolve(resources[namespace as keyof typeof resources], key)
-          return typeof value === 'string'
-            ? value.replace(/\{\{(\w+)\}\}/g, (match, name: string) => String(opts[name] ?? match))
-            : rawKey
-        },
-      }
-    },
+    useTranslation: () => ({
+      t: (key: string): string => {
+        const translations: Readonly<Record<string, string>> = {
+          'persons:title': 'Persons',
+          'persons:subtitle': 'Manage your network of key contacts and stakeholders',
+          'persons:empty.title': 'No persons yet',
+          'persons:empty.description':
+            'Start building your contact network by adding key stakeholders',
+          'list-pages:search.placeholder': 'Search dossiers...',
+          'persons:chip.vip': 'VIP',
+          title: 'Persons',
+          subtitle: 'Manage your network of key contacts and stakeholders',
+          'chip.vip': 'VIP',
+        }
+        return translations[key] ?? key
+      },
+      i18n: { language: 'en' },
+    }),
   }
 })
 

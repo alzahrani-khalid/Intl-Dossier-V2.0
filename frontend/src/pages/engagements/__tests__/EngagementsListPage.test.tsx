@@ -44,45 +44,39 @@ function Harness(): ReactElement {
   )
 }
 
-// Resolve the production EN bundles: fallback arguments are intentionally ignored.
+// Production resource subset; fallback arguments are intentionally ignored.
 const i18nLanguageRef = { current: 'en' }
-vi.mock('react-i18next', async () => {
-  const [{ default: engagements }, { default: listPages }, { default: emptyStates }] =
-    await Promise.all([
-      vi.importActual<typeof import('@/i18n/en/engagements.json')>('@/i18n/en/engagements.json'),
-      vi.importActual<typeof import('@/i18n/en/list-pages.json')>('@/i18n/en/list-pages.json'),
-      vi.importActual<typeof import('@/i18n/en/empty-states.json')>('@/i18n/en/empty-states.json'),
-    ])
-  const resources = { engagements, 'list-pages': listPages, 'empty-states': emptyStates }
-  const resolve = (resource: unknown, path: string): unknown =>
-    path
-      .split('.')
-      .reduce((value, segment) => (value as Record<string, unknown>)?.[segment], resource)
-
+vi.mock('react-i18next', () => {
+  const translations: Readonly<Record<string, string>> = {
+    title: 'Engagement Dossiers',
+    subtitle: 'Manage bilateral meetings, missions, and delegations',
+    'search.placeholder': 'Search engagements...',
+    'filter.aria': 'Filter engagements',
+    'filter.all': 'All',
+    'filter.meeting': 'Meeting',
+    'filter.travel': 'Travel',
+    'filter.event': 'Event',
+    'week.of': 'Week of',
+    'row.openAria': 'Open engagement: {{title}}',
+    'loadMore.cta': 'Load more',
+    'loadMore.loading': 'Loading…',
+    'statuses.scheduled': 'Scheduled',
+    'statuses.completed': 'Completed',
+    'empty-states:list.engagement.cta': 'Log engagement',
+  }
+  const translate = (key: string, opts: Record<string, unknown> = {}): string => {
+    const value = translations[key] ?? key
+    return Object.entries(opts).reduce(
+      (rendered, [name, replacement]) => rendered.replaceAll(`{{${name}}}`, String(replacement)),
+      value,
+    )
+  }
   return {
-    useTranslation: (requested?: string | string[]) => {
-      const defaultNamespace = Array.isArray(requested)
-        ? (requested[0] ?? 'translation')
-        : (requested ?? 'translation')
-      return {
-        i18n: { language: i18nLanguageRef.current },
-        t: (rawKey: string, opts: Record<string, unknown> = {}): string => {
-          const colon = rawKey.indexOf(':')
-          const namespace =
-            colon >= 0
-              ? rawKey.slice(0, colon)
-              : typeof opts.ns === 'string'
-                ? opts.ns
-                : defaultNamespace
-          const key = colon >= 0 ? rawKey.slice(colon + 1) : rawKey
-          const value = resolve(resources[namespace as keyof typeof resources], key)
-          return typeof value === 'string'
-            ? value.replace(/\{\{(\w+)\}\}/g, (match, name: string) => String(opts[name] ?? match))
-            : rawKey
-        },
-      }
-    },
     initReactI18next: { type: '3rdParty', init: (): void => undefined },
+    useTranslation: () => ({
+      i18n: { language: i18nLanguageRef.current },
+      t: translate,
+    }),
     Trans: ({ children }: { children: React.ReactNode }): React.ReactNode => children,
   }
 })
