@@ -87,7 +87,8 @@
     "engagement": "مشاركة",
     "working_group": "مجموعة عمل",
     "topic": "موضوع",
-    "elected_official": "مسؤول منتخب"
+    "elected_official": "مسؤول منتخب",
+    "unknown": "نوع غير معروف"
   },
   "status": {
     "active": "نشط",
