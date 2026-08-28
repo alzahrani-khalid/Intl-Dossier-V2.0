@@ -8,7 +8,13 @@
 // than folded into an order-blind namespace membership test.
 //
 // Usage: node scripts/i18n-binding-census.mjs <root> --self-check [--json]
+//        node scripts/i18n-binding-census.mjs <root> [--json]
 //        node scripts/i18n-binding-census.mjs <root> --base <ref> [--json]
+//
+// The ordinary no-base form discovers the pre-flatten universe from committed
+// common.json history and reports the selected commit as universeSourceRef. The
+// explicit --base form remains for historical compatibility, but acceptance
+// callers do not need to derive a worker-topology-dependent HEAD^ ref.
 
 import fs from 'node:fs'
 import path from 'node:path'
@@ -34,8 +40,8 @@ function parseArgs(argv) {
     else if (arg === '--base') args.base = argv[++i] || null
     else if (!arg.startsWith('--') && !args.root) args.root = arg
   }
-  if (!args.root || (!args.selfCheck && !args.base)) {
-    console.error('usage: i18n-binding-census.mjs <root> [--self-check | --base <ref> [--json]]')
+  if (!args.root) {
+    console.error('usage: i18n-binding-census.mjs <root> [--self-check] [--base <ref>] [--json]')
     process.exit(2)
   }
   return args
@@ -61,6 +67,14 @@ function resolveCommit(root, ref) {
 function readRefFile(root, ref, relativePath) {
   try {
     return git(root, ['show', `${ref}:${relativePath}`])
+  } catch {
+    return null
+  }
+}
+
+function readWorkingFile(root, relativePath) {
+  try {
+    return fs.readFileSync(path.join(root, relativePath), 'utf8')
   } catch {
     return null
   }
@@ -94,10 +108,15 @@ function literalText(node) {
   return null
 }
 
-// Read the namespace-to-JSON wiring from the real i18n resources object at ref.
-function readI18nConfig(root, ref) {
-  const text = readRefFile(root, ref, I18N_INDEX)
-  if (text === null) throw new Error(`cannot read ${I18N_INDEX} at ${ref}`)
+// Read the namespace-to-JSON wiring from either a committed ref or the working
+// tree. Historical and current sources deliberately use their own configuration.
+function readI18nConfig(root, ref = null) {
+  const readFile = ref === null
+    ? (relativePath) => readWorkingFile(root, relativePath)
+    : (relativePath) => readRefFile(root, ref, relativePath)
+  const source = ref === null ? 'working tree' : ref
+  const text = readFile(I18N_INDEX)
+  if (text === null) throw new Error(`cannot read ${I18N_INDEX} at ${source}`)
   const sf = ts.createSourceFile(I18N_INDEX, text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS)
   const imports = new Map()
   let resourcesNode = null
@@ -123,7 +142,7 @@ function readI18nConfig(root, ref) {
   visit(sf)
 
   if (!resourcesNode || !ts.isObjectLiteralExpression(resourcesNode)) {
-    throw new Error(`cannot derive resources object from ${I18N_INDEX} at ${ref}`)
+    throw new Error(`cannot derive resources object from ${I18N_INDEX} at ${source}`)
   }
 
   let defaultNS = 'translation'
@@ -142,7 +161,7 @@ function readI18nConfig(root, ref) {
   for (const locale of LOCALES) {
     const localeNode = objectProperty(resourcesNode, locale)
     if (!localeNode || !ts.isObjectLiteralExpression(localeNode)) {
-      throw new Error(`resources.${locale} is not a static object at ${ref}`)
+      throw new Error(`resources.${locale} is not a static object at ${source}`)
     }
     const bundles = new Map()
     const commonNamespaces = new Set()
@@ -153,13 +172,13 @@ function readI18nConfig(root, ref) {
       if (namespace === null || !initializer || !ts.isIdentifier(initializer)) continue
       const relative = imports.get(initializer.text)
       if (!relative) continue
-      const raw = readRefFile(root, ref, relative)
-      if (raw === null) throw new Error(`cannot read resource ${relative} at ${ref}`)
+      const raw = readFile(relative)
+      if (raw === null) throw new Error(`cannot read resource ${relative} at ${source}`)
       let bundle
       try {
         bundle = JSON.parse(raw)
       } catch {
-        throw new Error(`invalid JSON resource ${relative} at ${ref}`)
+        throw new Error(`invalid JSON resource ${relative} at ${source}`)
       }
       bundles.set(namespace, bundle)
       if (relative === COMMON_JSON_BY_LOCALE[locale]) commonNamespaces.add(namespace)
@@ -461,8 +480,10 @@ function analyzeSources(sources, config, universe) {
   const dynamicLiteral = []
   const dynamicNonLiteral = []
   const property = []
+  const propertyNonLiteral = []
   const blindUnion = new Set()
   const commonRouted = []
+  const commonCandidates = []
   const governed = []
   const commonColonResolved = []
   const translationColonExplicit = []
@@ -483,12 +504,22 @@ function analyzeSources(sources, config, universe) {
     }
     if (call.propertyAccess) {
       property.push(call)
+      if (call.nonLiteral) propertyNonLiteral.push(call)
       blindUnion.add(call)
     } else if (call.effectiveSpec.kind === 'dynamic') {
       dynamic.push(call)
       blindUnion.add(call)
       if (call.nonLiteral) dynamicNonLiteral.push(call)
       else dynamicLiteral.push(call)
+    }
+
+    // This population is intentionally resolution-independent: the call has a
+    // literal key and a static namespace list containing a namespace backed by
+    // common.json. commonRouted below is the separate current-tree population
+    // whose first-defined lookup actually resolves to common in both locales.
+    if (!call.nonLiteral && !call.propertyAccess && call.effectiveSpec.kind === 'static' &&
+        call.effectiveSpec.nsList.some((namespace) => config.commonNs.has(namespace))) {
+      commonCandidates.push(call)
     }
 
     const resolutions = resolveCall(call, config)
@@ -533,6 +564,7 @@ function analyzeSources(sources, config, universe) {
     literalKeyCalls: literal.length,
     nonLiteralKeyCalls: nonLiteral.length,
     commonNamespaceCalls: commonRouted.length,
+    commonCandidateCalls: commonCandidates.length,
     dynamicNamespaceCalls: dynamicLiteral.length,
     propertyAccessCalls: property.length,
     calls: allCalls,
@@ -555,6 +587,7 @@ function analyzeSources(sources, config, universe) {
       dynamicNamespaceNonLiteralKey: pair(dynamicNonLiteral),
       nonLiteralKey: pair(nonLiteral),
       propertyAccess: pair(property),
+      propertyAccessNonLiteralKey: pair(propertyNonLiteral),
       union: pair([...blindUnion]),
     },
     localeDivergent,
@@ -649,6 +682,76 @@ function runSelfCheck(root, universe) {
   }
 }
 
+function valueKind(value) {
+  if (value === null) return 'null'
+  if (Array.isArray(value)) return 'array'
+  return typeof value
+}
+
+function typeClashes(nested, rootBundle) {
+  return Object.keys(nested)
+    .filter((key) => Object.hasOwn(rootBundle, key) &&
+      valueKind(nested[key]) !== valueKind(rootBundle[key]))
+    .map((key) => `${key}:${valueKind(nested[key])}/${valueKind(rootBundle[key])}`)
+    .sort()
+}
+
+// A nested-object presence check is tautological after preFlattenUniverse has
+// selected its source ref. Trust the historical red control only after a
+// synthetic scalar/object drill, then require the two real collision shapes and
+// values that made the flatten lossy under a naive merge.
+function historicalCollisionControl(root, universeRef) {
+  const positiveControl = typeClashes({ x: 'scalar' }, { x: { child: true } })
+  if (positiveControl.length !== 1 || positiveControl[0] !== 'x:string/object') {
+    throw new Error(
+      `historical collision positive control failed: ${JSON.stringify(positiveControl)}`,
+    )
+  }
+
+  const expectedClashes = ['error:string/object', 'search:string/object']
+  const expectedValues = {
+    en: { error: 'Error', search: 'Search' },
+    ar: { error: 'خطأ', search: 'بحث' },
+  }
+  const locales = {}
+  for (const locale of LOCALES) {
+    const relativePath = COMMON_JSON_BY_LOCALE[locale]
+    const raw = readRefFile(root, universeRef, relativePath)
+    if (raw === null) throw new Error(`cannot read ${relativePath} at ${universeRef}`)
+    const bundle = JSON.parse(raw)
+    const nested = bundle.common
+    if (valueKind(nested) !== 'object') {
+      throw new Error(`${relativePath} at ${universeRef} lacks the historical common object`)
+    }
+    const clashes = typeClashes(nested, bundle)
+    const passed = JSON.stringify(clashes) === JSON.stringify(expectedClashes) &&
+      nested.error === expectedValues[locale].error &&
+      nested.search === expectedValues[locale].search &&
+      valueKind(bundle.error) === 'object' && valueKind(bundle.search) === 'object'
+    locales[locale] = {
+      clashes,
+      nestedError: nested.error,
+      nestedSearch: nested.search,
+      rootErrorType: valueKind(bundle.error),
+      rootSearchType: valueKind(bundle.search),
+      passed,
+    }
+    if (!passed) {
+      throw new Error(
+        `historical collision control failed for ${locale}: ${JSON.stringify(locales[locale])}`,
+      )
+    }
+  }
+
+  return {
+    positiveControl,
+    expectedClashes,
+    universeSourceRef: universeRef,
+    locales,
+    passed: LOCALES.every((locale) => locales[locale].passed),
+  }
+}
+
 function writeReport(report, json) {
   const serialized = JSON.stringify(report, null, json ? 0 : 2)
   process.stdout.write(`${serialized}\n`)
@@ -656,12 +759,12 @@ function writeReport(report, json) {
 
 const args = parseArgs(process.argv)
 const root = path.resolve(args.root)
-const startingRef = args.selfCheck ? 'HEAD' : args.base
+const startingRef = args.base || 'HEAD'
 const universe = preFlattenUniverse(root, startingRef)
 
 if (universe.paths.size === 0 || universe.sourceRef === null) {
   console.error(
-    `CENSUS-FAIL: pre-flatten universe could not be derived (base=${startingRef}); ` +
+    `CENSUS-FAIL: pre-flatten universe could not be derived (start=${startingRef}); ` +
       'refusing to report against an empty key universe',
   )
   process.exit(1)
@@ -674,12 +777,22 @@ try {
     process.exit(ledger.ok ? 0 : 1)
   }
 
-  const config = readI18nConfig(root, universe.sourceRef)
-  const current = analyzeSources(currentSources(root), config, universe)
-  const historical = analyzeSources(refSources(root, universe.sourceRef), config, universe)
+  const historicalConfig = readI18nConfig(root, universe.sourceRef)
+  const currentConfig = readI18nConfig(root)
+  const current = analyzeSources(currentSources(root), currentConfig, universe)
+  const historical = analyzeSources(
+    refSources(root, universe.sourceRef),
+    historicalConfig,
+    universe,
+  )
+  const historicalCollision = historicalCollisionControl(root, universe.sourceRef)
+  const blindInclusionExclusion = current.blind.nonLiteralKey.sites +
+    current.blind.dynamicNamespace.sites + current.blind.propertyAccess.sites -
+    current.blind.dynamicNamespaceNonLiteralKey.sites -
+    current.blind.propertyAccessNonLiteralKey.sites === current.blind.union.sites
   const unrepointed = current.governedCalls.map(publicCall)
   const doublePrefixed = current.calls.filter((call) => call.key !== null &&
-    call.explicitNs !== null && config.commonNs.has(call.explicitNs) &&
+    call.explicitNs !== null && currentConfig.commonNs.has(call.explicitNs) &&
     (call.keyPath === 'common' || call.keyPath.startsWith('common.'))).length
 
   const report = {
@@ -688,10 +801,11 @@ try {
     literalKeyCalls: current.literalKeyCalls,
     nonLiteralKeyCalls: current.nonLiteralKeyCalls,
     commonNamespaceCalls: current.commonNamespaceCalls,
+    commonCandidateCalls: current.commonCandidateCalls,
     dynamicNamespaceCalls: current.dynamicNamespaceCalls,
     propertyAccessCalls: current.propertyAccessCalls,
-    commonNamespaces: [...config.commonNs].sort(),
-    defaultNS: config.defaultNS,
+    commonNamespaces: [...currentConfig.commonNs].sort(),
+    defaultNS: currentConfig.defaultNS,
     base: args.base,
     universeSourceRef: universe.sourceRef,
     governed: historical.partitions.union,
@@ -702,8 +816,14 @@ try {
     objectReturns: current.objectReturns,
     unrepointed,
     doublePrefixed,
+    historicalCollision,
+    checks: {
+      blindInclusionExclusion,
+      flattenGuardTypeClashesAtUniverseRef: historicalCollision.passed,
+    },
   }
-  const clean = unrepointed.length === 0 && doublePrefixed === 0
+  const clean = unrepointed.length === 0 && doublePrefixed === 0 &&
+    blindInclusionExclusion && historicalCollision.passed
   writeReport(report, args.json)
   console.error(
     `blind populations: dynamicNamespace=${report.blind.dynamicNamespace.sites}/${report.blind.dynamicNamespace.files} ` +
