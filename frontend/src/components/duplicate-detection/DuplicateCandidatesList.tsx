@@ -83,15 +83,11 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">
-            {t('duplicate_candidates', 'Duplicate Candidates')}
-          </h2>
-          <p className="text-muted-foreground">
-            {t('duplicate_candidates_desc', 'Review and manage potential duplicate entities')}
-          </p>
+          <h2 className="text-2xl font-bold tracking-tight">{t('duplicate_candidates')}</h2>
+          <p className="text-muted-foreground">{t('duplicate_candidates_desc')}</p>
         </div>
         <Badge variant="outline" className="self-start sm:self-auto">
-          {totalCount} {t('pending', 'pending')}
+          {totalCount} {t('pending')}
         </Badge>
       </div>
 
@@ -108,20 +104,20 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
           >
             <SelectTrigger className="w-full sm:w-[180px]">
               <Filter className="h-4 w-4 me-2" />
-              <SelectValue placeholder={t('entity_type', 'Entity Type')} />
+              <SelectValue placeholder={t('entity_type')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{t('all_types', 'All Types')}</SelectItem>
+              <SelectItem value="all">{t('all_types')}</SelectItem>
               <SelectItem value="person">
                 <div className="flex items-center">
                   <Users className="h-4 w-4 me-2" />
-                  {t('persons', 'Persons')}
+                  {t('persons')}
                 </div>
               </SelectItem>
               <SelectItem value="organization">
                 <div className="flex items-center">
                   <Building2 className="h-4 w-4 me-2" />
-                  {t('organizations', 'Organizations')}
+                  {t('organizations')}
                 </div>
               </SelectItem>
             </SelectContent>
@@ -136,13 +132,13 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
             }}
           >
             <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue placeholder={t('confidence_level', 'Confidence Level')} />
+              <SelectValue placeholder={t('confidence_level')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{t('all_levels', 'All Levels')}</SelectItem>
-              <SelectItem value="high">{t('high_confidence', 'High Confidence')}</SelectItem>
-              <SelectItem value="medium">{t('medium_confidence', 'Medium Confidence')}</SelectItem>
-              <SelectItem value="low">{t('low_confidence', 'Low Confidence')}</SelectItem>
+              <SelectItem value="all">{t('all_levels')}</SelectItem>
+              <SelectItem value="high">{t('high_confidence')}</SelectItem>
+              <SelectItem value="medium">{t('medium_confidence')}</SelectItem>
+              <SelectItem value="low">{t('low_confidence')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -156,7 +152,7 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
             disabled={scanMutation.isPending}
           >
             <ScanSearch className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
-            {t('scan_persons', 'Scan Persons')}
+            {t('scan_persons')}
           </Button>
           <Button
             variant="outline"
@@ -165,14 +161,12 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
             disabled={scanMutation.isPending}
           >
             <ScanSearch className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
-            {t('scan_orgs', 'Scan Orgs')}
+            {t('scan_orgs')}
           </Button>
           {/* Refresh */}
           <Button variant="outline" size="icon" onClick={() => refetch()} disabled={isFetching}>
             <RefreshCw className={cn('h-4 w-4', isFetching && 'animate-spin')} />
-            <span className="sr-only">
-              {t('common:actions.refresh', { defaultValue: 'Refresh' })}
-            </span>
+            <span className="sr-only">{t('common:actions.refresh')}</span>
           </Button>
         </div>
       </div>
@@ -182,7 +176,7 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
         <div className="rounded-lg border bg-muted/50 p-4">
           <div className="flex items-center gap-2">
             <RefreshCw className="h-4 w-4 animate-spin" />
-            <span>{t('scanning', 'Scanning for duplicates...')}</span>
+            <span>{t('scanning')}</span>
           </div>
         </div>
       )}
@@ -190,8 +184,7 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
       {/* Scan Result */}
       {scanMutation.isSuccess && scanMutation.data && (
         <div className="rounded-lg border border-success/30 bg-success/10 p-4 text-success">
-          {t('scan_complete', 'Scan complete.')} {scanMutation.data.candidates_found}{' '}
-          {t('new_candidates_found', 'new candidates found.')}
+          {t('scan_complete')} {scanMutation.data.candidates_found} {t('new_candidates_found')}
         </div>
       )}
 
@@ -200,10 +193,10 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
         <div className="rounded-lg border border-destructive bg-destructive/10 p-4">
           <div className="flex items-center gap-2 text-destructive">
             <AlertCircle className="h-5 w-5" />
-            <span>{t('error_loading', 'Error loading duplicate candidates')}</span>
+            <span>{t('error_loading')}</span>
           </div>
           <Button variant="outline" size="sm" className="mt-2" onClick={() => refetch()}>
-            {t('retry', 'Retry')}
+            {t('retry')}
           </Button>
         </div>
       )}
@@ -223,13 +216,8 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
           <div className="rounded-full bg-muted p-3 mb-4">
             <Search className="h-6 w-6 text-muted-foreground" />
           </div>
-          <h3 className="text-lg font-semibold">{t('no_duplicates', 'No Duplicate Candidates')}</h3>
-          <p className="text-muted-foreground mt-1 max-w-sm">
-            {t(
-              'no_duplicates_desc',
-              'No potential duplicates found. Run a scan to check for new duplicates.',
-            )}
-          </p>
+          <h3 className="text-lg font-semibold">{t('no_duplicates')}</h3>
+          <p className="text-muted-foreground mt-1 max-w-sm">{t('no_duplicates_desc')}</p>
           <div className="flex gap-2 mt-4">
             <Button
               variant="outline"
@@ -237,7 +225,7 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
               disabled={scanMutation.isPending}
             >
               <Users className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
-              {t('scan_persons', 'Scan Persons')}
+              {t('scan_persons')}
             </Button>
             <Button
               variant="outline"
@@ -245,7 +233,7 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
               disabled={scanMutation.isPending}
             >
               <Building2 className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
-              {t('scan_orgs', 'Scan Organizations')}
+              {t('scan_orgs')}
             </Button>
           </div>
         </div>
@@ -270,8 +258,8 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
           {/* Pagination */}
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              {t('showing', 'Showing')} {page * pageSize + 1}-
-              {Math.min((page + 1) * pageSize, totalCount)} {t('of', 'of')} {totalCount}
+              {t('showing')} {page * pageSize + 1}-{Math.min((page + 1) * pageSize, totalCount)}{' '}
+              {t('of')} {totalCount}
             </p>
             <div className="flex gap-2">
               <Button
@@ -280,7 +268,7 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
                 onClick={() => setPage((p) => Math.max(0, p - 1))}
                 disabled={page === 0}
               >
-                {t('previous', 'Previous')}
+                {t('previous')}
               </Button>
               <Button
                 variant="outline"
@@ -288,7 +276,7 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
                 onClick={() => setPage((p) => p + 1)}
                 disabled={!hasMore}
               >
-                {t('next', 'Next')}
+                {t('next')}
               </Button>
             </div>
           </div>

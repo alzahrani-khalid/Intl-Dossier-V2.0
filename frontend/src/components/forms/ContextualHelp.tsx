@@ -267,7 +267,7 @@ function ExpandableHelpContent({
       {formatRequirements && formatRequirements.length > 0 && (
         <div className="space-y-1">
           <p className="font-medium text-xs text-muted-foreground uppercase tracking-wider">
-            {t('formatRequirements', 'Format Requirements')}
+            {t('formatRequirements')}
           </p>
           <ul className="list-disc list-inside space-y-1 text-muted-foreground">
             {formatRequirements.map((req, index) => (
@@ -283,7 +283,7 @@ function ExpandableHelpContent({
       {examples && examples.length > 0 && (
         <div className="space-y-2">
           <p className="font-medium text-xs text-muted-foreground uppercase tracking-wider">
-            {t('examples', 'Examples')}
+            {t('examples')}
           </p>
           <div className="space-y-2">
             {examples.map((example, index) => (
@@ -302,7 +302,7 @@ function ExpandableHelpContent({
       {links && links.length > 0 && (
         <div className="space-y-1 pt-2 border-t">
           <p className="font-medium text-xs text-muted-foreground uppercase tracking-wider">
-            {t('learnMore', 'Learn More')}
+            {t('learnMore')}
           </p>
           <div className="space-y-1">
             {links.map((link, index) => (
@@ -361,7 +361,7 @@ export function FieldLabelWithHelp({
       >
         {label}
         {required && (
-          <span className="text-destructive ms-0.5" aria-label={t('common:required', 'Required')}>
+          <span className="text-destructive ms-0.5" aria-label={t('common:required')}>
             *
           </span>
         )}

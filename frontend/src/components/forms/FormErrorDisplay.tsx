@@ -284,9 +284,7 @@ export function ErrorSummary({
               className="h-6 w-6 text-danger hover:text-danger hover:bg-danger/10 dark:hover:bg-danger/50"
             >
               <X className="h-4 w-4" />
-              <span className="sr-only">
-                {t('common:actions.dismiss', { defaultValue: 'Dismiss' })}
-              </span>
+              <span className="sr-only">{t('common:actions.dismiss')}</span>
             </Button>
           )}
         </div>

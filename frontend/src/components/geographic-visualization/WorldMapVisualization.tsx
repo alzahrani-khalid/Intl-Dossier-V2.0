@@ -123,7 +123,7 @@ export function WorldMapVisualization({
         <CardContent className="flex items-center justify-center h-64">
           <div className="text-center text-muted-foreground">
             <Globe className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p>{t('error.loadFailed', 'Failed to load map data')}</p>
+            <p>{t('error.loadFailed')}</p>
           </div>
         </CardContent>
       </Card>
@@ -137,26 +137,26 @@ export function WorldMapVisualization({
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
           <SummaryCard
             icon={<Globe className="h-4 w-4" />}
-            label={t('summary.totalCountries', 'Countries')}
+            label={t('summary.totalCountries')}
             value={summary?.totalCountries || 0}
-            subValue={`${summary?.countriesWithEngagements || 0} ${t('summary.active', 'active')}`}
+            subValue={`${summary?.countriesWithEngagements || 0} ${t('summary.active')}`}
             isLoading={isLoading}
           />
           <SummaryCard
             icon={<Activity className="h-4 w-4" />}
-            label={t('summary.engagements', 'Engagements')}
+            label={t('summary.engagements')}
             value={summary?.totalEngagements || 0}
             isLoading={isLoading}
           />
           <SummaryCard
             icon={<TrendingUp className="h-4 w-4" />}
-            label={t('summary.relationships', 'Relationships')}
+            label={t('summary.relationships')}
             value={connections.length}
             isLoading={isLoading}
           />
           <SummaryCard
             icon={<MapPin className="h-4 w-4" />}
-            label={t('summary.regions', 'Regions')}
+            label={t('summary.regions')}
             value={summary?.regionBreakdown?.length || 0}
             isLoading={isLoading}
           />
@@ -202,9 +202,7 @@ export function WorldMapVisualization({
           {/* Legend */}
           {showLegend && !isLoading && (
             <div className="absolute bottom-2 start-2 sm:bottom-4 sm:start-4 bg-background/90 backdrop-blur-sm rounded-lg p-2 sm:p-3 border">
-              <p className="text-xs font-medium mb-2">
-                {t('legend.intensity', 'Engagement Intensity')}
-              </p>
+              <p className="text-xs font-medium mb-2">{t('legend.intensity')}</p>
               <div className="flex flex-wrap gap-1 sm:gap-2">
                 {(['low', 'medium', 'high', 'very_high'] as EngagementIntensity[]).map((level) => (
                   <div key={level} className="flex items-center gap-1">
@@ -239,28 +237,22 @@ export function WorldMapVisualization({
               </div>
               <div className="mt-3 space-y-2">
                 <div className="flex justify-between text-xs">
-                  <span className="text-muted-foreground">
-                    {t('country.totalEngagements', 'Total Engagements')}
-                  </span>
+                  <span className="text-muted-foreground">{t('country.totalEngagements')}</span>
                   <span className="font-medium">{selectedCountry.totalEngagements}</span>
                 </div>
                 <div className="flex justify-between text-xs">
-                  <span className="text-muted-foreground">
-                    {t('country.recentEngagements', 'Recent (30d)')}
-                  </span>
+                  <span className="text-muted-foreground">{t('country.recentEngagements')}</span>
                   <span className="font-medium">{selectedCountry.recentEngagements}</span>
                 </div>
                 <div className="flex justify-between text-xs">
-                  <span className="text-muted-foreground">
-                    {t('country.upcomingEngagements', 'Upcoming')}
-                  </span>
+                  <span className="text-muted-foreground">{t('country.upcomingEngagements')}</span>
                   <span className="font-medium">{selectedCountry.upcomingEngagements}</span>
                 </div>
                 {selectedCountry.lastEngagementDate && (
                   <div className="flex items-center gap-1 text-xs text-muted-foreground pt-2 border-t">
                     <Calendar className="h-3 w-3" />
                     <span>
-                      {t('country.lastEngagement', 'Last')}:{' '}
+                      {t('country.lastEngagement')}:{' '}
                       {formatDayFirstYear(selectedCountry.lastEngagementDate)}
                     </span>
                   </div>
@@ -269,9 +261,9 @@ export function WorldMapVisualization({
               <button
                 onClick={() => setSelectedCountry(null)}
                 className="absolute top-2 end-2 text-muted-foreground hover:text-foreground"
-                aria-label={t('close', 'Close')}
+                aria-label={t('close')}
               >
-                <span className="sr-only">{t('close', 'Close')}</span>
+                <span className="sr-only">{t('close')}</span>
                 &times;
               </button>
             </div>
@@ -283,9 +275,7 @@ export function WorldMapVisualization({
       {showSummaryCards && summary?.regionBreakdown && (
         <Card>
           <CardHeader className="py-3 px-4">
-            <CardTitle className="text-sm font-medium">
-              {t('regions.title', 'Regional Breakdown')}
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">{t('regions.title')}</CardTitle>
           </CardHeader>
           <CardContent className="px-4 pb-4">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
@@ -307,8 +297,8 @@ export function WorldMapVisualization({
                         : REGION_LABELS[region.region as keyof typeof REGION_LABELS]?.en}
                     </p>
                     <p className="text-[10px] text-muted-foreground">
-                      {region.countryCount} {t('regions.countries', 'countries')} |{' '}
-                      {region.engagementCount} {t('regions.engagements', 'eng.')}
+                      {region.countryCount} {t('regions.countries')} | {region.engagementCount}{' '}
+                      {t('regions.engagements')}
                     </p>
                   </div>
                 </div>

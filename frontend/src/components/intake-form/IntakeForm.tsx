@@ -370,15 +370,13 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({ initialData, onSuccess }
                   required
                   multiple={false}
                   label={tDossier('selector.title')}
-                  hint={t('form.dossier.hint', 'Select the dossier this request relates to')}
+                  hint={t('form.dossier.hint')}
                   error={dossierError || (errors.dossierId?.message as string)}
                 />
                 {/* Show selected dossier badge */}
                 {selectedDossiers.length > 0 && selectedDossiers[0] && (
                   <div className="mt-2 flex items-center gap-2 rounded-md bg-muted p-2 text-sm">
-                    <span className="text-muted-foreground">
-                      {t('form.dossier.linkedTo', 'Linked to')}:
-                    </span>
+                    <span className="text-muted-foreground">{t('form.dossier.linkedTo')}:</span>
                     <DossierContextBadge
                       dossierId={selectedDossiers[0].id}
                       dossierType={(selectedDossiers[0].type as DossierType) ?? 'country'}
@@ -408,9 +406,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({ initialData, onSuccess }
                   Show an honest note instead of a dropzone that silently drops files.
                   Tracked: .planning/todos/260530-followup-intake-attachment-upload.md */}
               <div className="rounded-lg border border-border bg-muted/40 p-4">
-                <p className="text-sm text-muted-foreground">
-                  {t('form.attachments.unavailable', 'Attachment upload is not yet available.')}
-                </p>
+                <p className="text-sm text-muted-foreground">{t('form.attachments.unavailable')}</p>
               </div>
 
               {/* SLA Preview */}
@@ -487,7 +483,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({ initialData, onSuccess }
                       {t('actions.submitting')}
                     </span>
                   ) : (
-                    t('actions.submitRequest', 'Submit request')
+                    t('actions.submitRequest')
                   )}
                 </Button>
               </div>

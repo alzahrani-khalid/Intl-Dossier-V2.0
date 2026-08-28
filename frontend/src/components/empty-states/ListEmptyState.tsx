@@ -165,7 +165,7 @@ export function ListEmptyState({
   if (filtered) {
     const clearAction: QuickAction | undefined = onClearFilters
       ? {
-          label: t('list.filtered.clear', { defaultValue: 'Clear filters' }),
+          label: t('list.filtered.clear'),
           onClick: onClearFilters,
           variant: 'ghost',
         }
@@ -175,10 +175,8 @@ export function ListEmptyState({
       <div className={cn('flex flex-col', className)}>
         <EmptyState
           icon={config.icon}
-          title={t('list.filtered.title', { defaultValue: 'No matching rows' })}
-          description={t('list.filtered.description', {
-            defaultValue: 'No rows match the current filters.',
-          })}
+          title={t('list.filtered.title')}
+          description={t('list.filtered.description')}
           secondaryActions={clearAction ? [clearAction] : []}
           variant={variant}
           size={size}
@@ -190,31 +188,19 @@ export function ListEmptyState({
 
   const title =
     customTitle ||
-    (isFirstItem
-      ? t(`list.${translationKey}.firstTitle`, { defaultValue: t('list.generic.firstTitle') })
-      : t(`list.${translationKey}.title`, { defaultValue: t('list.generic.title') }))
+    (isFirstItem ? t(`list.${translationKey}.firstTitle`) : t(`list.${translationKey}.title`))
 
   const description =
     customDescription ||
     (isFirstItem
-      ? t(`list.${translationKey}.firstDescription`, {
-          defaultValue: t('list.generic.firstDescription'),
-        })
-      : t(`list.${translationKey}.description`, {
-          defaultValue: t('list.generic.description'),
-        }))
+      ? t(`list.${translationKey}.firstDescription`)
+      : t(`list.${translationKey}.description`))
 
-  const hint = t(`list.${translationKey}.hint`, {
-    defaultValue: t('list.generic.hint'),
-  })
+  const hint = t(`list.${translationKey}.hint`)
 
   // F26 copy matrix defines the accent CTA under `.cta`; fall back to the legacy
   // `.create`/`.createFirst` keys so out-of-matrix entities still resolve a label.
-  const primaryActionLabel = t(`list.${translationKey}.cta`, {
-    defaultValue: isFirstItem
-      ? t(`list.${translationKey}.createFirst`, { defaultValue: t('list.generic.createFirst') })
-      : t(`list.${translationKey}.create`, { defaultValue: t('list.generic.create') }),
-  })
+  const primaryActionLabel = t(`list.${translationKey}.cta`)
 
   const primaryAction: QuickAction | undefined = onCreate
     ? {
@@ -227,7 +213,7 @@ export function ListEmptyState({
   const secondaryActions: QuickAction[] = []
   if (onImport) {
     secondaryActions.push({
-      label: t(`list.${translationKey}.import`, { defaultValue: t('list.generic.import') }),
+      label: t(`list.${translationKey}.import`),
       icon: Upload,
       onClick: onImport,
       variant: 'outline',

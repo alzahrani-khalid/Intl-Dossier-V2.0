@@ -41,38 +41,17 @@ export function TopicReviewStep({ form, onEditStep }: TopicReviewStepProps): Rea
   return (
     <FormWizardStep stepId="review" className="space-y-4">
       {/* Basic Info + Topic Details -- single section since only 1 editable step */}
-      <ReviewSection
-        title={t('form-wizard:review.basic_info')}
-        onEdit={() => onEditStep(0)}
-      >
+      <ReviewSection title={t('form-wizard:review.basic_info')} onEdit={() => onEditStep(0)}>
+        <ReviewField label={t('dossier:form.nameEn')} value={values.name_en} />
+        <ReviewField label={t('dossier:form.nameAr')} value={values.name_ar} />
+        <ReviewField label={t('dossier:form.abbreviation')} value={values.abbreviation} />
+        <ReviewField label={t('dossier:form.description')} value={descriptionDisplay} />
+        <ReviewField label={t('dossier:form.status')} value={values.status} />
         <ReviewField
-          label={t('dossier:form.nameEn', 'Name (English)')}
-          value={values.name_en}
-        />
-        <ReviewField
-          label={t('dossier:form.nameAr', 'Name (Arabic)')}
-          value={values.name_ar}
-        />
-        <ReviewField
-          label={t('dossier:form.abbreviation', 'Abbreviation')}
-          value={values.abbreviation}
-        />
-        <ReviewField
-          label={t('dossier:form.description', 'Description')}
-          value={descriptionDisplay}
-        />
-        <ReviewField
-          label={t('dossier:form.status', 'Status')}
-          value={values.status}
-        />
-        <ReviewField
-          label={t('dossier:form.sensitivityLevel', 'Sensitivity')}
+          label={t('dossier:form.sensitivityLevel')}
           value={t(`dossier:sensitivityLevel.${values.sensitivity_level}`)}
         />
-        <ReviewField
-          label={t('form-wizard:topic.theme_category')}
-          value={themeCategoryDisplay}
-        />
+        <ReviewField label={t('form-wizard:topic.theme_category')} value={themeCategoryDisplay} />
       </ReviewSection>
     </FormWizardStep>
   )

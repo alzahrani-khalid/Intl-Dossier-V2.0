@@ -63,14 +63,14 @@ export function MapFilterControls({
 }: MapFilterControlsProps) {
   const { t } = useTranslation('geographic-visualization')
   const { isRTL } = useDirection()
-// Time range options
+  // Time range options
   const timeRangeOptions = useMemo(
     () => [
-      { value: '7d', label: t('filters.timeRange.7d', '7 Days') },
-      { value: '30d', label: t('filters.timeRange.30d', '30 Days') },
-      { value: '90d', label: t('filters.timeRange.90d', '90 Days') },
-      { value: '365d', label: t('filters.timeRange.365d', '1 Year') },
-      { value: 'custom', label: t('filters.timeRange.custom', 'Custom') },
+      { value: '7d', label: t('filters.timeRange.7d') },
+      { value: '30d', label: t('filters.timeRange.30d') },
+      { value: '90d', label: t('filters.timeRange.90d') },
+      { value: '365d', label: t('filters.timeRange.365d') },
+      { value: 'custom', label: t('filters.timeRange.custom') },
     ],
     [t],
   )
@@ -179,7 +179,7 @@ export function MapFilterControls({
           <PopoverTrigger asChild>
             <Button variant="outline" size="sm" className="h-9 text-xs gap-1">
               <Filter className="h-3 w-3" />
-              {t('filters.filters', 'Filters')}
+              {t('filters.filters')}
               {activeFilterCount > 0 && (
                 <Badge variant="secondary" className="ms-1 h-4 px-1 text-[10px]">
                   {activeFilterCount}
@@ -191,7 +191,7 @@ export function MapFilterControls({
             <div className="space-y-4">
               {/* Regions */}
               <div>
-                <Label className="text-xs font-medium">{t('filters.regions', 'Regions')}</Label>
+                <Label className="text-xs font-medium">{t('filters.regions')}</Label>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {regionOptions.map((opt) => (
                     <label
@@ -210,9 +210,7 @@ export function MapFilterControls({
 
               {/* Intensity Threshold */}
               <div>
-                <Label className="text-xs font-medium">
-                  {t('filters.minIntensity', 'Minimum Intensity')}
-                </Label>
+                <Label className="text-xs font-medium">{t('filters.minIntensity')}</Label>
                 <Select
                   value={filters.intensityThreshold}
                   onValueChange={(v) =>
@@ -235,9 +233,7 @@ export function MapFilterControls({
               {/* View Toggles */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label className="text-xs">
-                    {t('filters.showFlows', 'Show Relationship Flows')}
-                  </Label>
+                  <Label className="text-xs">{t('filters.showFlows')}</Label>
                   <Switch
                     checked={filters.showRelationshipFlows}
                     onCheckedChange={(checked) =>
@@ -246,7 +242,7 @@ export function MapFilterControls({
                   />
                 </div>
                 <div className="flex items-center justify-between">
-                  <Label className="text-xs">{t('filters.showHeatmap', 'Show Heatmap')}</Label>
+                  <Label className="text-xs">{t('filters.showHeatmap')}</Label>
                   <Switch
                     checked={filters.showEngagementHeatmap}
                     onCheckedChange={(checked) =>
@@ -259,7 +255,7 @@ export function MapFilterControls({
               {/* Reset */}
               <Button variant="ghost" size="sm" className="w-full h-8 text-xs" onClick={onReset}>
                 <RotateCcw className="h-3 w-3 me-1" />
-                {t('filters.reset', 'Reset Filters')}
+                {t('filters.reset')}
               </Button>
             </div>
           </PopoverContent>
@@ -274,9 +270,7 @@ export function MapFilterControls({
       <div className="flex flex-col sm:flex-row flex-wrap gap-3">
         {/* Time Range */}
         <div className="flex-1 min-w-[150px]">
-          <Label className="text-xs font-medium mb-1.5 block">
-            {t('filters.timeRange.label', 'Time Period')}
-          </Label>
+          <Label className="text-xs font-medium mb-1.5 block">{t('filters.timeRange.label')}</Label>
           <Select
             value={filters.timeRange}
             onValueChange={handleTimeRangeChange}
@@ -298,17 +292,15 @@ export function MapFilterControls({
 
         {/* Regions */}
         <div className="flex-1 min-w-[150px]">
-          <Label className="text-xs font-medium mb-1.5 block">
-            {t('filters.regions', 'Regions')}
-          </Label>
+          <Label className="text-xs font-medium mb-1.5 block">{t('filters.regions')}</Label>
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" className="w-full h-9 justify-between font-normal">
                 <div className="flex items-center gap-2 truncate">
                   <Globe className="h-4 w-4 text-muted-foreground shrink-0" />
                   {filters.regions.length === 0
-                    ? t('filters.allRegions', 'All Regions')
-                    : `${filters.regions.length} ${t('filters.selected', 'selected')}`}
+                    ? t('filters.allRegions')
+                    : `${filters.regions.length} ${t('filters.selected')}`}
                 </div>
                 <ChevronDown className="h-4 w-4 opacity-50 shrink-0" />
               </Button>
@@ -332,7 +324,7 @@ export function MapFilterControls({
         {/* Relationship Types */}
         <div className="flex-1 min-w-[150px]">
           <Label className="text-xs font-medium mb-1.5 block">
-            {t('filters.relationshipTypes', 'Relationship Types')}
+            {t('filters.relationshipTypes')}
           </Label>
           <Popover>
             <PopoverTrigger asChild>
@@ -340,8 +332,8 @@ export function MapFilterControls({
                 <div className="flex items-center gap-2 truncate">
                   <Network className="h-4 w-4 text-muted-foreground shrink-0" />
                   {filters.relationshipTypes.length === 0
-                    ? t('filters.allTypes', 'All Types')
-                    : `${filters.relationshipTypes.length} ${t('filters.selected', 'selected')}`}
+                    ? t('filters.allTypes')
+                    : `${filters.relationshipTypes.length} ${t('filters.selected')}`}
                 </div>
                 <ChevronDown className="h-4 w-4 opacity-50 shrink-0" />
               </Button>
@@ -369,9 +361,7 @@ export function MapFilterControls({
 
         {/* Intensity Threshold */}
         <div className="flex-1 min-w-[150px]">
-          <Label className="text-xs font-medium mb-1.5 block">
-            {t('filters.minIntensity', 'Min. Intensity')}
-          </Label>
+          <Label className="text-xs font-medium mb-1.5 block">{t('filters.minIntensity')}</Label>
           <Select
             value={filters.intensityThreshold}
             onValueChange={(v) => onFiltersChange({ intensityThreshold: v as EngagementIntensity })}
@@ -402,7 +392,7 @@ export function MapFilterControls({
               onCheckedChange={(checked) => onFiltersChange({ showRelationshipFlows: checked })}
             />
             <Label htmlFor="show-flows" className="text-xs cursor-pointer">
-              {t('filters.showFlows', 'Relationship Flows')}
+              {t('filters.showFlows')}
             </Label>
           </div>
           <div className="flex items-center gap-2">
@@ -412,7 +402,7 @@ export function MapFilterControls({
               onCheckedChange={(checked) => onFiltersChange({ showEngagementHeatmap: checked })}
             />
             <Label htmlFor="show-heatmap" className="text-xs cursor-pointer">
-              {t('filters.showHeatmap', 'Engagement Heatmap')}
+              {t('filters.showHeatmap')}
             </Label>
           </div>
         </div>
@@ -425,7 +415,7 @@ export function MapFilterControls({
           disabled={activeFilterCount === 0}
         >
           <RotateCcw className="h-3 w-3 me-1" />
-          {t('filters.reset', 'Reset')}
+          {t('filters.reset')}
           {activeFilterCount > 0 && (
             <Badge variant="secondary" className="ms-1 h-4 px-1 text-[10px]">
               {activeFilterCount}
