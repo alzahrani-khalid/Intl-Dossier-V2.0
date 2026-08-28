@@ -86,6 +86,7 @@ import { cn } from '@/lib/utils'
 import { toPng, toSvg } from 'html-to-image'
 import { toast } from 'sonner'
 import { useDirection } from '@/hooks/useDirection'
+import { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'
 import {
   graphNodeColors as SEMANTIC_NODE_COLORS,
   graphEdgeColors as SEMANTIC_EDGE_COLORS,
@@ -410,7 +411,12 @@ const ClusterNode = memo(
             {data.count}
           </span>
           <span className="text-xs text-muted-foreground capitalize">
-            {t(data.clusterType, data.clusterType)}
+            {t(
+              (DOSSIER_CARD_TYPES as readonly string[]).includes(data.clusterType)
+                ? `type.${data.clusterType}`
+                : 'type.unknown',
+              data.clusterType,
+            )}
           </span>
           <Button
             variant="ghost"

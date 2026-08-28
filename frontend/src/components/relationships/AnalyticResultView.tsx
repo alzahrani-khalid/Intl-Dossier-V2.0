@@ -17,6 +17,7 @@ import type { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDirection } from '@/hooks/useDirection'
 import { formatDayFirst } from '@/lib/format-date'
+import { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'
 import { GlobeSpinner } from '@/components/signature-visuals/GlobeSpinner'
 
 interface ResultNode {
@@ -258,7 +259,14 @@ function renderBody(
                 className="t-meta text-start"
                 style={{ padding: 'var(--space-2) var(--space-4)', color: 'var(--ink-mute)' }}
               >
-                {node.type != null ? t(`type.${node.type}`, node.type) : '—'}
+                {node.type != null
+                  ? t(
+                      (DOSSIER_CARD_TYPES as readonly string[]).includes(node.type)
+                        ? `type.${node.type}`
+                        : 'type.unknown',
+                      node.type,
+                    )
+                  : '—'}
               </td>
             </tr>
           ))}
@@ -297,7 +305,12 @@ function renderBody(
           <RowName name={nameOf(node)} nodeId={node.id} onNodeSelect={onNodeSelect} />
           {node.type != null && (
             <span className="t-meta" style={{ color: 'var(--ink-mute)' }}>
-              {t(`type.${node.type}`, node.type)}
+              {t(
+                (DOSSIER_CARD_TYPES as readonly string[]).includes(node.type)
+                  ? `type.${node.type}`
+                  : 'type.unknown',
+                node.type,
+              )}
             </span>
           )}
         </li>

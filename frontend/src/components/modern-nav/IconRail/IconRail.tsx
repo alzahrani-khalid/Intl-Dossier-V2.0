@@ -113,6 +113,12 @@ export function IconRail({
   ]
 
   const navigationItems = items || defaultItems
+  const tooltipByKey = new Map(
+    defaultItems.map((item) => [
+      item.tooltipKey,
+      t(item.tooltipKey, item.id.charAt(0).toUpperCase() + item.id.slice(1)),
+    ]),
+  )
 
   const handleItemClick = (item: IconRailItem) => {
     // Notify parent of category change for ExpandedPanel sync
@@ -184,7 +190,10 @@ export function IconRail({
               key={item.id}
               id={`nav-${item.id}`}
               icon={item.icon}
-              tooltip={t(item.tooltipKey, item.id.charAt(0).toUpperCase() + item.id.slice(1))}
+              tooltip={
+                tooltipByKey.get(item.tooltipKey) ??
+                t('unknown', item.id.charAt(0).toUpperCase() + item.id.slice(1))
+              }
               active={isActive(item.path)}
               onClick={() => handleItemClick(item)}
               badge={item.badge}
