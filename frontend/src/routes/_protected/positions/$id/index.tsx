@@ -121,7 +121,7 @@ function PositionEditorPanel() {
           </Card>
 
           <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">{t('attachments', 'Attachments')}</h3>
+            <h3 className="text-lg font-semibold mb-4">{t('attachments')}</h3>
             <AttachmentUploader positionId={position.id} />
           </Card>
         </div>
@@ -130,7 +130,7 @@ function PositionEditorPanel() {
           {(position.status === 'under_review' || position.status === 'approved') && (
             <Card className="p-6">
               <h3 className="text-lg font-semibold mb-4">
-                {t('approvalChain', 'Approval Progress')}
+                {t('approvalChain')}
               </h3>
               <ApprovalChain
                 approvalChainConfig={

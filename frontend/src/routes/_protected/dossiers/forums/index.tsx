@@ -173,7 +173,7 @@ function ForumsListPage(): ReactNode {
         id: String(f.id),
         primary,
         secondary: meta,
-        statusLabel: t(`forums:status.${status}`, { defaultValue: status }),
+        statusLabel: t(`forums:status.${status}`),
         statusChipClass: chipClass,
         icon: <DossierGlyph type="forum" name={primary} size={20} />,
       }
@@ -236,7 +236,7 @@ function ForumsListPage(): ReactNode {
       <ToolbarSearch
         value={search.search ?? ''}
         onChange={onSearchChange}
-        placeholder={t('list-pages:search.placeholder', { defaultValue: 'Search' })}
+        placeholder={t('list-pages:search.placeholder')}
       />
       <FilterPopover
         config={forumsListConfig}

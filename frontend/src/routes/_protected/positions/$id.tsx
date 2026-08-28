@@ -68,7 +68,7 @@ function PositionDetailLayout() {
     return (
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Card className="p-6 text-center">
-          <p className="text-lg text-muted-foreground">{t('notFound', 'Position not found')}</p>
+          <p className="text-lg text-muted-foreground">{t('notFound')}</p>
         </Card>
       </div>
     )
@@ -122,14 +122,14 @@ function PositionDetailLayout() {
             <>
               <Button variant="outline" onClick={handleSubmit}>
                 <Send className="me-2 h-4 w-4" />
-                {t('submit', 'Submit for Review')}
+                {t('submit')}
               </Button>
             </>
           )}
           {position.status === 'approved' && (
             <Button>
               <CheckCircle className="me-2 h-4 w-4" />
-              {t('publish', 'Publish')}
+              {t('publish')}
             </Button>
           )}
         </div>
@@ -140,17 +140,17 @@ function PositionDetailLayout() {
         <TabsList>
           <TabsTrigger value="editor">
             <FileText className="me-2 h-4 w-4" />
-            {t('tabs.editor', 'Editor')}
+            {t('tabs.editor')}
           </TabsTrigger>
           {APPROVALS_TAB_STATUSES.includes(position.status) && (
             <TabsTrigger value="approvals">
               <Users className="me-2 h-4 w-4" />
-              {t('tabs.approvals', 'Approvals')}
+              {t('tabs.approvals')}
             </TabsTrigger>
           )}
           <TabsTrigger value="versions">
             <History className="me-2 h-4 w-4" />
-            {t('tabs.versions', 'Versions')}
+            {t('tabs.versions')}
           </TabsTrigger>
         </TabsList>
 

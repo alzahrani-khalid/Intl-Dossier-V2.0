@@ -219,7 +219,7 @@ function CountriesListRoute(): ReactElement {
       <ToolbarSearch
         value={search.search ?? ''}
         onChange={onSearchChange}
-        placeholder={t('list-pages:search.placeholder', { defaultValue: 'Search…' })}
+        placeholder={t('list-pages:search.placeholder')}
       />
       <FilterPopover
         config={countriesListConfig}
@@ -244,10 +244,8 @@ function CountriesListRoute(): ReactElement {
 
   return (
     <ListPageShell
-      title={t('countries:title', { defaultValue: isArabic ? 'الدول' : 'Countries' })}
-      subtitle={t('countries:subtitle', {
-        defaultValue: isArabic ? 'كل ملفات الدول' : 'All country dossiers',
-      })}
+      title={t('countries:title')}
+      subtitle={t('countries:subtitle')}
       toolbar={toolbar}
       actions={
         <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">

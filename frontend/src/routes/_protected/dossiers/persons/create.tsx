@@ -46,7 +46,7 @@ function CreatePersonPage(): ReactElement {
         className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground min-h-11"
       >
         <ChevronLeft className="h-4 w-4 me-1" />
-        {t('person.back_to_list', 'Back to Persons')}
+        {t('person.back_to_list')}
       </Link>
       <h1 className="text-lg font-semibold">{t('person.page_title')}</h1>
       <CreateWizardShell wizard={wizard}>

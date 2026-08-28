@@ -31,7 +31,7 @@ function CreateTopicPage(): ReactElement {
         className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground min-h-11"
       >
         <ChevronLeft className="h-4 w-4 me-1" />
-        {t('topic.back_to_list', 'Back to Topics')}
+        {t('topic.back_to_list')}
       </Link>
       <h1 className="text-lg font-semibold">{t('topic.page_title')}</h1>
       <CreateWizardShell wizard={wizard}>

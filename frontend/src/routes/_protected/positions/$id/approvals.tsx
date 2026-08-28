@@ -101,7 +101,7 @@ function ApprovalTrackingPage() {
       {/* Approval Chain Visualization */}
       <Card className="p-6">
         <h2 className="text-xl font-semibold mb-4">
-          {t('positions:approvals.progress', 'Approval Progress')}
+          {t('positions:approvals.progress')}
         </h2>
         <ApprovalChain
           approvalChainConfig={position?.approval_chain_config || { stages: [] }}
@@ -114,18 +114,18 @@ function ApprovalTrackingPage() {
       {/* Approval History Table */}
       <Card className="p-6">
         <h2 className="text-xl font-semibold mb-4">
-          {t('positions:approvals.history', 'Approval History')}
+          {t('positions:approvals.history')}
         </h2>
 
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>{t('positions:approvals.stage', 'Stage')}</TableHead>
-              <TableHead>{t('positions:approvals.approver', 'Approver')}</TableHead>
-              <TableHead>{t('positions:approvals.action', 'Action')}</TableHead>
-              <TableHead>{t('positions:approvals.stepUp', 'Step-Up Verified')}</TableHead>
-              <TableHead>{t('positions:approvals.comments', 'Comments')}</TableHead>
-              <TableHead>{t('positions:approvals.timestamp', 'Timestamp')}</TableHead>
+              <TableHead>{t('positions:approvals.stage')}</TableHead>
+              <TableHead>{t('positions:approvals.approver')}</TableHead>
+              <TableHead>{t('positions:approvals.action')}</TableHead>
+              <TableHead>{t('positions:approvals.stepUp')}</TableHead>
+              <TableHead>{t('positions:approvals.comments')}</TableHead>
+              <TableHead>{t('positions:approvals.timestamp')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -141,7 +141,7 @@ function ApprovalTrackingPage() {
                     </span>
                     {approval.delegated_from && (
                       <span className="text-xs text-muted-foreground">
-                        {t('positions:approvals.delegatedFrom', 'Delegated from')}:{' '}
+                        {t('positions:approvals.delegatedFrom')}:{' '}
                         {approval.delegated_from}
                       </span>
                     )}
@@ -156,11 +156,11 @@ function ApprovalTrackingPage() {
                 <TableCell>
                   {approval.step_up_verified ? (
                     <Badge variant="default" className="text-xs">
-                      {t('common:yes', 'Yes')}
+                      {t('common:yes')}
                     </Badge>
                   ) : (
                     <Badge variant="secondary" className="text-xs">
-                      {t('common:no', 'No')}
+                      {t('common:no')}
                     </Badge>
                   )}
                 </TableCell>

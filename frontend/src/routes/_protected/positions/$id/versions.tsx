@@ -88,7 +88,7 @@ function VersionHistoryPage() {
         <Card className="p-6">
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              {t('positions:versions.selectTwo', 'Select two versions to compare')}
+              {t('positions:versions.selectTwo')}
             </p>
 
             <div className="space-y-2">
@@ -106,11 +106,11 @@ function VersionHistoryPage() {
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <span className="font-semibold">
-                          {t('positions:versions.version', 'Version')} {version.version_number}
+                          {t('positions:versions.version')} {version.version_number}
                         </span>
                         {!version.superseded && (
                           <Badge variant="default">
-                            {t('positions:versions.current', 'Current')}
+                            {t('positions:versions.current')}
                           </Badge>
                         )}
                       </div>
@@ -132,14 +132,14 @@ function VersionHistoryPage() {
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">
-                {t('positions:versions.comparing', 'Comparing versions')}:
+                {t('positions:versions.comparing')}:
               </span>
               <Badge>{selectedVersions[0]}</Badge>
               <span className="text-sm text-muted-foreground">vs</span>
               <Badge>{selectedVersions[1]}</Badge>
             </div>
             <Button variant="outline" onClick={() => setSelectedVersions([null, null])}>
-              {t('common:clear', 'Clear Selection')}
+              {t('common:clear')}
             </Button>
           </div>
 

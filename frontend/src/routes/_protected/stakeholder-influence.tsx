@@ -165,10 +165,9 @@ function StakeholderInfluencePage() {
     <div className="space-y-6">
       <PageHeader
         icon={<Network className="h-6 w-6" />}
-        title={t('title', 'Stakeholder Influence')}
+        title={t('title')}
         subtitle={t(
           'description',
-          'Analyze influence and identify key connectors for strategic planning',
         )}
         actions={
           <div className="flex gap-2">
@@ -179,27 +178,27 @@ function StakeholderInfluencePage() {
               variant="outline"
               onClick={handleCalculateScores}
               disabled
-              title={t('common:notYetAvailable', { defaultValue: 'Not yet available' })}
+              title={t('common:notYetAvailable')}
             >
               {calculateScores.isPending ? (
                 <Loader2 className="h-4 w-4 me-2 animate-spin" />
               ) : (
                 <RefreshCw className="h-4 w-4 me-2" />
               )}
-              {t('recalculate', 'Recalculate')}
+              {t('recalculate')}
             </Button>
             <Dialog open={showCreateReport} onOpenChange={setShowCreateReport}>
               <DialogTrigger asChild>
                 <Button>
                   <Plus className="h-4 w-4 me-2" />
-                  {t('new_report', 'New Report')}
+                  {t('new_report')}
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>{t('create_report', 'Create Influence Report')}</DialogTitle>
+                  <DialogTitle>{t('create_report')}</DialogTitle>
                   <DialogDescription>
-                    {t('create_report_desc', 'Generate a strategic analysis report')}
+                    {t('create_report_desc')}
                   </DialogDescription>
                 </DialogHeader>
                 <form
@@ -218,16 +217,16 @@ function StakeholderInfluencePage() {
                   <div className="space-y-4 py-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="title_en">{t('title_en', 'Title (English)')}</Label>
+                        <Label htmlFor="title_en">{t('title_en')}</Label>
                         <Input id="title_en" name="title_en" required />
                       </div>
                       <div>
-                        <Label htmlFor="title_ar">{t('title_ar', 'Title (Arabic)')}</Label>
+                        <Label htmlFor="title_ar">{t('title_ar')}</Label>
                         <Input id="title_ar" name="title_ar" dir="rtl" required />
                       </div>
                     </div>
                     <div>
-                      <Label htmlFor="report_type">{t('report_type', 'Report Type')}</Label>
+                      <Label htmlFor="report_type">{t('report_type')}</Label>
                       <Select name="report_type" defaultValue="full_network_analysis">
                         <SelectTrigger>
                           <SelectValue />
@@ -244,13 +243,13 @@ function StakeholderInfluencePage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="description_en">
-                          {t('description_en', 'Description (EN)')}
+                          {t('description_en')}
                         </Label>
                         <Textarea id="description_en" name="description_en" rows={2} />
                       </div>
                       <div>
                         <Label htmlFor="description_ar">
-                          {t('description_ar', 'Description (AR)')}
+                          {t('description_ar')}
                         </Label>
                         <Textarea id="description_ar" name="description_ar" dir="rtl" rows={2} />
                       </div>
@@ -258,19 +257,17 @@ function StakeholderInfluencePage() {
                   </div>
                   <DialogFooter>
                     <DialogClose asChild>
-                      <Button variant="outline">{t('cancel', 'Cancel')}</Button>
+                      <Button variant="outline">{t('cancel')}</Button>
                     </DialogClose>
                     {/* Stub-backed: useCreateInfluenceReport fakes success.
                         Disabled for honesty until a real endpoint exists. */}
                     <Button
                       type="submit"
                       disabled
-                      title={t('common:notYetAvailable', {
-                        defaultValue: 'Not yet available',
-                      })}
+                      title={t('common:notYetAvailable')}
                     >
                       {createReport.isPending && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
-                      {t('generate', 'Generate Report')}
+                      {t('generate')}
                     </Button>
                   </DialogFooter>
                 </form>
@@ -287,7 +284,7 @@ function StakeholderInfluencePage() {
             <div className="flex items-center gap-3">
               <Users className="h-5 w-5 text-accent" />
               <div>
-                <p className="text-xs text-muted-foreground">{t('stakeholders', 'Stakeholders')}</p>
+                <p className="text-xs text-muted-foreground">{t('stakeholders')}</p>
                 <p className="text-xl font-bold">
                   {loadingStats ? (
                     <Skeleton className="h-6 w-12" />
@@ -305,7 +302,7 @@ function StakeholderInfluencePage() {
               <GitBranch className="h-5 w-5 text-secondary" />
               <div>
                 <p className="text-xs text-muted-foreground">
-                  {t('relationships', 'Relationships')}
+                  {t('relationships')}
                 </p>
                 <p className="text-xl font-bold">
                   {loadingStats ? (
@@ -324,7 +321,7 @@ function StakeholderInfluencePage() {
               <TrendingUp className="h-5 w-5 text-warning" />
               <div>
                 <p className="text-xs text-muted-foreground">
-                  {t('key_influencers', 'Key Influencers')}
+                  {t('key_influencers')}
                 </p>
                 <p className="text-xl font-bold">
                   {loadingStats ? (
@@ -342,7 +339,7 @@ function StakeholderInfluencePage() {
             <div className="flex items-center gap-3">
               <BarChart3 className="h-5 w-5 text-success" />
               <div>
-                <p className="text-xs text-muted-foreground">{t('avg_influence', 'Avg Score')}</p>
+                <p className="text-xs text-muted-foreground">{t('avg_influence')}</p>
                 <p className="text-xl font-bold">
                   {loadingStats ? (
                     <Skeleton className="h-6 w-12" />
@@ -361,15 +358,15 @@ function StakeholderInfluencePage() {
         <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid mb-4">
           <TabsTrigger value="network" className="gap-2">
             <Network className="h-4 w-4" />
-            <span className="hidden sm:inline">{t('network', 'Network')}</span>
+            <span className="hidden sm:inline">{t('network')}</span>
           </TabsTrigger>
           <TabsTrigger value="list" className="gap-2">
             <Users className="h-4 w-4" />
-            <span className="hidden sm:inline">{t('stakeholders', 'Stakeholders')}</span>
+            <span className="hidden sm:inline">{t('stakeholders')}</span>
           </TabsTrigger>
           <TabsTrigger value="reports" className="gap-2">
             <FileText className="h-4 w-4" />
-            <span className="hidden sm:inline">{t('reports', 'Reports')}</span>
+            <span className="hidden sm:inline">{t('reports')}</span>
           </TabsTrigger>
         </TabsList>
 
@@ -381,12 +378,12 @@ function StakeholderInfluencePage() {
               <Card>
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base">
-                    {t('influence_network', 'Influence Network')}
+                    {t('influence_network')}
                   </CardTitle>
                   <CardDescription>
                     {selectedDossierId
-                      ? t('click_node', 'Click nodes to explore relationships')
-                      : t('select_stakeholder', 'Select a stakeholder to visualize their network')}
+                      ? t('click_node')
+                      : t('select_stakeholder')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
@@ -409,7 +406,7 @@ function StakeholderInfluencePage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm flex items-center gap-2">
                     <TrendingUp className="h-4 w-4" />
-                    {t('top_influencers', 'Top Influencers')}
+                    {t('top_influencers')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-3">
@@ -455,7 +452,7 @@ function StakeholderInfluencePage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm flex items-center gap-2">
                     <GitBranch className="h-4 w-4" />
-                    {t('key_connectors', 'Key Connectors')}
+                    {t('key_connectors')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-3">
@@ -479,7 +476,7 @@ function StakeholderInfluencePage() {
                           <div className="min-w-0">
                             <p className="text-sm truncate">{isRTL ? c.name_ar : c.name_en}</p>
                             <p className="text-xs text-muted-foreground">
-                              {c.groups_connected} {t('groups', 'groups')}
+                              {c.groups_connected} {t('groups')}
                             </p>
                           </div>
                           <Badge variant="outline" className="flex-shrink-0">
@@ -503,7 +500,7 @@ function StakeholderInfluencePage() {
                 <div className="relative flex-1">
                   <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder={t('search_stakeholders', 'Search stakeholders...')}
+                    placeholder={t('search_stakeholders')}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="ps-9"
@@ -512,15 +509,15 @@ function StakeholderInfluencePage() {
                 <Select value={filterType} onValueChange={setFilterType}>
                   <SelectTrigger className="w-full sm:w-40">
                     <Filter className="h-4 w-4 me-2" />
-                    <SelectValue placeholder={t('filter_type', 'Type')} />
+                    <SelectValue placeholder={t('filter_type')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">{t('all_types', 'All Types')}</SelectItem>
-                    <SelectItem value="person">{t('persons', 'Persons')}</SelectItem>
+                    <SelectItem value="all">{t('all_types')}</SelectItem>
+                    <SelectItem value="person">{t('persons')}</SelectItem>
                     <SelectItem value="organization">
-                      {t('organizations', 'Organizations')}
+                      {t('organizations')}
                     </SelectItem>
-                    <SelectItem value="country">{t('countries', 'Countries')}</SelectItem>
+                    <SelectItem value="country">{t('countries')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -572,7 +569,7 @@ function StakeholderInfluencePage() {
                   ))}
                   {filteredStakeholders?.length === 0 && (
                     <p className="text-center py-8 text-muted-foreground">
-                      {t('no_results', 'No stakeholders found')}
+                      {t('no_results')}
                     </p>
                   )}
                 </div>
@@ -588,7 +585,7 @@ function StakeholderInfluencePage() {
             <div className="lg:col-span-1">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">{t('reports', 'Reports')}</CardTitle>
+                  <CardTitle className="text-base">{t('reports')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   {loadingReports ? (
@@ -619,7 +616,7 @@ function StakeholderInfluencePage() {
                     </div>
                   ) : (
                     <p className="text-center py-8 text-muted-foreground">
-                      {t('no_reports', 'No reports generated yet')}
+                      {t('no_reports')}
                     </p>
                   )}
                 </CardContent>
@@ -642,9 +639,9 @@ function StakeholderInfluencePage() {
       <Sheet open={detailsSheetOpen} onOpenChange={setDetailsSheetOpen}>
         <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
           <SheetHeader>
-            <SheetTitle>{t('stakeholder_details', 'Stakeholder Details')}</SheetTitle>
+            <SheetTitle>{t('stakeholder_details')}</SheetTitle>
             <SheetDescription>
-              {t('metrics_desc', 'Influence metrics and network position')}
+              {t('metrics_desc')}
             </SheetDescription>
           </SheetHeader>
           <div className="mt-6">

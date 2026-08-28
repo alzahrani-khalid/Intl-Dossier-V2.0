@@ -131,7 +131,7 @@ export function TopicsListPage(): ReactElement {
           id: String(row.id),
           primary,
           secondary: updated,
-          statusLabel: t(`topics:status.${status}`, { defaultValue: status }),
+          statusLabel: t(`topics:status.${status}`),
           statusChipClass,
           icon: <BookOpen className="size-5" aria-hidden="true" />,
         }
@@ -195,7 +195,7 @@ export function TopicsListPage(): ReactElement {
       <ToolbarSearch
         value={search.search ?? ''}
         onChange={onSearchChange}
-        placeholder={t('list-pages:search.placeholder', { defaultValue: 'Search...' })}
+        placeholder={t('list-pages:search.placeholder')}
       />
       <DisplayPopover
         config={topicsListConfig}
@@ -213,8 +213,8 @@ export function TopicsListPage(): ReactElement {
 
   return (
     <ListPageShell
-      title={t('topics:title', { defaultValue: 'Topics' })}
-      subtitle={t('topics:subtitle', { defaultValue: '' })}
+      title={t('topics:title')}
+      subtitle={t('topics:subtitle')}
       toolbar={toolbar}
       actions={
         <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">
