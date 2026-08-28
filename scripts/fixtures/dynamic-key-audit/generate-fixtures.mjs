@@ -264,11 +264,11 @@ const scenarioFor = (identifier, form) => {
   }
 }
 
-const caller = () =>
+const caller = ({ keySetup = route() } = {}) =>
   fixtureProgram(
     targetFor('receiver', true),
     [hookImport('react-i18next')],
-    ["const { t } = useTranslation('graph')", ...route(), 'return t(key, runtimeType)'],
+    ["const { t } = useTranslation('graph')", ...keySetup, 'return t(key, runtimeType)'],
   )
 
 const putPreRepair = (put) => {
@@ -532,7 +532,10 @@ const buildCorpus = (cells = parseMatrix()) => {
   put('shared/frontend/src/i18n/ar/quickswitcher.json', sharedGraph)
 
   put('generality-membership/caller.tsx', caller())
-  put('generality-noproof/caller.tsx', caller({ keySetup: '  const key = `type.${runtimeType}`' }))
+  put(
+    'generality-noproof/caller.tsx',
+    caller({ keySetup: ['const key = `type.${runtimeType}`'] }),
+  )
   putPreRepair(put)
 
   for (const { identifier, form, fixture } of cells) {

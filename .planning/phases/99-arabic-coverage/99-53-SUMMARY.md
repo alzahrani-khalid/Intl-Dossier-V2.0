@@ -12,14 +12,14 @@ The translator-binding axis is re-derived from JavaScript/TypeScript binding mec
 - Language-derived forms: 8
 - Matrix cells: 32
 - Corpus files: 125
-- Corpus content bytes: 85956
+- Corpus content bytes: 86504
 - Generated files: 122
-- Generated content bytes: 45095
-- Corpus add-diff bytes: 129978
+- Generated content bytes: 45027
+- Corpus add-diff bytes: 130539
 - Add-diff overhead per file: 352
-- Task diff bytes: 145299
+- Task diff bytes: 145847
 - gates.diffCap: 155000
-- Headroom: 9701
+- Headroom: 9153
 - Reproduction drift lines: 0
 
 No instrument, consumer test, production caller, locale bundle outside this corpus, or other task plan changed.
@@ -129,13 +129,13 @@ identifiers=4 forms=8 rows=32
 fixtures drilling a RENAMED TRANSLATOR destructure=11
 scanned=66 parameter-bound=8 ctx-object-bound=8
 generator-check-exit=0 reproduction-drift-lines=0
-corpus-content=85956 corpus-files=125 corpus-add-diff=129978 overhead-per-file=352 task-diff=145299 cap=155000 headroom=9701
+corpus-content=86504 corpus-files=125 corpus-add-diff=130539 overhead-per-file=352 task-diff=145847 cap=155000 headroom=9153
 ```
 
 Exit status: 0.
 
 ## Verification and handoff
 
-`npx vitest run scripts/fixtures/dynamic-key-audit/generate-fixtures.test.mjs --reporter=verbose` passes one file and all six acceptance-criterion leaf tests. The reproduction test runs `--check` only inside a copied corpus and compares the entire byte snapshot before and after. A separate copy test changes a matrix root and proves a rebuild follows the matrix-selected name while removing the old root.
+`npx vitest run scripts/fixtures/dynamic-key-audit/generate-fixtures.test.mjs --reporter=verbose` passes one file and all six acceptance-criterion leaf tests. The reproduction test runs `--check` only inside a copied corpus and compares the entire byte snapshot before and after. It also proves `generality-membership` retains the membership guard while `generality-noproof` uses the guard-free interpolated key. A separate copy test changes a matrix root and proves a rebuild follows the matrix-selected name while removing the old root.
 
 The committed consumer `scripts/i18n-dynamic-key-audit.test.mjs` is expected to remain red because it pins the former 28-row/seven-form matrix and pre-rederivation fixture roots. RULING-P99-345 assigns that rescoping to P99-54; this task did not edit the consumer or shrink the matrix to accommodate it.

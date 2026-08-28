@@ -135,8 +135,21 @@ const assertEveryCellDrillsItsForm = () => {
   }
 }
 
+const assertGeneralityFixturesDrillOppositeProofShapes = () => {
+  const membership = readFileSync(
+    join(corpusRoot, 'generality-membership/caller.tsx'),
+    'utf8',
+  )
+  const noProof = readFileSync(join(corpusRoot, 'generality-noproof/caller.tsx'), 'utf8')
+  expect(membership).toMatch(/const key = DOSSIER_CARD_TYPES\.includes\(runtimeType\)/)
+  expect(noProof).toContain('const key = `type.${runtimeType}`')
+  expect(noProof).not.toContain('DOSSIER_CARD_TYPES.includes')
+  expect(noProof).not.toBe(membership)
+}
+
 test("Every named form is drilled by a fixture containing that form's production shape, and the corpus still rebuilds byte-identically into a copy.", () => {
   assertEveryCellDrillsItsForm()
+  assertGeneralityFixturesDrillOppositeProofShapes()
   inCopy((clone) => {
     const before = snapshot(clone)
     const result = runGenerator(clone, '--check')
