@@ -205,7 +205,9 @@ export function OnboardingTourTrigger({
 
               {/* Description */}
               <p className="mb-6 text-center leading-relaxed text-[var(--ink-mute)]">
-                {t('tours.onboarding.welcome.description')}
+                {t(
+                  'tours.onboarding.welcome.description',
+                )}
               </p>
 
               {/* Estimated time */}

@@ -264,7 +264,11 @@ export function MergeDialog({
             <Merge className="h-5 w-5" />
             {t('merge_entities')}
           </DialogTitle>
-          <DialogDescription>{t('merge_description')}</DialogDescription>
+          <DialogDescription>
+            {t(
+              'merge_description',
+            )}
+          </DialogDescription>
         </DialogHeader>
 
         <ScrollArea className="max-h-[60vh] pe-4">
@@ -273,13 +277,23 @@ export function MergeDialog({
             <Alert variant="destructive">
               <AlertTriangle className="h-4 w-4" />
               <AlertTitle>{t('warning')}</AlertTitle>
-              <AlertDescription>{t('merge_warning')}</AlertDescription>
+              <AlertDescription>
+                {t(
+                  'merge_warning',
+                )}
+              </AlertDescription>
             </Alert>
 
             {/* Primary Entity Selection */}
             <div className="space-y-3">
-              <Label className="text-base font-semibold">{t('select_primary')}</Label>
-              <p className="text-sm text-muted-foreground">{t('primary_description')}</p>
+              <Label className="text-base font-semibold">
+                {t('select_primary')}
+              </Label>
+              <p className="text-sm text-muted-foreground">
+                {t(
+                  'primary_description',
+                )}
+              </p>
 
               <RadioGroup
                 value={primaryEntityId}
@@ -356,7 +370,8 @@ export function MergeDialog({
                     <ArrowLeftRight className="h-4 w-4" />
                     {t('resolve_conflicts')}
                     <Badge variant="outline" className="ms-2">
-                      {fieldComparisons.filter((f) => f.is_different).length} {t('differences')}
+                      {fieldComparisons.filter((f) => f.is_different).length}{' '}
+                      {t('differences')}
                     </Badge>
                   </div>
                 </AccordionTrigger>
@@ -481,7 +496,8 @@ export function MergeDialog({
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>{t('error')}</AlertTitle>
             <AlertDescription>
-              {(mergeMutation.error as Error)?.message || t('merge_error')}
+              {(mergeMutation.error as Error)?.message ||
+                t('merge_error')}
             </AlertDescription>
           </Alert>
         )}

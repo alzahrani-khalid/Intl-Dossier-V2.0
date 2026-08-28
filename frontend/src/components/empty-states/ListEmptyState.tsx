@@ -188,7 +188,9 @@ export function ListEmptyState({
 
   const title =
     customTitle ||
-    (isFirstItem ? t(`list.${translationKey}.firstTitle`) : t(`list.${translationKey}.title`))
+    (isFirstItem
+      ? t(`list.${translationKey}.firstTitle`)
+      : t(`list.${translationKey}.title`))
 
   const description =
     customDescription ||

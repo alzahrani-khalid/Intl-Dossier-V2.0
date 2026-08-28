@@ -46,8 +46,14 @@ export function ForumReviewStep({ form, onEditStep }: ForumReviewStepProps): Rea
       <ReviewSection title={t('form-wizard:review.basic_info')} onEdit={(): void => onEditStep(0)}>
         <ReviewField label={t('dossier:form.nameEn')} value={values.name_en} />
         <ReviewField label={t('dossier:form.nameAr')} value={values.name_ar} />
-        <ReviewField label={t('dossier:form.abbreviation')} value={values.abbreviation} />
-        <ReviewField label={t('dossier:form.description')} value={descriptionDisplay} />
+        <ReviewField
+          label={t('dossier:form.abbreviation')}
+          value={values.abbreviation}
+        />
+        <ReviewField
+          label={t('dossier:form.description')}
+          value={descriptionDisplay}
+        />
       </ReviewSection>
 
       {/* Forum Details section */}

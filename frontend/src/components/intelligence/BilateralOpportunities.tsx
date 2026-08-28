@@ -95,7 +95,9 @@ export function BilateralOpportunities({ reports, dossierId }: BilateralOpportun
         <CardContent>
           <div className="text-center py-8 text-muted-foreground">
             <Globe className="mx-auto h-12 w-12 mb-3 text-ink-mute" />
-            <p className="text-sm">{t('intelligence.noBilateralData')}</p>
+            <p className="text-sm">
+              {t('intelligence.noBilateralData')}
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -147,12 +149,16 @@ export function BilateralOpportunities({ reports, dossierId }: BilateralOpportun
         {/* Executive Summary */}
         <div className="flex-1">
           <div className="flex items-center justify-between mb-2">
-            <h4 className="text-sm font-medium">{t('intelligence.relationshipAnalysis')}</h4>
+            <h4 className="text-sm font-medium">
+              {t('intelligence.relationshipAnalysis')}
+            </h4>
             <button
               onClick={() => setIsExpanded(!isExpanded)}
               className="text-xs text-accent-ink hover:underline"
             >
-              {isExpanded ? t('intelligence.showLess') : t('intelligence.showMore')}
+              {isExpanded
+                ? t('intelligence.showLess')
+                : t('intelligence.showMore')}
             </button>
           </div>
           <p
@@ -207,7 +213,8 @@ export function BilateralOpportunities({ reports, dossierId }: BilateralOpportun
         {latestReport?.anythingllm_workspace_id && (
           <div className="text-xs text-muted-foreground border-t pt-2 flex flex-wrap items-center justify-between gap-2">
             <div>
-              <span className="font-medium">{t('intelligence.generatedBy')}:</span> AnythingLLM{' '}
+              <span className="font-medium">{t('intelligence.generatedBy')}:</span>{' '}
+              AnythingLLM{' '}
               {latestReport.anythingllm_response_metadata?.model && (
                 <span>({latestReport.anythingllm_response_metadata.model})</span>
               )}

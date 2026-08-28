@@ -108,11 +108,15 @@ export function DuplicateCandidateCard({
               <TooltipTrigger asChild>
                 <div className="text-end">
                   <div className="text-2xl font-bold">{scorePercentage}%</div>
-                  <div className="text-xs text-muted-foreground">{t('similarity_score')}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {t('similarity_score')}
+                  </div>
                 </div>
               </TooltipTrigger>
               <TooltipContent>
-                <p>{t('similarity_tooltip')}</p>
+                <p>
+                  {t('similarity_tooltip')}
+                </p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -160,7 +164,9 @@ export function DuplicateCandidateCard({
               </Badge>
             ))}
             {matchingFields.length === 0 && (
-              <span className="text-xs text-muted-foreground">{t('no_strong_matches')}</span>
+              <span className="text-xs text-muted-foreground">
+                {t('no_strong_matches')}
+              </span>
             )}
           </div>
         </div>

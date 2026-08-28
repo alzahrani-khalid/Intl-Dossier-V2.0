@@ -51,13 +51,9 @@ function IdentityCard({ values, onEditStep }: IdentityCardProps): ReactElement {
   const nationalityId = values.nationality_id
   const hasNationality =
     nationalityId !== undefined && nationalityId !== null && nationalityId.trim() !== ''
-  const nationalityQuery = useDossier(
-    hasNationality ? (nationalityId as string) : '',
-    ['extension'],
-    {
-      enabled: hasNationality,
-    },
-  )
+  const nationalityQuery = useDossier(hasNationality ? (nationalityId as string) : '', ['extension'], {
+    enabled: hasNationality,
+  })
   const nationalityDossier = nationalityQuery.data
   const nationalityIso2 =
     (nationalityDossier?.extension as { iso_code_2?: string | null } | undefined)?.iso_code_2 ??
@@ -192,7 +188,9 @@ function IdentityCard({ values, onEditStep }: IdentityCardProps): ReactElement {
           </div>
         </div>
         <div className="space-y-1">
-          <dt className="text-xs text-muted-foreground">{t('dossier:form.tags')}</dt>
+          <dt className="text-xs text-muted-foreground">
+            {t('dossier:form.tags')}
+          </dt>
           <dd className="flex flex-wrap gap-2" data-testid="identity-tags">
             {tags.length === 0 ? (
               <span className="text-muted-foreground italic">{DASH}</span>
@@ -247,14 +245,25 @@ export function PersonReviewStep({ form, onEditStep }: PersonReviewStepProps): R
       <IdentityCard values={values} onEditStep={onEditStep} />
 
       {/* Person Details section */}
-      <ReviewSection title={t('form-wizard:review.person_details')} onEdit={() => onEditStep(1)}>
-        <ReviewField label={t('form-wizard:person.title_en')} value={values.title_en} />
-        <ReviewField label={t('form-wizard:person.title_ar')} value={values.title_ar} />
+      <ReviewSection
+        title={t('form-wizard:review.person_details')}
+        onEdit={() => onEditStep(1)}
+      >
+        <ReviewField
+          label={t('form-wizard:person.title_en')}
+          value={values.title_en}
+        />
+        <ReviewField
+          label={t('form-wizard:person.title_ar')}
+          value={values.title_ar}
+        />
 
         {/* Photo thumbnail (person-details context-specific photo; retained per scope) */}
         {values.photo_url !== undefined && values.photo_url !== '' ? (
           <div className="space-y-1">
-            <dt className="text-xs text-muted-foreground">{t('form-wizard:person.photo')}</dt>
+            <dt className="text-xs text-muted-foreground">
+              {t('form-wizard:person.photo')}
+            </dt>
             <dd>
               <img
                 src={values.photo_url}
@@ -264,11 +273,20 @@ export function PersonReviewStep({ form, onEditStep }: PersonReviewStepProps): R
             </dd>
           </div>
         ) : (
-          <ReviewField label={t('form-wizard:person.photo')} value={undefined} />
+          <ReviewField
+            label={t('form-wizard:person.photo')}
+            value={undefined}
+          />
         )}
 
-        <ReviewField label={t('form-wizard:person.biography_en')} value={biographyEnDisplay} />
-        <ReviewField label={t('form-wizard:person.biography_ar')} value={biographyArDisplay} />
+        <ReviewField
+          label={t('form-wizard:person.biography_en')}
+          value={biographyEnDisplay}
+        />
+        <ReviewField
+          label={t('form-wizard:person.biography_ar')}
+          value={biographyArDisplay}
+        />
       </ReviewSection>
 
       {/* Phase 30 D-07: Office & Term section — rendered ONLY for elected-official subtype */}
@@ -282,10 +300,7 @@ export function PersonReviewStep({ form, onEditStep }: PersonReviewStepProps): R
             label={t('form-wizard:elected_official.office_name_ar')}
             value={values.office_name_ar}
           />
-          <ReviewField
-            label={t('form-wizard:elected_official.country')}
-            value={values.country_id}
-          />
+          <ReviewField label={t('form-wizard:elected_official.country')} value={values.country_id} />
           <ReviewField
             label={t('form-wizard:elected_official.organization')}
             value={values.organization_id}

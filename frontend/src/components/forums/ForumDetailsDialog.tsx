@@ -184,7 +184,8 @@ export function ForumDetailsDialog({
     },
     onError: (error) => {
       toast.error(t('common:error.label'), {
-        description: error instanceof Error ? error.message : t('editFailed'),
+        description:
+          error instanceof Error ? error.message : t('editFailed'),
       })
     },
   })
@@ -547,7 +548,9 @@ export function ForumDetailsDialog({
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>{t('editForum')}</DialogTitle>
-            <DialogDescription>{t('editDescription')}</DialogDescription>
+            <DialogDescription>
+              {t('editDescription')}
+            </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-2">
@@ -621,7 +624,9 @@ export function ForumDetailsDialog({
                 editForm.name_ar.trim().length === 0
               }
             >
-              {updateForumMutation.isPending ? t('common:saving') : t('common:save')}
+              {updateForumMutation.isPending
+                ? t('common:saving')
+                : t('common:save')}
             </Button>
           </DialogFooter>
         </DialogContent>

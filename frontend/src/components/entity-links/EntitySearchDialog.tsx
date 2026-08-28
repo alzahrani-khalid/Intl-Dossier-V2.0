@@ -356,7 +356,9 @@ export function EntitySearchDialog({
                     {t('entityLinks.searchTitle')}
                   </h3>
                   <p className="text-sm text-ink-mute max-w-sm mx-auto">
-                    {t('entityLinks.searchEmptyState')}
+                    {t(
+                      'entityLinks.searchEmptyState',
+                    )}
                   </p>
                 </div>
               )}
@@ -378,7 +380,9 @@ export function EntitySearchDialog({
                     <ul className="list-disc list-inside space-y-0.5">
                       <li>{t('entityLinks.tip1')}</li>
                       <li>{t('entityLinks.tip2')}</li>
-                      <li>{t('entityLinks.tip3')}</li>
+                      <li>
+                        {t('entityLinks.tip3')}
+                      </li>
                     </ul>
                   </div>
                 </div>

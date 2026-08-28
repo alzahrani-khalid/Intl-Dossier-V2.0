@@ -63,7 +63,7 @@ export function MapFilterControls({
 }: MapFilterControlsProps) {
   const { t } = useTranslation('geographic-visualization')
   const { isRTL } = useDirection()
-  // Time range options
+// Time range options
   const timeRangeOptions = useMemo(
     () => [
       { value: '7d', label: t('filters.timeRange.7d') },
@@ -210,7 +210,9 @@ export function MapFilterControls({
 
               {/* Intensity Threshold */}
               <div>
-                <Label className="text-xs font-medium">{t('filters.minIntensity')}</Label>
+                <Label className="text-xs font-medium">
+                  {t('filters.minIntensity')}
+                </Label>
                 <Select
                   value={filters.intensityThreshold}
                   onValueChange={(v) =>
@@ -233,7 +235,9 @@ export function MapFilterControls({
               {/* View Toggles */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label className="text-xs">{t('filters.showFlows')}</Label>
+                  <Label className="text-xs">
+                    {t('filters.showFlows')}
+                  </Label>
                   <Switch
                     checked={filters.showRelationshipFlows}
                     onCheckedChange={(checked) =>
@@ -270,7 +274,9 @@ export function MapFilterControls({
       <div className="flex flex-col sm:flex-row flex-wrap gap-3">
         {/* Time Range */}
         <div className="flex-1 min-w-[150px]">
-          <Label className="text-xs font-medium mb-1.5 block">{t('filters.timeRange.label')}</Label>
+          <Label className="text-xs font-medium mb-1.5 block">
+            {t('filters.timeRange.label')}
+          </Label>
           <Select
             value={filters.timeRange}
             onValueChange={handleTimeRangeChange}
@@ -292,7 +298,9 @@ export function MapFilterControls({
 
         {/* Regions */}
         <div className="flex-1 min-w-[150px]">
-          <Label className="text-xs font-medium mb-1.5 block">{t('filters.regions')}</Label>
+          <Label className="text-xs font-medium mb-1.5 block">
+            {t('filters.regions')}
+          </Label>
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" className="w-full h-9 justify-between font-normal">
@@ -361,7 +369,9 @@ export function MapFilterControls({
 
         {/* Intensity Threshold */}
         <div className="flex-1 min-w-[150px]">
-          <Label className="text-xs font-medium mb-1.5 block">{t('filters.minIntensity')}</Label>
+          <Label className="text-xs font-medium mb-1.5 block">
+            {t('filters.minIntensity')}
+          </Label>
           <Select
             value={filters.intensityThreshold}
             onValueChange={(v) => onFiltersChange({ intensityThreshold: v as EngagementIntensity })}

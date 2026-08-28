@@ -96,7 +96,9 @@ export function EconomicDashboard({ reports, dossierId }: EconomicDashboardProps
         <CardContent>
           <div className="text-center py-8 text-muted-foreground">
             <BarChart3 className="mx-auto h-12 w-12 mb-3 text-ink-mute" />
-            <p className="text-sm">{t('intelligence.noEconomicData')}</p>
+            <p className="text-sm">
+              {t('intelligence.noEconomicData')}
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -148,12 +150,16 @@ export function EconomicDashboard({ reports, dossierId }: EconomicDashboardProps
         {/* Executive Summary */}
         <div className="flex-1">
           <div className="flex items-center justify-between mb-2">
-            <h4 className="text-sm font-medium">{t('intelligence.executiveSummary')}</h4>
+            <h4 className="text-sm font-medium">
+              {t('intelligence.executiveSummary')}
+            </h4>
             <button
               onClick={() => setIsExpanded(!isExpanded)}
               className="text-xs text-accent-ink hover:underline"
             >
-              {isExpanded ? t('intelligence.showLess') : t('intelligence.showMore')}
+              {isExpanded
+                ? t('intelligence.showLess')
+                : t('intelligence.showMore')}
             </button>
           </div>
           <p
@@ -168,7 +174,9 @@ export function EconomicDashboard({ reports, dossierId }: EconomicDashboardProps
         {/* Key Economic Indicators */}
         {latestReport?.metrics && Object.keys(latestReport.metrics).length > 0 && (
           <div>
-            <h4 className="text-sm font-medium mb-3">{t('intelligence.keyIndicators')}</h4>
+            <h4 className="text-sm font-medium mb-3">
+              {t('intelligence.keyIndicators')}
+            </h4>
             <div className="grid grid-cols-2 gap-3">
               {Object.entries(latestReport.metrics).map(([key, value]) => (
                 <div key={key} className="bg-muted/50 rounded-lg p-3">
@@ -209,7 +217,8 @@ export function EconomicDashboard({ reports, dossierId }: EconomicDashboardProps
         {latestReport?.anythingllm_workspace_id && (
           <div className="text-xs text-muted-foreground border-t pt-2 flex flex-wrap items-center justify-between gap-2">
             <div>
-              <span className="font-medium">{t('intelligence.generatedBy')}:</span> AnythingLLM{' '}
+              <span className="font-medium">{t('intelligence.generatedBy')}:</span>{' '}
+              AnythingLLM{' '}
               {latestReport.anythingllm_response_metadata?.model && (
                 <span>({latestReport.anythingllm_response_metadata.model})</span>
               )}

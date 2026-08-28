@@ -83,8 +83,12 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">{t('duplicate_candidates')}</h2>
-          <p className="text-muted-foreground">{t('duplicate_candidates_desc')}</p>
+          <h2 className="text-2xl font-bold tracking-tight">
+            {t('duplicate_candidates')}
+          </h2>
+          <p className="text-muted-foreground">
+            {t('duplicate_candidates_desc')}
+          </p>
         </div>
         <Badge variant="outline" className="self-start sm:self-auto">
           {totalCount} {t('pending')}
@@ -166,7 +170,9 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
           {/* Refresh */}
           <Button variant="outline" size="icon" onClick={() => refetch()} disabled={isFetching}>
             <RefreshCw className={cn('h-4 w-4', isFetching && 'animate-spin')} />
-            <span className="sr-only">{t('common:actions.refresh')}</span>
+            <span className="sr-only">
+              {t('common:actions.refresh')}
+            </span>
           </Button>
         </div>
       </div>
@@ -184,7 +190,8 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
       {/* Scan Result */}
       {scanMutation.isSuccess && scanMutation.data && (
         <div className="rounded-lg border border-success/30 bg-success/10 p-4 text-success">
-          {t('scan_complete')} {scanMutation.data.candidates_found} {t('new_candidates_found')}
+          {t('scan_complete')} {scanMutation.data.candidates_found}{' '}
+          {t('new_candidates_found')}
         </div>
       )}
 
@@ -217,7 +224,11 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
             <Search className="h-6 w-6 text-muted-foreground" />
           </div>
           <h3 className="text-lg font-semibold">{t('no_duplicates')}</h3>
-          <p className="text-muted-foreground mt-1 max-w-sm">{t('no_duplicates_desc')}</p>
+          <p className="text-muted-foreground mt-1 max-w-sm">
+            {t(
+              'no_duplicates_desc',
+            )}
+          </p>
           <div className="flex gap-2 mt-4">
             <Button
               variant="outline"
@@ -258,8 +269,8 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
           {/* Pagination */}
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              {t('showing')} {page * pageSize + 1}-{Math.min((page + 1) * pageSize, totalCount)}{' '}
-              {t('of')} {totalCount}
+              {t('showing')} {page * pageSize + 1}-
+              {Math.min((page + 1) * pageSize, totalCount)} {t('of')} {totalCount}
             </p>
             <div className="flex gap-2">
               <Button

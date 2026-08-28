@@ -132,7 +132,9 @@ export function AISuggestionPanel({
             {t('entityLinks.aiSuggestions.title')}
           </CardTitle>
           <CardDescription className="text-start">
-            {t('entityLinks.aiSuggestions.description')}
+            {t(
+              'entityLinks.aiSuggestions.description',
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -196,7 +198,10 @@ export function AISuggestionPanel({
         <CardContent className="space-y-4">
           <Alert variant="destructive">
             <AlertDescription className="text-start">
-              {errorData?.details || t('entityLinks.aiSuggestions.errorDescription')}
+              {errorData?.details ||
+                t(
+                  'entityLinks.aiSuggestions.errorDescription',
+                )}
             </AlertDescription>
           </Alert>
 
@@ -234,9 +239,13 @@ export function AISuggestionPanel({
     return (
       <Card className="w-full">
         <CardHeader>
-          <CardTitle className="text-start">{t('entityLinks.aiSuggestions.noResults')}</CardTitle>
+          <CardTitle className="text-start">
+            {t('entityLinks.aiSuggestions.noResults')}
+          </CardTitle>
           <CardDescription className="text-start">
-            {t('entityLinks.aiSuggestions.noResultsDescription')}
+            {t(
+              'entityLinks.aiSuggestions.noResultsDescription',
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent>

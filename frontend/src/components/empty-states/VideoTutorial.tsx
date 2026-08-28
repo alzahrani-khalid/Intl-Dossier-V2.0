@@ -311,7 +311,9 @@ export function VideoTutorial({
                 >
                   <RotateCcw className="h-6 w-6 sm:h-7 sm:w-7 text-foreground" />
                 </Button>
-                <span className="text-surface text-sm font-medium">{t('video.replayLabel')}</span>
+                <span className="text-surface text-sm font-medium">
+                  {t('video.replayLabel')}
+                </span>
               </div>
             )}
 

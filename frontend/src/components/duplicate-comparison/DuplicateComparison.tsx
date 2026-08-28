@@ -109,7 +109,9 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
     return (
       <div className="py-8 text-center">
         <div className="inline-block size-8 animate-spin rounded-full border-b-2 border-accent"></div>
-        <p className="mt-4 text-ink-mute">{t('intake:duplicates.loading')}</p>
+        <p className="mt-4 text-ink-mute">
+          {t('intake:duplicates.loading')}
+        </p>
       </div>
     )
   }
@@ -126,7 +128,9 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
     return (
       <div className="py-8 text-center">
         <CheckCircle2 className="mx-auto mb-4 h-12 w-12 text-success" aria-hidden="true" />
-        <p className="text-lg text-ink-mute">{t('intake:duplicates.noDuplicates')}</p>
+        <p className="text-lg text-ink-mute">
+          {t('intake:duplicates.noDuplicates')}
+        </p>
       </div>
     )
   }
@@ -149,7 +153,10 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
             </h3>
           </div>
           <p className="text-sm text-danger">
-            {t('intake:duplicates.highConfidenceMessage', { count: highConfidence.length })}
+            {t(
+              'intake:duplicates.highConfidenceMessage',
+              { count: highConfidence.length },
+            )}
           </p>
         </div>
       )}
@@ -209,7 +216,9 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
                     {t('intake:duplicates.mergeDialog.primaryTicket')}
                   </label>
                   <p className="mb-3 text-sm text-ink-mute">
-                    {t('intake:duplicates.mergeDialog.primaryTicketHelp')}
+                    {t(
+                      'intake:duplicates.mergeDialog.primaryTicketHelp',
+                    )}
                   </p>
                   <div className="space-y-2">
                     <button
@@ -248,7 +257,9 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
                     id="merge-reason"
                     value={mergeReason}
                     onChange={(e) => setMergeReason(e.target.value)}
-                    placeholder={t('intake:duplicates.mergeDialog.reasonPlaceholder')}
+                    placeholder={t(
+                      'intake:duplicates.mergeDialog.reasonPlaceholder',
+                    )}
                     rows={3}
                     className="w-full rounded-md border-line bg-surface text-ink"
                   />
@@ -334,7 +345,9 @@ function DuplicateCandidateCard({
 
       <div className="mb-4 grid grid-cols-3 gap-2">
         <div className="text-center">
-          <div className="mb-1 text-xs text-ink-mute">{t('intake:duplicates.titleSimilarity')}</div>
+          <div className="mb-1 text-xs text-ink-mute">
+            {t('intake:duplicates.titleSimilarity')}
+          </div>
           <div className="text-sm font-semibold text-ink">
             {Math.round(candidate.title_similarity * 100)}%
           </div>
