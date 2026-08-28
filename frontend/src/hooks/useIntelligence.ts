@@ -173,14 +173,14 @@ export function useRefreshIntelligence(
       return { previousData, toastId }
     },
 
-    onSuccess: (data, params, context) => {
+    onSuccess: (_data, params, context) => {
       // Dismiss loading toast
       if (context?.toastId) {
         toast.dismiss(context.toastId)
       }
 
       // Show success toast
-      toast.success(t('intelligence.refresh.success', data.message_en))
+      toast.success(t('intelligence.refresh.success'))
 
       // Add small delay to allow database transaction to fully commit
       // before refetching (prevents race condition with 404 errors)
