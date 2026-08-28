@@ -181,7 +181,7 @@ function PersonsListPage({
       <ToolbarSearch
         value={search ?? ''}
         onChange={onSearchChange}
-        placeholder={t('list-pages:search.placeholder', { defaultValue: 'Search...' })}
+        placeholder={t('list-pages:search.placeholder')}
       />
       {controls !== undefined ? (
         <>

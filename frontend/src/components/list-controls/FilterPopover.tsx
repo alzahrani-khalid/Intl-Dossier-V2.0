@@ -54,8 +54,8 @@ export function FilterPopover({
 
   const hasActive = activeFilterCount > 0
   const triggerLabel = hasActive
-    ? t('filter.trigger_active', { count: activeFilterCount, defaultValue: 'Filter · {{count}}' })
-    : t('filter.trigger', { defaultValue: 'Filter' })
+    ? t('filter.trigger_active', { count: activeFilterCount })
+    : t('filter.trigger')
 
   // Resolve option labels once so the builder search can filter on them.
   const groups = useMemo(
@@ -98,13 +98,11 @@ export function FilterPopover({
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder={t('filter.search_placeholder', { defaultValue: 'Filter by...' })}
+          placeholder={t('filter.search_placeholder')}
           className="mb-2 w-full rounded-[var(--radius-sm)] border border-[var(--line)] bg-transparent px-2 py-1.5 text-sm text-ink outline-none focus-visible:border-line-strong"
         />
         {filteredGroups.length === 0 ? (
-          <p className="px-1 py-2 text-sm text-ink-mute">
-            {t('filter.no_matches', { defaultValue: 'No filters match' })}
-          </p>
+          <p className="px-1 py-2 text-sm text-ink-mute">{t('filter.no_matches')}</p>
         ) : (
           <div className="flex flex-col gap-3">
             {filteredGroups.map((g) => (
@@ -130,7 +128,7 @@ export function FilterPopover({
                       <span className={zero ? 'text-ink-tertiary' : 'text-ink'}>{opt.label}</span>
                       {count !== undefined ? (
                         <span className="ms-auto text-sm text-ink-faint">
-                          {t('filter.option_count', { count, defaultValue: '{{count}}' })}
+                          {t('filter.option_count', { count })}
                         </span>
                       ) : null}
                     </button>

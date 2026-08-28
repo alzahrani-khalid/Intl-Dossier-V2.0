@@ -233,14 +233,14 @@ function AISettingsPage() {
       setFormState(null)
       setHasChanges(false)
       toast({
-        title: t('settings.saved', 'Settings saved'),
-        description: t('settings.savedDesc', 'AI settings have been updated successfully.'),
+        title: t('settings.saved'),
+        description: t('settings.savedDesc'),
       })
     },
     onError: () => {
       toast({
-        title: t('settings.error', 'Error'),
-        description: t('settings.errorDesc', 'Failed to save AI settings. Please try again.'),
+        title: t('settings.error'),
+        description: t('settings.errorDesc'),
         variant: 'destructive',
       })
     },
@@ -278,18 +278,18 @@ function AISettingsPage() {
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       <PageHeader
         icon={<Bot className="h-6 w-6" />}
-        title={t('settings.title', 'AI Settings')}
-        subtitle={t('settings.description', 'Configure AI features, models, and spending limits')}
+        title={t('settings.title')}
+        subtitle={t('settings.description')}
         actions={
           hasChanges ? (
             <div className="flex items-center gap-3">
               <Button variant="outline" onClick={handleReset}>
                 <RotateCcw className="h-4 w-4 me-2" />
-                {t('settings.reset', 'Reset')}
+                {t('settings.reset')}
               </Button>
               <Button onClick={handleSave} disabled={updatePolicyMutation.isPending}>
                 <Save className="h-4 w-4 me-2" />
-                {t('settings.save', 'Save Changes')}
+                {t('settings.save')}
               </Button>
             </div>
           ) : undefined
@@ -300,11 +300,10 @@ function AISettingsPage() {
       {hasChanges && (
         <Alert className="mb-6">
           <AlertTriangle className="h-4 w-4" />
-          <AlertTitle>{t('settings.unsaved', 'Unsaved Changes')}</AlertTitle>
+          <AlertTitle>{t('settings.unsaved')}</AlertTitle>
           <AlertDescription>
             {t(
-              'settings.unsavedDesc',
-              'You have unsaved changes. Click "Save Changes" to apply them.',
+              'settings.unsavedDesc'
             )}
           </AlertDescription>
         </Alert>
@@ -316,10 +315,10 @@ function AISettingsPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Zap className="h-5 w-5" />
-              {t('settings.features', 'AI Features')}
+              {t('settings.features')}
             </CardTitle>
             <CardDescription>
-              {t('settings.featuresDesc', 'Enable or disable AI features for your organization')}
+              {t('settings.featuresDesc')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -336,10 +335,10 @@ function AISettingsPage() {
                     <FileText className="h-5 w-5 text-muted-foreground" />
                     <div>
                       <p className="font-medium">
-                        {t('settings.briefGeneration', 'Brief Generation')}
+                        {t('settings.briefGeneration')}
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        {t('settings.briefGenerationDesc', 'AI-generated briefing documents')}
+                        {t('settings.briefGenerationDesc')}
                       </p>
                     </div>
                   </div>
@@ -355,9 +354,9 @@ function AISettingsPage() {
                   <div className="flex items-center gap-3">
                     <MessageSquare className="h-5 w-5 text-muted-foreground" />
                     <div>
-                      <p className="font-medium">{t('settings.chat', 'AI Chat')}</p>
+                      <p className="font-medium">{t('settings.chat')}</p>
                       <p className="text-sm text-muted-foreground">
-                        {t('settings.chatDesc', 'Natural language Q&A interface')}
+                        {t('settings.chatDesc')}
                       </p>
                     </div>
                   </div>
@@ -373,9 +372,9 @@ function AISettingsPage() {
                   <div className="flex items-center gap-3">
                     <Link2 className="h-5 w-5 text-muted-foreground" />
                     <div>
-                      <p className="font-medium">{t('settings.entityLinking', 'Entity Linking')}</p>
+                      <p className="font-medium">{t('settings.entityLinking')}</p>
                       <p className="text-sm text-muted-foreground">
-                        {t('settings.entityLinkingDesc', 'AI-suggested entity links for intake')}
+                        {t('settings.entityLinkingDesc')}
                       </p>
                     </div>
                   </div>
@@ -394,10 +393,10 @@ function AISettingsPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Brain className="h-5 w-5" />
-              {t('settings.modelConfig', 'Model Configuration')}
+              {t('settings.modelConfig')}
             </CardTitle>
             <CardDescription>
-              {t('settings.modelConfigDesc', 'Select default and Arabic-routing AI models')}
+              {t('settings.modelConfigDesc')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -409,7 +408,7 @@ function AISettingsPage() {
             ) : (
               <>
                 <div className="space-y-2">
-                  <Label>{t('settings.defaultProvider', 'Default Provider')}</Label>
+                  <Label>{t('settings.defaultProvider')}</Label>
                   <Select
                     value={currentState.default_provider}
                     onValueChange={(v) => {
@@ -431,7 +430,7 @@ function AISettingsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>{t('settings.defaultModel', 'Default Model')}</Label>
+                  <Label>{t('settings.defaultModel')}</Label>
                   <Select
                     value={currentState.default_model}
                     onValueChange={(v) => updateField('default_model', v)}
@@ -465,11 +464,10 @@ function AISettingsPage() {
                 <Separator />
 
                 <div className="space-y-2">
-                  <Label>{t('settings.arabicProvider', 'Arabic Provider (Optional)')}</Label>
+                  <Label>{t('settings.arabicProvider')}</Label>
                   <p className="text-xs text-muted-foreground">
                     {t(
-                      'settings.arabicRoutingDesc',
-                      'Route Arabic-language requests to a dedicated provider.',
+                      'settings.arabicRoutingDesc'
                     )}
                   </p>
                   <Select
@@ -484,10 +482,10 @@ function AISettingsPage() {
                     }}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder={t('settings.none', 'None')} />
+                      <SelectValue placeholder={t('settings.none')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value={NONE}>{t('settings.none', 'None')}</SelectItem>
+                      <SelectItem value={NONE}>{t('settings.none')}</SelectItem>
                       {PROVIDERS.filter((p) => p.value !== currentState.default_provider).map(
                         (p) => (
                           <SelectItem key={p.value} value={p.value}>
@@ -501,7 +499,7 @@ function AISettingsPage() {
 
                 {currentState.arabic_provider != null && (
                   <div className="space-y-2">
-                    <Label>{t('settings.arabicModel', 'Arabic Model')}</Label>
+                    <Label>{t('settings.arabicModel')}</Label>
                     <Select
                       value={currentState.arabic_model || ''}
                       onValueChange={(v) => updateField('arabic_model', v || null)}
@@ -529,12 +527,11 @@ function AISettingsPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Shield className="h-5 w-5" />
-              {t('settings.privacyRouting', 'Privacy & Routing')}
+              {t('settings.privacyRouting')}
             </CardTitle>
             <CardDescription>
               {t(
-                'settings.privacyRoutingDesc',
-                'Control how confidential content is routed to AI providers',
+                'settings.privacyRoutingDesc'
               )}
             </CardDescription>
           </CardHeader>
@@ -552,12 +549,11 @@ function AISettingsPage() {
                     <Shield className="h-5 w-5 text-muted-foreground" />
                     <div>
                       <p className="font-medium">
-                        {t('settings.allowCloudConfidential', 'Allow cloud for confidential')}
+                        {t('settings.allowCloudConfidential')}
                       </p>
                       <p className="text-sm text-muted-foreground">
                         {t(
-                          'settings.allowCloudConfidentialDesc',
-                          'Permit confidential content to be sent to cloud providers.',
+                          'settings.allowCloudConfidentialDesc'
                         )}
                       </p>
                     </div>
@@ -573,11 +569,10 @@ function AISettingsPage() {
                 <Separator />
 
                 <div className="space-y-2">
-                  <Label>{t('settings.privateProvider', 'Private Provider (Optional)')}</Label>
+                  <Label>{t('settings.privateProvider')}</Label>
                   <p className="text-xs text-muted-foreground">
                     {t(
-                      'settings.privateRoutingDesc',
-                      'Self-hosted provider for confidential content.',
+                      'settings.privateRoutingDesc'
                     )}
                   </p>
                   <Select
@@ -592,10 +587,10 @@ function AISettingsPage() {
                     }}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder={t('settings.none', 'None')} />
+                      <SelectValue placeholder={t('settings.none')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value={NONE}>{t('settings.none', 'None')}</SelectItem>
+                      <SelectItem value={NONE}>{t('settings.none')}</SelectItem>
                       {PROVIDERS.map((p) => (
                         <SelectItem key={p.value} value={p.value}>
                           {p.label}
@@ -607,7 +602,7 @@ function AISettingsPage() {
 
                 {currentState.private_provider != null && (
                   <div className="space-y-2">
-                    <Label>{t('settings.privateModel', 'Private Model')}</Label>
+                    <Label>{t('settings.privateModel')}</Label>
                     <Select
                       value={currentState.private_model || ''}
                       onValueChange={(v) => updateField('private_model', v || null)}
@@ -627,7 +622,7 @@ function AISettingsPage() {
                 )}
 
                 <div className="space-y-2">
-                  <Label>{t('settings.privateEndpoint', 'Private Endpoint URL')}</Label>
+                  <Label>{t('settings.privateEndpoint')}</Label>
                   <Input
                     type="url"
                     value={currentState.private_endpoint_url ?? ''}
@@ -638,8 +633,7 @@ function AISettingsPage() {
                   />
                   <p className="text-xs text-muted-foreground">
                     {t(
-                      'settings.privateEndpointDesc',
-                      'Base URL of the self-hosted inference endpoint.',
+                      'settings.privateEndpointDesc'
                     )}
                   </p>
                 </div>
@@ -653,10 +647,10 @@ function AISettingsPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <DollarSign className="h-5 w-5" />
-              {t('settings.spendingLimits', 'Spending Limits')}
+              {t('settings.spendingLimits')}
             </CardTitle>
             <CardDescription>
-              {t('settings.spendingLimitsDesc', 'Set monthly budget caps for AI usage')}
+              {t('settings.spendingLimitsDesc')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -668,7 +662,7 @@ function AISettingsPage() {
             ) : (
               <>
                 <div className="space-y-2">
-                  <Label>{t('settings.monthlyCap', 'Monthly Spend Cap (USD)')}</Label>
+                  <Label>{t('settings.monthlyCap')}</Label>
                   <Input
                     type="number"
                     value={currentState.monthly_spend_cap_usd ?? ''}
@@ -678,20 +672,19 @@ function AISettingsPage() {
                         e.target.value ? parseFloat(e.target.value) : null,
                       )
                     }
-                    placeholder={t('settings.noLimit', 'No limit')}
+                    placeholder={t('settings.noLimit')}
                     min={0}
                     step={10}
                   />
                   <p className="text-xs text-muted-foreground">
                     {t(
-                      'settings.monthlyCapDesc',
-                      'Leave empty for no spending limit. AI features will be disabled when cap is reached.',
+                      'settings.monthlyCapDesc'
                     )}
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label>{t('settings.alertThreshold', 'Alert Threshold (%)')}</Label>
+                  <Label>{t('settings.alertThreshold')}</Label>
                   <Input
                     type="number"
                     value={currentState.alert_threshold_percent ?? ''}
@@ -707,8 +700,7 @@ function AISettingsPage() {
                   />
                   <p className="text-xs text-muted-foreground">
                     {t(
-                      'settings.alertThresholdDesc',
-                      'Send an alert when spending reaches this percentage of the monthly cap.',
+                      'settings.alertThresholdDesc'
                     )}
                   </p>
                 </div>
@@ -718,8 +710,7 @@ function AISettingsPage() {
                     <AlertTriangle className="h-4 w-4" />
                     <AlertDescription>
                       {t(
-                        'settings.capWarning',
-                        'When the monthly cap is reached, all AI features will be temporarily disabled until the next billing cycle.',
+                        'settings.capWarning'
                       )}
                     </AlertDescription>
                   </Alert>
@@ -735,31 +726,31 @@ function AISettingsPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <CheckCircle2 className="h-5 w-5 text-success" />
-            {t('settings.status', 'Configuration Status')}
+            {t('settings.status')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-3">
             <Badge variant={currentState.brief_generation_enabled ? 'default' : 'secondary'}>
               <FileText className="h-3 w-3 me-1" />
-              {t('settings.briefGeneration', 'Brief Generation')}:{' '}
+              {t('settings.briefGeneration')}:{' '}
               {currentState.brief_generation_enabled
-                ? t('settings.enabled', 'Enabled')
-                : t('settings.disabled', 'Disabled')}
+                ? t('settings.enabled')
+                : t('settings.disabled')}
             </Badge>
             <Badge variant={currentState.chat_enabled ? 'default' : 'secondary'}>
               <MessageSquare className="h-3 w-3 me-1" />
-              {t('settings.chat', 'Chat')}:{' '}
+              {t('settings.chat')}:{' '}
               {currentState.chat_enabled
-                ? t('settings.enabled', 'Enabled')
-                : t('settings.disabled', 'Disabled')}
+                ? t('settings.enabled')
+                : t('settings.disabled')}
             </Badge>
             <Badge variant={currentState.entity_linking_enabled ? 'default' : 'secondary'}>
               <Link2 className="h-3 w-3 me-1" />
-              {t('settings.entityLinking', 'Entity Linking')}:{' '}
+              {t('settings.entityLinking')}:{' '}
               {currentState.entity_linking_enabled
-                ? t('settings.enabled', 'Enabled')
-                : t('settings.disabled', 'Disabled')}
+                ? t('settings.enabled')
+                : t('settings.disabled')}
             </Badge>
             <Badge variant="outline">
               <Brain className="h-3 w-3 me-1" />

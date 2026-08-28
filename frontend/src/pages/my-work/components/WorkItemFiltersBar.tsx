@@ -62,36 +62,36 @@ export function WorkItemFiltersBar({
   const trackingTypes: { id: TrackingType; label: string; color: string }[] = [
     {
       id: 'delivery',
-      label: t('trackingType.delivery', 'Delivery'),
+      label: t('trackingType.delivery'),
       color: 'bg-accent/10 text-accent dark:bg-accent/30',
     },
     {
       id: 'follow_up',
-      label: t('trackingType.followUp', 'Follow-up'),
+      label: t('trackingType.followUp'),
       color: 'bg-secondary/30 text-secondary-foreground dark:bg-secondary/50',
     },
     {
       id: 'sla',
-      label: t('trackingType.sla', 'SLA'),
+      label: t('trackingType.sla'),
       color: 'bg-warning/10 text-warning dark:bg-warning/30',
     },
   ]
 
   const sortOptions: { sortBy: WorkItemSortBy; sortOrder: SortOrder; label: string }[] = [
-    { sortBy: 'deadline', sortOrder: 'asc', label: t('sort.deadlineAsc', 'Deadline (Earliest)') },
-    { sortBy: 'deadline', sortOrder: 'desc', label: t('sort.deadlineDesc', 'Deadline (Latest)') },
+    { sortBy: 'deadline', sortOrder: 'asc', label: t('sort.deadlineAsc') },
+    { sortBy: 'deadline', sortOrder: 'desc', label: t('sort.deadlineDesc') },
     {
       sortBy: 'priority',
       sortOrder: 'desc',
-      label: t('sort.priorityDesc', 'Priority (High to Low)'),
+      label: t('sort.priorityDesc'),
     },
     {
       sortBy: 'priority',
       sortOrder: 'asc',
-      label: t('sort.priorityAsc', 'Priority (Low to High)'),
+      label: t('sort.priorityAsc'),
     },
-    { sortBy: 'created_at', sortOrder: 'desc', label: t('sort.createdDesc', 'Newest First') },
-    { sortBy: 'created_at', sortOrder: 'asc', label: t('sort.createdAsc', 'Oldest First') },
+    { sortBy: 'created_at', sortOrder: 'desc', label: t('sort.createdDesc') },
+    { sortBy: 'created_at', sortOrder: 'asc', label: t('sort.createdAsc') },
   ]
 
   const currentSort = sortOptions.find(
@@ -109,7 +109,7 @@ export function WorkItemFiltersBar({
           )}
         />
         <Input
-          placeholder={t('search.placeholder', 'Search work items...')}
+          placeholder={t('search.placeholder')}
           value={localSearch}
           onChange={handleSearchChange}
           className={cn('h-10', isRTL ? 'pe-10 ps-3' : 'ps-10 pe-3')}
@@ -121,7 +121,7 @@ export function WorkItemFiltersBar({
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="h-10 gap-2 whitespace-nowrap">
             <SlidersHorizontal className="h-4 w-4" />
-            <span className="hidden sm:inline">{t('filters.trackingType', 'Type')}</span>
+            <span className="hidden sm:inline">{t('filters.trackingType')}</span>
             {trackingType && (
               <Badge variant="secondary" className="ms-1">
                 {trackingTypes.find((tt) => tt.id === trackingType)?.label}
@@ -131,10 +131,10 @@ export function WorkItemFiltersBar({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="w-48">
-          <DropdownMenuLabel>{t('filters.trackingType', 'Tracking Type')}</DropdownMenuLabel>
+          <DropdownMenuLabel>{t('filters.trackingType')}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => onTrackingTypeChange(undefined)}>
-            {t('filters.all', 'All Types')}
+            {t('filters.all')}
           </DropdownMenuItem>
           {trackingTypes.map((tt) => (
             <DropdownMenuItem
@@ -155,12 +155,12 @@ export function WorkItemFiltersBar({
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="h-10 gap-2 whitespace-nowrap">
             <ArrowUpDown className="h-4 w-4" />
-            <span className="hidden sm:inline">{t('sort.label', 'Sort')}</span>
+            <span className="hidden sm:inline">{t('sort.label')}</span>
             <ChevronDown className="h-4 w-4 ms-1" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="w-56">
-          <DropdownMenuLabel>{t('sort.label', 'Sort By')}</DropdownMenuLabel>
+          <DropdownMenuLabel>{t('sort.label')}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {sortOptions.map((opt, idx) => (
             <DropdownMenuItem

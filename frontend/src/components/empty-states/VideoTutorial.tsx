@@ -312,7 +312,7 @@ export function VideoTutorial({
                   <RotateCcw className="h-6 w-6 sm:h-7 sm:w-7 text-foreground" />
                 </Button>
                 <span className="text-surface text-sm font-medium">
-                  {t('video.replayLabel', 'Watch Again')}
+                  {t('video.replayLabel')}
                 </span>
               </div>
             )}
@@ -398,7 +398,7 @@ export function VideoTutorial({
                         e.stopPropagation()
                         setShowTranscript(!showTranscript)
                       }}
-                      title={t('video.transcriptToggle', 'Toggle Transcript')}
+                      title={t('video.transcriptToggle')}
                     >
                       <FileText className={sizeClasses.icon} />
                     </Button>
@@ -426,7 +426,7 @@ export function VideoTutorial({
                       e.stopPropagation()
                       handleDismiss()
                     }}
-                    title={t('video.dismiss', 'Dismiss')}
+                    title={t('video.dismiss')}
                   >
                     <X className={sizeClasses.icon} />
                   </Button>
@@ -443,7 +443,7 @@ export function VideoTutorial({
             )}
             {videoDuration > 0 && !hasStarted && (
               <p className="text-xs text-muted-foreground/70 mt-1">
-                {t('video.durationLabel', '{{duration}} video', {
+                {t('video.durationLabel', {
                   duration: formatTime(videoDuration),
                 })}
               </p>
@@ -464,7 +464,7 @@ export function VideoTutorial({
           >
             <span className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
-              {t('video.transcriptTitle', 'Transcript')}
+              {t('video.transcriptTitle')}
             </span>
             {showTranscript ? (
               <ChevronUp className="h-4 w-4" />

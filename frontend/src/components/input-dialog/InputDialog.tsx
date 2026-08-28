@@ -74,7 +74,7 @@ export function InputDialog({
 
   const validate = useCallback(() => {
     if (required && !value.trim()) {
-      setError(t('validation.required', 'This field is required'))
+      setError(t('validation.required'))
       return false
     }
     if (minLength && value.length < minLength) {
@@ -169,16 +169,16 @@ export function InputDialog({
 
         <DialogFooter thumbZone>
           <Button variant="outline" onClick={handleCancel} disabled={isLoading}>
-            {cancelLabel || t('common:cancel', 'Cancel')}
+            {cancelLabel || t('common:cancel')}
           </Button>
           <Button onClick={handleConfirm} disabled={isLoading}>
             {isLoading ? (
               <span className="flex items-center gap-2">
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                {t('common:saving', 'Saving...')}
+                {t('common:saving')}
               </span>
             ) : (
-              confirmLabel || t('common:confirm', 'Confirm')
+              confirmLabel || t('common:confirm')
             )}
           </Button>
         </DialogFooter>

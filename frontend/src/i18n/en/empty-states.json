@@ -26,6 +26,7 @@
       "description": "There are no items to display at this time.",
       "firstDescription": "Create your first item to get started with this section.",
       "hint": "Items you create or import will appear here",
+      "cta": "Create item",
       "create": "Create New",
       "createFirst": "Create First Item",
       "import": "Import"
@@ -36,6 +37,7 @@
       "description": "No documents have been added to this section yet.",
       "firstDescription": "Upload documents to keep all your important files organized and accessible.",
       "hint": "Supported formats: PDF, DOCX, XLSX, images, and more",
+      "cta": "Upload document",
       "create": "Upload Document",
       "createFirst": "Upload First Document",
       "import": "Import from Drive"
@@ -46,6 +48,7 @@
       "description": "Dossiers help you organize information about countries, organizations, and topics.",
       "firstDescription": "Start by creating a dossier to track important relationships and activities.",
       "hint": "Dossiers can contain documents, engagements, MOUs, and intelligence signals",
+      "cta": "Create dossier",
       "create": "Create Dossier",
       "createFirst": "Create First Dossier",
       "import": "Import Dossiers"
@@ -67,6 +70,7 @@
       "description": "No commitments have been recorded from engagements.",
       "firstDescription": "Commitments help you track promises and deliverables from meetings and events.",
       "hint": "Commitments are automatically created from after-action records",
+      "cta": "Add commitment",
       "create": "Add Commitment",
       "createFirst": "Add First Commitment",
       "import": "Import Commitments"
@@ -110,6 +114,7 @@
       "description": "Upcoming events and meetings will appear here.",
       "firstDescription": "Add events to your calendar to stay organized and track deadlines.",
       "hint": "Events can be linked to engagements and dossiers",
+      "cta": "Create event",
       "create": "Create Event",
       "createFirst": "Create First Event",
       "import": "Import Events"
@@ -120,6 +125,7 @@
       "description": "Your tasks and assignments will appear here.",
       "firstDescription": "Create tasks to track your work and stay organized.",
       "hint": "Tasks can be assigned, prioritized, and tracked through completion",
+      "cta": "Create task",
       "create": "Create Task",
       "createFirst": "Create First Task",
       "import": "Import Tasks"
@@ -141,6 +147,7 @@
       "description": "Policy positions and stances will be listed here.",
       "firstDescription": "Document official positions on international topics and issues.",
       "hint": "Positions help maintain consistency across engagements",
+      "cta": "Create position",
       "create": "Create Position",
       "createFirst": "Create First Position",
       "import": "Import Positions"
@@ -151,29 +158,54 @@
       "description": "Memoranda of Understanding will be tracked here.",
       "firstDescription": "Track agreements, their status, and renewal dates.",
       "hint": "Get notified when MOUs are approaching expiration",
+      "cta": "Add MOU",
       "create": "Add MOU",
       "createFirst": "Add First MOU",
       "import": "Import MOUs"
     },
     "topic": {
       "title": "No topic dossiers",
+      "firstTitle": "Add your first topic dossier",
       "description": "Topic dossiers follow policy areas and strategic initiatives.",
-      "cta": "Add topic"
+      "firstDescription": "Create a topic dossier to follow a policy area or strategic initiative.",
+      "hint": "Topic dossiers keep related policy activity and evidence together",
+      "cta": "Add topic",
+      "create": "Add topic",
+      "createFirst": "Add first topic",
+      "import": "Import topics"
     },
     "working_group": {
       "title": "No working groups",
+      "firstTitle": "Add your first working group",
       "description": "Working-group dossiers track committees and task forces.",
-      "cta": "Add working group"
+      "firstDescription": "Create a working-group dossier to track a committee or task force.",
+      "hint": "Working-group dossiers keep mandates, members, and activity together",
+      "cta": "Add working group",
+      "create": "Add working group",
+      "createFirst": "Add first working group",
+      "import": "Import working groups"
     },
     "elected_official": {
       "title": "No elected officials",
+      "firstTitle": "Add your first elected official",
       "description": "Elected-official dossiers hold office and term details for government contacts.",
-      "cta": "Add elected official"
+      "firstDescription": "Create an elected-official dossier to track office, term, and contact details.",
+      "hint": "Elected-official dossiers keep office and term information current",
+      "cta": "Add elected official",
+      "create": "Add elected official",
+      "createFirst": "Add first elected official",
+      "import": "Import elected officials"
     },
     "work_item": {
       "title": "No work items",
+      "firstTitle": "Create your first work item",
       "description": "Work items collect tasks, commitments, and intake requests across dossiers.",
-      "cta": "Create work item"
+      "firstDescription": "Create a work item to organize a task, commitment, or intake request.",
+      "hint": "Work items keep ownership, priority, and progress visible",
+      "cta": "Create work item",
+      "create": "Create work item",
+      "createFirst": "Create first work item",
+      "import": "Import work items"
     },
     "filtered": {
       "title": "No matching rows",

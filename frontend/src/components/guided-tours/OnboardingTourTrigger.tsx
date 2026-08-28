@@ -200,14 +200,13 @@ export function OnboardingTourTrigger({
 
               {/* Title */}
               <h2 className="mb-3 text-center font-display text-xl font-semibold text-[var(--ink)] sm:text-2xl">
-                {t('tours.onboarding.welcome.title', 'Welcome to GASTAT Dossier!')}
+                {t('tours.onboarding.welcome.title')}
               </h2>
 
               {/* Description */}
               <p className="mb-6 text-center leading-relaxed text-[var(--ink-mute)]">
                 {t(
                   'tours.onboarding.welcome.description',
-                  "Let's take a quick tour to help you understand how everything is organized around Dossiers - your central hub for managing international relations.",
                 )}
               </p>
 
@@ -215,18 +214,18 @@ export function OnboardingTourTrigger({
               <p className="mb-6 text-center text-sm text-[var(--ink-mute)]">
                 <span className="inline-flex items-center gap-1.5">
                   <Play className="h-3.5 w-3.5" />
-                  {t('trigger.estimatedTime', '~{{minutes}} min', { minutes: 3 })}
+                  {t('trigger.estimatedTime', { minutes: 3 })}
                 </span>
               </p>
 
               {/* Actions */}
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button variant="outline" className="flex-1 h-11" onClick={handleSkip}>
-                  {t('tours.onboarding.welcome.skipButton', 'Skip for now')}
+                  {t('tours.onboarding.welcome.skipButton')}
                 </Button>
                 <Button className="flex-1 h-11" onClick={handleStartTour}>
                   <Play className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
-                  {t('tours.onboarding.welcome.startButton', 'Start Tour')}
+                  {t('tours.onboarding.welcome.startButton')}
                 </Button>
               </div>
             </m.div>
@@ -261,7 +260,7 @@ export function OnboardingTourTrigger({
                   'hover:scale-105 active:scale-95',
                   className,
                 )}
-                aria-label={t('tours.onboarding.replay', 'Replay onboarding tour')}
+                aria-label={t('tours.onboarding.replay')}
               >
                 <RefreshCw className="h-5 w-5" />
               </m.button>
@@ -277,7 +276,7 @@ export function OnboardingTourTrigger({
                     : 'right'
               }
             >
-              {t('tours.onboarding.replay', 'Replay onboarding tour')}
+              {t('tours.onboarding.replay')}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

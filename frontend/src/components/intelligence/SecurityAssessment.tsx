@@ -80,7 +80,7 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
             <div className="flex items-center gap-2">
               <Shield className="h-5 w-5 text-danger" />
               <CardTitle className="text-base sm:text-lg">
-                {t('intelligence.types.security', 'Security Assessment')}
+                {t('intelligence.types.security')}
               </CardTitle>
             </div>
             <RefreshButton
@@ -95,9 +95,7 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
         <CardContent>
           <div className="text-center py-8 text-muted-foreground">
             <ShieldAlert className="mx-auto h-12 w-12 mb-3 text-ink-mute" />
-            <p className="text-sm">
-              {t('intelligence.noSecurityData', 'No security intelligence available')}
-            </p>
+            <p className="text-sm">{t('intelligence.noSecurityData')}</p>
           </div>
         </CardContent>
       </Card>
@@ -112,7 +110,7 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
             <div className="flex items-center gap-2 mb-2">
               <Shield className="h-5 w-5 flex-shrink-0 text-danger" />
               <CardTitle className="text-base sm:text-lg truncate">
-                {t('intelligence.types.security', 'Security Assessment')}
+                {t('intelligence.types.security')}
               </CardTitle>
             </div>
             <CardDescription className="text-xs sm:text-sm line-clamp-2">
@@ -135,16 +133,16 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
         <div className="flex flex-wrap items-center gap-2 text-xs">
           {isStale && (
             <Badge variant="destructive" className="animate-pulse">
-              {t('intelligence.securityStale', 'Security Data Stale - Refresh Required')}
+              {t('intelligence.securityStale')}
             </Badge>
           )}
           {!isStale && (
             <Badge variant="outline" className="bg-success/5 text-success border-success/20">
-              {t('intelligence.current', 'Current')}
+              {t('intelligence.current')}
             </Badge>
           )}
           <span className="text-muted-foreground">
-            {t('intelligence.updated', 'Updated')}{' '}
+            {t('intelligence.updated')}{' '}
             {formatDateTime(
               latestReport?.last_refreshed_at || latestReport?.created_at || Date.now(),
             )}
@@ -154,16 +152,12 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
         {/* Executive Summary */}
         <div className="flex-1">
           <div className="flex items-center justify-between mb-2">
-            <h4 className="text-sm font-medium">
-              {t('intelligence.threatAssessment', 'Threat Assessment')}
-            </h4>
+            <h4 className="text-sm font-medium">{t('intelligence.threatAssessment')}</h4>
             <button
               onClick={() => setIsExpanded(!isExpanded)}
               className="text-xs text-accent-ink hover:underline"
             >
-              {isExpanded
-                ? t('intelligence.showLess', 'Show Less')
-                : t('intelligence.showMore', 'Show More')}
+              {isExpanded ? t('intelligence.showLess') : t('intelligence.showMore')}
             </button>
           </div>
           <p
@@ -178,9 +172,7 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
         {/* Security Indicators */}
         {latestReport?.metrics && Object.keys(latestReport.metrics).length > 0 && (
           <div>
-            <h4 className="text-sm font-medium mb-3">
-              {t('intelligence.securityMetrics', 'Security Metrics')}
-            </h4>
+            <h4 className="text-sm font-medium mb-3">{t('intelligence.securityMetrics')}</h4>
             <div className="grid grid-cols-2 gap-3">
               {Object.entries(latestReport.metrics).map(([key, value]) => (
                 <div key={key} className="bg-muted/50 rounded-lg p-3">
@@ -201,7 +193,7 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
         {dataSources.length > 0 && (
           <div className="border-t pt-3">
             <h4 className="text-xs font-medium mb-2 text-muted-foreground">
-              {t('intelligence.sources', 'Data Sources')}
+              {t('intelligence.sources')}
             </h4>
             <div className="flex flex-wrap gap-2">
               {dataSources.map((source, idx) => (
@@ -217,8 +209,7 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
         {latestReport?.anythingllm_workspace_id && (
           <div className="text-xs text-muted-foreground border-t pt-2 flex flex-wrap items-center justify-between gap-2">
             <div>
-              <span className="font-medium">{t('intelligence.generatedBy', 'Generated by')}:</span>{' '}
-              AnythingLLM{' '}
+              <span className="font-medium">{t('intelligence.generatedBy')}:</span> AnythingLLM{' '}
               {latestReport.anythingllm_response_metadata?.model && (
                 <span>({latestReport.anythingllm_response_metadata.model})</span>
               )}

@@ -105,7 +105,7 @@ function AfterActionDetailPage(): React.ReactNode {
       const maybeConflict = err as Error & { conflict?: ConflictError }
       if (maybeConflict.conflict != null) {
         setConflict(maybeConflict.conflict)
-        toast.error(t('afterActions.conflict.warning', 'This record was modified by another user.'))
+        toast.error(t('afterActions.conflict.warning'))
         return
       }
       // D-08: the translated key renders ALONE. The server-originated operand used to win
@@ -170,7 +170,6 @@ function AfterActionDetailPage(): React.ReactNode {
             <p className="text-sm text-destructive">
               {t(
                 'afterActions.conflict.warning',
-                'This record was modified by another user. Review changes before saving.',
               )}
             </p>
           </div>
@@ -182,7 +181,7 @@ function AfterActionDetailPage(): React.ReactNode {
               window.location.reload()
             }}
           >
-            {t('afterActions.conflict.reviewChanges', 'Review Changes')}
+            {t('afterActions.conflict.reviewChanges')}
           </Button>
         </div>
       )}

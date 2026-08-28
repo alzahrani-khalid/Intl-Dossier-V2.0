@@ -218,7 +218,7 @@ function OrganizationsListRoute(): ReactElement {
       <ToolbarSearch
         value={search.search ?? ''}
         onChange={onSearchChange}
-        placeholder={t('list-pages:search.placeholder', { defaultValue: 'Search…' })}
+        placeholder={t('list-pages:search.placeholder')}
       />
       <FilterPopover
         config={organizationsListConfig}
@@ -243,10 +243,8 @@ function OrganizationsListRoute(): ReactElement {
 
   return (
     <ListPageShell
-      title={t('organizations:title', { defaultValue: isArabic ? 'المنظمات' : 'Organizations' })}
-      subtitle={t('organizations:subtitle', {
-        defaultValue: isArabic ? 'كل ملفات المنظمات' : 'All organization dossiers',
-      })}
+      title={t('organizations:title')}
+      subtitle={t('organizations:subtitle')}
       toolbar={toolbar}
       actions={
         <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">

@@ -51,20 +51,20 @@ export function ProjectList({ projects, activeId, onProjectClick, className }: P
   const defaultProjects: ProjectItem[] = [
     {
       id: 'dashboard',
-      label: t('navigation.dashboard', 'Dashboard'),
+      label: t('navigation.dashboard'),
       icon: <LayoutDashboard className="h-4 w-4" />,
       count: 0,
       path: '/dashboard',
     },
     {
       id: 'library',
-      label: t('navigation.library', 'Library'),
+      label: t('navigation.library'),
       icon: <Library className="h-4 w-4" />,
       path: '/data-library',
     },
     {
       id: 'shared-projects',
-      label: t('navigation.sharedProjects', 'Shared Projects'),
+      label: t('navigation.sharedProjects'),
       icon: <Share2 className="h-4 w-4" />,
       path: '/shared',
     },
@@ -81,10 +81,10 @@ export function ProjectList({ projects, activeId, onProjectClick, className }: P
   return (
     <div className={cn('flex flex-col', className)}>
       {/* Section Header */}
-      <h3 className="section-header px-4 py-2">{t('navigation.projects', 'Projects')}</h3>
+      <h3 className="section-header px-4 py-2">{t('navigation.projects')}</h3>
 
       {/* Project Items */}
-      <nav className="flex flex-col px-2" aria-label={t('navigation.projects', 'Projects')}>
+      <nav className="flex flex-col px-2" aria-label={t('navigation.projects')}>
         {items.map((project) => {
           const isActive = activeId === project.id
 

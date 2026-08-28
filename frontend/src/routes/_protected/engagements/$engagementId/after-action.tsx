@@ -113,7 +113,7 @@ function AfterActionFormPage(): React.ReactNode {
       const maybeConflict = err as Error & { conflict?: ConflictError }
       if (maybeConflict.conflict != null) {
         setConflict(maybeConflict.conflict)
-        toast.error(t('afterActions.conflict.warning', 'This record was modified by another user.'))
+        toast.error(t('afterActions.conflict.warning'))
         return
       }
       // D-08/D-10: the user sees the translated key ALONE — a server-originated
@@ -153,7 +153,7 @@ function AfterActionFormPage(): React.ReactNode {
     >
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild aria-label={t('common:goBack', 'Go back')}>
+        <Button variant="ghost" size="icon" asChild aria-label={t('common:goBack')}>
           <Link to={'/engagements/$engagementId' as any} params={{ engagementId } as any}>
             <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
           </Link>
@@ -172,7 +172,6 @@ function AfterActionFormPage(): React.ReactNode {
             <p className="text-sm text-destructive">
               {t(
                 'afterActions.conflict.warning',
-                'This record was modified by another user. Review changes before saving.',
               )}
             </p>
           </div>
@@ -184,7 +183,7 @@ function AfterActionFormPage(): React.ReactNode {
               window.location.reload()
             }}
           >
-            {t('afterActions.conflict.reviewChanges', 'Review Changes')}
+            {t('afterActions.conflict.reviewChanges')}
           </Button>
         </div>
       )}

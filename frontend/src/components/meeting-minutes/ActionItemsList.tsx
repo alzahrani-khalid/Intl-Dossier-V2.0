@@ -257,9 +257,7 @@ export function ActionItemsList({
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
                           <MoreVertical className="h-4 w-4" />
-                          <span className="sr-only">
-                            {t('common:actions.openMenu', { defaultValue: 'Open menu' })}
-                          </span>
+                          <span className="sr-only">{t('common:actions.openMenu')}</span>
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align={isRTL ? 'start' : 'end'}>

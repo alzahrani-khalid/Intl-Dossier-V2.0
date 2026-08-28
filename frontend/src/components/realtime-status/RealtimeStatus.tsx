@@ -38,15 +38,15 @@ export function RealtimeStatus() {
   const getStatusText = () => {
     switch (connectionStatus) {
       case 'connected':
-        return t('realtime.connected', 'Connected')
+        return t('realtime.connected')
       case 'disconnected':
-        return t('realtime.disconnected', 'Disconnected')
+        return t('realtime.disconnected')
       case 'reconnecting':
-        return t('realtime.reconnecting', 'Reconnecting...')
+        return t('realtime.reconnecting')
       case 'error':
-        return t('realtime.connectionLost', 'Connection Lost')
+        return t('realtime.connectionLost')
       default:
-        return t('realtime.disconnected', 'Disconnected')
+        return t('realtime.disconnected')
     }
   }
 

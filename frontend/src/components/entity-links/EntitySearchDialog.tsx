@@ -353,12 +353,11 @@ export function EntitySearchDialog({
                     <Search className="h-8 w-8 text-info" />
                   </div>
                   <h3 className="text-base font-semibold text-ink mb-2">
-                    {t('entityLinks.searchTitle', 'Find and link entities')}
+                    {t('entityLinks.searchTitle')}
                   </h3>
                   <p className="text-sm text-ink-mute max-w-sm mx-auto">
                     {t(
                       'entityLinks.searchEmptyState',
-                      'Enter at least 2 characters to search for dossiers, positions, countries, and more',
                     )}
                   </p>
                 </div>
@@ -371,18 +370,18 @@ export function EntitySearchDialog({
                     <Search className="h-8 w-8 text-ink-faint" />
                   </div>
                   <h3 className="text-base font-semibold text-ink mb-2">
-                    {t('entityLinks.noResultsTitle', 'No entities found')}
+                    {t('entityLinks.noResultsTitle')}
                   </h3>
                   <p className="text-sm text-ink-mute max-w-sm mx-auto mb-4">
-                    {t('entityLinks.noResults', `No entities match "${query}"`)}
+                    {t('entityLinks.noResults')}
                   </p>
                   <div className="text-xs text-ink-mute space-y-1">
-                    <p>{t('entityLinks.searchTips', 'Try:')}</p>
+                    <p>{t('entityLinks.searchTips')}</p>
                     <ul className="list-disc list-inside space-y-0.5">
-                      <li>{t('entityLinks.tip1', 'Using fewer or different keywords')}</li>
-                      <li>{t('entityLinks.tip2', 'Checking your spelling')}</li>
+                      <li>{t('entityLinks.tip1')}</li>
+                      <li>{t('entityLinks.tip2')}</li>
                       <li>
-                        {t('entityLinks.tip3', 'Clearing filters to search all entity types')}
+                        {t('entityLinks.tip3')}
                       </li>
                     </ul>
                   </div>
@@ -524,7 +523,7 @@ export function EntitySearchDialog({
                                     'bg-success/10 text-success border-success/30',
                                   )}
                                 >
-                                  {t('entityLinks.alreadyLinked', 'Already linked')}
+                                  {t('entityLinks.alreadyLinked')}
                                 </Badge>
                               )}
                             </div>
@@ -623,7 +622,6 @@ export function EntitySearchDialog({
                   <div className="flex-1 min-w-0">
                     <p className={cn('text-xs sm:text-sm text-warning', 'text-start')}>
                       {t('entityLinks.replacePrimaryWarning', {
-                        defaultValue: `This will replace the existing primary link (${(existingPrimaryLink as any).entity_name || existingPrimaryLink.entity_id})`,
                         currentPrimary:
                           (existingPrimaryLink as any).entity_name || existingPrimaryLink.entity_id,
                       })}
@@ -648,7 +646,6 @@ export function EntitySearchDialog({
                 >
                   {t('entityLinks.selectedCount', {
                     count: selectedEntities.length,
-                    defaultValue: `${selectedEntities.length} selected`,
                   })}
                 </span>
                 <Button
@@ -661,7 +658,6 @@ export function EntitySearchDialog({
                 >
                   {t('entityLinks.linkSelected', {
                     count: selectedEntities.length,
-                    defaultValue: `Link ${selectedEntities.length} ${selectedEntities.length === 1 ? 'entity' : 'entities'}`,
                   })}
                 </Button>
               </div>

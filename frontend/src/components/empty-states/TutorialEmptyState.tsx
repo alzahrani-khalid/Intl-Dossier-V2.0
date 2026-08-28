@@ -281,7 +281,7 @@ export function TutorialEmptyState({
             <div className="space-y-4" data-testid={`${testId}-expanded`}>
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-medium text-muted-foreground">
-                  {t('video.watchTutorial', 'Watch Tutorial')}
+                  {t('video.watchTutorial')}
                 </h3>
                 <Button
                   variant="ghost"
@@ -290,7 +290,7 @@ export function TutorialEmptyState({
                   onClick={() => setExpandedVideo(false)}
                 >
                   <X className="h-3.5 w-3.5 me-1" />
-                  {t('video.close', 'Close')}
+                  {t('video.close')}
                 </Button>
               </div>
 
@@ -322,13 +322,13 @@ export function TutorialEmptyState({
                     ) : (
                       <ChevronLeft className="h-4 w-4 me-1" />
                     )}
-                    {t('video.previous', 'Previous')}
+                    {t('video.previous')}
                   </Button>
                   <span className="text-sm text-muted-foreground">
                     {activeTutorialIndex + 1} / {relevantTutorials.length}
                   </span>
                   <Button variant="outline" size="sm" onClick={handleNext} className="h-9 min-h-9">
-                    {t('video.next', 'Next')}
+                    {t('video.next')}
                     {isRTL ? (
                       <ChevronLeft className="h-4 w-4 ms-1" />
                     ) : (
@@ -393,7 +393,7 @@ export function TutorialEmptyState({
                           e.stopPropagation()
                           setShowTutorials(false)
                         }}
-                        title={t('video.hideTutorial', 'Hide tutorial')}
+                        title={t('video.hideTutorial')}
                       >
                         <X className="h-4 w-4" />
                       </Button>
@@ -485,7 +485,7 @@ export function TutorialEmptyState({
             data-testid={`${testId}-show-button`}
           >
             <Play className="h-3.5 w-3.5 me-1" />
-            {t('video.showTutorials', 'Show video tutorial')}
+            {t('video.showTutorials')}
           </Button>
         </div>
       )}

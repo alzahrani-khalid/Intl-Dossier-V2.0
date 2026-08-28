@@ -635,7 +635,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
     () => [
       {
         id: 'create-task',
-        label: t('createActions.newTask', 'Create task'),
+        label: t('createActions.newTask'),
         icon: CheckSquare,
         action: (): void => {
           openPalette('task')
@@ -645,7 +645,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
       },
       {
         id: 'create-intake',
-        label: t('createActions.newIntake', 'Create intake request'),
+        label: t('createActions.newIntake'),
         icon: Inbox,
         action: (): void => {
           openPalette('intake')
@@ -655,14 +655,14 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
       },
       {
         id: 'create-dossier',
-        label: t('createActions.newDossier', 'Create dossier'),
+        label: t('createActions.newDossier'),
         icon: FolderPlus,
         action: () => navigateTo('/dossiers/create'),
         category: 'create',
       },
       {
         id: 'create-commitment',
-        label: t('createActions.newCommitment', 'Create commitment'),
+        label: t('createActions.newCommitment'),
         icon: FileCheck,
         action: (): void => {
           openPalette('commitment')
@@ -672,70 +672,70 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
       },
       {
         id: 'create-mou',
-        label: t('createActions.newMou', 'Create MoU'),
+        label: t('createActions.newMou'),
         icon: FileSignature,
         action: () => navigateTo('/mous?action=create'),
         category: 'create',
       },
       {
         id: 'create-user',
-        label: t('createActions.newUser', 'Create user'),
+        label: t('createActions.newUser'),
         icon: UserPlus,
         action: () => navigateTo('/users/create'),
         category: 'create',
       },
       {
         id: 'create-country',
-        label: t('createActions.newCountry', 'Create country dossier'),
+        label: t('createActions.newCountry'),
         icon: Globe,
         action: () => navigateTo('/dossiers/countries/create'),
         category: 'create-dossier',
       },
       {
         id: 'create-organization',
-        label: t('createActions.newOrganization', 'Create organization dossier'),
+        label: t('createActions.newOrganization'),
         icon: Building2,
         action: () => navigateTo('/dossiers/organizations/create'),
         category: 'create-dossier',
       },
       {
         id: 'create-forum',
-        label: t('createActions.newForum', 'Create forum dossier'),
+        label: t('createActions.newForum'),
         icon: UsersRound,
         action: () => navigateTo('/dossiers/forums/create'),
         category: 'create-dossier',
       },
       {
         id: 'create-engagement',
-        label: t('createActions.newEngagement', 'Create engagement'),
+        label: t('createActions.newEngagement'),
         icon: CalendarDays,
         action: () => navigateTo('/dossiers/engagements/create'),
         category: 'create-dossier',
       },
       {
         id: 'create-person',
-        label: t('createActions.newPerson', 'Create person dossier'),
+        label: t('createActions.newPerson'),
         icon: UserPlus,
         action: () => navigateTo('/dossiers/persons/create'),
         category: 'create-dossier',
       },
       {
         id: 'create-topic',
-        label: t('createActions.newTopic', 'Create topic dossier'),
+        label: t('createActions.newTopic'),
         icon: Tag,
         action: () => navigateTo('/dossiers/topics/create'),
         category: 'create-dossier',
       },
       {
         id: 'create-working-group',
-        label: t('createActions.newWorkingGroup', 'Create working group'),
+        label: t('createActions.newWorkingGroup'),
         icon: Briefcase,
         action: () => navigateTo('/dossiers/working_groups/create'),
         category: 'create-dossier',
       },
       {
         id: 'create-elected-official',
-        label: t('createActions.newElectedOfficial', 'Create elected official'),
+        label: t('createActions.newElectedOfficial'),
         icon: UserPlus,
         action: () => navigateTo('/dossiers/elected-officials/create'),
         category: 'create-dossier',
@@ -749,56 +749,56 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
     () => [
       {
         id: 'nav-dashboard',
-        label: t('quickActions.dashboard', 'Go to dashboard'),
+        label: t('quickActions.dashboard'),
         icon: LayoutDashboard,
         action: () => navigateTo('/dashboard'),
         shortcut: formatShortcut('d', ['alt']),
       },
       {
         id: 'nav-my-work',
-        label: t('quickActions.myWork', 'Go to my work'),
+        label: t('quickActions.myWork'),
         icon: Briefcase,
         action: () => navigateTo('/my-work'),
         shortcut: formatShortcut('w', ['alt']),
       },
       {
         id: 'nav-dossiers',
-        label: t('quickActions.dossiers', 'Go to dossiers'),
+        label: t('quickActions.dossiers'),
         icon: Folder,
         action: () => navigateTo('/dossiers'),
         shortcut: formatShortcut('o', ['alt']),
       },
       {
         id: 'nav-calendar',
-        label: t('quickActions.calendar', 'Go to calendar'),
+        label: t('quickActions.calendar'),
         icon: CalendarDays,
         action: () => navigateTo('/calendar'),
         shortcut: formatShortcut('c', ['alt']),
       },
       {
         id: 'nav-tasks',
-        label: t('quickActions.tasks', 'Go to tasks'),
+        label: t('quickActions.tasks'),
         icon: CheckSquare,
         action: () => navigateTo('/tasks'),
         shortcut: formatShortcut('t', ['alt']),
       },
       {
         id: 'nav-analytics',
-        label: t('quickActions.analytics', 'Go to analytics'),
+        label: t('quickActions.analytics'),
         icon: TrendingUp,
         action: () => navigateTo('/analytics'),
         shortcut: formatShortcut('a', ['alt']),
       },
       {
         id: 'nav-settings',
-        label: t('quickActions.settings', 'Go to settings'),
+        label: t('quickActions.settings'),
         icon: Settings,
         action: () => navigateTo('/settings'),
         shortcut: formatShortcut('s', ['alt']),
       },
       {
         id: 'cmd-view-network',
-        label: t('quickActions.viewNetwork', 'View network'),
+        label: t('quickActions.viewNetwork'),
         icon: Network,
         action: () => navigateTo('/relationships/graph'),
       },
@@ -809,7 +809,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
       // deep-link live in the panel (the deep-link target), not here.
       ...getAnalyzeCommandActions(location.pathname).map((analyze) => ({
         id: analyze.id,
-        label: t(analyzeLabelKey[analyze.queryType], analyze.label),
+        label: t(analyzeLabelKey[analyze.queryType]),
         icon: Sparkles,
         action: (): void => navigateTo(analyze.deepLink),
       })),
@@ -836,19 +836,19 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
       })(),
       {
         id: 'nav-activity',
-        label: t('quickActions.recentActivity', 'Recent activity'),
+        label: t('quickActions.recentActivity'),
         icon: History,
         action: () => navigateTo('/activity'),
       },
       {
         id: 'nav-briefs',
-        label: t('quickActions.briefs', 'Go to briefs'),
+        label: t('quickActions.briefs'),
         icon: ScrollText,
         action: () => navigateTo('/briefs'),
       },
       {
         id: 'cmd-generate-briefing',
-        label: t('quickActions.generateBriefing', 'Generate briefing'),
+        label: t('quickActions.generateBriefing'),
         icon: FileText,
         action: (): void => {
           const engagementMatch = /\/engagements\/([^/]+)/.exec(location.pathname)
@@ -861,7 +861,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
       },
       {
         id: 'cmd-schedule-poll',
-        label: t('quickActions.schedulePoll', 'Schedule poll'),
+        label: t('quickActions.schedulePoll'),
         icon: CalendarClock,
         action: (): void => {
           const engagementMatch = /\/engagements\/([^/]+)/.exec(location.pathname)
@@ -874,25 +874,25 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
       },
       {
         id: 'nav-intelligence',
-        label: t('quickActions.intelligence', 'Go to intelligence'),
+        label: t('quickActions.intelligence'),
         icon: Brain,
         action: () => navigateTo('/intelligence'),
       },
       {
         id: 'nav-reports',
-        label: t('quickActions.reports', 'Go to reports'),
+        label: t('quickActions.reports'),
         icon: BarChart3,
         action: () => navigateTo('/reports'),
       },
       {
         id: 'nav-sla',
-        label: t('quickActions.slaMonitoring', 'SLA monitoring'),
+        label: t('quickActions.slaMonitoring'),
         icon: Gauge,
         action: () => navigateTo('/sla-monitoring'),
       },
       {
         id: 'toggle-theme',
-        label: t('commands.toggleTheme', 'Toggle theme'),
+        label: t('commands.toggleTheme'),
         icon: SunMoon,
         action: (): void => {
           setMode(mode === 'dark' ? 'light' : 'dark')
@@ -901,7 +901,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
       },
       {
         id: 'switch-language',
-        label: t('commands.switchLanguage', 'Switch language'),
+        label: t('commands.switchLanguage'),
         icon: Languages,
         action: (): void => {
           void switchLanguage(i18n.language === 'ar' ? 'en' : 'ar')
@@ -1101,7 +1101,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
       <div className={cn('flex flex-col', className)}>
         <CommandInput
           ref={inputRef}
-          placeholder={t('searchPlaceholder', 'Type a command or search...')}
+          placeholder={t('searchPlaceholder')}
           value={searchQuery}
           onValueChange={(value) => {
             setSearchQuery(value)
@@ -1147,7 +1147,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
               {/* Context-Aware Suggestions */}
               {contextSuggestions.length > 0 && (
                 <>
-                  <CommandGroup heading={t('contextSuggestions.title', 'Suggested')}>
+                  <CommandGroup heading={t('contextSuggestions.title')}>
                     {contextSuggestions.map((suggestion) => {
                       const SuggestionIcon = suggestion.icon
                       return (
@@ -1167,7 +1167,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                             variant="secondary"
                             className="shrink-0 text-xs bg-warning/10 dark:bg-warning/30 text-warning"
                           >
-                            {t('contextSuggestions.suggested', 'Suggested')}
+                            {t('contextSuggestions.suggested')}
                           </Badge>
                         </CommandItem>
                       )
@@ -1294,7 +1294,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
               {/* Create Actions (empty query) */}
               {filteredCreateActions.length > 0 && (
                 <>
-                  <CommandGroup heading={t('createActions.title', 'Create')}>
+                  <CommandGroup heading={t('createActions.title')}>
                     {filteredCreateActions.map((action) => {
                       const CreateIcon = action.icon
                       return (
@@ -1324,7 +1324,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
               {/* Quick Navigation (empty query) */}
               {filteredQuickActions.length > 0 && (
                 <>
-                  <CommandGroup heading={t('quickActions.title', 'Navigate')}>
+                  <CommandGroup heading={t('quickActions.title')}>
                     {filteredQuickActions.map((action) => {
                       const QuickIcon = action.icon
                       return (
@@ -1573,23 +1573,23 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                 <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">
                   {'\u2191\u2193'}
                 </kbd>
-                <span className="hidden sm:inline">{t('footer.navigate', 'Navigate')}</span>
+                <span className="hidden sm:inline">{t('footer.navigate')}</span>
               </span>
               <span className="flex items-center gap-1">
                 <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">
                   {'\u21B5'}
                 </kbd>
-                <span className="hidden sm:inline">{t('footer.select', 'Select')}</span>
+                <span className="hidden sm:inline">{t('footer.select')}</span>
               </span>
               <span className="flex items-center gap-1">
                 <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">Esc</kbd>
-                <span className="hidden sm:inline">{t('footer.close', 'Close')}</span>
+                <span className="hidden sm:inline">{t('footer.close')}</span>
               </span>
             </div>
             <div className="flex items-center gap-1">
               <Keyboard className="size-3" />
               <span>
-                {isMac ? '\u2318K' : 'Ctrl+K'} {t('footer.toOpen', 'to open')}
+                {isMac ? '\u2318K' : 'Ctrl+K'} {t('footer.toOpen')}
               </span>
             </div>
           </div>
@@ -1655,9 +1655,7 @@ export function ShortcutGuide({
 
   return (
     <div className={cn('flex flex-col gap-1 text-xs text-muted-foreground', className)}>
-      <div className="mb-1 font-medium text-foreground">
-        {t('guide.title', 'Keyboard shortcuts')}
-      </div>
+      <div className="mb-1 font-medium text-foreground">{t('guide.title')}</div>
       {shortcuts.map((shortcut) => (
         <div key={shortcut.id} className="flex items-center justify-between gap-2">
           <span className="truncate">{shortcut.description}</span>

@@ -150,7 +150,7 @@ export function ConvertMilestoneDialog({
             {t('form.cancel')}
           </Button>
           <Button onClick={handleConvert} disabled={isConverting} className="w-full sm:w-auto">
-            {isConverting ? t('common:converting', 'Converting...') : t('convert.confirm')}
+            {isConverting ? t('common:converting') : t('convert.confirm')}
           </Button>
         </DialogFooter>
       </DialogContent>

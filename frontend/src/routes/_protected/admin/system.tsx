@@ -199,17 +199,17 @@ function AdminSystemPage() {
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       <PageHeader
         icon={<Settings className="h-6 w-6" />}
-        title={t('system.title', 'System Utilities')}
-        subtitle={t('system.subtitle', 'Maintenance and data management tools')}
+        title={t('system.title')}
+        subtitle={t('system.subtitle')}
       />
 
       {/* Warning Banner */}
       <Alert variant="default" className="border-warning bg-warning/10 dark:bg-warning/20">
         <AlertCircle className="h-5 w-5 text-warning dark:text-warning" />
         <AlertDescription className="text-warning dark:text-warning">
-          <p className="font-medium">{t('system.warning', 'Admin Privileges Active')}</p>
+          <p className="font-medium">{t('system.warning')}</p>
           <p className="text-sm mt-1">
-            {t('system.warningText', 'These operations modify system data. Use with caution.')}
+            {t('system.warningText')}
           </p>
         </AlertDescription>
       </Alert>
@@ -224,12 +224,11 @@ function AdminSystemPage() {
               </div>
               <div>
                 <CardTitle className="text-xl">
-                  {t('system.populateCountries.title', 'Populate Country Data')}
+                  {t('system.populateCountries.title')}
                 </CardTitle>
                 <CardDescription>
                   {t(
                     'system.populateCountries.description',
-                    'Fetch and update geographic data for all countries from REST Countries API',
                   )}
                 </CardDescription>
               </div>
@@ -241,32 +240,32 @@ function AdminSystemPage() {
           {/* Information */}
           <div className="space-y-2">
             <h3 className="text-sm font-medium">
-              {t('system.populateCountries.whatIsIncluded', 'What will be updated:')}
+              {t('system.populateCountries.whatIsIncluded')}
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-success" />
-                <span>{t('system.populateCountries.isoCodes', 'ISO Codes (2 & 3 letter)')}</span>
+                <span>{t('system.populateCountries.isoCodes')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-success" />
-                <span>{t('system.populateCountries.capitals', 'Capital Cities')}</span>
+                <span>{t('system.populateCountries.capitals')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-success" />
-                <span>{t('system.populateCountries.regions', 'Regions & Subregions')}</span>
+                <span>{t('system.populateCountries.regions')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-success" />
-                <span>{t('system.populateCountries.population', 'Population Data')}</span>
+                <span>{t('system.populateCountries.population')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-success" />
-                <span>{t('system.populateCountries.area', 'Area (km²)')}</span>
+                <span>{t('system.populateCountries.area')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-success" />
-                <span>{t('system.populateCountries.flags', 'Flag URLs')}</span>
+                <span>{t('system.populateCountries.flags')}</span>
               </div>
             </div>
           </div>
@@ -275,14 +274,14 @@ function AdminSystemPage() {
           <div className="flex items-center gap-2">
             <Database className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm text-muted-foreground">
-              {t('system.populateCountries.dataSource', 'Data Source:')}
+              {t('system.populateCountries.dataSource')}
             </span>
             <Badge variant="secondary" className="gap-1">
               <Download className="h-3 w-3" />
               REST Countries API
             </Badge>
             <span className="text-xs text-muted-foreground">
-              ({t('system.populateCountries.countriesCount', '~250 countries')})
+              ({t('system.populateCountries.countriesCount')})
             </span>
           </div>
 
@@ -296,12 +295,12 @@ function AdminSystemPage() {
             {populateMutation.isPending ? (
               <>
                 <RefreshCw className="h-4 w-4 animate-spin" />
-                <span>{t('system.populateCountries.processing', 'Processing...')}</span>
+                <span>{t('system.populateCountries.processing')}</span>
               </>
             ) : (
               <>
                 <RefreshCw className="h-4 w-4" />
-                <span>{t('system.populateCountries.updateButton', 'Update Country Data')}</span>
+                <span>{t('system.populateCountries.updateButton')}</span>
               </>
             )}
           </Button>
@@ -313,14 +312,14 @@ function AdminSystemPage() {
                 <span className="text-muted-foreground font-medium">
                   {progress && progress.processed_items > 0 ? (
                     <>
-                      {t('system.populateCountries.processing', 'Processing')}:{' '}
+                      {t('system.populateCountries.processing')}:{' '}
                       <span className="font-bold text-foreground">
                         {progress.processed_items}/{progress.total_items}
                       </span>{' '}
-                      {t('system.populateCountries.countries', 'countries')}
+                      {t('system.populateCountries.countries')}
                     </>
                   ) : (
-                    t('system.populateCountries.fetching', 'Fetching and updating countries...')
+                    t('system.populateCountries.fetching')
                   )}
                 </span>
                 {progress && (
@@ -339,7 +338,7 @@ function AdminSystemPage() {
                   <div className="text-center p-2 bg-background rounded">
                     <div className="font-bold text-info">{progress.successful_items}</div>
                     <div className="text-muted-foreground">
-                      {t('system.populateCountries.successful', 'Successful')}
+                      {t('system.populateCountries.successful')}
                     </div>
                   </div>
                   <div className="text-center p-2 bg-background rounded">
@@ -347,13 +346,13 @@ function AdminSystemPage() {
                       {progress.processed_items - progress.successful_items - progress.failed_items}
                     </div>
                     <div className="text-muted-foreground">
-                      {t('system.populateCountries.pending', 'Pending')}
+                      {t('system.populateCountries.pending')}
                     </div>
                   </div>
                   <div className="text-center p-2 bg-background rounded">
                     <div className="font-bold text-danger">{progress.failed_items}</div>
                     <div className="text-muted-foreground">
-                      {t('system.populateCountries.failed', 'Failed')}
+                      {t('system.populateCountries.failed')}
                     </div>
                   </div>
                 </div>
@@ -361,11 +360,11 @@ function AdminSystemPage() {
 
               <p className="text-xs text-muted-foreground text-center">
                 {!progress &&
-                  t('system.populateCountries.estimatedTime', 'This may take 2-3 minutes')}
+                  t('system.populateCountries.estimatedTime')}
                 {progress && progress.percentage < 100 && (
                   <span className="flex items-center justify-center gap-1">
                     <RefreshCw className="h-3 w-3 animate-spin inline" />
-                    {t('system.populateCountries.inProgress', 'Operation in progress...')}
+                    {t('system.populateCountries.inProgress')}
                   </span>
                 )}
               </p>
@@ -402,7 +401,7 @@ function AdminSystemPage() {
                           {result.summary.total}
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          {t('system.populateCountries.total', 'Total')}
+                          {t('system.populateCountries.total')}
                         </div>
                       </div>
                       <div className="text-center p-2 bg-background rounded">
@@ -410,7 +409,7 @@ function AdminSystemPage() {
                           {result.summary.processed}
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          {t('system.populateCountries.processed', 'Processed')}
+                          {t('system.populateCountries.processed')}
                         </div>
                       </div>
                       <div className="text-center p-2 bg-background rounded">
@@ -418,7 +417,7 @@ function AdminSystemPage() {
                           {result.summary.successful}
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          {t('system.populateCountries.successful', 'Successful')}
+                          {t('system.populateCountries.successful')}
                         </div>
                       </div>
                       <div className="text-center p-2 bg-background rounded">
@@ -428,7 +427,7 @@ function AdminSystemPage() {
                           {result.summary.failed}
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          {t('system.populateCountries.failed', 'Failed')}
+                          {t('system.populateCountries.failed')}
                         </div>
                       </div>
                     </div>
@@ -438,7 +437,7 @@ function AdminSystemPage() {
                   {result.errors && result.errors.length > 0 && (
                     <details className="text-sm">
                       <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
-                        {t('system.populateCountries.viewErrors', 'View error details')} (
+                        {t('system.populateCountries.viewErrors')} (
                         {result.errors.length})
                       </summary>
                       <ul className="mt-2 space-y-1 text-xs max-h-40 overflow-y-auto">
@@ -462,14 +461,12 @@ function AdminSystemPage() {
               <Lightbulb className="size-3.5 shrink-0 mt-0.5" aria-hidden="true" />
               {t(
                 'system.populateCountries.tip1',
-                'This operation is safe to run multiple times - it will update existing countries.',
               )}
             </p>
             <p className="flex items-start gap-1.5">
               <Lightbulb className="size-3.5 shrink-0 mt-0.5" aria-hidden="true" />
               {t(
                 'system.populateCountries.tip2',
-                'Run this annually to keep population and area data up to date.',
               )}
             </p>
           </div>

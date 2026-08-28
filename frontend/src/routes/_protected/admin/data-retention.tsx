@@ -256,21 +256,21 @@ function DataRetentionPage() {
 
   // Format retention period
   const formatRetentionPeriod = (days: number) => {
-    if (days === 0) return t('period.permanent', 'Permanent')
+    if (days === 0) return t('period.permanent')
     if (days >= 365) {
       const years = Math.floor(days / 365)
-      return `${years} ${years === 1 ? t('period.year', 'Year') : t('period.years', 'Years')}`
+      return `${years} ${years === 1 ? t('period.year') : t('period.years')}`
     }
-    return `${days} ${t('period.days', 'Days')}`
+    return `${days} ${t('period.days')}`
   }
 
   // Format action
   const formatAction = (action: RetentionActionType) => {
     const map: Record<RetentionActionType, string> = {
-      archive: t('action.archive', 'Archive'),
-      soft_delete: t('action.softDelete', 'Soft Delete'),
-      hard_delete: t('action.hardDelete', 'Hard Delete'),
-      anonymize: t('action.anonymize', 'Anonymize'),
+      archive: t('action.archive'),
+      soft_delete: t('action.softDelete'),
+      hard_delete: t('action.hardDelete'),
+      anonymize: t('action.anonymize'),
     }
     return map[action] || action
   }
@@ -295,17 +295,17 @@ function DataRetentionPage() {
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       <PageHeader
         icon={<Database className="h-6 w-6" />}
-        title={t('title', 'Data Retention Policies')}
-        subtitle={t('description', 'Configure data lifecycle, retention periods, and legal holds')}
+        title={t('title')}
+        subtitle={t('description')}
         actions={
           <div className="flex items-center gap-3">
             <Button variant="outline" onClick={() => setShowProcessorDialog(true)}>
               <Play className="h-4 w-4 me-2" />
-              {t('actions.runProcessor', 'Run Processor')}
+              {t('actions.runProcessor')}
             </Button>
             <Button onClick={() => setShowPolicyDialog(true)}>
               <Plus className="h-4 w-4 me-2" />
-              {t('actions.newPolicy', 'New Policy')}
+              {t('actions.newPolicy')}
             </Button>
           </div>
         }
@@ -324,7 +324,7 @@ function DataRetentionPage() {
                   {figure(policiesIsError, totalPolicies)}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {t('stats.activePolicies', 'Active Policies')}
+                  {t('stats.activePolicies')}
                 </p>
               </div>
             </div>
@@ -342,7 +342,7 @@ function DataRetentionPage() {
                   {figure(holdsIsError, activeLegalHolds)}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {t('stats.legalHolds', 'Legal Holds')}
+                  {t('stats.legalHolds')}
                 </p>
               </div>
             </div>
@@ -360,7 +360,7 @@ function DataRetentionPage() {
                   {figure(pendingIsError, totalPendingActions)}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {t('stats.pendingActions', 'Pending Actions')}
+                  {t('stats.pendingActions')}
                 </p>
               </div>
             </div>
@@ -378,7 +378,7 @@ function DataRetentionPage() {
                   {figure(expiringIsError, totalExpiringSoon)}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {t('stats.expiringSoon', 'Expiring Soon')}
+                  {t('stats.expiringSoon')}
                 </p>
               </div>
             </div>
@@ -396,7 +396,7 @@ function DataRetentionPage() {
                   {figure(statsIsError, entitiesUnderHold)}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {t('stats.underHold', 'Under Hold')}
+                  {t('stats.underHold')}
                 </p>
               </div>
             </div>
@@ -421,23 +421,23 @@ function DataRetentionPage() {
           <TabsList className="grid w-full grid-cols-2 sm:grid-cols-5 h-auto">
             <TabsTrigger value="overview" className="gap-2 py-2">
               <BarChart3 className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('tabs.overview', 'Overview')}</span>
+              <span className="hidden sm:inline">{t('tabs.overview')}</span>
             </TabsTrigger>
             <TabsTrigger value="policies" className="gap-2 py-2">
               <Settings className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('tabs.policies', 'Policies')}</span>
+              <span className="hidden sm:inline">{t('tabs.policies')}</span>
             </TabsTrigger>
             <TabsTrigger value="legal-holds" className="gap-2 py-2">
               <Lock className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('tabs.legalHolds', 'Legal Holds')}</span>
+              <span className="hidden sm:inline">{t('tabs.legalHolds')}</span>
             </TabsTrigger>
             <TabsTrigger value="pending" className="gap-2 py-2">
               <Clock className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('tabs.pending', 'Pending')}</span>
+              <span className="hidden sm:inline">{t('tabs.pending')}</span>
             </TabsTrigger>
             <TabsTrigger value="history" className="gap-2 py-2">
               <History className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('tabs.history', 'History')}</span>
+              <span className="hidden sm:inline">{t('tabs.history')}</span>
             </TabsTrigger>
           </TabsList>
 
@@ -449,7 +449,7 @@ function DataRetentionPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <BarChart3 className="h-5 w-5" />
-                    {t('overview.byEntityType', 'Statistics by Entity Type')}
+                    {t('overview.byEntityType')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -467,7 +467,7 @@ function DataRetentionPage() {
                     />
                   ) : statistics.length === 0 ? (
                     <p className="text-muted-foreground text-center py-8">
-                      {t('overview.noStats', 'No retention tracking data yet')}
+                      {t('overview.noStats')}
                     </p>
                   ) : (
                     <div className="space-y-4">
@@ -478,7 +478,7 @@ function DataRetentionPage() {
                               {stat.entity_type.replace(/_/g, ' ')}
                             </span>
                             <span className="text-sm text-muted-foreground">
-                              {stat.total_tracked} {t('overview.tracked', 'tracked')}
+                              {stat.total_tracked} {t('overview.tracked')}
                             </span>
                           </div>
                           <div className="flex gap-2">
@@ -515,7 +515,7 @@ function DataRetentionPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <History className="h-5 w-5" />
-                    {t('overview.recentExecutions', 'Recent Executions')}
+                    {t('overview.recentExecutions')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -533,7 +533,7 @@ function DataRetentionPage() {
                     />
                   ) : executionLog.length === 0 ? (
                     <p className="text-muted-foreground text-center py-8">
-                      {t('overview.noExecutions', 'No processor executions yet')}
+                      {t('overview.noExecutions')}
                     </p>
                   ) : (
                     <div className="space-y-4">
@@ -575,11 +575,10 @@ function DataRetentionPage() {
             {totalExpiringSoon > 0 && (
               <Alert>
                 <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>{t('overview.expiringAlert', 'Entities Expiring Soon')}</AlertTitle>
+                <AlertTitle>{t('overview.expiringAlert')}</AlertTitle>
                 <AlertDescription>
                   {t(
                     'overview.expiringAlertDesc',
-                    '{{count}} entities will expire within the next 30 days. Review them in the Pending tab.',
                     { count: totalExpiringSoon },
                   )}
                 </AlertDescription>
@@ -593,17 +592,16 @@ function DataRetentionPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle>{t('policies.title', 'Retention Policies')}</CardTitle>
+                    <CardTitle>{t('policies.title')}</CardTitle>
                     <CardDescription>
                       {t(
                         'policies.description',
-                        'Configure how long data is retained and what happens when it expires',
                       )}
                     </CardDescription>
                   </div>
                   <Button onClick={() => setShowPolicyDialog(true)}>
                     <Plus className="h-4 w-4 me-2" />
-                    {t('actions.newPolicy', 'New Policy')}
+                    {t('actions.newPolicy')}
                   </Button>
                 </div>
               </CardHeader>
@@ -617,29 +615,28 @@ function DataRetentionPage() {
                 ) : policies.length === 0 ? (
                   <div className="text-center py-12">
                     <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                    <p className="text-lg font-medium">{t('policies.empty', 'No Policies')}</p>
+                    <p className="text-lg font-medium">{t('policies.empty')}</p>
                     <p className="text-muted-foreground mb-4">
                       {t(
                         'policies.emptyDesc',
-                        'Create your first retention policy to start managing data lifecycle',
                       )}
                     </p>
                     <Button onClick={() => setShowPolicyDialog(true)}>
                       <Plus className="h-4 w-4 me-2" />
-                      {t('actions.newPolicy', 'Create Policy')}
+                      {t('actions.newPolicy')}
                     </Button>
                   </div>
                 ) : (
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>{t('policies.name', 'Name')}</TableHead>
-                        <TableHead>{t('policies.entityType', 'Entity Type')}</TableHead>
-                        <TableHead>{t('policies.retention', 'Retention')}</TableHead>
-                        <TableHead>{t('policies.action', 'Action')}</TableHead>
-                        <TableHead>{t('policies.status', 'Status')}</TableHead>
+                        <TableHead>{t('policies.name')}</TableHead>
+                        <TableHead>{t('policies.entityType')}</TableHead>
+                        <TableHead>{t('policies.retention')}</TableHead>
+                        <TableHead>{t('policies.action')}</TableHead>
+                        <TableHead>{t('policies.status')}</TableHead>
                         <TableHead className="text-end">
-                          {t('policies.actions', 'Actions')}
+                          {t('policies.actions')}
                         </TableHead>
                       </TableRow>
                     </TableHeader>
@@ -677,7 +674,7 @@ function DataRetentionPage() {
                                 setShowPolicyDialog(true)
                               }}
                             >
-                              {t('actions.edit', 'Edit')}
+                              {t('actions.edit')}
                             </Button>
                           </TableCell>
                         </TableRow>
@@ -697,18 +694,17 @@ function DataRetentionPage() {
                   <div>
                     <CardTitle className="flex items-center gap-2">
                       <Lock className="h-5 w-5" />
-                      {t('legalHolds.title', 'Legal Holds')}
+                      {t('legalHolds.title')}
                     </CardTitle>
                     <CardDescription>
                       {t(
                         'legalHolds.description',
-                        'Prevent data from being archived or deleted during legal proceedings',
                       )}
                     </CardDescription>
                   </div>
                   <Button onClick={() => setShowLegalHoldDialog(true)}>
                     <Plus className="h-4 w-4 me-2" />
-                    {t('actions.newLegalHold', 'New Legal Hold')}
+                    {t('actions.newLegalHold')}
                   </Button>
                 </div>
               </CardHeader>
@@ -729,29 +725,28 @@ function DataRetentionPage() {
                 ) : legalHolds.length === 0 ? (
                   <div className="text-center py-12">
                     <Lock className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                    <p className="text-lg font-medium">{t('legalHolds.empty', 'No Legal Holds')}</p>
+                    <p className="text-lg font-medium">{t('legalHolds.empty')}</p>
                     <p className="text-muted-foreground mb-4">
                       {t(
                         'legalHolds.emptyDesc',
-                        'Legal holds prevent data deletion during legal proceedings',
                       )}
                     </p>
                     <Button onClick={() => setShowLegalHoldDialog(true)}>
                       <Plus className="h-4 w-4 me-2" />
-                      {t('actions.newLegalHold', 'Create Legal Hold')}
+                      {t('actions.newLegalHold')}
                     </Button>
                   </div>
                 ) : (
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>{t('legalHolds.reference', 'Reference')}</TableHead>
-                        <TableHead>{t('legalHolds.name', 'Name')}</TableHead>
-                        <TableHead>{t('legalHolds.matter', 'Legal Matter')}</TableHead>
-                        <TableHead>{t('legalHolds.effectiveDate', 'Effective Date')}</TableHead>
-                        <TableHead>{t('legalHolds.status', 'Status')}</TableHead>
+                        <TableHead>{t('legalHolds.reference')}</TableHead>
+                        <TableHead>{t('legalHolds.name')}</TableHead>
+                        <TableHead>{t('legalHolds.matter')}</TableHead>
+                        <TableHead>{t('legalHolds.effectiveDate')}</TableHead>
+                        <TableHead>{t('legalHolds.status')}</TableHead>
                         <TableHead className="text-end">
-                          {t('legalHolds.actions', 'Actions')}
+                          {t('legalHolds.actions')}
                         </TableHead>
                       </TableRow>
                     </TableHeader>
@@ -783,7 +778,7 @@ function DataRetentionPage() {
                                 disabled={releaseLegalHold.isPending}
                               >
                                 <Unlock className="h-4 w-4 me-2" />
-                                {t('actions.release', 'Release')}
+                                {t('actions.release')}
                               </Button>
                             )}
                           </TableCell>
@@ -804,10 +799,10 @@ function DataRetentionPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Clock className="h-5 w-5" />
-                    {t('pending.actions', 'Pending Retention Actions')}
+                    {t('pending.actions')}
                   </CardTitle>
                   <CardDescription>
-                    {t('pending.actionsDesc', 'Entities that have exceeded their retention period')}
+                    {t('pending.actionsDesc')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -825,7 +820,7 @@ function DataRetentionPage() {
                     />
                   ) : pendingActions.length === 0 ? (
                     <p className="text-muted-foreground text-center py-8">
-                      {t('pending.noActions', 'No pending actions')}
+                      {t('pending.noActions')}
                     </p>
                   ) : (
                     <div className="space-y-3">
@@ -857,10 +852,10 @@ function DataRetentionPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <AlertTriangle className="h-5 w-5" />
-                    {t('pending.expiring', 'Expiring Soon')}
+                    {t('pending.expiring')}
                   </CardTitle>
                   <CardDescription>
-                    {t('pending.expiringDesc', 'Entities expiring within 30 days')}
+                    {t('pending.expiringDesc')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -878,7 +873,7 @@ function DataRetentionPage() {
                     />
                   ) : expiringEntities.length === 0 ? (
                     <p className="text-muted-foreground text-center py-8">
-                      {t('pending.noExpiring', 'No entities expiring soon')}
+                      {t('pending.noExpiring')}
                     </p>
                   ) : (
                     <div className="space-y-3">
@@ -916,10 +911,10 @@ function DataRetentionPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <History className="h-5 w-5" />
-                  {t('history.title', 'Execution History')}
+                  {t('history.title')}
                 </CardTitle>
                 <CardDescription>
-                  {t('history.description', 'Log of all retention processor executions')}
+                  {t('history.description')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -939,12 +934,11 @@ function DataRetentionPage() {
                   <div className="text-center py-12">
                     <History className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                     <p className="text-lg font-medium">
-                      {t('history.empty', 'No Execution History')}
+                      {t('history.empty')}
                     </p>
                     <p className="text-muted-foreground">
                       {t(
                         'history.emptyDesc',
-                        'Run the retention processor to see execution history',
                       )}
                     </p>
                   </div>
@@ -952,14 +946,14 @@ function DataRetentionPage() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>{t('history.date', 'Date')}</TableHead>
-                        <TableHead>{t('history.type', 'Type')}</TableHead>
-                        <TableHead>{t('history.processed', 'Processed')}</TableHead>
-                        <TableHead>{t('history.archived', 'Archived')}</TableHead>
-                        <TableHead>{t('history.deleted', 'Deleted')}</TableHead>
-                        <TableHead>{t('history.warned', 'Warned')}</TableHead>
-                        <TableHead>{t('history.errors', 'Errors')}</TableHead>
-                        <TableHead>{t('history.status', 'Status')}</TableHead>
+                        <TableHead>{t('history.date')}</TableHead>
+                        <TableHead>{t('history.type')}</TableHead>
+                        <TableHead>{t('history.processed')}</TableHead>
+                        <TableHead>{t('history.archived')}</TableHead>
+                        <TableHead>{t('history.deleted')}</TableHead>
+                        <TableHead>{t('history.warned')}</TableHead>
+                        <TableHead>{t('history.errors')}</TableHead>
+                        <TableHead>{t('history.status')}</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -1096,13 +1090,12 @@ function PolicyDialog({
         <DialogHeader>
           <DialogTitle>
             {policy
-              ? t('dialog.editPolicy', 'Edit Policy')
-              : t('dialog.newPolicy', 'New Retention Policy')}
+              ? t('dialog.editPolicy')
+              : t('dialog.newPolicy')}
           </DialogTitle>
           <DialogDescription>
             {t(
               'dialog.policyDesc',
-              'Configure how long data should be retained and what happens when it expires',
             )}
           </DialogDescription>
         </DialogHeader>
@@ -1110,7 +1103,7 @@ function PolicyDialog({
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>{t('dialog.code', 'Policy Code')}</Label>
+              <Label>{t('dialog.code')}</Label>
               <Input
                 placeholder="POL-DOC-3Y"
                 value={formData.code || policy?.code || ''}
@@ -1118,7 +1111,7 @@ function PolicyDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label>{t('dialog.priority', 'Priority')}</Label>
+              <Label>{t('dialog.priority')}</Label>
               <Input
                 type="number"
                 placeholder="100"
@@ -1130,14 +1123,14 @@ function PolicyDialog({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>{t('dialog.nameEn', 'Name (English)')}</Label>
+              <Label>{t('dialog.nameEn')}</Label>
               <Input
                 value={formData.name_en || policy?.name_en || ''}
                 onChange={(e) => setFormData({ ...formData, name_en: e.target.value })}
               />
             </div>
             <div className="space-y-2">
-              <Label>{t('dialog.nameAr', 'Name (Arabic)')}</Label>
+              <Label>{t('dialog.nameAr')}</Label>
               <Input
                 value={formData.name_ar || policy?.name_ar || ''}
                 onChange={(e) => setFormData({ ...formData, name_ar: e.target.value })}
@@ -1148,7 +1141,7 @@ function PolicyDialog({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>{t('dialog.entityType', 'Entity Type')}</Label>
+              <Label>{t('dialog.entityType')}</Label>
               <Select
                 value={formData.entity_type || policy?.entity_type || ''}
                 onValueChange={(v) =>
@@ -1168,7 +1161,7 @@ function PolicyDialog({
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>{t('dialog.documentClass', 'Document Class (Optional)')}</Label>
+              <Label>{t('dialog.documentClass')}</Label>
               <Select
                 value={formData.document_class || policy?.document_class || '__none__'}
                 onValueChange={(v) =>
@@ -1195,7 +1188,7 @@ function PolicyDialog({
 
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label>{t('dialog.retentionDays', 'Retention Days')}</Label>
+              <Label>{t('dialog.retentionDays')}</Label>
               <Input
                 type="number"
                 placeholder="0 = Permanent"
@@ -1207,7 +1200,7 @@ function PolicyDialog({
               <p className="text-xs text-muted-foreground">0 = Permanent</p>
             </div>
             <div className="space-y-2">
-              <Label>{t('dialog.warningDays', 'Warning Days')}</Label>
+              <Label>{t('dialog.warningDays')}</Label>
               <Input
                 type="number"
                 value={formData.warning_days ?? policy?.warning_days ?? 30}
@@ -1217,7 +1210,7 @@ function PolicyDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label>{t('dialog.action', 'Action')}</Label>
+              <Label>{t('dialog.action')}</Label>
               <Select
                 value={formData.action || policy?.action || 'archive'}
                 onValueChange={(v) =>
@@ -1241,7 +1234,7 @@ function PolicyDialog({
           <Separator />
 
           <div className="space-y-2">
-            <Label>{t('dialog.regulatoryReference', 'Regulatory Reference (Optional)')}</Label>
+            <Label>{t('dialog.regulatoryReference')}</Label>
             <Input
               placeholder="ISO 27001, GDPR, etc."
               value={formData.regulatory_reference || policy?.regulatory_reference || ''}
@@ -1250,7 +1243,7 @@ function PolicyDialog({
           </div>
 
           <div className="space-y-2">
-            <Label>{t('dialog.complianceNotes', 'Compliance Notes')}</Label>
+            <Label>{t('dialog.complianceNotes')}</Label>
             <Textarea
               placeholder="Additional compliance information..."
               value={formData.compliance_notes || policy?.compliance_notes || ''}
@@ -1261,10 +1254,10 @@ function PolicyDialog({
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {t('dialog.cancel', 'Cancel')}
+            {t('dialog.cancel')}
           </Button>
           <Button onClick={handleSubmit} disabled={isLoading}>
-            {isLoading ? t('dialog.saving', 'Saving...') : t('dialog.save', 'Save Policy')}
+            {isLoading ? t('dialog.saving') : t('dialog.save')}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -1322,18 +1315,17 @@ function LegalHoldDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{t('dialog.newLegalHold', 'New Legal Hold')}</DialogTitle>
+          <DialogTitle>{t('dialog.newLegalHold')}</DialogTitle>
           <DialogDescription>
             {t(
               'dialog.legalHoldDesc',
-              'Create a legal hold to prevent data from being archived or deleted',
             )}
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
           <div className="space-y-2">
-            <Label>{t('dialog.reference', 'Reference Number')}</Label>
+            <Label>{t('dialog.reference')}</Label>
             <Input
               placeholder="LH-2026-001"
               value={formData.reference_number || ''}
@@ -1343,14 +1335,14 @@ function LegalHoldDialog({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>{t('dialog.nameEn', 'Name (English)')}</Label>
+              <Label>{t('dialog.nameEn')}</Label>
               <Input
                 value={formData.name_en || ''}
                 onChange={(e) => setFormData({ ...formData, name_en: e.target.value })}
               />
             </div>
             <div className="space-y-2">
-              <Label>{t('dialog.nameAr', 'Name (Arabic)')}</Label>
+              <Label>{t('dialog.nameAr')}</Label>
               <Input
                 value={formData.name_ar || ''}
                 onChange={(e) => setFormData({ ...formData, name_ar: e.target.value })}
@@ -1360,7 +1352,7 @@ function LegalHoldDialog({
           </div>
 
           <div className="space-y-2">
-            <Label>{t('dialog.legalMatter', 'Legal Matter')}</Label>
+            <Label>{t('dialog.legalMatter')}</Label>
             <Input
               placeholder="Case name or matter reference"
               value={formData.legal_matter || ''}
@@ -1370,14 +1362,14 @@ function LegalHoldDialog({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>{t('dialog.reasonEn', 'Reason (English)')}</Label>
+              <Label>{t('dialog.reasonEn')}</Label>
               <Textarea
                 value={formData.reason_en || ''}
                 onChange={(e) => setFormData({ ...formData, reason_en: e.target.value })}
               />
             </div>
             <div className="space-y-2">
-              <Label>{t('dialog.reasonAr', 'Reason (Arabic)')}</Label>
+              <Label>{t('dialog.reasonAr')}</Label>
               <Textarea
                 value={formData.reason_ar || ''}
                 onChange={(e) => setFormData({ ...formData, reason_ar: e.target.value })}
@@ -1387,7 +1379,7 @@ function LegalHoldDialog({
           </div>
 
           <div className="space-y-2">
-            <Label>{t('dialog.entityType', 'Entity Type (Optional)')}</Label>
+            <Label>{t('dialog.entityType')}</Label>
             <Select
               value={formData.entity_type || '__all__'}
               onValueChange={(v) =>
@@ -1419,18 +1411,18 @@ function LegalHoldDialog({
                 setFormData({ ...formData, notify_custodians: checked })
               }
             />
-            <Label htmlFor="notify">{t('dialog.notifyCustodians', 'Notify custodians')}</Label>
+            <Label htmlFor="notify">{t('dialog.notifyCustodians')}</Label>
           </div>
         </div>
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {t('dialog.cancel', 'Cancel')}
+            {t('dialog.cancel')}
           </Button>
           <Button onClick={handleSubmit} disabled={isLoading}>
             {isLoading
-              ? t('dialog.creating', 'Creating...')
-              : t('dialog.createHold', 'Create Legal Hold')}
+              ? t('dialog.creating')
+              : t('dialog.createHold')}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -1462,20 +1454,19 @@ function ProcessorDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t('processor.title', 'Run Retention Processor')}</DialogTitle>
+          <DialogTitle>{t('processor.title')}</DialogTitle>
           <DialogDescription>
-            {t('processor.description', 'Execute retention policies on expired entities')}
+            {t('processor.description')}
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
           <Alert>
             <AlertTriangle className="h-4 w-4" />
-            <AlertTitle>{t('processor.warning', 'Warning')}</AlertTitle>
+            <AlertTitle>{t('processor.warning')}</AlertTitle>
             <AlertDescription>
               {t(
                 'processor.warningDesc',
-                'Running the processor will archive or delete expired data. Use dry run first to preview changes.',
               )}
             </AlertDescription>
           </Alert>
@@ -1486,7 +1477,7 @@ function ProcessorDialog({
               checked={config.dry_run}
               onCheckedChange={(checked) => setConfig({ ...config, dry_run: checked })}
             />
-            <Label htmlFor="dry-run">{t('processor.dryRun', 'Dry Run (Preview Only)')}</Label>
+            <Label htmlFor="dry-run">{t('processor.dryRun')}</Label>
           </div>
 
           <div className="flex items-center space-x-2">
@@ -1496,12 +1487,12 @@ function ProcessorDialog({
               onCheckedChange={(checked) => setConfig({ ...config, send_warnings: checked })}
             />
             <Label htmlFor="send-warnings">
-              {t('processor.sendWarnings', 'Send expiration warnings')}
+              {t('processor.sendWarnings')}
             </Label>
           </div>
 
           <div className="space-y-2">
-            <Label>{t('processor.batchSize', 'Batch Size')}</Label>
+            <Label>{t('processor.batchSize')}</Label>
             <Input
               type="number"
               value={config.batch_size}
@@ -1512,7 +1503,7 @@ function ProcessorDialog({
           </div>
 
           <div className="space-y-2">
-            <Label>{t('processor.entityType', 'Entity Type (Optional)')}</Label>
+            <Label>{t('processor.entityType')}</Label>
             <Select
               value={config.entity_type || '__all__'}
               onValueChange={(v) =>
@@ -1539,20 +1530,20 @@ function ProcessorDialog({
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {t('dialog.cancel', 'Cancel')}
+            {t('dialog.cancel')}
           </Button>
           <Button onClick={() => onRun(config)} disabled={isLoading}>
             {isLoading ? (
               <>
                 <RefreshCw className="h-4 w-4 me-2 animate-spin" />
-                {t('processor.running', 'Running...')}
+                {t('processor.running')}
               </>
             ) : (
               <>
                 <Play className="h-4 w-4 me-2" />
                 {config.dry_run
-                  ? t('processor.preview', 'Preview')
-                  : t('processor.run', 'Run Processor')}
+                  ? t('processor.preview')
+                  : t('processor.run')}
               </>
             )}
           </Button>

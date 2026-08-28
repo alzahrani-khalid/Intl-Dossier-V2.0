@@ -177,19 +177,19 @@ function IdentityCard({ values, onEditStep }: IdentityCardProps): ReactElement {
         </h4>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
           <ReviewField
-            label={t('dossier:form.descriptionEn', 'Description (English)')}
+            label={t('dossier:form.descriptionEn')}
             value={fallback(values.description_en)}
           />
           <div dir={isRTL ? 'rtl' : 'ltr'}>
             <ReviewField
-              label={t('dossier:form.descriptionAr', 'Description (Arabic)')}
+              label={t('dossier:form.descriptionAr')}
               value={fallback(values.description_ar)}
             />
           </div>
         </div>
         <div className="space-y-1">
           <dt className="text-xs text-muted-foreground">
-            {t('dossier:form.tags', 'Tags')}
+            {t('dossier:form.tags')}
           </dt>
           <dd className="flex flex-wrap gap-2" data-testid="identity-tags">
             {tags.length === 0 ? (

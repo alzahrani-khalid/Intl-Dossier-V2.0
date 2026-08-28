@@ -39,7 +39,7 @@ export function Header() {
           <button
             onClick={() => keyboardContext?.openCommandPalette()}
             className="hidden md:flex relative w-80 items-center gap-2 ps-10 pe-3 py-2 rounded-lg bg-muted border-0 hover:bg-accent/50 transition-colors text-muted-foreground"
-            aria-label={t('keyboard-shortcuts:quickActions.title', 'Quick Actions')}
+            aria-label={t('keyboard-shortcuts:quickActions.title')}
           >
             <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4" />
             <span className="flex-1 text-start text-sm">{t('search.searchPlaceholder')}</span>
@@ -52,7 +52,7 @@ export function Header() {
           <button
             onClick={() => keyboardContext?.openCommandPalette()}
             className="md:hidden p-2 rounded-lg hover:bg-accent transition-colors"
-            aria-label={t('keyboard-shortcuts:quickActions.title', 'Quick Actions')}
+            aria-label={t('keyboard-shortcuts:quickActions.title')}
           >
             <Search className="h-5 w-5" />
           </button>

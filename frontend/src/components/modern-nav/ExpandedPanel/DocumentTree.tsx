@@ -156,9 +156,7 @@ export function DocumentTree({
                   'p-0.5 rounded hover:bg-panel-hover',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-icon-rail-active-indicator',
                 )}
-                aria-label={
-                  isExpanded ? t('common:collapse', 'Collapse') : t('common:expand', 'Expand')
-                }
+                aria-label={isExpanded ? t('common:collapse') : t('common:expand')}
               >
                 <ChevronRight
                   className={cn(
@@ -208,13 +206,13 @@ export function DocumentTree({
     <div className={cn('flex flex-col', className)}>
       {/* Section Header with Add Button */}
       <div className="flex items-center justify-between px-4 py-2">
-        <h3 className="section-header">{t('navigation.documents', 'Documents')}</h3>
+        <h3 className="section-header">{t('navigation.documents')}</h3>
         <Button
           variant="ghost"
           size="sm"
           className="h-6 w-6 p-0 hover:bg-panel-hover"
           onClick={onAddClick}
-          aria-label={t('common:add', 'Add document')}
+          aria-label={t('common:add')}
         >
           <Plus className="h-4 w-4 text-panel-text-muted" />
         </Button>
@@ -227,7 +225,7 @@ export function DocumentTree({
             <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-panel-text-muted opacity-50" />
             <Input
               type="search"
-              placeholder={t('common:search.label', 'Search')}
+              placeholder={t('common:search.label')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={cn(
@@ -253,7 +251,7 @@ export function DocumentTree({
       <nav
         className="flex flex-col px-2 overflow-y-auto"
         role="navigation"
-        aria-label={t('navigation.documents', 'Documents')}
+        aria-label={t('navigation.documents')}
       >
         {documentFolders.map((folder) => renderFolder(folder))}
       </nav>
@@ -272,7 +270,7 @@ export function DocumentTree({
         )}
       >
         <Plus className="h-4 w-4" />
-        <span>{t('common:more', 'More')}</span>
+        <span>{t('common:more')}</span>
       </button>
     </div>
   )

@@ -104,18 +104,14 @@ export function EngagementsList({
           <ToolbarSearch
             value={search}
             onChange={onSearchChange}
-            placeholder={t('search.placeholder', { defaultValue: 'Search engagements…' })}
+            placeholder={t('search.placeholder')}
           />
-          <div
-            role="group"
-            aria-label={t('filter.aria', { defaultValue: 'Filter engagements' })}
-            className="flex flex-wrap gap-2"
-          >
+          <div role="group" aria-label={t('filter.aria')} className="flex flex-wrap gap-2">
             {FILTERS.map((f) => (
               <FilterPill
                 key={f.value}
                 active={filter === f.value}
-                label={t(f.labelKey, { ns: 'engagements', defaultValue: f.value })}
+                label={t(f.labelKey, { ns: 'engagements' })}
                 onClick={(): void => onFilterChange(f.value)}
               />
             ))}
@@ -155,7 +151,6 @@ export function EngagementsList({
               {group.rows.map((row) => {
                 const title = isRTL ? row.title_ar : row.title_en
                 const ariaLabel = t('row.openAria', {
-                  defaultValue: 'Open engagement: {{title}}',
                   title,
                 })
                 return (
@@ -202,14 +197,11 @@ export function EngagementsList({
               >
                 {isFetchingNextPage ? (
                   <>
-                    <GlobeSpinner
-                      size={16}
-                      aria-label={t('loadMore.loading', { defaultValue: 'Loading…' })}
-                    />
-                    <span>{t('loadMore.loading', { defaultValue: 'Loading…' })}</span>
+                    <GlobeSpinner size={16} aria-label={t('loadMore.loading')} />
+                    <span>{t('loadMore.loading')}</span>
                   </>
                 ) : (
-                  <span>{t('loadMore.cta', { defaultValue: 'Load more' })}</span>
+                  <span>{t('loadMore.cta')}</span>
                 )}
               </button>
             </div>

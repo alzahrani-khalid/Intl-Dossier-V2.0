@@ -144,7 +144,7 @@ function EntityBreadcrumbItem({ entry, isRTL, isActive, onRemove, t }: EntityBre
           'transition-opacity duration-200',
           'focus:outline-none focus:ring-2 focus:ring-destructive',
         )}
-        aria-label={t('breadcrumbTrail.remove', 'Remove from history')}
+        aria-label={t('breadcrumbTrail.remove')}
       >
         <X className="h-3 w-3" />
       </button>
@@ -215,7 +215,7 @@ export function EntityBreadcrumbTrail({
         )}
       >
         <History className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-        <span className="hidden md:inline">{t('breadcrumbTrail.recent', 'Recent')}</span>
+        <span className="hidden md:inline">{t('breadcrumbTrail.recent')}</span>
       </div>
 
       {/* Scroll Left Button (for overflow) */}
@@ -228,11 +228,7 @@ export function EntityBreadcrumbTrail({
           'hidden md:flex',
         )}
         onClick={() => handleScroll('start')}
-        aria-label={
-          isRTL
-            ? t('breadcrumbTrail.scrollRight', 'Scroll right')
-            : t('breadcrumbTrail.scrollLeft', 'Scroll left')
-        }
+        aria-label={isRTL ? t('breadcrumbTrail.scrollRight') : t('breadcrumbTrail.scrollLeft')}
       >
         {isRTL ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
       </Button>
@@ -270,11 +266,7 @@ export function EntityBreadcrumbTrail({
           'hidden md:flex',
         )}
         onClick={() => handleScroll('end')}
-        aria-label={
-          isRTL
-            ? t('breadcrumbTrail.scrollLeft', 'Scroll left')
-            : t('breadcrumbTrail.scrollRight', 'Scroll right')
-        }
+        aria-label={isRTL ? t('breadcrumbTrail.scrollLeft') : t('breadcrumbTrail.scrollRight')}
       >
         {isRTL ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
       </Button>
@@ -284,7 +276,7 @@ export function EntityBreadcrumbTrail({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm" className="h-7 px-2 text-xs text-muted-foreground">
-              +{remainingCount} {t('breadcrumbTrail.more', 'more')}
+              +{remainingCount} {t('breadcrumbTrail.more')}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="w-56">
@@ -309,7 +301,7 @@ export function EntityBreadcrumbTrail({
               className="text-destructive focus:text-destructive"
             >
               <Trash2 className="h-4 w-4 me-2" />
-              {t('breadcrumbTrail.clearAll', 'Clear all')}
+              {t('breadcrumbTrail.clearAll')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -325,14 +317,12 @@ export function EntityBreadcrumbTrail({
                 size="icon"
                 className="h-6 w-6 sm:h-7 sm:w-7 flex-shrink-0 text-muted-foreground hover:text-destructive"
                 onClick={clearHistory}
-                aria-label={t('common:actions.clearHistory', { defaultValue: 'Clear history' })}
+                aria-label={t('common:actions.clearHistory')}
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="bottom">
-              {t('breadcrumbTrail.clearAll', 'Clear all')}
-            </TooltipContent>
+            <TooltipContent side="bottom">{t('breadcrumbTrail.clearAll')}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       )}
