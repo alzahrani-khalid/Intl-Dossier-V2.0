@@ -39,6 +39,14 @@ const readJson = (relative, from) => {
   }
 }
 
+const readSource = (relative) => {
+  try {
+    return readFileSync(resolve(root, relative), 'utf8')
+  } catch (error) {
+    cannotRun(`cannot read ${relative}: ${error.message}`)
+  }
+}
+
 const leaves = (object, prefix = '') => {
   const out = {}
   for (const [key, value] of Object.entries(object ?? {})) {
@@ -53,16 +61,16 @@ const leaves = (object, prefix = '') => {
 // of truth moved and neither can be trusted as THE reachable set.
 const readUnion = () => {
   const fromConst = (() => {
-    const text = readFileSync(
-      resolve(root, 'frontend/src/components/unified-kanban/utils/status-transitions.ts'),
-      'utf8',
-    )
+    // These reads used to be UNGUARDED: a missing source threw, and node exited 1 — which this
+    // grader's own contract reserves for "the work FAILED", not "the instrument could not run".
+    // RULING-P99-524. A cannot-run must never be reported as a verdict about the work.
+    const text = readSource('frontend/src/components/unified-kanban/utils/status-transitions.ts')
     const block = text.match(/VALID_TICKET_STATUSES\s*=\s*\[([\s\S]*?)\]/)
     if (block === null) return null
     return [...block[1].matchAll(/'([a-z_]+)'/g)].map((match) => match[1])
   })()
   const fromType = (() => {
-    const text = readFileSync(resolve(root, 'frontend/src/types/intake.ts'), 'utf8')
+    const text = readSource('frontend/src/types/intake.ts')
     const block = text.match(/export type TicketStatus =([\s\S]*?)\n\n/)
     if (block === null) return null
     return [...block[1].matchAll(/'([a-z_]+)'/g)].map((match) => match[1])
@@ -107,13 +115,19 @@ for (const locale of LOCALES) {
     console.error(`FAIL ${locale}: key(s) no code path can request, extra=[${extra.join(',')}]`)
     failures++
   }
-  const draft = status.draft
-  if (typeof draft !== 'string' || draft.trim() === '') {
-    console.error(`FAIL ${locale}: queue.status.draft absent or empty`)
-    failures++
-  } else if (locale === 'ar' && !ARABIC.test(draft)) {
-    console.error(`FAIL ar: queue.status.draft is not Arabic script: ${JSON.stringify(draft)}`)
-    failures++
+  // Every union key is checked, not just `draft`. The first version checked draft alone because
+  // draft was the key P99-61 added — so a fixture set written for that task could not contain the
+  // shape it never had to think about. RULING-P99-524: `ar closed="Closed"` with `ar merged=""`
+  // scored a clean exit 0 across seven untested keys.
+  for (const key of union) {
+    const value = status[key]
+    if (typeof value !== 'string' || value.trim() === '') {
+      console.error(`FAIL ${locale}: queue.status.${key} absent or empty`)
+      failures++
+    } else if (locale === 'ar' && !ARABIC.test(value)) {
+      console.error(`FAIL ar: queue.status.${key} is not Arabic script: ${JSON.stringify(value)}`)
+      failures++
+    }
   }
 }
 process.exit(failures === 0 ? 0 : 1)
