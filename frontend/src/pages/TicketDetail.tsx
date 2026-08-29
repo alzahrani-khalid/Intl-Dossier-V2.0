@@ -105,7 +105,7 @@ export function TicketDetail() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Card className="border-destructive">
           <CardContent className="p-4 text-destructive">
-            {t('intake:ticketDetail.error', 'Failed to load ticket. Please try again.')}
+            {t('intake:ticketDetail.error')}
           </CardContent>
         </Card>
       </div>
@@ -144,7 +144,7 @@ export function TicketDetail() {
               </Badge>
             )}
             <Button variant="outline" size="sm" onClick={() => navigate({ to: '/my-work/intake' })}>
-              {t('intake:common.back', 'Back to Queue')}
+              {t('intake:common.back')}
             </Button>
           </div>
         </div>
@@ -182,7 +182,7 @@ export function TicketDetail() {
           <div className="px-4 sm:px-6 pt-3">
             <TabsList
               className="w-full justify-start overflow-x-auto scrollbar-hide flex-nowrap h-auto"
-              aria-label={t('intake:ticketDetail.tabsLabel', 'Ticket sections')}
+              aria-label={t('intake:ticketDetail.tabsLabel')}
             >
               {(['details', 'triage', 'duplicates', 'history', 'links'] as const).map((tab) => (
                 <TabsTrigger key={tab} value={tab} className="flex-shrink-0 text-xs sm:text-sm">
@@ -200,7 +200,7 @@ export function TicketDetail() {
               <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
                 <div>
                   <label className="mb-1 block text-sm font-medium text-muted-foreground">
-                    {t('intake:ticketDetail.requestType', 'Request Type')}
+                    {t('intake:ticketDetail.requestType')}
                   </label>
                   <p className="text-foreground">
                     {ticket.requestType
@@ -212,7 +212,7 @@ export function TicketDetail() {
                 </div>
                 <div>
                   <label className="mb-1 block text-sm font-medium text-muted-foreground">
-                    {t('intake:ticketDetail.urgency', 'Urgency')}
+                    {t('intake:ticketDetail.urgency')}
                   </label>
                   <p className="text-foreground">
                     {ticket.urgency
@@ -222,13 +222,13 @@ export function TicketDetail() {
                 </div>
                 <div>
                   <label className="mb-1 block text-sm font-medium text-muted-foreground">
-                    {t('intake:ticketDetail.sensitivity', 'Sensitivity')}
+                    {t('intake:ticketDetail.sensitivity')}
                   </label>
                   <p className="capitalize text-foreground">{ticket.sensitivity || '—'}</p>
                 </div>
                 <div>
                   <label className="mb-1 block text-sm font-medium text-muted-foreground">
-                    {t('intake:ticketDetail.priority', 'Priority')}
+                    {t('intake:ticketDetail.priority')}
                   </label>
                   <p className="text-foreground">
                     {ticket.priority
@@ -241,7 +241,7 @@ export function TicketDetail() {
               {/* Description */}
               <div>
                 <label className="mb-2 block text-sm font-medium text-muted-foreground">
-                  {t('intake:ticketDetail.description', 'Description')}
+                  {t('intake:ticketDetail.description')}
                 </label>
                 <div className="rounded-lg bg-muted/50 p-4">
                   <p className="whitespace-pre-wrap text-foreground">
@@ -254,7 +254,7 @@ export function TicketDetail() {
               {ticket.typeSpecificFields && Object.keys(ticket.typeSpecificFields).length > 0 && (
                 <div>
                   <label className="mb-2 block text-sm font-medium text-muted-foreground">
-                    {t('intake:ticketDetail.additionalInfo', 'Additional Information')}
+                    {t('intake:ticketDetail.additionalInfo')}
                   </label>
                   <div className="space-y-2 rounded-lg bg-muted/50 p-4">
                     {Object.entries(ticket.typeSpecificFields).map(([key, value]) => (
@@ -271,7 +271,7 @@ export function TicketDetail() {
               {attachments && attachments.length > 0 && (
                 <div>
                   <label className="mb-2 block text-sm font-medium text-muted-foreground">
-                    {t('intake:ticketDetail.attachments', 'Attachments')}
+                    {t('intake:ticketDetail.attachments')}
                   </label>
                   <div className="space-y-2">
                     {attachments.map((attachment: any) => (
@@ -291,7 +291,7 @@ export function TicketDetail() {
                           </div>
                         </div>
                         <Button variant="link" size="sm" className="text-accent-ink">
-                          {t('intake:common.download', 'Download')}
+                          {t('intake:common.download')}
                         </Button>
                       </div>
                     ))}
@@ -308,7 +308,7 @@ export function TicketDetail() {
                       disabled={isPromoting}
                       className="bg-primary hover:bg-primary/90 text-primary-foreground"
                     >
-                      {t('intake:ticketDetail.promoteToEngagement', 'Promote to Engagement')}
+                      {t('intake:ticketDetail.promoteToEngagement')}
                     </Button>
                   )}
                   {ticket.status === 'triaged' && (
@@ -317,7 +317,7 @@ export function TicketDetail() {
                       disabled={convertMutation.isPending}
                       className="bg-success hover:bg-success/90 text-success-foreground"
                     >
-                      {t('intake:ticketDetail.convert', 'Convert to Artifact')}
+                      {t('intake:ticketDetail.convert')}
                     </Button>
                   )}
                   <Button
@@ -325,7 +325,7 @@ export function TicketDetail() {
                     onClick={() => setCloseDialogOpen(true)}
                     disabled={closeMutation.isPending}
                   >
-                    {t('intake:ticketDetail.close', 'Close Ticket')}
+                    {t('intake:ticketDetail.close')}
                   </Button>
                 </div>
               )}
@@ -334,26 +334,23 @@ export function TicketDetail() {
               <InputDialog
                 open={convertDialogOpen}
                 onOpenChange={setConvertDialogOpen}
-                title={t('intake:ticketDetail.convertTitle', 'Convert Ticket')}
-                description={t(
-                  'intake:ticketDetail.convertDescription',
-                  'Select the artifact type to convert this ticket into',
-                )}
-                placeholder={t('intake:ticketDetail.selectType', 'Select type...')}
+                title={t('intake:ticketDetail.convertTitle')}
+                description={t('intake:ticketDetail.convertDescription')}
+                placeholder={t('intake:ticketDetail.selectType')}
                 inputType="select"
                 options={[
                   // 'dossier' removed: convert_ticket_to_artifact RPC only supports
                   // engagement / position / mou_action / foresight (not dossier).
                   {
                     value: 'engagement',
-                    label: t('intake:ticketDetail.convertOptions.engagement', 'Engagement'),
+                    label: t('intake:ticketDetail.convertOptions.engagement'),
                   },
                   {
                     value: 'position',
-                    label: t('intake:ticketDetail.convertOptions.position', 'Position'),
+                    label: t('intake:ticketDetail.convertOptions.position'),
                   },
                 ]}
-                confirmLabel={t('intake:ticketDetail.convertAction', 'Convert')}
+                confirmLabel={t('intake:ticketDetail.convertAction')}
                 isLoading={convertMutation.isPending}
                 onConfirm={(targetType) => {
                   convertMutation.mutate(
@@ -367,17 +364,11 @@ export function TicketDetail() {
               <InputDialog
                 open={closeDialogOpen}
                 onOpenChange={setCloseDialogOpen}
-                title={t('intake:ticketDetail.closeTitle', 'Close Ticket')}
-                description={t(
-                  'intake:ticketDetail.closeDescription',
-                  'Provide a resolution summary for closing this ticket',
-                )}
-                placeholder={t(
-                  'intake:ticketDetail.resolutionPlaceholder',
-                  'Enter resolution summary...',
-                )}
+                title={t('intake:ticketDetail.closeTitle')}
+                description={t('intake:ticketDetail.closeDescription')}
+                placeholder={t('intake:ticketDetail.resolutionPlaceholder')}
                 inputType="textarea"
-                confirmLabel={t('intake:ticketDetail.close', 'Close Ticket')}
+                confirmLabel={t('intake:ticketDetail.close')}
                 isLoading={closeMutation.isPending}
                 onConfirm={(resolution) => {
                   closeMutation.mutate(
@@ -409,7 +400,7 @@ export function TicketDetail() {
 
           {activeTab === 'history' && (
             <div className="text-muted-foreground">
-              {t('intake:ticketDetail.historyPlaceholder', 'Audit history will be displayed here')}
+              {t('intake:ticketDetail.historyPlaceholder')}
             </div>
           )}
 
@@ -418,9 +409,7 @@ export function TicketDetail() {
               fallback={
                 <div className="flex items-center justify-center py-12">
                   <div className="inline-block size-8 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />
-                  <p className="ms-4 text-muted-foreground">
-                    {t('intake:common.loading', 'Loading...')}
-                  </p>
+                  <p className="ms-4 text-muted-foreground">{t('intake:common.loading')}</p>
                 </div>
               }
             >
