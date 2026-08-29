@@ -71,42 +71,30 @@ function ErrorFallback({
   const getErrorTitle = () => {
     switch (componentType) {
       case 'timeline':
-        return t('error.timeline_title', 'Activity Timeline Error')
+        return t('error.timeline_title')
       case 'selector':
-        return t('error.selector_title', 'Dossier Selector Error')
+        return t('error.selector_title')
       case 'badge':
-        return t('error.badge_title', 'Dossier Badge Error')
+        return t('error.badge_title')
       case 'context':
-        return t('error.context_title', 'Dossier Context Error')
+        return t('error.context_title')
       default:
-        return t('error.general_title', 'Something went wrong')
+        return t('error.general_title')
     }
   }
 
   const getErrorDescription = () => {
     switch (componentType) {
       case 'timeline':
-        return t(
-          'error.timeline_description',
-          'Unable to load the activity timeline. Please try refreshing.',
-        )
+        return t('error.timeline_description')
       case 'selector':
-        return t(
-          'error.selector_description',
-          'Unable to load the dossier selector. Please try again.',
-        )
+        return t('error.selector_description')
       case 'badge':
-        return t('error.badge_description', 'Unable to display dossier information.')
+        return t('error.badge_description')
       case 'context':
-        return t(
-          'error.context_description',
-          'Unable to resolve dossier context. Please select a dossier manually.',
-        )
+        return t('error.context_description')
       default:
-        return t(
-          'error.general_description',
-          'An unexpected error occurred. Please try refreshing the page.',
-        )
+        return t('error.general_description')
     }
   }
 
@@ -122,7 +110,7 @@ function ErrorFallback({
           {process.env.NODE_ENV === 'development' && error && (
             <details className="mt-2 text-xs">
               <summary className="cursor-pointer hover:underline">
-                {t('error.technical_details', 'Technical details')}
+                {t('error.technical_details')}
               </summary>
               <pre className="mt-2 max-h-32 overflow-auto rounded bg-destructive/10 p-2 text-[10px]">
                 {error.message}
@@ -135,7 +123,7 @@ function ErrorFallback({
           <div className="flex flex-wrap gap-2 pt-2">
             <Button variant="outline" size="sm" onClick={resetError} className="min-h-9 gap-2">
               <RefreshCw className="size-3" />
-              {t('error.try_again', 'Try Again')}
+              {t('error.try_again')}
             </Button>
             <Button
               variant="ghost"
@@ -144,7 +132,7 @@ function ErrorFallback({
               className="min-h-9 gap-2"
             >
               <Home className="size-3" />
-              {t('error.refresh_page', 'Refresh Page')}
+              {t('error.refresh_page')}
             </Button>
           </div>
         </AlertDescription>

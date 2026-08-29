@@ -619,7 +619,7 @@ export function WidgetSettingsDialog({
 
         <DialogFooter className="mt-6">
           <Button variant="outline" onClick={onClose}>
-            {t('actions.cancel', 'Cancel')}
+            {t('actions.cancel')}
           </Button>
           <Button onClick={handleSave}>{t('saveLayout')}</Button>
         </DialogFooter>
