@@ -19,7 +19,12 @@ const LOCALES = ['en', 'ar']
 const TWO_ARG = /\bt\(\s*'([^']+)'\s*,\s*'([^']*)'/g
 const ONE_ARG = /\bt\(\s*'([^']+)'\s*\)/g
 const OPTS_ARG = /\bt\(\s*'([^']+)'\s*,\s*\{/g
-const HAS_DEFAULT_VALUE = /\bdefaultValue\s*:/
+// RULING-P99-477: the plain-form-only matcher could not see `defaultValue_one:` /
+// `defaultValue_other:`, so twoArgTotal=0 was a correct number about the WRONG POPULATION —
+// acceptance passed P99-58 twice while review failed it twice on those very sites. The suffix
+// group is optional so the plain form still matches, and it is anchored by `\s*:` so the
+// unrelated identifier `defaultValues:` (form defaults, 65 occurrences) still does NOT match.
+const HAS_DEFAULT_VALUE = /\bdefaultValue(_[A-Za-z0-9]+)?\s*:/
 
 const parseArgs = (argv) => {
   let root = scriptRepoRoot
@@ -332,6 +337,8 @@ t('arOnly', 'Default')
 t('featureOnly', 'Default')
 t('translation:alias.ok', 'Default')
 t('optionsMask', { defaultValue: 'Default' })
+t('pluralMask', { count: 2, defaultValue_one: '{{count}} file', defaultValue_other: '{{count}} files' })
+t('notAMask', { defaultValues: { a: 1 } })
 `,
     },
     {
@@ -407,9 +414,18 @@ t('bareOnly', 'Default')
     englishLocaleChecked: enOnly.resolved.en && !enOnly.resolved.ar,
     arabicLocaleChecked: !arOnly.resolved.en && arOnly.resolved.ar,
     everyMaskSiteCounted:
-      audit.twoArgTotal === 9 && audit.literalTwoArgTotal === 8 && audit.optionsDefaultTotal === 1,
+      audit.twoArgTotal === 10 && audit.literalTwoArgTotal === 8 && audit.optionsDefaultTotal === 2,
     optionsDefaultMaskCounted: audit.assessed.some(
       (site) => site.key === 'optionsMask' && site.class === 'two-arg-mask',
+    ),
+    // RULING-P99-477, both directions. The positive: the plural fallback-text form is a mask and
+    // must be counted. The negative: `defaultValues:` is a different identifier (form defaults) and
+    // must NOT be — a widened matcher that swallowed it would trade one blindness for a false red.
+    pluralDefaultMaskCounted: audit.assessed.some(
+      (site) => site.key === 'pluralMask' && site.class === 'two-arg-mask',
+    ),
+    defaultValuesIsNotAMask: !audit.assessed.some(
+      (site) => site.key === 'notAMask' && site.class === 'two-arg-mask',
     ),
     defectiveModelVisiblyReclassified:
       audit.defectiveBindingDelta.twoArgSitesReclassified === 2 &&
