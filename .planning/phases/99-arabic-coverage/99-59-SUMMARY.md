@@ -263,4 +263,3 @@ test. This summary is the only planning artifact changed. No i18n JSON or siblin
 The wholesale working dot-form to colon-form conversion remains the recorded Phase 102 scope under
 D-21; this deletion does not pull it forward. Other file-disjoint lane 6 parts remain owned by their
 named sibling tasks.
-
