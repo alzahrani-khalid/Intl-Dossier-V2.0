@@ -46,12 +46,10 @@ export function KeyContactsCard({ dossierId }: KeyContactsCardProps): React.Reac
     return (
       <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
         <h3 className="text-base font-semibold leading-tight text-start mb-4">
-          {t('overview.contacts.title', { defaultValue: 'Key Contacts' })}
+          {t('overview.contacts.title')}
         </h3>
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('overview.sectionError')}
         </p>
       </div>
     )
@@ -65,12 +63,12 @@ export function KeyContactsCard({ dossierId }: KeyContactsCardProps): React.Reac
   return (
     <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
       <h3 className="text-base font-semibold leading-tight text-start mb-4">
-        {t('overview.contacts.title', { defaultValue: 'Key Contacts' })}
+        {t('overview.contacts.title')}
       </h3>
 
       {displayContacts.length === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">
-          {t('overview.contacts.empty', { defaultValue: 'No contacts linked' })}
+          {t('overview.contacts.empty')}
         </p>
       ) : (
         <div className="space-y-2">
@@ -127,7 +125,6 @@ export function KeyContactsCard({ dossierId }: KeyContactsCardProps): React.Reac
             <p className="text-xs text-muted-foreground text-center py-2">
               {t('overview.contacts.more', {
                 count: totalCount - MAX_CONTACTS,
-                defaultValue: '+{{count}} more contacts',
               })}
             </p>
           )}

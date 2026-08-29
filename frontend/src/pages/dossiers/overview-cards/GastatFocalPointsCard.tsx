@@ -49,12 +49,10 @@ export function GastatFocalPointsCard({
     return (
       <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
         <h3 className="text-base font-semibold leading-tight text-start mb-4">
-          {t('overview.focalPoints.title', { defaultValue: 'GASTAT focal points' })}
+          {t('overview.focalPoints.title')}
         </h3>
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('overview.sectionError')}
         </p>
       </div>
     )
@@ -76,12 +74,12 @@ export function GastatFocalPointsCard({
   return (
     <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
       <h3 className="text-base font-semibold leading-tight text-start mb-4">
-        {t('overview.focalPoints.title', { defaultValue: 'GASTAT focal points' })}
+        {t('overview.focalPoints.title')}
       </h3>
 
       {officers.length === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">
-          {t('overview.focalPoints.empty', { defaultValue: 'No focal points recorded' })}
+          {t('overview.focalPoints.empty')}
         </p>
       ) : (
         <div className="space-y-2">
@@ -93,7 +91,7 @@ export function GastatFocalPointsCard({
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium truncate">{officer.name}</p>
                 <p className="text-xs text-muted-foreground truncate">
-                  {t(`overview.focalPoints.${officer.role}`, { defaultValue: officer.role })}
+                  {t(`overview.focalPoints.${officer.role}`)}
                 </p>
               </div>
             </div>
