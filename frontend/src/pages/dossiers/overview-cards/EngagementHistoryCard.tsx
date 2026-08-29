@@ -71,19 +71,17 @@ export function EngagementHistoryCard({
       <div className="flex items-center gap-2 mb-4">
         <History className="h-4 w-4 text-muted-foreground" />
         <h3 className="text-base font-semibold leading-tight text-start">
-          {t('overview.engagementHistory.title', { defaultValue: 'Engagement History' })}
+          {t('overview.engagementHistory.title')}
         </h3>
       </div>
 
       {isError && data === null ? (
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('overview.sectionError')}
         </p>
       ) : timelineEntries.length === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">
-          {t('overview.engagementHistory.empty', { defaultValue: 'No engagement history' })}
+          {t('overview.engagementHistory.empty')}
         </p>
       ) : (
         <div className="relative">
@@ -114,9 +112,7 @@ export function EngagementHistoryCard({
 
           {hasMore && (
             <p className="text-xs text-accent-ink cursor-pointer hover:underline pt-3 ps-6">
-              {t('overview.engagementHistory.viewAll', {
-                defaultValue: 'View all engagements',
-              })}
+              {t('overview.engagementHistory.viewAll')}
             </p>
           )}
         </div>

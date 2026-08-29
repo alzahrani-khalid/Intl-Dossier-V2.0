@@ -68,14 +68,9 @@ export function GeographicVisualizationPage() {
         <div>
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold flex items-center gap-2">
             <Globe className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
-            {t('page.title', 'Geographic Visualization')}
+            {t('page.title')}
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {t(
-              'page.description',
-              'Interactive map showing country relationships and engagement activity',
-            )}
-          </p>
+          <p className="text-sm text-muted-foreground mt-1">{t('page.description')}</p>
         </div>
 
         {/* View Toggle */}
@@ -87,11 +82,11 @@ export function GeographicVisualizationPage() {
           <TabsList className="h-9">
             <TabsTrigger value="map" className="text-xs sm:text-sm gap-1.5 px-3">
               <Map className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('tabs.map', 'Map View')}</span>
+              <span className="hidden sm:inline">{t('tabs.map')}</span>
             </TabsTrigger>
             <TabsTrigger value="list" className="text-xs sm:text-sm gap-1.5 px-3">
               <List className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('tabs.list', 'List View')}</span>
+              <span className="hidden sm:inline">{t('tabs.list')}</span>
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -126,7 +121,7 @@ export function GeographicVisualizationPage() {
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 text-muted-foreground mb-1">
                   <Globe className="h-4 w-4" />
-                  <span className="text-xs">{t('summary.totalCountries', 'Countries')}</span>
+                  <span className="text-xs">{t('summary.totalCountries')}</span>
                 </div>
                 <p className="text-2xl font-bold">{summary?.totalCountries || 0}</p>
               </CardContent>
@@ -135,7 +130,7 @@ export function GeographicVisualizationPage() {
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 text-muted-foreground mb-1">
                   <Activity className="h-4 w-4" />
-                  <span className="text-xs">{t('summary.engagements', 'Engagements')}</span>
+                  <span className="text-xs">{t('summary.engagements')}</span>
                 </div>
                 <p className="text-2xl font-bold">{summary?.totalEngagements || 0}</p>
               </CardContent>
@@ -144,7 +139,7 @@ export function GeographicVisualizationPage() {
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 text-muted-foreground mb-1">
                   <TrendingUp className="h-4 w-4" />
-                  <span className="text-xs">{t('summary.activeCountries', 'Active')}</span>
+                  <span className="text-xs">{t('summary.activeCountries')}</span>
                 </div>
                 <p className="text-2xl font-bold">{summary?.countriesWithEngagements || 0}</p>
               </CardContent>
@@ -153,7 +148,7 @@ export function GeographicVisualizationPage() {
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 text-muted-foreground mb-1">
                   <Calendar className="h-4 w-4" />
-                  <span className="text-xs">{t('summary.relationships', 'Relationships')}</span>
+                  <span className="text-xs">{t('summary.relationships')}</span>
                 </div>
                 <p className="text-2xl font-bold">{connections.length}</p>
               </CardContent>
@@ -163,30 +158,20 @@ export function GeographicVisualizationPage() {
           {/* Countries Table */}
           <Card>
             <CardHeader className="py-4">
-              <CardTitle className="text-base">
-                {t('list.title', 'Countries by Engagement')}
-              </CardTitle>
-              <CardDescription className="text-xs">
-                {t('list.description', 'Click on a country to view its dossier')}
-              </CardDescription>
+              <CardTitle className="text-base">{t('list.title')}</CardTitle>
+              <CardDescription className="text-xs">{t('list.description')}</CardDescription>
             </CardHeader>
             <CardContent className="p-0">
               <div className="overflow-x-auto scrollbar-thin">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-[200px]">{t('list.country', 'Country')}</TableHead>
-                      <TableHead className="text-center">{t('list.region', 'Region')}</TableHead>
-                      <TableHead className="text-center">
-                        {t('list.engagements', 'Engagements')}
-                      </TableHead>
-                      <TableHead className="text-center">{t('list.recent', 'Recent')}</TableHead>
-                      <TableHead className="text-center">
-                        {t('list.upcoming', 'Upcoming')}
-                      </TableHead>
-                      <TableHead className="text-center">
-                        {t('list.intensity', 'Intensity')}
-                      </TableHead>
+                      <TableHead className="w-[200px]">{t('list.country')}</TableHead>
+                      <TableHead className="text-center">{t('list.region')}</TableHead>
+                      <TableHead className="text-center">{t('list.engagements')}</TableHead>
+                      <TableHead className="text-center">{t('list.recent')}</TableHead>
+                      <TableHead className="text-center">{t('list.upcoming')}</TableHead>
+                      <TableHead className="text-center">{t('list.intensity')}</TableHead>
                       <TableHead className="w-[80px]"></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -194,9 +179,7 @@ export function GeographicVisualizationPage() {
                     {sortedCountries.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
-                          {isLoading
-                            ? t('list.loading', 'Loading countries...')
-                            : t('list.noData', 'No countries found')}
+                          {isLoading ? t('list.loading') : t('list.noData')}
                         </TableCell>
                       </TableRow>
                     ) : (

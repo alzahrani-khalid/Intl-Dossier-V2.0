@@ -254,9 +254,7 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
               className="min-h-11 min-w-11"
             >
               <RefreshCw className={cn('h-4 w-4', isFetching && 'animate-spin')} />
-              <span className="sr-only">
-                {t('common:actions.refresh', { defaultValue: 'Refresh' })}
-              </span>
+              <span className="sr-only">{t('common:actions.refresh')}</span>
             </Button>
             {/* Export disabled: useAnalyticsExport is a stub (no real export
                 endpoint), so a click would download a misleading payload.
@@ -267,11 +265,11 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
               size="icon"
               onClick={handleExport}
               disabled
-              title={t('common:notYetAvailable', { defaultValue: 'Not yet available' })}
+              title={t('common:notYetAvailable')}
               className="min-h-11 min-w-11"
             >
               <Download className="h-4 w-4" />
-              <span className="sr-only">{t('common:export', { defaultValue: 'Export' })}</span>
+              <span className="sr-only">{t('common:export')}</span>
             </Button>
           </>
         }

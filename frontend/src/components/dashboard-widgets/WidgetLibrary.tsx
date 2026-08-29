@@ -276,7 +276,7 @@ function WidgetCard({
             <h4 className="font-medium text-sm">{name}</h4>
             {isAdded && (
               <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-                {t('actions.added', 'Added')}
+                {t('actions.added')}
               </Badge>
             )}
           </div>

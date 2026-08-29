@@ -309,7 +309,7 @@ export function DossierListPage() {
         key: 'type',
         label: t('list.filterByType'),
         value: t(`type.${filters.type}`),
-        category: t('active-filters:filterCategories.type', 'Type'),
+        category: t('active-filters:filterCategories.type'),
         variant: 'info',
       })
     }
@@ -326,7 +326,7 @@ export function DossierListPage() {
         key: 'status',
         label: t('list.filterByStatus'),
         value: t(`status.${status}`),
-        category: t('active-filters:filterCategories.status', 'Status'),
+        category: t('active-filters:filterCategories.status'),
         arrayValue: status,
         variant: status === 'archived' ? 'warning' : 'default',
       })
@@ -338,7 +338,7 @@ export function DossierListPage() {
         key: 'search',
         label: t('list.search'),
         value: `"${filters.search}"`,
-        category: t('active-filters:filterCategories.search', 'Search'),
+        category: t('active-filters:filterCategories.search'),
         variant: 'default',
       })
     }
@@ -672,7 +672,7 @@ export function DossierListPage() {
               className="text-muted-foreground hover:text-foreground"
             >
               <RotateCcw className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
-              {t('dossier:filter.reset', 'Reset')}
+              {t('dossier:filter.reset')}
             </Button>
           )}
         </div>
@@ -749,9 +749,9 @@ export function DossierListPage() {
                 </PopoverTrigger>
                 <PopoverContent className="w-[250px] p-0" align="start" id="status-filter-options">
                   <Command>
-                    <CommandInput placeholder={t('filter.search_status', 'Search statuses...')} />
+                    <CommandInput placeholder={t('filter.search_status')} />
                     <CommandList>
-                      <CommandEmpty>{t('filter.no_status_found', 'No status found')}</CommandEmpty>
+                      <CommandEmpty>{t('filter.no_status_found')}</CommandEmpty>
                       <CommandGroup>
                         {DOSSIER_STATUSES.map((status) => {
                           const currentStatuses = Array.isArray(filters.status)

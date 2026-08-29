@@ -48,17 +48,17 @@ export function DeliverablesTrackerCard({
 
   const statuses: StatusCount[] = [
     {
-      label: t('overview.deliverables.completed', { defaultValue: 'Completed' }),
+      label: t('overview.deliverables.completed'),
       count: breakdown?.completed ?? 0,
       colorClass: 'text-success',
     },
     {
-      label: t('overview.deliverables.inProgress', { defaultValue: 'In Progress' }),
+      label: t('overview.deliverables.inProgress'),
       count: breakdown?.in_progress ?? 0,
       colorClass: 'text-warning',
     },
     {
-      label: t('overview.deliverables.pending', { defaultValue: 'Pending' }),
+      label: t('overview.deliverables.pending'),
       count: breakdown?.pending ?? 0,
       colorClass: 'text-muted-foreground',
     },
@@ -71,19 +71,17 @@ export function DeliverablesTrackerCard({
       <div className="flex items-center gap-2 mb-4">
         <ClipboardCheck className="h-4 w-4 text-muted-foreground" />
         <h3 className="text-base font-semibold leading-tight text-start">
-          {t('overview.deliverables.title', { defaultValue: 'Deliverables' })}
+          {t('overview.deliverables.title')}
         </h3>
       </div>
 
       {isError && data === null ? (
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('overview.sectionError')}
         </p>
       ) : totalCount === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">
-          {t('overview.deliverables.empty', { defaultValue: 'No deliverables tracked' })}
+          {t('overview.deliverables.empty')}
         </p>
       ) : (
         <div className="grid grid-cols-3 gap-3">

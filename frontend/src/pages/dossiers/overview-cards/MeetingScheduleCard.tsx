@@ -46,19 +46,17 @@ export function MeetingScheduleCard({ dossierId }: MeetingScheduleCardProps): Re
       <div className="flex items-center gap-2 mb-4">
         <CalendarDays className="h-4 w-4 text-muted-foreground" />
         <h3 className="text-base font-semibold leading-tight text-start">
-          {t('overview.meetings.title', { defaultValue: 'Upcoming Meetings' })}
+          {t('overview.meetings.title')}
         </h3>
       </div>
 
       {isError && data === null ? (
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('overview.sectionError')}
         </p>
       ) : upcomingEvents.length === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">
-          {t('overview.meetings.empty', { defaultValue: 'No upcoming meetings' })}
+          {t('overview.meetings.empty')}
         </p>
       ) : (
         <div className="space-y-2">
@@ -72,7 +70,7 @@ export function MeetingScheduleCard({ dossierId }: MeetingScheduleCardProps): Re
               </span>
               <p className="text-sm flex-1 min-w-0 truncate">
                 {(isRTL ? (event.title_ar ?? event.title_en) : event.title_en) ??
-                  t('overview.meetings.untitled', { defaultValue: 'Meeting' })}
+                  t('overview.meetings.untitled')}
               </p>
             </div>
           ))}

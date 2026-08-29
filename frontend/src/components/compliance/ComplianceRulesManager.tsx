@@ -261,7 +261,7 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
                         disabled={isFetchingNextPage}
                       >
                         {isFetchingNextPage && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
-                        {t('common:loadMore', 'Load More')}
+                        {t('common:loadMore')}
                       </Button>
                     </div>
                   )}

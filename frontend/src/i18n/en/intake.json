@@ -254,6 +254,7 @@
       "clear": "Clear all filters"
     },
     "status": {
+      "draft": "Draft",
       "submitted": "Submitted",
       "triaged": "Triaged",
       "assigned": "Assigned",

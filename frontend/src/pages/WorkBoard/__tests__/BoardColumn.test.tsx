@@ -26,11 +26,41 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { Fragment, type ReactElement } from 'react'
+import { execFileSync } from 'node:child_process'
+import { existsSync, readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 
 import { KanbanProvider, useDndContext, type KanbanItemProps } from '@/components/kanban'
 import type { WorkItem, WorkflowStage } from '@/types/work-item.types'
 
 import { BoardColumn, isColumnDropDisabled, type BoardDragItem } from '../BoardColumn'
+
+const laneSourceRoot = existsSync(resolve(process.cwd(), 'frontend/src'))
+  ? resolve(process.cwd(), 'frontend/src')
+  : resolve(process.cwd(), 'src')
+const laneRepoRoot = resolve(laneSourceRoot, '../..')
+const laneProductionPaths = [
+  'pages/WorkBoard/BoardColumn.tsx',
+  'pages/WorkBoard/WorkBoard.tsx',
+  'pages/analytics/AnalyticsDashboardPage.tsx',
+  'pages/availability-polling/AvailabilityPollingPage.tsx',
+  'pages/dossiers/DossierListPage.tsx',
+  'pages/engagements/EngagementsListPage.tsx',
+  'pages/engagements/workspace/AuditTab.tsx',
+  'pages/geographic-visualization/GeographicVisualizationPage.tsx',
+  'pages/intelligence/IntelligencePage.tsx',
+  'pages/my-work/MyWorkDashboard.tsx',
+  'pages/my-work/components/ProductivityMetrics.tsx',
+  'pages/my-work/components/TeamWorkloadPanel.tsx',
+  'pages/my-work/components/WorkItemCard.tsx',
+] as const
+const laneProductionSources = Object.fromEntries(
+  laneProductionPaths.map((path) => [path, readFileSync(resolve(laneSourceRoot, path), 'utf8')]),
+) as Record<(typeof laneProductionPaths)[number], string>
+const joinedLaneProduction = Object.values(laneProductionSources).join('\n')
+const literalMaskPattern = /\bt\(\s*'[^']+'\s*,\s*'[^']*'/g
+const fallbackOptionPattern = /\bdefaultValue(?:_[A-Za-z0-9]+)?\s*:/g
+const rawKeyPattern = /\bt\(\s*'[^']+'/g
 
 // ── i18n mock ─────────────────────────────────────────────────────────────
 let currentLang = 'en'
@@ -411,5 +441,76 @@ describe('isColumnDropDisabled — the shared-guard predicate (D-33)', () => {
     expect(isColumnDropDisabled(pastDueInTodo, 'todo')).toBe(false)
     const pastDueInDone: BoardDragItem = { ...pastDueInTodo, homeStage: 'done' }
     expect(isColumnDropDisabled(pastDueInDone, 'todo')).toBe(true)
+  })
+})
+
+describe('P99-62 acceptance criteria', () => {
+  it("No t() call in this slice passes an English default; a missing key now shows as missing in both locales — which the gatekeeper's proven zero makes an empty set today.", () => {
+    expect(joinedLaneProduction.match(literalMaskPattern) ?? []).toHaveLength(0)
+    expect(joinedLaneProduction.match(fallbackOptionPattern) ?? []).toHaveLength(0)
+  })
+
+  it("Decisions covered — D-06, D-20, D-23, D-24, D-28, D-39: deletion-only, behind the gatekeeper, no conversion, one population, every zero controlled, file-disjoint from its siblings. || Both mask shapes are deleted across this lane's files: `t('key', 'Literal')` -> `t('key')`, `t('key', 'Literal', opts)` -> `t('key', opts)`, and the object-form fallback-text option is removed while every remaining option is kept — because interpolation options are not masks. The object-form fallback class is a SEPARATE population from the literal class: 314 sites across 103 files repo-wide, 88 of which carry no literal-class site at all, and the first draft's single 161-file scope covered only the literal class while demanding both reach zero.", () => {
+    expect(joinedLaneProduction.match(literalMaskPattern) ?? []).toHaveLength(0)
+    expect(joinedLaneProduction.match(fallbackOptionPattern) ?? []).toHaveLength(0)
+    expect(laneProductionSources['pages/my-work/components/WorkItemCard.tsx']).toMatch(
+      /t\('deadline\.dueInDays',\s*\{\s*count:/,
+    )
+  })
+
+  it("COMPANION TESTS — This part owns exactly these companion tests: `frontend/src/pages/WorkBoard/__tests__/BoardColumn.test.tsx`, `frontend/src/pages/engagements/__tests__/EngagementsListPage.test.tsx`. They are here because they ASSERT ON THE ENGLISH LITERALS THIS PART DELETES, and the WHOLE IMPORT CLOSURE of each is inside this part, so repairing one never reaches another part''s file (RULING-P99-468). TRIGGER: if this part''s deletions cause one to render or assert a BARE i18n KEY, or to fail on a literal that no longer exists, it MUST be repaired as below; OTHERWISE it MUST be left BYTE-UNCHANGED — ownership grants authority to repair a break this part causes, never a mandate to rewrite a test that still passes. || KEYS are byte-untouched. The diff contains deletions of default arguments and nothing else — no key string, no namespace prefix, no hook, no import moves. Spot-diff a sample and state it. COMPANION TEST FIXTURES, OWNED AND CONDITIONALLY REPAIRABLE (RULING-P99-429). The companion tests named in files_modified are owned by this lane. TRIGGER: if this lane's deletions cause one of them to render or assert a BARE i18n KEY as visible text or accessible name, it MUST be repaired as below; OTHERWISE it MUST be left BYTE-UNCHANGED - ownership grants authority to repair a break this lane causes, never a mandate to rewrite a test that still passes. WHEN REPAIRED: (a) expected copy comes from a STATIC top-level import of the relevant frontend/src/i18n/{en,ar}/<ns>.json, as DossierEngagementsTab.test.tsx:6-7 does, and any hand-copied copy object is deleted; (b) the react-i18next mock RESOLVES keys against the real bundle loaded with await vi.importActual of that same JSON INSIDE the vi.mock factory - a static import cannot serve this side because vi.mock is hoisted above it - with no private copy, no default-argument fallback and no key fallback; (c) the resolved en AND ar values are both asserted, the ar assertion being what proves the fallback is gone; (d) the rendered output must NOT contain the bare key; (e) existing assertions still exist and still run, not deleted, skipped, .only-ed or loosened. AND NO PRODUCTION-SIDE ESCAPE: the suite is made green by repairing the TEST. No production change may be made whose EFFECT is that an assertion passes independently of whether the key resolves - that covers a literal second-argument default, an object-form default option, and any conditional, wrapper, concatenation or logical-or that substitutes for or augments the value returned by t(). If a key fails to resolve, production must render the failure, not disguise it. || NO i18n JSON changes in this lane — a JSON edit here means the gatekeeper's proof was wrong or scope broke", () => {
+    expect(laneProductionSources['pages/WorkBoard/BoardColumn.tsx']).toContain("t('emptyColumn')")
+
+    render(<BoardColumn {...baseProps} items={[]} />)
+    expect(screen.getByText('No items')).toBeTruthy()
+    expect(screen.queryByText('emptyColumn')).toBeNull()
+
+    currentLang = 'ar'
+    render(<BoardColumn {...baseProps} items={[]} />)
+    expect(screen.getByText('لا توجد عناصر')).toBeTruthy()
+    expect(screen.queryByText('emptyColumn')).toBeNull()
+  })
+
+  it("A mask site found in a file OUTSIDE this lane's list means the tree moved between the gatekeeper's manifest and this lane: STOP and record it, do not widen scope || This part's logic-diff budget is **~36790 bytes** against the engine's 60,000-byte gates.diffCap. It is NOT a plan-time floor: it is the pre-split lane's ENGINE-MEASURED 107645-byte diff (fetchTaskDiff at the attempt's own HEAD, 1.79x over cap), apportioned by this part's 62/251 share of the lane's mask sites — so it inherits a measurement, not an estimate, and it inherits the pre-split churn too, which makes it an OVER-estimate of deletion-only work. On top of that it carries 2 companion-test allowance(s) at 5,100 bytes each — MEASURED, not guessed: the one companion repaired in the landed lane 5 cost 5,036 logic-diff bytes. Test companions carry no masks, so they cost budget without earning apportioned budget (RULING-P99-468 order 4). Every part is held at or under 45,000 bytes, >=25% under the 60,000 cap, per RULING-P99-465 and the decomposition rule. The pre-split floor for this lane read ~44066 bytes and the truth was 107645: a 2x miss, which is exactly why a measured apportionment replaces it. A diff-cap trip returns park:\"human\" with the engine's own note that the diff cannot shrink by retrying — it is un-retryable, after the work is done, which is why the parts are cut this small.", () => {
+    expect(laneProductionPaths).toHaveLength(13)
+    expect(new Set(laneProductionPaths).size).toBe(13)
+    expect(laneProductionPaths.every((path) => laneProductionSources[path].length > 0)).toBe(true)
+  })
+
+  it("the strict instrument's twoArgTotal — EVERY mask site, resolved or not, seen by the cross-line matcher — reads ZERO across this lane's files, with a nonzero rawKeyTotal as the positive control that the scope matched real t() calls, AND no fallback-text option survives in them. This is D-22 applied: the closing predicate is the strict parser's own total, not the line-bound acceptance grep, which is unsatisfiable (23 identifier tails it can never remove) and under-detecting (111 wrapped sites it cannot see) in the same clause. RED at HEAD (62 mask sites in this part).", () => {
+    expect(joinedLaneProduction.match(literalMaskPattern) ?? []).toHaveLength(0)
+    expect(joinedLaneProduction.match(fallbackOptionPattern) ?? []).toHaveLength(0)
+    expect((joinedLaneProduction.match(rawKeyPattern) ?? []).length).toBeGreaterThan(0)
+  })
+
+  it('no i18n JSON changed in this lane, the scoped strict audit still reads zero UNRESOLVED after the drop (a nonzero here means a key moved, which is the one way a deletion-only diff can go wrong), and the phase negative control still prints 3x MISS=true — RED at HEAD', () => {
+    const scope = laneProductionPaths.map((path) => `frontend/src/${path}`).join(',')
+    const audit = JSON.parse(
+      execFileSync(
+        process.execPath,
+        [
+          resolve(laneRepoRoot, 'scripts/i18n-audit-strict.mjs'),
+          laneRepoRoot,
+          '--scope',
+          scope,
+          '--json',
+        ],
+        { encoding: 'utf8' },
+      ),
+    ) as Record<string, number>
+    const negativeControl = execFileSync(
+      process.execPath,
+      [resolve(laneRepoRoot, 'scripts/neg-taskcard.mjs'), laneRepoRoot],
+      { encoding: 'utf8' },
+    )
+
+    expect(audit.twoArgTotal).toBe(0)
+    expect(audit.rawKeyTotal).toBeGreaterThan(0)
+    expect(audit.twoArgUnresolved).toBe(0)
+    expect(audit.rawKeyUnresolved).toBe(0)
+    expect(audit.twoArgUnresolvedAr).toBe(0)
+    expect(audit.rawKeyUnresolvedAr).toBe(0)
+    expect(negativeControl.match(/MISS=true/g) ?? []).toHaveLength(3)
+    expect(laneProductionPaths.some((path) => path.endsWith('.json'))).toBe(false)
   })
 })

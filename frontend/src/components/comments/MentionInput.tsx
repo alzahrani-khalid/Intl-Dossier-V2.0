@@ -215,9 +215,7 @@ export const MentionInput = forwardRef<HTMLTextAreaElement, MentionInputProps>(
           value={value}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          placeholder={
-            placeholder || t('form.placeholder', 'Write a comment... Use @ to mention someone')
-          }
+          placeholder={placeholder || t('form.placeholder')}
           disabled={disabled}
           autoFocus={autoFocus}
           rows={rows}
@@ -259,13 +257,11 @@ export const MentionInput = forwardRef<HTMLTextAreaElement, MentionInputProps>(
           >
             {isSearching ? (
               <div className="p-3 text-center text-sm text-muted-foreground">
-                {t('form.searchingUsers', 'Searching...')}
+                {t('form.searchingUsers')}
               </div>
             ) : mentionUsers.length === 0 ? (
               <div className="p-3 text-center text-sm text-muted-foreground">
-                {mentionQuery.length < 1
-                  ? t('form.typeToSearch', 'Type to search users')
-                  : t('form.noUsersFound', 'No users found')}
+                {mentionQuery.length < 1 ? t('form.typeToSearch') : t('form.noUsersFound')}
               </div>
             ) : (
               <ul className="py-1" role="listbox">

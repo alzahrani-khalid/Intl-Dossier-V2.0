@@ -72,7 +72,7 @@ export default function AuditTab(): ReactElement {
           <CardTitle className="text-xl font-semibold text-start">
             <span className="flex items-center gap-2">
               <Clock className="size-5" aria-hidden="true" />
-              {t('tabs.audit', 'Activity Log')}
+              {t('tabs.audit')}
             </span>
           </CardTitle>
         </CardHeader>

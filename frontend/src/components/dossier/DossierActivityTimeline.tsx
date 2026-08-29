@@ -103,7 +103,7 @@ export function DossierActivityTimeline({
       {/* Header with count and refresh */}
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <h3 className="text-lg font-semibold">{t('timeline.title', 'Activity Timeline')}</h3>
+          <h3 className="text-lg font-semibold">{t('timeline.title')}</h3>
           {!isLoading && (
             <Badge variant="secondary" className="text-xs">
               {totalCount}
@@ -121,7 +121,7 @@ export function DossierActivityTimeline({
               }}
             >
               <Filter className={cn('size-4', isRTL ? 'ms-0 sm:me-2' : 'me-0 sm:me-2')} />
-              <span className="hidden sm:inline">{t('timeline.filter', 'Filter')}</span>
+              <span className="hidden sm:inline">{t('timeline.filter')}</span>
             </Button>
           )}
           <Button
@@ -132,7 +132,7 @@ export function DossierActivityTimeline({
             disabled={isLoading}
           >
             <RefreshCw className={cn('size-4', isLoading && 'animate-spin')} />
-            <span className="sr-only">{t('timeline.refresh', 'Refresh')}</span>
+            <span className="sr-only">{t('timeline.refresh')}</span>
           </Button>
         </div>
       </div>
@@ -147,7 +147,7 @@ export function DossierActivityTimeline({
           ))}
           {filters.overdue_only && (
             <Badge variant="destructive" className="text-xs">
-              {t('timeline.overdueOnly', 'Overdue Only')}
+              {t('timeline.overdueOnly')}
             </Badge>
           )}
         </div>
@@ -171,11 +171,9 @@ export function DossierActivityTimeline({
       {/* Error State */}
       {isError && (
         <div className="flex flex-col items-center justify-center py-8 text-center">
-          <p className="text-destructive mb-4">
-            {t('timeline.error', 'Failed to load activities')}
-          </p>
+          <p className="text-destructive mb-4">{t('timeline.error')}</p>
           <Button variant="outline" onClick={() => refetch()}>
-            {t('timeline.retry', 'Try Again')}
+            {t('timeline.retry')}
           </Button>
         </div>
       )}
@@ -183,12 +181,10 @@ export function DossierActivityTimeline({
       {/* Empty State */}
       {!isLoading && !isError && activities.length === 0 && (
         <div className="flex flex-col items-center justify-center py-12 text-center">
-          <p className="text-muted-foreground">
-            {t('timeline.empty', 'No activities found for this dossier')}
-          </p>
+          <p className="text-muted-foreground">{t('timeline.empty')}</p>
           {filters && Object.keys(filters).length > 0 && (
             <Button variant="link" className="mt-2" onClick={() => onFiltersChange?.({})}>
-              {t('timeline.clearFilters', 'Clear filters')}
+              {t('timeline.clearFilters')}
             </Button>
           )}
         </div>
@@ -213,7 +209,7 @@ export function DossierActivityTimeline({
                 <Loader2 className="size-6 animate-spin text-muted-foreground" />
               ) : (
                 <Button variant="ghost" onClick={() => fetchNextPage()} className="min-h-11">
-                  {t('timeline.loadMore', 'Load More')}
+                  {t('timeline.loadMore')}
                 </Button>
               )}
             </div>
@@ -222,7 +218,7 @@ export function DossierActivityTimeline({
           {/* End of List Indicator */}
           {!hasNextPage && activities.length > 0 && (
             <p className="text-center text-xs text-muted-foreground py-4">
-              {t('timeline.endOfList', 'End of activities')}
+              {t('timeline.endOfList')}
             </p>
           )}
         </div>
