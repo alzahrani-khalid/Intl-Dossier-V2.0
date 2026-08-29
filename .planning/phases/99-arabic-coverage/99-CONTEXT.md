@@ -279,6 +279,21 @@ unchanged; `tickmarkr compile` ingests this plan set. A plan that does not compi
   under the lane's own directory** — two real traps lived in `frontend/tests/` and `tests/`, outside every
   `frontend/src/**` population that had been used to verify the split.
 
+- **D-42: RECOMPILE THROUGH `scripts/tkr-recompile.sh`, never bare `tickmarkr compile`** (RULING-P99-483).
+  Completion is derived from `status: complete` front-matter in a SUMMARY, and **nothing in the engine
+  ensures a worker writes it** — so a task that passed all seven gates silently reverts to `pending` at the
+  next compile. Measured on **P99-32** (R428) and again on **P99-61** (R478), where it changed the value of a
+  landing decision. **Recompile is the exact moment the defect bites**, which is why the guard belongs there
+  and not in a report nobody runs.
+  ⚠ **The guard was committed with ZERO callers and that is how it failed the first time.** *A guard nothing
+  invokes is not a guard; it is the belief that the entry is handled.* Wiring is the deliverable, not the
+  script. Both branches are drilled: it REFUSES on a real breach and `--force` proceeds while saying so, and
+  `TKR_RECOMPILE_RUN=<runId>` pins which run is checked so the refuse branch stays drillable — an untested
+  refuse branch is the same shape as the defect it replaces.
+  **Every plan's `<output>` now states the marker requirement**, because the guard only makes the loss
+  VISIBLE; the plan is what makes it not happen. A worker told only to "create the SUMMARY" writes the
+  markerless one, which is precisely what P99-61 did.
+
 ### Claude's Discretion
 
 - Plan/wave count and lane boundaries, subject to D-39 and the sequencing in D-14.
