@@ -44,12 +44,10 @@ export function MembershipStructureCard({
     return (
       <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
         <h3 className="text-base font-semibold leading-tight text-start mb-4">
-          {t('overview.membership.title', { defaultValue: 'Membership Structure' })}
+          {t('overview.membership.title')}
         </h3>
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('overview.sectionError')}
         </p>
       </div>
     )
@@ -60,28 +58,20 @@ export function MembershipStructureCard({
   const profileRows: { label: string; value: string }[] = [
     profile?.membership_type
       ? {
-          label: t('overview.membership.membershipType', { defaultValue: 'Membership type' }),
-          value: t(`overview.membership.membershipTypes.${profile.membership_type}`, {
-            defaultValue: profile.membership_type,
-          }),
+          label: t('overview.membership.membershipType'),
+          value: t(`overview.membership.membershipTypes.${profile.membership_type}`),
         }
       : null,
     profile?.importance
       ? {
-          label: t('overview.membership.importance', { defaultValue: 'Importance' }),
-          value: t(`overview.membership.importances.${profile.importance}`, {
-            defaultValue: profile.importance,
-          }),
+          label: t('overview.membership.importance'),
+          value: t(`overview.membership.importances.${profile.importance}`),
         }
       : null,
     profile?.representation_level
       ? {
-          label: t('overview.membership.representationLevel', {
-            defaultValue: 'Representation level',
-          }),
-          value: t(`overview.membership.representationLevels.${profile.representation_level}`, {
-            defaultValue: profile.representation_level,
-          }),
+          label: t('overview.membership.representationLevel'),
+          value: t(`overview.membership.representationLevels.${profile.representation_level}`),
         }
       : null,
   ].filter((r): r is { label: string; value: string } => r !== null)
@@ -92,17 +82,17 @@ export function MembershipStructureCard({
 
   const sections = [
     {
-      label: t('overview.membership.members', { defaultValue: 'Members' }),
+      label: t('overview.membership.members'),
       icon: <Users className="h-4 w-4 text-muted-foreground" />,
       count: members.length,
     },
     {
-      label: t('overview.membership.memberOf', { defaultValue: 'Member Of' }),
+      label: t('overview.membership.memberOf'),
       icon: <Building2 className="h-4 w-4 text-muted-foreground" />,
       count: memberOf.length,
     },
     {
-      label: t('overview.membership.subUnits', { defaultValue: 'Sub-Units' }),
+      label: t('overview.membership.subUnits'),
       icon: <Building2 className="h-4 w-4 text-muted-foreground" />,
       count: children.length,
     },
@@ -113,12 +103,12 @@ export function MembershipStructureCard({
   return (
     <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
       <h3 className="text-base font-semibold leading-tight text-start mb-4">
-        {t('overview.membership.title', { defaultValue: 'Membership Structure' })}
+        {t('overview.membership.title')}
       </h3>
 
       {profileRows.length === 0 && sections.length === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">
-          {t('overview.membership.empty', { defaultValue: 'No membership data available' })}
+          {t('overview.membership.empty')}
         </p>
       ) : (
         <div className="space-y-3">
@@ -143,7 +133,6 @@ export function MembershipStructureCard({
             <p className="text-xs text-muted-foreground pt-1">
               {t('overview.membership.totalRelated', {
                 count: totalRelated,
-                defaultValue: '{{count}} total related dossiers',
               })}
             </p>
           )}
