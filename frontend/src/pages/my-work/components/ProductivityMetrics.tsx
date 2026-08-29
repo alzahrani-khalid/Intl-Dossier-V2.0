@@ -66,7 +66,7 @@ export function ProductivityMetrics({ metrics, isLoading }: ProductivityMetricsP
   }[] = [
     {
       key: 'completed',
-      label: t('metrics.completed30d', 'Completed (30d)'),
+      label: t('metrics.completed30d'),
       value: metrics?.completed_count_30d || 0,
       icon: CheckCircle2,
       color: 'text-success bg-success/10 dark:bg-success/30',
@@ -74,7 +74,7 @@ export function ProductivityMetrics({ metrics, isLoading }: ProductivityMetricsP
     },
     {
       key: 'on-time',
-      label: t('metrics.onTimeRate', 'On-Time Rate'),
+      label: t('metrics.onTimeRate'),
       value: metrics?.on_time_rate_30d || 0,
       icon: TrendingUp,
       color: 'text-accent bg-accent/10 dark:bg-accent/30',
@@ -83,7 +83,7 @@ export function ProductivityMetrics({ metrics, isLoading }: ProductivityMetricsP
     },
     {
       key: 'avg-time',
-      label: t('metrics.avgCompletionTime', 'Avg Completion'),
+      label: t('metrics.avgCompletionTime'),
       value: metrics?.avg_completion_hours_30d || 0,
       icon: Clock,
       color: 'text-secondary-foreground bg-secondary/30 dark:bg-secondary/50',
@@ -95,7 +95,7 @@ export function ProductivityMetrics({ metrics, isLoading }: ProductivityMetricsP
     <Card className="mb-3 sm:mb-4">
       <CardContent className="px-3 py-2 sm:px-4">
         <p className="text-xs font-medium text-muted-foreground text-start mb-2">
-          {t('metrics.title', 'Your Productivity')}
+          {t('metrics.title')}
         </p>
         <div className="grid grid-cols-3 gap-3">
           {metricItems.map((item) => {

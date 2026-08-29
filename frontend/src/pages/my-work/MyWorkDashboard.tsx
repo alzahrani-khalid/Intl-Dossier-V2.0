@@ -182,8 +182,8 @@ export default function MyWorkDashboard() {
     <div className="space-y-6">
       <PageHeader
         icon={<LayoutDashboard className="h-6 w-6" />}
-        title={t('title', 'My Work')}
-        subtitle={t('subtitle', 'Track your commitments, tasks, and intake tickets in one place')}
+        title={t('title')}
+        subtitle={t('subtitle')}
         actions={
           <Button
             variant="outline"
@@ -192,7 +192,7 @@ export default function MyWorkDashboard() {
             className="flex items-center gap-2 self-start sm:self-auto"
           >
             <LayoutGrid className="h-4 w-4" />
-            <span>{t('viewBoard', 'Board View')}</span>
+            <span>{t('viewBoard')}</span>
           </Button>
         }
       />

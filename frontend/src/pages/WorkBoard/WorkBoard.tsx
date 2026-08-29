@@ -444,7 +444,7 @@ export function WorkBoard(): ReactElement {
 
   return (
     <div className="workboard-page" dir={isRTL ? 'rtl' : 'ltr'}>
-      <h1 className="sr-only">{t('title', { defaultValue: 'Work Board' })}</h1>
+      <h1 className="sr-only">{t('title')}</h1>
       <BoardToolbar
         config={boardListConfig}
         controls={controls}

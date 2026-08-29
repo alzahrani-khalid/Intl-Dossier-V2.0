@@ -258,7 +258,7 @@ export default function EngagementsListPage({
         <ToolbarSearch
           value={search}
           onChange={onSearchChange}
-          placeholder={t('search.placeholder', { defaultValue: 'Search engagements...' })}
+          placeholder={t('search.placeholder')}
         />
         <div className="flex flex-wrap items-center gap-2">
           <FilterPopover
@@ -285,10 +285,9 @@ export default function EngagementsListPage({
 
   return (
     <ListPageShell
-      title={t('title', { ns: 'engagements', defaultValue: 'Engagements' })}
+      title={t('title', { ns: 'engagements' })}
       subtitle={t('subtitle', {
         ns: 'engagements',
-        defaultValue: 'Meetings, consultations, and visits',
       })}
       actions={
         <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">

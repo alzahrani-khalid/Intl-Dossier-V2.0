@@ -33,17 +33,17 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
     commitment: {
       icon: FileCheck,
       color: 'text-success bg-success/10 dark:bg-success/30',
-      label: t('source.commitment', 'Commitment'),
+      label: t('source.commitment'),
     },
     task: {
       icon: ListChecks,
       color: 'text-accent bg-accent/10 dark:bg-accent/30',
-      label: t('source.task', 'Task'),
+      label: t('source.task'),
     },
     intake: {
       icon: Inbox,
       color: 'text-secondary-foreground bg-secondary/30 dark:bg-secondary/50',
-      label: t('source.intake', 'Intake'),
+      label: t('source.intake'),
     },
   }
 
@@ -51,15 +51,15 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
   const trackingTypeConfig: Record<TrackingType, { color: string; label: string }> = {
     delivery: {
       color: 'bg-accent/10 text-accent dark:bg-accent/30',
-      label: t('trackingType.delivery', 'Delivery'),
+      label: t('trackingType.delivery'),
     },
     follow_up: {
       color: 'bg-secondary/30 text-secondary-foreground dark:bg-secondary/50',
-      label: t('trackingType.followUp', 'Follow-up'),
+      label: t('trackingType.followUp'),
     },
     sla: {
       color: 'bg-warning/10 text-warning dark:bg-warning/30',
-      label: t('trackingType.sla', 'SLA'),
+      label: t('trackingType.sla'),
     },
   }
 
@@ -67,23 +67,23 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
   const priorityConfig: Record<string, { color: string; label: string }> = {
     low: {
       color: 'bg-muted text-ink-mute dark:bg-muted/30',
-      label: t('priority.low', 'Low'),
+      label: t('priority.low'),
     },
     medium: {
       color: 'bg-warning/10 text-warning/80 dark:bg-warning/30',
-      label: t('priority.medium', 'Medium'),
+      label: t('priority.medium'),
     },
     high: {
       color: 'bg-warning/10 text-warning dark:bg-warning/30',
-      label: t('priority.high', 'High'),
+      label: t('priority.high'),
     },
     critical: {
       color: 'bg-danger/10 text-danger dark:bg-danger/30',
-      label: t('priority.critical', 'Critical'),
+      label: t('priority.critical'),
     },
     urgent: {
       color: 'bg-danger/10 text-danger dark:bg-danger/30',
-      label: t('priority.urgent', 'Urgent'),
+      label: t('priority.urgent'),
     },
   }
 
@@ -183,7 +183,7 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
                     className="text-[11px] leading-none px-1.5 py-0 gap-0.5"
                   >
                     <AlertTriangle className="h-3 w-3" />
-                    {t('status.overdue', 'Overdue')}
+                    {t('status.overdue')}
                   </Badge>
                 )}
 
@@ -204,9 +204,9 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
                 {item.days_until_due !== null && !item.is_overdue && (
                   <span className="hidden sm:inline text-[11px] text-muted-foreground">
                     {item.days_until_due === 0
-                      ? t('deadline.dueToday', 'Due today')
+                      ? t('deadline.dueToday')
                       : item.days_until_due === 1
-                        ? t('deadline.dueTomorrow', 'Due tomorrow')
+                        ? t('deadline.dueTomorrow')
                         : t('deadline.dueInDays', { count: item.days_until_due })}
                   </span>
                 )}
