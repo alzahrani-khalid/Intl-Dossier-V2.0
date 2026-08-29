@@ -1,5 +1,5 @@
 ---
-status: complete
+status: blocked
 task: P99-60
 implementation_commits:
   - 66f121828
@@ -122,3 +122,25 @@ logic-diff-bytes=39202
 This stays below the 45,000-byte part ceiling before the execution record. P99-36, P99-59, and
 P99-62 own the other file-disjoint lane-6 parts; P99-41 owns the consolidated rendered re-proof.
 Phase 102 owns the D-21 dot-to-colon conversion. Nothing from those populations was changed here.
+
+## Repair-attempt scope blocker
+
+The post-run full-suite gate exposed a third companion outside this task's fixed allowlist:
+`frontend/src/pages/dossiers/overview-cards/__tests__/OverviewCardErrorStates.test.tsx`. Its private
+`react-i18next` mock still returns `opts?.defaultValue ?? key`, and its
+`SharedRecentActivityCard` forced-error assertion still expects the deleted English fallback. A
+targeted run reproduced the gate fingerprint:
+
+```text
+FAIL  src/pages/dossiers/overview-cards/__tests__/OverviewCardErrorStates.test.tsx > SharedRecentActivityCard forced-error state (OVRERR-01) > renders error state, not the no-recent-activity empty copy, on section failure
+AssertionError: expected 'overview.sectionError' to match /failed to load this section/i
+Test Files  1 failed (1)
+Tests       1 failed | 9 passed (10)
+```
+
+Repairing that test requires editing the out-of-scope file so its mock resolves the real dossier
+bundles and its assertion uses their copy, just as the two declared companions now do. No
+allowlisted test can alter another Vitest file's isolated mock. A production-side fallback or
+test-only substitute would violate the explicit no-production-escape acceptance rule. Per the
+fixed-scope contract, this repair attempt therefore stops without widening scope. No out-of-scope
+path was touched.
