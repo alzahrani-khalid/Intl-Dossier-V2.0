@@ -172,7 +172,7 @@ function DossierLinkItem({ link, isRTL, editable, compact, onRemove, t }: Dossie
           {/* Primary Badge */}
           {link.is_primary && (
             <Badge variant="default" className="text-[10px] px-1.5 py-0 h-5">
-              {t('widget.primary', 'Primary')}
+              {t('widget.primary')}
             </Badge>
           )}
 
@@ -199,9 +199,7 @@ function DossierLinkItem({ link, isRTL, editable, compact, onRemove, t }: Dossie
               {inheritancePath && inheritancePath.length > 0 && (
                 <TooltipContent side={isRTL ? 'left' : 'right'} className="max-w-xs">
                   <div className="space-y-1">
-                    <p className="font-medium text-xs">
-                      {t('widget.inheritance_path', 'Inheritance Path')}
-                    </p>
+                    <p className="font-medium text-xs">{t('widget.inheritance_path')}</p>
                     <p className="text-xs text-muted-foreground">{inheritancePath.join(' → ')}</p>
                   </div>
                 </TooltipContent>
@@ -220,11 +218,11 @@ function DossierLinkItem({ link, isRTL, editable, compact, onRemove, t }: Dossie
               <Button variant="ghost" size="sm" className="size-8 p-0" asChild>
                 <Link to={getDossierDetailPath(dossier.id, dossier.type as DossierType)}>
                   <ExternalLink className="size-4" />
-                  <span className="sr-only">{t('widget.view_dossier', 'View Dossier')}</span>
+                  <span className="sr-only">{t('widget.view_dossier')}</span>
                 </Link>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>{t('widget.view_dossier', 'View Dossier')}</TooltipContent>
+            <TooltipContent>{t('widget.view_dossier')}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
@@ -240,10 +238,10 @@ function DossierLinkItem({ link, isRTL, editable, compact, onRemove, t }: Dossie
                   onClick={() => onRemove(link)}
                 >
                   <X className="size-4" />
-                  <span className="sr-only">{t('widget.remove_link', 'Remove Link')}</span>
+                  <span className="sr-only">{t('widget.remove_link')}</span>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>{t('widget.remove_link', 'Remove Link')}</TooltipContent>
+              <TooltipContent>{t('widget.remove_link')}</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         )}
@@ -358,9 +356,9 @@ export function DossierLinksWidget({
     const content = (
       <div className="flex items-center gap-2 text-destructive text-sm p-3 bg-destructive/10 rounded-lg">
         <AlertCircle className="size-4 shrink-0" />
-        <span>{t('errors.load_timeline_failed', 'Failed to load dossier links')}</span>
+        <span>{t('errors.load_timeline_failed')}</span>
         <Button variant="ghost" size="sm" onClick={() => refetch()} className="ms-auto">
-          {t('actions.retry', 'Retry')}
+          {t('actions.retry')}
         </Button>
       </div>
     )
@@ -372,7 +370,7 @@ export function DossierLinksWidget({
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base">
             <Link2 className="size-4" />
-            {title || t('widget.title', 'Linked Dossiers')}
+            {title || t('widget.title')}
           </CardTitle>
         </CardHeader>
         <CardContent>{content}</CardContent>
@@ -387,9 +385,7 @@ export function DossierLinksWidget({
     const content = (
       <div className="flex flex-col items-center justify-center py-6 text-center">
         <Link2 className="size-10 text-muted-foreground/50 mb-3" />
-        <p className="text-sm text-muted-foreground mb-3">
-          {t('widget.no_links', 'No dossiers linked')}
-        </p>
+        <p className="text-sm text-muted-foreground mb-3">{t('widget.no_links')}</p>
         {editable && (
           <Button
             variant="outline"
@@ -398,7 +394,7 @@ export function DossierLinksWidget({
             className="min-h-11"
           >
             <Plus className={cn('size-4', isRTL ? 'ms-2' : 'me-2')} />
-            {t('widget.add_dossier', 'Add Dossier')}
+            {t('widget.add_dossier')}
           </Button>
         )}
       </div>
@@ -411,7 +407,7 @@ export function DossierLinksWidget({
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base">
             <Link2 className="size-4" />
-            {title || t('widget.title', 'Linked Dossiers')}
+            {title || t('widget.title')}
           </CardTitle>
         </CardHeader>
         <CardContent>{content}</CardContent>
@@ -445,12 +441,12 @@ export function DossierLinksWidget({
               {isExpanded ? (
                 <>
                   <ChevronUp className={cn('size-4', isRTL ? 'ms-2' : 'me-2')} />
-                  {t('widget.show_less', 'Show less')}
+                  {t('widget.show_less')}
                 </>
               ) : (
                 <>
                   <ChevronDown className={cn('size-4', isRTL ? 'ms-2' : 'me-2')} />
-                  {t('widget.show_more', 'Show {{count}} more', {
+                  {t('widget.show_more', {
                     count: links.length - maxVisible,
                   })}
                 </>
@@ -468,7 +464,7 @@ export function DossierLinksWidget({
             required={false}
             multiple
             disabled={createLinks.isPending}
-            label={t('widget.select_dossier', 'Select dossier to link')}
+            label={t('widget.select_dossier')}
           />
           <div className="flex gap-2">
             <Button
@@ -478,7 +474,7 @@ export function DossierLinksWidget({
               disabled={createLinks.isPending}
               className="min-h-11"
             >
-              {t('actions.cancel', 'Cancel')}
+              {t('actions.cancel')}
             </Button>
           </div>
         </div>
@@ -493,7 +489,7 @@ export function DossierLinksWidget({
           className="w-full min-h-11"
         >
           <Plus className={cn('size-4', isRTL ? 'ms-2' : 'me-2')} />
-          {t('widget.add_dossier', 'Add Dossier')}
+          {t('widget.add_dossier')}
         </Button>
       )}
     </div>
@@ -504,19 +500,12 @@ export function DossierLinksWidget({
     <AlertDialog open={!!linkToRemove} onOpenChange={(open) => !open && setLinkToRemove(null)}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>
-            {t('widget.confirm_remove_title', 'Remove Dossier Link')}
-          </AlertDialogTitle>
-          <AlertDialogDescription>
-            {t(
-              'widget.confirm_remove_description',
-              'Are you sure you want to remove this dossier link? This action cannot be undone.',
-            )}
-          </AlertDialogDescription>
+          <AlertDialogTitle>{t('widget.confirm_remove_title')}</AlertDialogTitle>
+          <AlertDialogDescription>{t('widget.confirm_remove_description')}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={deleteLink.isPending}>
-            {t('actions.cancel', 'Cancel')}
+            {t('actions.cancel')}
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={confirmRemoveLink}
@@ -526,10 +515,10 @@ export function DossierLinksWidget({
             {deleteLink.isPending ? (
               <>
                 <Loader2 className={cn('size-4 animate-spin', isRTL ? 'ms-2' : 'me-2')} />
-                {t('actions.removing', 'Removing...')}
+                {t('actions.removing')}
               </>
             ) : (
-              t('actions.remove', 'Remove')
+              t('actions.remove')
             )}
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -554,7 +543,7 @@ export function DossierLinksWidget({
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-base">
               <Link2 className="size-4" />
-              {title || t('widget.title', 'Linked Dossiers')}
+              {title || t('widget.title')}
               {links.length > 0 && (
                 <Badge variant="secondary" className="ms-2">
                   {links.length}

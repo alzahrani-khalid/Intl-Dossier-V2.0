@@ -158,10 +158,10 @@ export const DossierContextIndicator = memo(function DossierContextIndicator({
     if (!activeInheritance || activeInheritance.source === 'direct') return null
 
     const labelMap: Record<string, string> = {
-      engagement: t('contextIndicator.inheritedFrom.engagement', 'via Engagement'),
-      after_action: t('contextIndicator.inheritedFrom.afterAction', 'via After-Action'),
-      position: t('contextIndicator.inheritedFrom.position', 'via Position'),
-      mou: t('contextIndicator.inheritedFrom.mou', 'via MOU'),
+      engagement: t('contextIndicator.inheritedFrom.engagement'),
+      after_action: t('contextIndicator.inheritedFrom.afterAction'),
+      position: t('contextIndicator.inheritedFrom.position'),
+      mou: t('contextIndicator.inheritedFrom.mou'),
     }
 
     return labelMap[activeInheritance.source]
@@ -194,7 +194,7 @@ export const DossierContextIndicator = memo(function DossierContextIndicator({
       >
         <FolderOpen className={cn(sizeClasses.icon, 'text-muted-foreground')} />
         <span className={cn(sizeClasses.text, 'text-muted-foreground')}>
-          {t('contextIndicator.noContext', 'No dossier context selected')}
+          {t('contextIndicator.noContext')}
         </span>
         {changeable && (
           <Popover open={changePopoverOpen} onOpenChange={setChangePopoverOpen}>
@@ -207,7 +207,7 @@ export const DossierContextIndicator = memo(function DossierContextIndicator({
                   'text-muted-foreground hover:text-foreground',
                 )}
               >
-                <span className="hidden sm:inline">{t('contextIndicator.select', 'Select')}</span>
+                <span className="hidden sm:inline">{t('contextIndicator.select')}</span>
                 <ChevronDown className={cn('size-4', isRTL ? 'me-1 sm:me-0' : 'ms-1 sm:ms-0')} />
               </Button>
             </PopoverTrigger>
@@ -216,7 +216,7 @@ export const DossierContextIndicator = memo(function DossierContextIndicator({
                 onChange={handleDossierChange}
                 required={false}
                 multiple={false}
-                label={t('contextIndicator.selectDossier', 'Select a dossier...')}
+                label={t('contextIndicator.selectDossier')}
               />
             </PopoverContent>
           </Popover>
@@ -249,7 +249,7 @@ export const DossierContextIndicator = memo(function DossierContextIndicator({
 
         {/* Label - hidden on very small screens */}
         <span className={cn(sizeClasses.text, 'text-muted-foreground hidden xs:inline shrink-0')}>
-          {t('contextIndicator.viewingInContext', 'Viewing in context of:')}
+          {t('contextIndicator.viewingInContext')}
         </span>
 
         {/* Dossier name with link */}
@@ -283,7 +283,7 @@ export const DossierContextIndicator = memo(function DossierContextIndicator({
                       {t(`type.${dossierType}`, dossierType)}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {t('contextIndicator.clickToView', 'Click to view dossier')}
+                      {t('contextIndicator.clickToView')}
                     </p>
                   </div>
                 </TooltipContent>
@@ -304,7 +304,7 @@ export const DossierContextIndicator = memo(function DossierContextIndicator({
                   colored
                 />
               )}
-              <span className="truncate">{displayName || t('untitled', 'Untitled')}</span>
+              <span className="truncate">{displayName || t('untitled')}</span>
             </span>
           )}
 
@@ -347,13 +347,13 @@ export const DossierContextIndicator = memo(function DossierContextIndicator({
                           sizeClasses.button,
                           'text-muted-foreground hover:text-foreground hover:bg-primary/10',
                         )}
-                        aria-label={t('contextIndicator.change', 'Change dossier')}
+                        aria-label={t('contextIndicator.change')}
                       >
                         <RefreshCw className="size-3.5 sm:size-4" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent side={isRTL ? 'left' : 'right'}>
-                      {t('contextIndicator.change', 'Change dossier')}
+                      {t('contextIndicator.change')}
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -364,20 +364,17 @@ export const DossierContextIndicator = memo(function DossierContextIndicator({
               >
                 <div className="mb-3">
                   <h4 className={cn('font-medium', sizeClasses.text)}>
-                    {t('contextIndicator.changeDossier', 'Change Dossier Context')}
+                    {t('contextIndicator.changeDossier')}
                   </h4>
                   <p className="text-xs text-muted-foreground mt-1">
-                    {t(
-                      'contextIndicator.changeDescription',
-                      'Select a different dossier to work within',
-                    )}
+                    {t('contextIndicator.changeDescription')}
                   </p>
                 </div>
                 <DossierSelector
                   onChange={handleDossierChange}
                   required={false}
                   multiple={false}
-                  label={t('contextIndicator.searchDossiers', 'Search dossiers...')}
+                  label={t('contextIndicator.searchDossiers')}
                 />
               </PopoverContent>
             </Popover>
@@ -396,13 +393,13 @@ export const DossierContextIndicator = memo(function DossierContextIndicator({
                       sizeClasses.button,
                       'text-muted-foreground hover:text-destructive hover:bg-destructive/10',
                     )}
-                    aria-label={t('contextIndicator.clear', 'Clear context')}
+                    aria-label={t('contextIndicator.clear')}
                   >
                     <X className="size-3.5 sm:size-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side={isRTL ? 'left' : 'right'}>
-                  {t('contextIndicator.clear', 'Clear context')}
+                  {t('contextIndicator.clear')}
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

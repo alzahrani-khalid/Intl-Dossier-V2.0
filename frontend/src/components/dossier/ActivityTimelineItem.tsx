@@ -170,7 +170,7 @@ export function ActivityTimelineItem({
             <h4 className="font-medium text-sm leading-tight truncate">
               {(isRTL && activity.activity_title_ar
                 ? activity.activity_title_ar
-                : activity.activity_title) || t('timeline.noTitle', 'Untitled')}
+                : activity.activity_title) || t('timeline.noTitle')}
             </h4>
             <ChevronRight
               className={cn('size-4 shrink-0 text-muted-foreground', isRTL && 'rotate-180')}
@@ -204,7 +204,7 @@ export function ActivityTimelineItem({
             {isOverdue && (
               <span className="flex items-center gap-1 text-destructive">
                 <AlertTriangle className="size-3" />
-                {t('timeline.overdue', 'Overdue')}
+                {t('timeline.overdue')}
               </span>
             )}
 
@@ -225,7 +225,7 @@ export function ActivityTimelineItem({
           {/* Inheritance Info */}
           {activity.inheritance_source !== 'direct' && (
             <p className="text-xs text-muted-foreground italic">
-              {t('timeline.inheritedVia', 'via')}{' '}
+              {t('timeline.inheritedVia')}{' '}
               {t(
                 `timeline.inheritanceSource.${activity.inheritance_source}`,
                 activity.inheritance_source,
