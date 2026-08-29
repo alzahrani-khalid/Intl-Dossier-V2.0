@@ -141,11 +141,7 @@ export function BriefGenerationPanel({
           setPhase('success')
         },
         onError: (err) => {
-          setManualNotice(
-            err instanceof Error
-              ? err.message
-              : t('fallback.saveError', 'Failed to save the brief. Please try again.'),
-          )
+          setManualNotice(err instanceof Error ? err.message : t('fallback.saveError'))
         },
       },
     )
@@ -154,13 +150,13 @@ export function BriefGenerationPanel({
   const getPhaseLabel = () => {
     switch (phase) {
       case 'context':
-        return t('phases.context', 'Gathering context...')
+        return t('phases.context')
       case 'generating':
-        return t('phases.generating', 'Generating brief...')
+        return t('phases.generating')
       case 'success':
-        return t('phases.success', 'Complete')
+        return t('phases.success')
       case 'error':
-        return t('phases.error', 'Error')
+        return t('phases.error')
       default:
         return ''
     }
@@ -172,18 +168,16 @@ export function BriefGenerationPanel({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sparkles className={cn('h-5 w-5 text-primary', isRTL && 'rotate-180')} />
-            <CardTitle className="text-lg">{t('title', 'Generate AI Brief')}</CardTitle>
+            <CardTitle className="text-lg">{t('title')}</CardTitle>
           </div>
           {isGenerating && (
             <Button variant="ghost" size="sm" onClick={cancel} className="h-8">
               <X className="h-4 w-4 me-1" />
-              {t('cancel', 'Cancel')}
+              {t('cancel')}
             </Button>
           )}
         </div>
-        <CardDescription>
-          {t('description', 'Generate a comprehensive brief using AI analysis')}
-        </CardDescription>
+        <CardDescription>{t('description')}</CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-4">
@@ -195,7 +189,7 @@ export function BriefGenerationPanel({
               <div className="flex items-center gap-2 flex-1">
                 <StepIndicator
                   step={1}
-                  label={t('steps.context', 'Context')}
+                  label={t('steps.context')}
                   active={phase === 'context'}
                   complete={phase === 'generating' || phase === 'success'}
                 />
@@ -207,7 +201,7 @@ export function BriefGenerationPanel({
                 />
                 <StepIndicator
                   step={2}
-                  label={t('steps.generating', 'Generate')}
+                  label={t('steps.generating')}
                   active={phase === 'generating'}
                   complete={phase === 'success'}
                 />
@@ -219,7 +213,7 @@ export function BriefGenerationPanel({
                 />
                 <StepIndicator
                   step={3}
-                  label={t('steps.review', 'Review')}
+                  label={t('steps.review')}
                   active={phase === 'success'}
                   complete={false}
                 />
@@ -247,7 +241,7 @@ export function BriefGenerationPanel({
           <div
             role="status"
             aria-live="polite"
-            aria-label={t('streamingPreview', 'Brief generation progress')}
+            aria-label={t('streamingPreview')}
             className="bg-muted/50 rounded-lg p-4 max-h-64 overflow-y-auto border"
           >
             {streamingContent ? (
@@ -280,7 +274,7 @@ export function BriefGenerationPanel({
                 {formattedError.retryable && (
                   <Button variant="outline" size="sm" onClick={retry} className="gap-1">
                     <RefreshCw className="h-3 w-3" />
-                    {t('retry', 'Retry')}
+                    {t('retry')}
                   </Button>
                 )}
                 <Button
@@ -290,11 +284,11 @@ export function BriefGenerationPanel({
                   className="gap-1"
                 >
                   <PenLine className="h-3 w-3" />
-                  {t('fallback.switchToManual', 'Enter Manually')}
+                  {t('fallback.switchToManual')}
                 </Button>
                 <Button variant="ghost" size="sm" onClick={handleGenerateAnother} className="gap-1">
                   <RotateCcw className="h-3 w-3" />
-                  {t('startOver', 'Start over')}
+                  {t('startOver')}
                 </Button>
               </div>
             </AlertDescription>
@@ -306,9 +300,7 @@ export function BriefGenerationPanel({
           <Alert className={briefSuccessColors.alert}>
             <CheckCircle className={`h-4 w-4 ${briefSuccessColors.icon}`} />
             <AlertTitle className={briefSuccessColors.title}>
-              {manualBrief && !brief
-                ? t('fallback.saved', 'Brief saved successfully!')
-                : t('success', 'Brief generated successfully!')}
+              {manualBrief && !brief ? t('fallback.saved') : t('success')}
             </AlertTitle>
             <AlertDescription className="mt-3">
               <p className={`text-sm ${briefSuccessColors.description} mb-3`}>
@@ -317,7 +309,7 @@ export function BriefGenerationPanel({
               <div className="flex items-center gap-2">
                 <Button variant="default" size="sm" onClick={handleViewBrief} className="gap-1">
                   <Eye className="h-3 w-3" />
-                  {t('viewBrief', 'Open Brief')}
+                  {t('viewBrief')}
                 </Button>
                 <Button
                   variant="outline"
@@ -326,11 +318,11 @@ export function BriefGenerationPanel({
                   className="gap-1"
                 >
                   <Sparkles className={cn('h-3 w-3', isRTL && 'rotate-180')} />
-                  {t('generateAnother', 'Generate Another')}
+                  {t('generateAnother')}
                 </Button>
                 {onClose && (
                   <Button variant="ghost" size="sm" onClick={onClose}>
-                    {t('close', 'Close')}
+                    {t('close')}
                   </Button>
                 )}
               </div>
@@ -349,23 +341,16 @@ export function BriefGenerationPanel({
                 onClick={() => setShowAdvanced(!showAdvanced)}
                 className="text-muted-foreground"
               >
-                {showAdvanced
-                  ? t('hideAdvanced', 'Hide options')
-                  : t('showAdvanced', 'Show options')}
+                {showAdvanced ? t('hideAdvanced') : t('showAdvanced')}
               </Button>
 
               {showAdvanced && (
                 <div className="mt-2 space-y-2">
-                  <label className="text-sm font-medium mb-1 block">
-                    {t('customPrompt', 'Custom instructions (optional)')}
-                  </label>
+                  <label className="text-sm font-medium mb-1 block">{t('customPrompt')}</label>
                   <Textarea
                     value={customPrompt}
                     onChange={(e) => setCustomPrompt(e.target.value)}
-                    placeholder={t(
-                      'customPromptPlaceholder',
-                      'e.g., Focus on trade agreements and recent developments',
-                    )}
+                    placeholder={t('customPromptPlaceholder')}
                     className="resize-none"
                     rows={3}
                     maxLength={500}
@@ -384,7 +369,7 @@ export function BriefGenerationPanel({
               className="w-full min-h-11"
             >
               <Sparkles className={cn('h-4 w-4 me-2', isRTL && 'rotate-180')} />
-              {t('generate', 'Generate Brief')}
+              {t('generate')}
             </Button>
           </>
         )}
@@ -394,14 +379,9 @@ export function BriefGenerationPanel({
           <div className="space-y-4">
             <Alert className={briefManualColors.alert}>
               <PenLine className={`h-4 w-4 ${briefManualColors.icon}`} />
-              <AlertTitle className={briefManualColors.title}>
-                {t('fallback.title', 'Manual Brief Entry')}
-              </AlertTitle>
+              <AlertTitle className={briefManualColors.title}>{t('fallback.title')}</AlertTitle>
               <AlertDescription className={briefManualColors.description}>
-                {t(
-                  'fallback.description',
-                  'AI service is unavailable. You can enter the brief details manually.',
-                )}
+                {t('fallback.description')}
               </AlertDescription>
             </Alert>
 
@@ -409,16 +389,13 @@ export function BriefGenerationPanel({
               {/* Executive Summary */}
               <div className="space-y-2">
                 <Label htmlFor="manual-summary" className="text-sm font-medium">
-                  {t('fallback.summary', 'Executive Summary')}
+                  {t('fallback.summary')}
                 </Label>
                 <Textarea
                   id="manual-summary"
                   value={manualContent.summary}
                   onChange={(e) => setManualContent({ ...manualContent, summary: e.target.value })}
-                  placeholder={t(
-                    'fallback.summaryPlaceholder',
-                    'Enter a brief executive summary...',
-                  )}
+                  placeholder={t('fallback.summaryPlaceholder')}
                   className="resize-none min-h-[100px]"
                   rows={4}
                 />
@@ -427,7 +404,7 @@ export function BriefGenerationPanel({
               {/* Background */}
               <div className="space-y-2">
                 <Label htmlFor="manual-background" className="text-sm font-medium">
-                  {t('fallback.background', 'Background')}
+                  {t('fallback.background')}
                 </Label>
                 <Textarea
                   id="manual-background"
@@ -435,10 +412,7 @@ export function BriefGenerationPanel({
                   onChange={(e) =>
                     setManualContent({ ...manualContent, background: e.target.value })
                   }
-                  placeholder={t(
-                    'fallback.backgroundPlaceholder',
-                    'Enter background information...',
-                  )}
+                  placeholder={t('fallback.backgroundPlaceholder')}
                   className="resize-none min-h-[80px]"
                   rows={3}
                 />
@@ -447,7 +421,7 @@ export function BriefGenerationPanel({
               {/* Recommendations */}
               <div className="space-y-2">
                 <Label htmlFor="manual-recommendations" className="text-sm font-medium">
-                  {t('fallback.recommendations', 'Recommendations')}
+                  {t('fallback.recommendations')}
                 </Label>
                 <Textarea
                   id="manual-recommendations"
@@ -455,10 +429,7 @@ export function BriefGenerationPanel({
                   onChange={(e) =>
                     setManualContent({ ...manualContent, recommendations: e.target.value })
                   }
-                  placeholder={t(
-                    'fallback.recommendationsPlaceholder',
-                    'Enter your recommendations...',
-                  )}
+                  placeholder={t('fallback.recommendationsPlaceholder')}
                   className="resize-none min-h-[80px]"
                   rows={3}
                 />
@@ -484,11 +455,11 @@ export function BriefGenerationPanel({
                   ) : (
                     <CheckCircle className="h-4 w-4 me-2" />
                   )}
-                  {t('fallback.submit', 'Submit Brief')}
+                  {t('fallback.submit')}
                 </Button>
                 <Button variant="outline" onClick={handleGenerateAnother} className="min-h-11">
                   <RotateCcw className="h-3 w-3 me-2" />
-                  {t('startOver', 'Start over')}
+                  {t('startOver')}
                 </Button>
               </div>
             </div>
