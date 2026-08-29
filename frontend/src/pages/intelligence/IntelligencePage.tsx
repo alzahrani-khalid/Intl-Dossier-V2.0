@@ -416,7 +416,7 @@ export function IntelligencePage() {
             activeTab === 'reports' && 'active',
           )}
         >
-          {t('intelligence.tabs.reports', { defaultValue: 'Reports' })}
+          {t('intelligence.tabs.reports')}
         </button>
         <button
           type="button"

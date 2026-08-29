@@ -235,7 +235,7 @@ export function BoardColumn(props: BoardColumnProps): ReactElement {
       </KanbanCards>
       {items.length === 0 ? (
         <div className="col-empty" aria-live="polite">
-          {t('emptyColumn', { defaultValue: 'No items' })}
+          {t('emptyColumn')}
         </div>
       ) : null}
     </section>
