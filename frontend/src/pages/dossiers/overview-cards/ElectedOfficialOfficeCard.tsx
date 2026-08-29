@@ -104,14 +104,10 @@ export function ElectedOfficialOfficeCard({
 
       {isError && official === undefined ? (
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('dossier:overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('dossier:overview.sectionError')}
         </p>
       ) : displayRows.length === 0 ? (
-        <p className="text-muted-foreground text-sm text-center py-8">
-          {t('detail.officeEmpty', { defaultValue: 'No office data available' })}
-        </p>
+        <p className="text-muted-foreground text-sm text-center py-8">{t('detail.officeEmpty')}</p>
       ) : (
         <dl className="space-y-3">
           {displayRows.map((row) => (

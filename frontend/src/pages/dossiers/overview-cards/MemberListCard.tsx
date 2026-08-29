@@ -62,19 +62,17 @@ export function MemberListCard({ dossierId }: MemberListCardProps): React.ReactE
       <div className="flex items-center gap-2 mb-4">
         <Users className="h-4 w-4 text-muted-foreground" />
         <h3 className="text-base font-semibold leading-tight text-start">
-          {t('overview.members.title', { defaultValue: 'Members' })}
+          {t('overview.members.title')}
         </h3>
       </div>
 
       {isError && data === null ? (
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('overview.sectionError')}
         </p>
       ) : members.length === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">
-          {t('overview.members.empty', { defaultValue: 'No members linked' })}
+          {t('overview.members.empty')}
         </p>
       ) : (
         <div className="space-y-2">
@@ -96,7 +94,6 @@ export function MemberListCard({ dossierId }: MemberListCardProps): React.ReactE
           {hasMore && (
             <p className="text-xs text-muted-foreground text-center pt-1">
               {t('overview.members.more', {
-                defaultValue: '+{{count}} more members',
                 count: members.length - MAX_MEMBERS,
               })}
             </p>

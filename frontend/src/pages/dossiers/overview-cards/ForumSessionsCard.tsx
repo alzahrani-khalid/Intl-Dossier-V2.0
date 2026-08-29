@@ -76,19 +76,17 @@ export function ForumSessionsCard({ dossierId }: ForumSessionsCardProps): React.
       <div className="flex items-center gap-2 mb-4">
         <Layers className="h-4 w-4 text-muted-foreground" />
         <h3 className="text-base font-semibold leading-tight text-start">
-          {t('overview.sessions.title', { defaultValue: 'Sessions' })}
+          {t('overview.sessions.title')}
         </h3>
       </div>
 
       {isError && data === null ? (
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('overview.sectionError')}
         </p>
       ) : !hasItems ? (
         <p className="text-muted-foreground text-sm text-center py-8">
-          {t('overview.sessions.empty', { defaultValue: 'No sessions recorded' })}
+          {t('overview.sessions.empty')}
         </p>
       ) : (
         <div className="space-y-2">

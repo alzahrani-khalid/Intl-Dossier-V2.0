@@ -53,7 +53,7 @@ export function PersonMetadataCard({ dossierId }: PersonMetadataCardProps): Reac
   const rows: MetadataRow[] = [
     {
       icon: <Building2 className="h-4 w-4 text-muted-foreground flex-shrink-0" />,
-      label: t('overview.person.organization', { defaultValue: 'Organization' }),
+      label: t('overview.person.organization'),
       value:
         primaryOrg != null
           ? isRTL
@@ -63,18 +63,18 @@ export function PersonMetadataCard({ dossierId }: PersonMetadataCardProps): Reac
     },
     {
       icon: <Briefcase className="h-4 w-4 text-muted-foreground flex-shrink-0" />,
-      label: t('overview.person.role', { defaultValue: 'Role / Title' }),
+      label: t('overview.person.role'),
       value: isRTL
         ? (data?.dossier?.description_ar ?? data?.dossier?.description_en ?? '-')
         : (data?.dossier?.description_en ?? '-'),
     },
     {
       icon: <CalendarCheck className="h-4 w-4 text-muted-foreground flex-shrink-0" />,
-      label: t('overview.person.lastEngagement', { defaultValue: 'Last Engagement' }),
+      label: t('overview.person.lastEngagement'),
       value:
         lastEvent != null
           ? formatDayFirstYear(new Date(lastEvent.start_datetime))
-          : t('overview.person.noEngagement', { defaultValue: 'None recorded' }),
+          : t('overview.person.noEngagement'),
     },
   ]
 
@@ -83,15 +83,13 @@ export function PersonMetadataCard({ dossierId }: PersonMetadataCardProps): Reac
       <div className="flex items-center gap-2 mb-4">
         <User className="h-4 w-4 text-muted-foreground" />
         <h3 className="text-base font-semibold leading-tight text-start">
-          {t('overview.person.title', { defaultValue: 'Profile' })}
+          {t('overview.person.title')}
         </h3>
       </div>
 
       {isError && data === null ? (
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('overview.sectionError')}
         </p>
       ) : (
         <div className="space-y-3">
