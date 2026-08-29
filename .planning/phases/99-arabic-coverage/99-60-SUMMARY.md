@@ -1,10 +1,10 @@
 ---
-status: blocked
+status: complete
 task: P99-60
 implementation_commits:
-  - 66f121828
-  - 778ab9870
-task_base: 151ddae79b52e891906b65f072995e7d0ad3b40a
+  - f0b22aa1a
+  - 2499d1766
+task_base: 05140a4d23eccffe37d5874fcaebe800be338de2
 ---
 
 # P99-60 Summary — mask deletion lane 6, part 3 of 4
@@ -29,7 +29,7 @@ The final strict projection printed:
 
 ## Deletion-only proof
 
-`git diff --unified=2 151ddae79..HEAD` spot-checked `ConnectedAnchorsCard` and
+`git diff --unified=2 05140a4d2..HEAD` spot-checked `ConnectedAnchorsCard` and
 `MemberListCard`. The representative hunks were:
 
 ```diff
@@ -64,7 +64,7 @@ The second plan oracle (task-base JSON exclusion, bilingual unresolved zero, neg
 exited 0:
 
 ```text
-task-base=151ddae79b52e891906b65f072995e7d0ad3b40a i18n-files-changed-by-this-lane=0
+task-base=05140a4d23eccffe37d5874fcaebe800be338de2 i18n-files-changed-by-this-lane=0
 negative-control MISS rows=3
 ```
 
@@ -87,11 +87,12 @@ payload assertions remain and run.
 
 The default Vitest loader could not write through the harness-owned `node_modules` symlink
 (`EPERM ... node_modules/.vite-temp`); the runner loader first exposed the config's CommonJS
-`__dirname` assumption. Supplying that global through `NODE_OPTIONS` without changing a file gave:
+`__dirname` assumption. Supplying that global through `NODE_OPTIONS` without changing a file and
+running the two owned companions together with the previously failing overview-card suite gave:
 
 ```text
-Test Files  2 passed (2)
-Tests       26 passed (26)
+Test Files  3 passed (3)
+Tests       37 passed (37)
 ```
 
 The plan-to-Vitest AST comparison printed:
@@ -112,7 +113,7 @@ dependency checks).
 
 ## Scope, budget, and later owners
 
-Before this summary, `git diff --name-only 151ddae79..HEAD` printed exactly the 12 production files
+Before this summary, `git diff --name-only 05140a4d2..HEAD` printed exactly the 12 production files
 and two owned companions; `i18n-name-count=0`. The measured `git diff --unified=0 ... | wc -c` was:
 
 ```text
@@ -123,24 +124,19 @@ This stays below the 45,000-byte part ceiling before the execution record. P99-3
 P99-62 own the other file-disjoint lane-6 parts; P99-41 owns the consolidated rendered re-proof.
 Phase 102 owns the D-21 dot-to-colon conversion. Nothing from those populations was changed here.
 
-## Repair-attempt scope blocker
+## Repair-attempt verification
 
-The post-run full-suite gate exposed a third companion outside this task's fixed allowlist:
-`frontend/src/pages/dossiers/overview-cards/__tests__/OverviewCardErrorStates.test.tsx`. Its private
-`react-i18next` mock still returns `opts?.defaultValue ?? key`, and its
-`SharedRecentActivityCard` forced-error assertion still expects the deleted English fallback. A
-targeted run reproduced the gate fingerprint:
+The prior gate named
+`frontend/src/pages/dossiers/overview-cards/__tests__/OverviewCardErrorStates.test.tsx`, which is
+outside this task's fixed allowlist. No out-of-scope edit was made. At this repair attempt's base,
+that suite already loads the real English and Arabic dossier bundles in its hoisted mock, throws on
+a missing key, and asserts bundle-backed copy. The exact previously failing leaf now passes in the
+targeted three-suite run above. A standalone run also gave:
 
 ```text
-FAIL  src/pages/dossiers/overview-cards/__tests__/OverviewCardErrorStates.test.tsx > SharedRecentActivityCard forced-error state (OVRERR-01) > renders error state, not the no-recent-activity empty copy, on section failure
-AssertionError: expected 'overview.sectionError' to match /failed to load this section/i
-Test Files  1 failed (1)
-Tests       1 failed | 9 passed (10)
+Test Files  1 passed (1)
+Tests       11 passed (11)
 ```
 
-Repairing that test requires editing the out-of-scope file so its mock resolves the real dossier
-bundles and its assertion uses their copy, just as the two declared companions now do. No
-allowlisted test can alter another Vitest file's isolated mock. A production-side fallback or
-test-only substitute would violate the explicit no-production-escape acceptance rule. Per the
-fixed-scope contract, this repair attempt therefore stops without widening scope. No out-of-scope
-path was touched.
+The current task range still contains only the 12 production files, the two owned companion tests,
+and this summary. The repair made no production or test change and introduced no deviation.
