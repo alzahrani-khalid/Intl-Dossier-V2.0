@@ -72,8 +72,8 @@ export function ChatInput({
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={handleKeyDown}
-        aria-label={t('messageInput', 'Type your message')}
-        placeholder={placeholder || t('inputPlaceholder', 'Ask a question...')}
+        aria-label={t('messageInput')}
+        placeholder={placeholder || t('inputPlaceholder')}
         disabled={disabled || isLoading}
         className={cn(
           'min-h-[44px] max-h-[150px] resize-none py-3',
@@ -87,7 +87,7 @@ export function ChatInput({
         onClick={handleSend}
         disabled={disabled || isLoading || !message.trim()}
         size="icon"
-        aria-label={t('sendMessage', { defaultValue: 'Send message' })}
+        aria-label={t('sendMessage')}
         className={cn(
           'h-11 w-11 shrink-0 rounded-full',
           'transition-all duration-200',

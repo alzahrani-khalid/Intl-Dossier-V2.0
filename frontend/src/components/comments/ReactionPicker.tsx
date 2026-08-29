@@ -126,7 +126,7 @@ export function ReactionPicker({
             data-testid="add-reaction-button"
           >
             <SmilePlus className="h-4 w-4" />
-            {!compact && !hasReactions && <span>{t('reactions.add', 'React')}</span>}
+            {!compact && !hasReactions && <span>{t('reactions.add')}</span>}
           </Button>
         </PopoverTrigger>
         <PopoverContent

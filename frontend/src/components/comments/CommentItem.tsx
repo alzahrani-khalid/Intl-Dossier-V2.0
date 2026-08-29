@@ -170,7 +170,7 @@ export function CommentItem({
   const timeAgo = useMemo(() => formatRelativeTime(comment.created_at), [comment.created_at])
 
   const handleDelete = async () => {
-    if (!window.confirm(t('confirmDelete', 'Are you sure you want to delete this comment?'))) {
+    if (!window.confirm(t('confirmDelete'))) {
       return
     }
 
@@ -230,9 +230,7 @@ export function CommentItem({
                 {timeAgo}
               </span>
               {comment.is_edited && (
-                <span className="text-xs text-muted-foreground italic">
-                  ({t('edited', 'edited')})
-                </span>
+                <span className="text-xs text-muted-foreground italic">({t('edited')})</span>
               )}
               {comment.visibility !== 'public' && (
                 <Badge variant="outline" className="h-5 text-xs gap-1">
@@ -248,14 +246,14 @@ export function CommentItem({
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
                     <MoreHorizontal className="h-4 w-4" />
-                    <span className="sr-only">{t('actions', 'Actions')}</span>
+                    <span className="sr-only">{t('actions')}</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
                   {canEdit && (
                     <DropdownMenuItem onClick={() => setIsEditing(true)}>
                       <Edit2 className="h-4 w-4 me-2" />
-                      {t('actions.edit', 'Edit')}
+                      {t('actions.edit')}
                     </DropdownMenuItem>
                   )}
                   {canDelete && (
@@ -266,7 +264,7 @@ export function CommentItem({
                         className="text-destructive focus:text-destructive"
                       >
                         <Trash2 className="h-4 w-4 me-2" />
-                        {t('actions.delete', 'Delete')}
+                        {t('actions.delete')}
                       </DropdownMenuItem>
                     </>
                   )}
@@ -290,7 +288,7 @@ export function CommentItem({
                 onClick={() => setIsReplying(!isReplying)}
               >
                 <MessageSquare className="h-3 w-3 me-1" />
-                {t('actions.reply', 'Reply')}
+                {t('actions.reply')}
               </Button>
             )}
 
@@ -305,12 +303,12 @@ export function CommentItem({
                 {showRepliesExpanded ? (
                   <>
                     <ChevronUp className="h-3 w-3 me-1" />
-                    {t('hideReplies', 'Hide replies')}
+                    {t('hideReplies')}
                   </>
                 ) : (
                   <>
                     <ChevronDown className="h-3 w-3 me-1" />
-                    {t('showReplies', 'Show {{count}} replies', { count: comment.reply_count })}
+                    {t('showReplies', { count: comment.reply_count })}
                   </>
                 )}
               </Button>
@@ -338,9 +336,7 @@ export function CommentItem({
       {showReplies && showRepliesExpanded && replies.length > 0 && (
         <div className="mt-2">
           {isLoadingReplies ? (
-            <div className="ps-11 py-2 text-sm text-muted-foreground">
-              {t('loadingReplies', 'Loading replies...')}
-            </div>
+            <div className="ps-11 py-2 text-sm text-muted-foreground">{t('loadingReplies')}</div>
           ) : (
             replies.map((reply) => (
               <CommentItem
