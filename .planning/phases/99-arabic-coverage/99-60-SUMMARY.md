@@ -94,10 +94,10 @@ Test Files  2 passed (2)
 Tests       26 passed (26)
 ```
 
-The acceptance-title AST census printed:
+The plan-to-Vitest AST comparison printed:
 
 ```text
-acceptance-titles=6 chars=166,734,2759,1372,572,264
+plan-criteria=6 exact-leaf-titles=6 missing=0
 ```
 
 `pnpm --dir frontend type-check` exited 0:
