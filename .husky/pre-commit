@@ -1,7 +1,28 @@
 #!/usr/bin/env sh
 
-# Run lint-staged for ESLint + Prettier on staged files
-npx lint-staged
+# Run lint-staged for ESLint + Prettier on staged files.
+#
+# ITS EXIT STATUS IS LOAD-BEARING — BACKLOG-REPO-PRECOMMIT-RESTORE / RULING-P99-469.
+# lint-staged stashes the unstaged worktree before running and restores it after. If the
+# restore step fails — e.g. because a force-added gitignored path was staged, which makes
+# it report "paths are ignored by one of your .gitignore files" — it exits non-zero and the
+# working tree survives ONLY as an anonymous "lint-staged automatic backup" stash that
+# nothing points at. This line previously ignored that status, so the hook fell through to
+# the build and exited 0: the commit succeeded while the author believed the tree was intact.
+# Observed twice, 597b6597e1e7 and 30bcdc15f0a1.
+# A rejected commit is strictly better than a silent stash.
+if ! npx lint-staged; then
+  echo "" >&2
+  echo "pre-commit: lint-staged FAILED — commit rejected." >&2
+  echo "  If it failed while APPLYING MODIFICATIONS, your unstaged changes are not in the" >&2
+  echo "  worktree; they are in a stash that nothing references:" >&2
+  echo "      git stash list | head -3        # look for 'lint-staged automatic backup'" >&2
+  echo "      git stash apply <ref>           # inspect BEFORE dropping; indices renumber" >&2
+  echo "  Common cause: staging a force-added gitignored path (git add -f .tickmarkr/...)." >&2
+  echo "  Commit those separately with --no-verify." >&2
+  echo "" >&2
+  exit 1
+fi
 
 # Skip the full-project build + knip for docs-only commits under .planning/
 # (planning artifacts never affect TypeScript/Vite output). Any staged file
