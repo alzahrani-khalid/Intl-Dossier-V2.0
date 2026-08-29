@@ -15,7 +15,7 @@
  *
  * Exit 0 every done task carries the marker · 1 at least one does not · 3 cannot run.
  */
-import { readFileSync, existsSync } from 'node:fs'
+import { readFileSync, existsSync, readdirSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 
 const FRONT_MATTER = /^---\r?\n([\s\S]*?)\r?\n---/
@@ -40,6 +40,28 @@ if (process.argv[2] === '--self-check') {
     console.log(`  ${got === want ? 'PASS' : 'FAIL'}  ${name}: got ${got}, want ${want}`)
   }
   console.log(bad === 0 ? 'SELF-CHECK PASS' : `SELF-CHECK FAIL (${bad})`)
+  process.exit(bad === 0 ? 0 : 1)
+}
+
+// --summaries <phaseDir>: worktree-safe form. An acceptance oracle runs INSIDE a task worktree,
+// where .tickmarkr/runs/ does not exist, so the journal form above cannot be an engine-run gate.
+// This form needs only the tracked phase directory: every SUMMARY that EXISTS must carry the marker.
+// It asserts presence-implies-marker, never existence, so a phase mid-flight is not failed for the
+// summaries it has not written yet.
+if (process.argv[2] === '--summaries') {
+  const dir = process.argv[3]
+  if (!dir) { console.error('INSTRUMENT-CANNOT-RUN: --summaries needs a phase directory'); process.exit(3) }
+  let names
+  try { names = readdirSync(dir).filter((f) => /-SUMMARY\.md$/.test(f)).sort() } catch (e) {
+    console.error(`INSTRUMENT-CANNOT-RUN: cannot read ${dir}: ${e.message}`); process.exit(3)
+  }
+  if (names.length === 0) { console.error(`INSTRUMENT-CANNOT-RUN: no SUMMARY files under ${dir}; an empty population proves nothing`); process.exit(3) }
+  let bad = 0
+  for (const n of names) {
+    const ok = hasCompleteStatus(readFileSync(`${dir}/${n}`, 'utf8'))
+    if (!ok) { console.log(`  ${n}  BREACH — no 'status: complete' front-matter; the next compile reads this task PENDING`); bad++ }
+  }
+  console.log(`completion-contract: ${names.length - bad}/${names.length} SUMMARY files carry the marker`)
   process.exit(bad === 0 ? 0 : 1)
 }
 
