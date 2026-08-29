@@ -6,7 +6,7 @@ status: complete
 
 ## Outcome
 
-**GREEN.** Commit `56e7d7915` removes every English literal/default-value mask in this part's 22 production files. The three empty-string sentinels in `DossierTypeGuide.tsx` remain byte-intact. The owned `DossierEngagementsTab` companion was repaired because the deletion activated its hardcoded/default-fallback mock: it now resolves the real English and Arabic `dossier-shell`, `dossier`, `dossier-overview`, and `engagements` resources, throws on missing/non-string keys, asserts both locale values, and rejects the bare `overview.sectionError` key.
+**GREEN.** Commit `d2fabd06a` removes every English literal/default-value mask in this part's 22 production files. The three empty-string sentinels in `DossierTypeGuide.tsx` remain byte-intact. Review also preserved the localized dynamic fallback in `BulkActionPreviewDialog.tsx`: seven reachable hyphenated action IDs normalize to keys absent from both locales, so their title falls back to the translated `confirmation.title` rather than an English literal or raw key. The owned `DossierEngagementsTab` companion was repaired because the deletion activated its hardcoded/default-fallback mock: it now resolves the real English and Arabic `dossier-shell`, `dossier`, `dossier-overview`, and `engagements` resources, throws on missing/non-string keys, asserts both locale values, and rejects the bare `overview.sectionError` key.
 
 No production first-argument key, namespace prefix, translation hook, import, test-mode branch, or locale JSON was changed. Interpolation/namespace options remain. The working dot-form keys remain dot-form under D-20/D-23; this was deletion-only.
 
@@ -20,7 +20,7 @@ frontend/src/components/app-error-boundary/ErrorBoundary.tsx	literal=6	options=0
 frontend/src/components/attachment-uploader/AttachmentUploader.tsx	literal=1	options=3	total=4	sentinels=0
 frontend/src/components/briefing-books/BriefingBookBuilder.tsx	literal=4	options=4	total=8	sentinels=0
 frontend/src/components/briefing-books/BriefingBooksList.tsx	literal=1	options=1	total=2	sentinels=0
-frontend/src/components/bulk-actions/BulkActionPreviewDialog.tsx	literal=0	options=17	total=17	sentinels=0
+frontend/src/components/bulk-actions/BulkActionPreviewDialog.tsx	literal=0	options=16	total=16	sentinels=0	localized-dynamic-fallbacks=1
 frontend/src/components/bulk-actions/EnhancedUndoToast.tsx	literal=0	options=4	total=4	sentinels=0
 frontend/src/components/bulk-actions/SelectableDataTable.tsx	literal=0	options=4	total=4	sentinels=0
 frontend/src/components/commitments/CommitmentDetailDrawer.tsx	literal=1	options=0	total=1	sentinels=0
@@ -37,12 +37,12 @@ frontend/src/components/dossier/tabs/DossierEngagementsTab.tsx	literal=0	options
 frontend/src/components/dossier/wizard/StepGuidanceBanner.tsx	literal=1	options=0	total=1	sentinels=0
 frontend/src/components/dossier/wizard/edit/useEditDossierWizard.ts	literal=0	options=1	total=1	sentinels=0
 frontend/src/components/dossier/wizard/hooks/useCreateDossierWizard.ts	literal=0	options=1	total=1	sentinels=0
-BASELINE production-files=22 files-with-mask=22 literal=30 options=58 english-mask-total=88 empty-sentinels=3
+BASELINE production-files=22 files-with-mask=22 literal=30 options=57 english-mask-total=87 empty-sentinels=3 localized-dynamic-fallbacks=1
 BASELINE strict-visible literal=30 options=50 twoArgTotal=80
-POST literal=0 options=0 english-mask-total=0 empty-sentinels=3
+POST literal=0 options=0 english-mask-total=0 empty-sentinels=3 localized-dynamic-fallbacks=1
 ```
 
-The live population is 88 English masks, not the plan-time 78. All ten additional sites are inside the declared file list, so the out-of-lane stop condition did not trigger. Two are plural fallback properties newly counted by the amended strict parser; eight have template/identifier first arguments and are intentionally outside its single-quoted matcher but inside the AST census. The strict parser therefore read 80 at the task base and zero after the drop. This is a live re-derivation, not a widening of scope.
+The corrected live population is 87 English masks, not the plan-time 78. All nine additional masks are inside the declared file list, so the out-of-lane stop condition did not trigger. Two are plural fallback properties newly counted by the amended strict parser; seven have template/identifier first arguments and are intentionally outside its single-quoted matcher but inside the AST census. The separately classified localized dynamic fallback also has a template first argument, is not an English mask, and remains in production. The strict parser therefore read 80 at the task base and zero after the drop. This is a live re-derivation, not a widening of scope.
 
 ## Scoped zero register
 
@@ -54,7 +54,7 @@ Command: `node scripts/i18n-audit-strict.mjs "$PWD" --scope <the 22 production p
   "twoArgTotal": 0,
   "literalTwoArgTotal": 0,
   "optionsDefaultTotal": 0,
-  "rawKeyTotal": 264,
+  "rawKeyTotal": 265,
   "twoArgUnresolved": 0,
   "rawKeyUnresolved": 0,
   "twoArgUnresolvedEn": 0,
@@ -64,9 +64,9 @@ Command: `node scripts/i18n-audit-strict.mjs "$PWD" --scope <the 22 production p
 }
 ```
 
-`rawKeyTotal=264` is the positive control: the scoped zero was measured over real `t()` calls. Both locale-specific unresolved counters remain zero, proving that no surviving key moved.
+`rawKeyTotal=265` is the positive control: the scoped zero was measured over real `t()` calls. Both locale-specific unresolved counters remain zero, proving that no surviving key moved.
 
-## Acceptance oracle 1 — dynamic sentinels, strict total, fallback options
+## Acceptance oracle 1 — dynamic sentinels, strict total, English fallback options
 
 The plan's first command ran unchanged at committed HEAD. Verbatim output:
 
@@ -78,7 +78,7 @@ dynamic-key coverage: OK (2 site(s))
 scoped-files=22 defaultValue-hits=0
 ```
 
-Process exit: `0`. The two dynamic families account for three source sentinels: the popover content reads both families, while the compact trigger reads `whenToUse` a second time. The `missing=7/8` rows positively prove why those empty fallbacks must remain.
+Process exit: `0`. The two type-guide dynamic families account for three source sentinels: the popover content reads both families, while the compact trigger reads `whenToUse` a second time. The `missing=7/8` rows positively prove why those empty fallbacks must remain. The review repair adds the independently verified `BulkActionType` family: seven of twelve reachable normalized title keys are absent from both locales, and its one surviving `defaultValue` resolves the real localized `confirmation.title` key rather than supplying fallback text. The plan scanner still prints zero because its quoted-key matcher cannot parse the quotes inside this template key; the owned acceptance fixture therefore targets this exact localized sentinel, requires it once, and requires zero fallback-text options after excluding it.
 
 ## Acceptance oracle 2 — task-range JSON, unresolved zero, negative control
 
@@ -116,7 +116,7 @@ Process exit: `0`. The command also asserted all six scoped unresolved counters 
 
 `DossierTypeGuide.tsx` changed only its nonempty `typeGuide.learnMore` default. Its three ``t(`typeGuide.${type}...`, '')`` calls do not appear in the diff and the AST post-count remains `empty-sentinels=3`.
 
-The committed production/test logic diff measured `31,676` bytes by summing added/removed `-U0` line content, below the 45,000-byte task ceiling. It changed exactly 23 allowlisted paths (22 production plus the owned companion), with `i18n-json-paths=0`.
+The committed production/test logic diff measured `31,938` bytes by summing added/removed `-U0` line content, below the 45,000-byte task ceiling. It changed exactly 23 allowlisted paths (22 production plus the owned companion), with `i18n-json-paths=0`.
 
 ## Companion test and type/build verification
 

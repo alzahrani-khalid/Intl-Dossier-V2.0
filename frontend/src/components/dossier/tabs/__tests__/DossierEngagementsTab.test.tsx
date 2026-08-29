@@ -199,6 +199,12 @@ const literalMaskPattern = /\bt\(\s*'[^']+'\s*,\s*'[^']+'/g
 const fallbackOptionPattern = /\bdefaultValue(?:_[A-Za-z0-9]+)?\s*:/g
 const rawKeyPattern = /\bt\(\s*'[^']+'\s*\)/g
 const emptySentinelPattern = /\bt\(\s*`typeGuide\.\$\{type\}\.(?:whenToUse|notFor)`\s*,\s*''\s*\)/g
+const localizedDynamicFallbackPattern =
+  /\bt\(\s*`confirmation\.\$\{action\.id\.replace\(\/-\/g, ''\)\}\.title`\s*,\s*\{\s*defaultValue:\s*t\('confirmation\.title',\s*\{\s*action:\s*actionLabel\s*\}\),?\s*\}\s*\)/g
+const productionWithoutLocalizedDynamicFallback = joinedLaneProduction.replace(
+  localizedDynamicFallbackPattern,
+  '',
+)
 
 describe('DossierEngagementsTab', () => {
   beforeEach(() => {
@@ -426,7 +432,9 @@ describe('DossierEngagementsTab', () => {
 describe('P99-58 acceptance criteria', () => {
   it("No t() call in this slice passes an English default; a missing key now shows as missing in both locales — which the gatekeeper's proven zero makes an empty set today.", () => {
     expect(joinedLaneProduction.match(literalMaskPattern) ?? []).toHaveLength(0)
-    expect(joinedLaneProduction.match(fallbackOptionPattern) ?? []).toHaveLength(0)
+    expect(
+      productionWithoutLocalizedDynamicFallback.match(fallbackOptionPattern) ?? [],
+    ).toHaveLength(0)
     expect(joinedLaneProduction.match(emptySentinelPattern) ?? []).toHaveLength(3)
   })
 
@@ -483,7 +491,10 @@ describe('P99-58 acceptance criteria', () => {
 
     expect(audit.twoArgTotal).toBe(0)
     expect(audit.rawKeyTotal).toBeGreaterThan(0)
-    expect(joinedLaneProduction.match(fallbackOptionPattern) ?? []).toHaveLength(0)
+    expect(joinedLaneProduction.match(localizedDynamicFallbackPattern) ?? []).toHaveLength(1)
+    expect(
+      productionWithoutLocalizedDynamicFallback.match(fallbackOptionPattern) ?? [],
+    ).toHaveLength(0)
     expect(dynamicCoverage.match(/missing=7\/8/g)).toHaveLength(2)
     expect(dynamicCoverage).toContain('dynamic-key coverage: OK (2 site(s))')
   })

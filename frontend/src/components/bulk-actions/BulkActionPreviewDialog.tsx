@@ -374,7 +374,9 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
       >
         <AlertDialogHeader>
           <AlertDialogTitle>
-            {t(`confirmation.${action.id.replace(/-/g, '')}.title`)}
+            {t(`confirmation.${action.id.replace(/-/g, '')}.title`, {
+              defaultValue: t('confirmation.title', { action: actionLabel }),
+            })}
           </AlertDialogTitle>
           <AlertDialogDescription>
             {t('preview.description', {
