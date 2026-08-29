@@ -57,30 +57,24 @@ export function PositionTrackerCard({ dossierId }: PositionTrackerCardProps): Re
     <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-base font-semibold leading-tight text-start">
-          {t('overview.positions.title', { defaultValue: 'Position Tracker' })}
+          {t('overview.positions.title')}
         </h3>
       </div>
 
       {error != null && !hasPositions ? (
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('overview.sectionError')}
         </p>
       ) : !hasPositions ? (
         <div className="text-center py-8">
-          <p className="text-muted-foreground text-sm mb-3">
-            {t('overview.positions.empty', {
-              defaultValue: 'No positions tracked yet. Add positions in the Positions tab.',
-            })}
-          </p>
+          <p className="text-muted-foreground text-sm mb-3">{t('overview.positions.empty')}</p>
           <Link
             to="/dossiers/topics/$id/positions"
             params={{ id: dossierId }}
             className="inline-flex items-center gap-1.5 text-sm text-primary hover:text-primary/80 transition-colors min-h-11"
           >
             <ExternalLink className="h-3.5 w-3.5" />
-            {t('overview.positions.addPositions', { defaultValue: 'Add Positions' })}
+            {t('overview.positions.addPositions')}
           </Link>
         </div>
       ) : (
@@ -89,12 +83,10 @@ export function PositionTrackerCard({ dossierId }: PositionTrackerCardProps): Re
           <div className="flex flex-col sm:flex-row gap-4">
             {/* Our Position — first child renders on RIGHT in RTL */}
             <div className="flex-1 rounded-md bg-primary/5 p-3">
-              <h4 className="text-sm font-medium mb-2">
-                {t('overview.positions.ourStance', { defaultValue: 'Our Position' })}
-              </h4>
+              <h4 className="text-sm font-medium mb-2">{t('overview.positions.ourStance')}</h4>
               {ourPositions.length === 0 ? (
                 <p className="text-xs text-muted-foreground">
-                  {t('overview.positions.noOurStance', { defaultValue: 'Not defined' })}
+                  {t('overview.positions.noOurStance')}
                 </p>
               ) : (
                 <div className="space-y-2">
@@ -116,12 +108,10 @@ export function PositionTrackerCard({ dossierId }: PositionTrackerCardProps): Re
 
             {/* Counterpart Positions — second child renders on LEFT in RTL */}
             <div className="flex-1 rounded-md bg-muted/50 p-3">
-              <h4 className="text-sm font-medium mb-2">
-                {t('overview.positions.counterpart', { defaultValue: 'Counterpart Positions' })}
-              </h4>
+              <h4 className="text-sm font-medium mb-2">{t('overview.positions.counterpart')}</h4>
               {counterpartPositions.length === 0 ? (
                 <p className="text-xs text-muted-foreground">
-                  {t('overview.positions.noCounterpart', { defaultValue: 'None recorded' })}
+                  {t('overview.positions.noCounterpart')}
                 </p>
               ) : (
                 <div className="space-y-2">
@@ -149,7 +139,7 @@ export function PositionTrackerCard({ dossierId }: PositionTrackerCardProps): Re
             className="inline-flex items-center gap-1.5 text-sm text-primary hover:text-primary/80 transition-colors min-h-11"
           >
             <ExternalLink className="h-3.5 w-3.5" />
-            {t('overview.positions.viewAll', { defaultValue: 'View Positions' })}
+            {t('overview.positions.viewAll')}
           </Link>
         </div>
       )}

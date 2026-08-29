@@ -51,23 +51,23 @@ export function ForumMetadataCard({ dossierId }: ForumMetadataCardProps): React.
   const rows: MetadataRow[] = [
     {
       icon: <Globe className="h-4 w-4 text-muted-foreground flex-shrink-0" />,
-      label: t('overview.forum.type', { defaultValue: 'Forum Type' }),
+      label: t('overview.forum.type'),
       value: data?.dossier?.description_en ?? '-',
     },
     {
       icon: <RefreshCw className="h-4 w-4 text-muted-foreground flex-shrink-0" />,
-      label: t('overview.forum.frequency', { defaultValue: 'Frequency' }),
+      label: t('overview.forum.frequency'),
       value: (data?.dossier?.metadata?.frequency as string | undefined) ?? '-',
     },
     {
       icon: <Building2 className="h-4 w-4 text-muted-foreground flex-shrink-0" />,
-      label: t('overview.forum.host', { defaultValue: 'Host Organization' }),
+      label: t('overview.forum.host'),
       value:
         hostOrg != null ? (isRTL ? (hostOrg.name_ar ?? hostOrg.name_en) : hostOrg.name_en) : '-',
     },
     {
       icon: <Users className="h-4 w-4 text-muted-foreground flex-shrink-0" />,
-      label: t('overview.forum.participants', { defaultValue: 'Participants' }),
+      label: t('overview.forum.participants'),
       value: String(participantCount),
     },
   ]
@@ -77,15 +77,13 @@ export function ForumMetadataCard({ dossierId }: ForumMetadataCardProps): React.
       <div className="flex items-center gap-2 mb-4">
         <Globe className="h-4 w-4 text-muted-foreground" />
         <h3 className="text-base font-semibold leading-tight text-start">
-          {t('overview.forum.title', { defaultValue: 'Forum Details' })}
+          {t('overview.forum.title')}
         </h3>
       </div>
 
       {isError && data === null ? (
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('overview.sectionError')}
         </p>
       ) : (
         <div className="space-y-3">
