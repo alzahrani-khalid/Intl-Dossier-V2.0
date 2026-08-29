@@ -374,16 +374,13 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
       >
         <AlertDialogHeader>
           <AlertDialogTitle>
-            {t(`confirmation.${action.id.replace(/-/g, '')}.title`, {
-              defaultValue: t('confirmation.title', { action: actionLabel }),
-            })}
+            {t(`confirmation.${action.id.replace(/-/g, '')}.title`)}
           </AlertDialogTitle>
           <AlertDialogDescription>
             {t('preview.description', {
               action: actionLabel.toLowerCase(),
               count: includedCount,
               entityType: entityLabel,
-              defaultValue: `${actionLabel} ${includedCount} ${entityLabel}`,
             })}
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -399,14 +396,12 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
               <Badge variant="secondary" className="text-xs">
                 {t('preview.includedCount', {
                   count: includedCount,
-                  defaultValue: `${includedCount} included`,
                 })}
               </Badge>
               {excludedCount > 0 && (
                 <Badge variant="outline" className="text-xs text-muted-foreground">
                   {t('preview.excludedCount', {
                     count: excludedCount,
-                    defaultValue: `${excludedCount} excluded`,
                   })}
                 </Badge>
               )}
@@ -420,10 +415,10 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
                 onClick={includeAll}
                 disabled={allVisibleIncluded || isProcessing}
                 className="h-7 px-2 text-xs"
-                title={t('preview.includeAll', { defaultValue: 'Include all' })}
+                title={t('preview.includeAll')}
               >
                 <CheckSquare className="h-3.5 w-3.5 me-1" />
-                {t('preview.includeAll', { defaultValue: 'All' })}
+                {t('preview.includeAll')}
               </Button>
               <Button
                 variant="ghost"
@@ -431,10 +426,10 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
                 onClick={excludeAll}
                 disabled={filteredItems.length === 0 || isProcessing}
                 className="h-7 px-2 text-xs"
-                title={t('preview.excludeAll', { defaultValue: 'Exclude all' })}
+                title={t('preview.excludeAll')}
               >
                 <Square className="h-3.5 w-3.5 me-1" />
-                {t('preview.excludeAll', { defaultValue: 'None' })}
+                {t('preview.excludeAll')}
               </Button>
               {excludedCount > 0 && (
                 <Button
@@ -442,7 +437,7 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
                   size="sm"
                   onClick={() => setShowExcludedOnly(!showExcludedOnly)}
                   className="h-7 px-2 text-xs"
-                  title={t('preview.showExcluded', { defaultValue: 'Show excluded only' })}
+                  title={t('preview.showExcluded')}
                 >
                   {showExcludedOnly ? (
                     <Eye className="h-3.5 w-3.5" />
@@ -459,7 +454,7 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
             <Search className="absolute start-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               type="text"
-              placeholder={t('preview.searchPlaceholder', { defaultValue: 'Search items...' })}
+              placeholder={t('preview.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="ps-8 pe-8 h-9"
@@ -483,9 +478,7 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
             <div className="p-2 space-y-1">
               {filteredItems.length === 0 ? (
                 <p className="text-center text-sm text-muted-foreground py-8">
-                  {searchQuery
-                    ? t('preview.noResults', { defaultValue: 'No items match your search' })
-                    : t('preview.noItems', { defaultValue: 'No items to preview' })}
+                  {searchQuery ? t('preview.noResults') : t('preview.noItems')}
                 </p>
               ) : (
                 filteredItems.map((item) => {
@@ -508,11 +501,9 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
                           isExcluded
                             ? t('preview.includeItem', {
                                 name: getItemDisplayName(item),
-                                defaultValue: `Include ${getItemDisplayName(item)}`,
                               })
                             : t('preview.excludeItem', {
                                 name: getItemDisplayName(item),
-                                defaultValue: `Exclude ${getItemDisplayName(item)}`,
                               })
                         }
                       />
@@ -549,7 +540,7 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
                                     item.status === 'archived' && 'bg-muted text-ink-mute',
                                   )}
                                 >
-                                  {t(`status.${item.status}`, { defaultValue: item.status })}
+                                  {t(`status.${item.status}`)}
                                 </Badge>
                               )}
                               {item.priority && (
@@ -565,7 +556,7 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
                                     item.priority === 'low' && 'border-success text-success',
                                   )}
                                 >
-                                  {t(`priority.${item.priority}`, { defaultValue: item.priority })}
+                                  {t(`priority.${item.priority}`)}
                                 </Badge>
                               )}
                               {item.assignee && (
@@ -596,11 +587,7 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
         {includedCount === 0 && (
           <div className="flex items-center gap-2 p-2 bg-warning/10 border border-warning/30 rounded-md mt-2">
             <AlertTriangle className="h-4 w-4 text-warning shrink-0" />
-            <p className="text-xs text-warning">
-              {t('preview.noItemsWarning', {
-                defaultValue: 'No items selected. Please include at least one item.',
-              })}
-            </p>
+            <p className="text-xs text-warning">{t('preview.noItemsWarning')}</p>
           </div>
         )}
 

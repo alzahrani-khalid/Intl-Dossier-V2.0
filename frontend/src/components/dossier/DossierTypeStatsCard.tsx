@@ -173,7 +173,7 @@ export function DossierTypeStatsCard({
                       'transition-colors duration-150',
                       'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-1',
                     )}
-                    aria-label={t('typeGuide.learnMore', 'Learn more about this type')}
+                    aria-label={t('typeGuide.learnMore')}
                   >
                     <HelpCircle className="h-3 w-3" />
                   </button>

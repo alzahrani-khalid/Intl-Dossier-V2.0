@@ -84,7 +84,6 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
     if (files.length >= maxFiles) {
       return t('form.attachments.maxFilesAllowed', {
         count: maxFiles,
-        defaultValue: 'Maximum {{count}} files allowed',
       })
     }
 
@@ -338,7 +337,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
                     <p className="text-xs text-muted-foreground">
                       {formatFileSize(attachmentFile.file.size)}
                       {attachmentFile.status === 'uploading' &&
-                        ` - ${t('form.attachments.uploading', 'Uploading…')}`}
+                        ` - ${t('form.attachments.uploading')}`}
                     </p>
                     {attachmentFile.error && (
                       <p className="mt-1 text-xs text-destructive">{attachmentFile.error}</p>
@@ -379,15 +378,12 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
             <span>
               {t('form.attachments.fileCount', {
                 count: files.length,
-                defaultValue_one: '{{count}} file',
-                defaultValue_other: '{{count}} files',
               })}
             </span>
             <span>
               {t('form.attachments.totalSize', {
                 used: formatFileSize(getTotalSize()),
                 max: formatFileSize(maxTotalSize),
-                defaultValue: 'Total: {{used}} / {{max}}',
               })}
             </span>
           </div>

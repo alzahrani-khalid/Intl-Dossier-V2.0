@@ -124,12 +124,7 @@ export function useCreateDossierWizard<T extends FieldValues>(
           await config.postCreate(newDossier.id, values)
         } catch (err) {
           console.warn('postCreate hook failed', err)
-          toast.warning(
-            t('form-wizard:postCreateWarning', {
-              defaultValue:
-                'Dossier created, but some related records (e.g. participants) failed to save.',
-            }),
-          )
+          toast.warning(t('form-wizard:postCreateWarning'))
         }
       }
 

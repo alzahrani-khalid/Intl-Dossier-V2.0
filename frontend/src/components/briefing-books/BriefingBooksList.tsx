@@ -239,8 +239,6 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
                         <span>
                           {t('list.pageCount', {
                             count: book.pageCount,
-                            defaultValue_one: '{{count}} page',
-                            defaultValue_other: '{{count}} pages',
                           })}
                         </span>
                       )}
@@ -360,7 +358,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
               {isDeleting ? (
                 <>
                   <Loader2 className="h-4 w-4 me-2 animate-spin" />
-                  {t('confirmDelete.deleting', 'Deleting…')}
+                  {t('confirmDelete.deleting')}
                 </>
               ) : (
                 t('confirmDelete.confirm')

@@ -58,11 +58,9 @@ export function DossierAnalyticsCard({
     return (
       <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
         <h3 className="text-base font-semibold leading-tight text-start mb-4">
-          {t('overview.analytics', { defaultValue: 'Analytics' })}
+          {t('overview.analytics')}
         </h3>
-        <p className="text-sm text-muted-foreground text-start">
-          {t('overview.analyticsError', { defaultValue: 'Unable to load analytics' })}
-        </p>
+        <p className="text-sm text-muted-foreground text-start">{t('overview.analyticsError')}</p>
       </div>
     )
   }
@@ -71,7 +69,7 @@ export function DossierAnalyticsCard({
     <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
       <h3 className="text-base font-semibold leading-tight text-start mb-4 flex items-center gap-2">
         <BarChart3 className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-        {t('overview.analytics', { defaultValue: 'Analytics' })}
+        {t('overview.analytics')}
       </h3>
 
       <div className="space-y-3">
@@ -80,12 +78,8 @@ export function DossierAnalyticsCard({
             key={metric.i18nKey}
             className="flex items-center justify-between rounded-md bg-muted/50 p-3"
           >
-            <span className="text-sm text-muted-foreground">
-              {t(metric.i18nKey, { defaultValue: metric.label })}
-            </span>
-            <span className="text-base font-semibold">
-              {metric.value}
-            </span>
+            <span className="text-sm text-muted-foreground">{t(metric.i18nKey)}</span>
+            <span className="text-base font-semibold">{metric.value}</span>
           </div>
         ))}
       </div>
