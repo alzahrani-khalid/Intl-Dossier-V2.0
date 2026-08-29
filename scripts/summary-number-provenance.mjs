@@ -70,19 +70,26 @@ export const findUnsupported = (text) => {
     for (const m of line.matchAll(NUM)) supported.add(canon(m[0]))
   }
   const out = []
+  // Every exclusion is COUNTED and reported. `unsupported=2` alone is a number without a denominator:
+  // a reader cannot tell whether it examined four numbers or four hundred, nor whether the exclusions
+  // quietly ate the real measurements. RULING-P99-513 -- "a number without a denominator reads exactly
+  // like a number with one" -- and this instrument was built to carry that lesson, so it states its own.
+  const drop = { year: 0, identifier: 0, tooSmall: 0, supported: 0 }
+  let seen = 0
   for (const { n, line } of prose) {
     for (const m of line.matchAll(NUM)) {
+      seen++
       const c = canon(m[0])
-      if (isYear(c)) continue
-      if (isIdentifierBound(line, m.index, m.index + m[0].length)) continue
+      if (isYear(c)) { drop.year++; continue }
+      if (isIdentifierBound(line, m.index, m.index + m[0].length)) { drop.identifier++; continue }
       // Only numbers big enough to be a count or a size. Small integers in prose are overwhelmingly
       // ordinals ("the 3 parts", "step 2"), and flagging them buries the real finding.
-      if (Number(c) < 100) continue
-      if (supported.has(c)) continue
+      if (Number(c) < 100) { drop.tooSmall++; continue }
+      if (supported.has(c)) { drop.supported++; continue }
       out.push({ line: n, value: m[0], context: line.trim().slice(0, 110) })
     }
   }
-  return { unterminated, unsupported: out, verbatimLines: verbatim.length }
+  return { unterminated, unsupported: out, verbatimLines: verbatim.length, seen, drop }
 }
 
 const selfCheck = () => {
@@ -99,6 +106,9 @@ const selfCheck = () => {
       findUnsupported('see AgingIndicator:315 and line 303\n\n```\nx=1\n```\n').unsupported.length, 0],
     ['a dotted-quad address is not a measurement',
       findUnsupported('served on 127.0.0.1:5173 here\n\n```\nx=1\n```\n').unsupported.length, 0],
+    ['the denominator is reported, not just the hit count',
+      (() => { const r = findUnsupported('sha `71b2725d8960f` and 336 leaves and 4 parts in 2026\n\n```\nx=1\n```\n')
+               return r.seen === r.drop.year + r.drop.identifier + r.drop.tooSmall + r.drop.supported + r.unsupported.length })(), true],
     ['a real prose measurement STILL fires beside them',
       findUnsupported('sha `71b272519d8960116f146a70936a` and 336 leaves\n\n```\nx=1\n```\n').unsupported.length, 1],
   ]
@@ -127,5 +137,5 @@ const r = findUnsupported(text)
 if (r.unterminated) { console.error('INSTRUMENT-CANNOT-RUN: unterminated fence — block boundaries are unknown, so neither a hit nor a zero can be read'); process.exit(3) }
 if (r.verbatimLines === 0) { console.log(`FAIL ${file}: zero verbatim block lines — the SUMMARY records no command output at all`); process.exit(1) }
 for (const u of r.unsupported) console.log(`${file}:${u.line}  UNSUPPORTED ${u.value}  | ${u.context}`)
-console.log(`${file}: verbatim-lines=${r.verbatimLines} unsupported=${r.unsupported.length}`)
+console.log(`${file}: verbatim-lines=${r.verbatimLines} prose-numbers=${r.seen} excluded=[year:${r.drop.year} id:${r.drop.identifier} small:${r.drop.tooSmall} backed:${r.drop.supported}] unsupported=${r.unsupported.length}`)
 process.exit(r.unsupported.length === 0 ? 0 : 1)
