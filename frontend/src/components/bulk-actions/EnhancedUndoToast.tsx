@@ -261,12 +261,11 @@ export function EnhancedUndoToast({
             <div className="flex items-center gap-2 mt-0.5">
               <p className="text-xs text-muted-foreground dark:text-muted-foreground">
                 {showSuccess
-                  ? t('undo.immediateUndo', { defaultValue: 'Click to undo' })
+                  ? t('undo.immediateUndo')
                   : isPaused
-                    ? t('undo.paused', { defaultValue: 'Paused' })
+                    ? t('undo.paused')
                     : t('undo.countdown', {
                         seconds: remainingSeconds,
-                        defaultValue: `${remainingSeconds}s to undo`,
                       })}
               </p>
               {!showSuccess && !isPaused && (
@@ -320,9 +319,7 @@ export function EnhancedUndoToast({
         {!showSuccess && !isUndoing && (
           <div className="px-4 pb-3 -mt-1">
             <p className="text-xs text-muted-foreground dark:text-muted-foreground">
-              {t('undo.keyboardHint', {
-                defaultValue: 'Press Ctrl+Z to undo',
-              })}
+              {t('undo.keyboardHint')}
             </p>
           </div>
         )}

@@ -344,7 +344,7 @@ export function DossierTypeGuide({
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
         className,
       )}
-      aria-label={t('typeGuide.learnMore', 'Learn more about this dossier type')}
+      aria-label={t('typeGuide.learnMore')}
     >
       <HelpCircle className="h-4 w-4" />
     </button>

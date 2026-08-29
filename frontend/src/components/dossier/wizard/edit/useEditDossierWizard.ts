@@ -92,12 +92,7 @@ export function useEditDossierWizard<T extends FieldValues>(
           await onAfterUpdate(values)
         } catch (err) {
           console.warn('edit post-update hook failed', err)
-          toast.warning(
-            t('form-wizard:postUpdateWarning', {
-              defaultValue:
-                'Dossier updated, but some related records (e.g. participants) failed to save.',
-            }),
-          )
+          toast.warning(t('form-wizard:postUpdateWarning'))
         }
       }
 

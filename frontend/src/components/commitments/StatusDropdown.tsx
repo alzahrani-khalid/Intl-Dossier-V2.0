@@ -72,7 +72,7 @@ export function StatusDropdown({
         className="bg-muted text-ink-mute border flex items-center gap-1 text-xs"
       >
         <Clock className="size-3.5" />
-        <span>{t('status.loading', 'Loading...')}</span>
+        <span>{t('status.loading')}</span>
       </Badge>
     )
   }

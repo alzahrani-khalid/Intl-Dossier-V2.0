@@ -161,13 +161,10 @@ function ErrorFallback({
         <Alert variant="destructive" className="mb-6">
           <AlertTriangle className="size-5" />
           <AlertTitle className="mb-2 text-start text-lg sm:text-xl">
-            {t('error.boundary.title', 'Something went wrong')}
+            {t('error.boundary.title')}
           </AlertTitle>
           <AlertDescription className="text-start">
-            {t(
-              'error.boundary.description',
-              'An unexpected error occurred. Please try refreshing the page or return to the home page.',
-            )}
+            {t('error.boundary.description')}
           </AlertDescription>
         </Alert>
 
@@ -175,7 +172,7 @@ function ErrorFallback({
         {error && (
           <div className="mb-6 rounded-lg border bg-card p-4 sm:p-6">
             <p className="break-all text-start font-mono text-sm text-destructive sm:text-base">
-              {error.message || t('error.boundary.unknownError', 'Unknown error')}
+              {error.message || t('error.boundary.unknownError')}
             </p>
           </div>
         )}
@@ -184,7 +181,7 @@ function ErrorFallback({
         {showDetails && errorInfo && (
           <details className="mb-6 rounded-lg border bg-card p-4 sm:p-6">
             <summary className="mb-2 cursor-pointer text-start text-sm font-medium sm:text-base">
-              {t('error.boundary.technicalDetails', 'Technical Details')}
+              {t('error.boundary.technicalDetails')}
             </summary>
             <pre className="mt-2 overflow-auto rounded bg-muted p-4 text-start text-xs sm:text-sm">
               {errorInfo.componentStack}
@@ -196,11 +193,11 @@ function ErrorFallback({
         <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
           <Button onClick={onReset} className=" w-full sm: sm:w-auto" variant="default">
             <RefreshCw className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-            {t('error.boundary.tryAgain', 'Try Again')}
+            {t('error.boundary.tryAgain')}
           </Button>
           <Button onClick={onGoHome} className=" w-full sm: sm:w-auto" variant="outline">
             <Home className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-            {t('error.boundary.goHome', 'Go to Home')}
+            {t('error.boundary.goHome')}
           </Button>
         </div>
       </div>
