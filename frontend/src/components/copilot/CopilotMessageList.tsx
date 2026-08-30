@@ -142,7 +142,7 @@ function UserMessage(): ReactElement {
   const { t } = useTranslation('copilot')
   return (
     <MessagePrimitive.Root className="copilot-message" data-role="user">
-      <div className="copilot-message__role">{t('roleYou', { defaultValue: 'You' })}</div>
+      <div className="copilot-message__role">{t('roleYou')}</div>
       <MessagePrimitive.Parts components={{ Text: MarkdownText }} />
     </MessagePrimitive.Root>
   )

@@ -112,10 +112,10 @@ export function DossierContextBadge({
 
     const labelMap: Record<InheritanceSource, string> = {
       direct: '',
-      engagement: t('badge.via_engagement', 'via Engagement'),
-      after_action: t('badge.via_after_action', 'via After-Action'),
-      position: t('badge.via_position', 'via Position'),
-      mou: t('badge.via_mou', 'via MOU'),
+      engagement: t('badge.via_engagement'),
+      after_action: t('badge.via_after_action'),
+      position: t('badge.via_position'),
+      mou: t('badge.via_mou'),
     }
 
     return labelMap[inheritanceSource]
@@ -143,9 +143,7 @@ export function DossierContextBadge({
         />
       )}
       <span className="truncate max-w-[120px] sm:max-w-[180px]">{displayName}</span>
-      {isPrimary && (
-        <span className="text-[10px] opacity-75 shrink-0">{t('badge.primary', 'Primary')}</span>
-      )}
+      {isPrimary && <span className="text-[10px] opacity-75 shrink-0">{t('badge.primary')}</span>}
       {inheritanceLabel && (
         <span className="text-[10px] opacity-75 shrink-0 hidden sm:inline">{inheritanceLabel}</span>
       )}

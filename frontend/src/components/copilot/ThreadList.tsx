@@ -27,16 +27,14 @@ function ThreadRow(): ReactElement {
       <ThreadListItemPrimitive.Trigger className="flex min-w-0 flex-1 items-center gap-2 text-start">
         <span className="copilot-thread-row__dot" aria-hidden="true" />
         <span className="copilot-thread-row__title truncate">
-          <ThreadListItemPrimitive.Title
-            fallback={t('thread.untitled', { defaultValue: 'New conversation' })}
-          />
+          <ThreadListItemPrimitive.Title fallback={t('thread.untitled')} />
         </span>
       </ThreadListItemPrimitive.Trigger>
       <ThreadListItemPrimitive.Archive asChild>
         <button
           type="button"
           className="tb-icon-btn inline-flex h-8 w-8 min-h-8 items-center justify-center rounded-[var(--radius-sm)] text-[var(--ink-mute)] hover:bg-[var(--line-soft)] hover:text-[var(--ink)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-          aria-label={t('archive.action', { defaultValue: 'Archive conversation' })}
+          aria-label={t('archive.action')}
         >
           <Archive size={14} />
         </button>
@@ -53,12 +51,10 @@ export function ThreadList(): ReactElement {
         <button
           type="button"
           className="btn-ghost inline-flex min-h-11 items-center gap-2 px-3 text-start"
-          aria-label={t('thread.new', { defaultValue: 'New conversation' })}
+          aria-label={t('thread.new')}
         >
           <Plus size={14} />
-          <span className="text-[var(--t-body)]">
-            {t('thread.new', { defaultValue: 'New conversation' })}
-          </span>
+          <span className="text-[var(--t-body)]">{t('thread.new')}</span>
         </button>
       </ThreadListPrimitive.New>
       <ThreadListPrimitive.Items components={{ ThreadListItem: ThreadRow }} />

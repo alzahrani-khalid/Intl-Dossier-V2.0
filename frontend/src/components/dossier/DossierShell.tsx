@@ -163,11 +163,11 @@ export function DossierShell({
         {/* Breadcrumbs */}
         <nav
           className="label mb-2 flex min-w-0 items-center gap-2 overflow-hidden"
-          aria-label={t('header.breadcrumb', { defaultValue: 'Breadcrumb' })}
+          aria-label={t('header.breadcrumb')}
         >
           <Link
             to="/dashboard"
-            aria-label={t('header.home', { defaultValue: 'Home' })}
+            aria-label={t('header.home')}
             className="flex min-h-9 shrink-0 items-center gap-1 text-[var(--ink-mute)] transition-colors hover:text-[var(--ink)]"
           >
             <Home className="h-4 w-4" />
@@ -177,7 +177,7 @@ export function DossierShell({
             to="/dossiers"
             className="flex min-h-9 shrink-0 items-center text-[var(--ink-mute)] transition-colors hover:text-[var(--ink)]"
           >
-            {t('header.dossierHub', { defaultValue: 'Dossier Hub' })}
+            {t('header.dossierHub')}
           </Link>
           <ChevronRight className="icon-flip h-4 w-4 shrink-0 text-[var(--ink-faint)]" />
           <span className="min-w-0 truncate font-medium text-[var(--ink)]">
@@ -236,9 +236,7 @@ export function DossierShell({
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
-                  {isConnected
-                    ? t('header.realtimeConnected', { defaultValue: 'Real-time connected' })
-                    : t('header.realtimeDisconnected', { defaultValue: 'Real-time disconnected' })}
+                  {isConnected ? t('header.realtimeConnected') : t('header.realtimeDisconnected')}
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -250,7 +248,7 @@ export function DossierShell({
               <Link to={`/dossiers/edit/${getDossierRouteSegment(dossierType)}/${dossierId}`}>
                 <Pencil className="h-4 w-4 sm:me-2" />
                 <span className="hidden sm:inline">
-                  {t('dossier:action.edit', { ns: 'dossier', defaultValue: 'Edit' })}
+                  {t('dossier:action.edit', { ns: 'dossier' })}
                 </span>
               </Link>
             </Button>
@@ -272,13 +270,11 @@ export function DossierShell({
                   >
                     <FileDown className="h-4 w-4 sm:me-2" />
                     <span className="hidden sm:inline">
-                      {t('dossier:action.export', { ns: 'dossier', defaultValue: 'Export' })}
+                      {t('dossier:action.export', { ns: 'dossier' })}
                     </span>
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>
-                  {t('header.exportTooltip', { defaultValue: 'Export briefing pack' })}
-                </TooltipContent>
+                <TooltipContent>{t('header.exportTooltip')}</TooltipContent>
               </Tooltip>
             </TooltipProvider>
 

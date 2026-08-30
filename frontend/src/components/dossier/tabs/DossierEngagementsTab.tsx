@@ -263,9 +263,7 @@ export function DossierEngagementsTab({
 
   const sectionErrorLine = (
     <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-      {t('dossier:overview.sectionError', {
-        defaultValue: 'Failed to load this section. Check your connection and try again.',
-      })}
+      {t('dossier:overview.sectionError')}
     </p>
   )
 
@@ -276,7 +274,7 @@ export function DossierEngagementsTab({
       <div className="flex items-center gap-2 mb-4">
         <History className="h-4 w-4 text-muted-foreground" />
         <h3 className="text-base font-semibold leading-tight text-start">
-          {t('tabs.engagements', { defaultValue: 'Engagements' })}
+          {t('tabs.engagements')}
         </h3>
       </div>
 
@@ -307,7 +305,7 @@ export function DossierEngagementsTab({
                     )}
                     {row.badge !== '' && (
                       <span className="bg-muted text-muted-foreground text-xs px-2 py-0.5 rounded-full">
-                        {t(`${perTypeBadgeNamespace}${row.badge}`, { defaultValue: row.badge })}
+                        {t(`${perTypeBadgeNamespace}${row.badge}`)}
                       </span>
                     )}
                   </div>
@@ -361,7 +359,6 @@ export function DossierEngagementsTab({
                       <span className="bg-muted text-muted-foreground text-xs px-2 py-0.5 rounded-full">
                         {t(
                           `dossier-overview:${entry.kind === 'dossier' ? 'relationshipType' : 'eventType'}.${entry.badge}`,
-                          { defaultValue: entry.badge },
                         )}
                       </span>
                     )}

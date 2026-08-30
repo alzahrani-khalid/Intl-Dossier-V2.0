@@ -293,7 +293,7 @@ export function DossierSelector({
                   className="size-5 p-0 ms-1 hover:bg-destructive/20"
                   onClick={() => handleRemove(dossier.id)}
                   disabled={disabled}
-                  aria-label={t('actions.remove_dossier', 'Remove Dossier')}
+                  aria-label={t('actions.remove_dossier')}
                 >
                   <X className="size-3" />
                 </Button>
@@ -309,7 +309,7 @@ export function DossierSelector({
               onClick={handleClear}
               disabled={disabled}
             >
-              {t('selector.clear_selection', 'Clear selection')}
+              {t('selector.clear_selection')}
             </Button>
           )}
         </div>
@@ -337,9 +337,9 @@ export function DossierSelector({
             <span className="text-muted-foreground">
               {selectedDossiers.length > 0
                 ? multiple
-                  ? t('selector.select_at_least_one', 'Select at least one dossier')
-                  : t('selector.placeholder', 'Search dossiers...')
-                : t('selector.placeholder', 'Search dossiers...')}
+                  ? t('selector.select_at_least_one')
+                  : t('selector.placeholder')
+                : t('selector.placeholder')}
             </span>
           </Button>
         </PopoverTrigger>
@@ -349,7 +349,7 @@ export function DossierSelector({
               <Search className="size-4 shrink-0 opacity-50" />
               <Input
                 ref={inputRef}
-                placeholder={t('selector.search_hint', 'Type to search by name')}
+                placeholder={t('selector.search_hint')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
@@ -372,10 +372,10 @@ export function DossierSelector({
                 {isLoading || isSearching ? (
                   <div className="flex items-center justify-center gap-2 py-6">
                     <Loader2 className="size-4 animate-spin" />
-                    <span>{t('selector.loading', 'Loading dossiers...')}</span>
+                    <span>{t('selector.loading')}</span>
                   </div>
                 ) : (
-                  <span>{t('selector.no_results', 'No dossiers found')}</span>
+                  <span>{t('selector.no_results')}</span>
                 )}
               </CommandEmpty>
 
