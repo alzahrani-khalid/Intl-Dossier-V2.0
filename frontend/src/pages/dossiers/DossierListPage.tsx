@@ -741,7 +741,10 @@ export function DossierListPage() {
                     <span>
                       {filters.status &&
                       (Array.isArray(filters.status) ? filters.status : [filters.status]).length > 0
-                        ? `${(Array.isArray(filters.status) ? filters.status : [filters.status]).length} status(es) selected`
+                        ? t('filter.status_selected_count', {
+                            n: (Array.isArray(filters.status) ? filters.status : [filters.status])
+                              .length,
+                          })
                         : t('list.filterByStatus')}
                     </span>
                     <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />

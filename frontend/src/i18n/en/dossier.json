@@ -101,6 +101,7 @@
     "select_sensitivity": "Select sensitivity...",
     "type_selected": "type(s)",
     "status_selected": "status(es)",
+    "status_selected_count": "{{n}} status(es) selected",
     "sensitivity_selected": "level(s)",
     "search_type": "Search types...",
     "search_status": "Search statuses...",

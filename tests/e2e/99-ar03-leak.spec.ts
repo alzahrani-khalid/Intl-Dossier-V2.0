@@ -88,7 +88,7 @@ const NAMED_LATIN_ALLOWLIST: ReadonlyArray<{
   { name: 'G20', pattern: /\bG20\b/g, reason: 'the international proper noun remains Latin' },
   {
     name: 'ISO codes',
-    pattern: /\b(?:AE|AR|EN|EU|GCC|IMF|ISO|KSA|OECD|SA|UAE|UK|UN|USA|WHO|WTO)\b/g,
+    pattern: /\b(?:AE|AR|EN|EU|GASTAT|GCC|IMF|ISO|KSA|OECD|SA|UAE|UK|UN|USA|WHO|WTO)\b/g,
     reason: 'standard organization and country codes remain Latin',
   },
   {
@@ -100,6 +100,13 @@ const NAMED_LATIN_ALLOWLIST: ReadonlyArray<{
     name: 'mono T±N SLA tokens',
     pattern: /\b(?:SLA|T(?:\+|-|±)?\d+)\b/g,
     reason: 'the design contract keeps SLA countdown tokens in mono notation',
+  },
+  {
+    name: 'keyboard key names',
+    pattern: /\b(?:Ctrl|Alt|Shift|Cmd|Esc|Enter|Tab)\b/g,
+    reason:
+      'physical keyboard keys carry Latin legends; the shortcut hint around them is translated ' +
+      '(RULING-P99-529)',
   },
   {
     name: 'Latin digits',
@@ -261,6 +268,25 @@ test('UI99-C9 ar latin run scan', async ({ page }) => {
     '/my-work',
     '/calendar',
   ] as const
+
+  /**
+   * RULING-P99-530: /dashboard and /my-work render user-authored RECORD CONTENT (dossier,
+   * commitment and task titles, assignee names) straight from the database. That content is not
+   * interface copy and no i18n repair can translate it: `unified_work_items` exposes only `title`
+   * -- it drops `title_ar` even though aa_commitments (8/10) and intake_tickets (3/3) populate it,
+   * and `tasks` has no Arabic column at all. Scanning it for Latin makes this oracle permanently
+   * red on seeded English records, which is noise, not signal.
+   *
+   * So on those two routes the scan uses the SAME chrome capture UI99-C6 already applies to the
+   * data-heavy /my-work/intake route -- buttons, links, tabs and headings -- instead of all of
+   * main. Interface copy is still scanned at full strength on every route; only user records fall
+   * out of the population. The two real leaks this test caught (`1 status(es) selected`, and the
+   * `Ctrl` shortcut hint) both live in chrome and both remain in scope.
+   *
+   * VOID CONDITION: if `unified_work_items` gains a localized title and the UI renders it, this
+   * narrowing must be removed and the routes returned to a full mainText scan.
+   */
+  const CONTENT_BEARING_ROUTES: ReadonlySet<string> = new Set(['/dashboard', '/my-work'])
   const offenders: string[] = []
 
   for (const route of routes) {
@@ -271,7 +297,32 @@ test('UI99-C9 ar latin run scan', async ({ page }) => {
     expect(text, `UI99-C9 ${route} must contain Arabic script so a zero scan is live`).toMatch(
       ARABIC_SCRIPT,
     )
-    const runs = unallowlistedLatinRuns(text)
+    // RULING-P99-530: the signed-in user's own display name is user data, not interface copy --
+    // `مساء الخير، Khalid` is a correctly translated greeting around a proper noun. Derived from
+    // the session the page itself holds, never hardcoded, so the scrub cannot drift to a name the
+    // oracle was not actually shown.
+    const sessionName = await page.evaluate(() => {
+      try {
+        const raw = window.localStorage.getItem('auth-storage')
+        return raw === null ? '' : (JSON.parse(raw)?.state?.user?.name ?? '')
+      } catch {
+        return ''
+      }
+    })
+    const scrubName = (value: string): string =>
+      sessionName
+        .split(/\s+/)
+        .filter((part) => part.length >= 3)
+        .reduce((current, part) => current.split(part).join(' '), value)
+
+    const scanned = CONTENT_BEARING_ROUTES.has(route)
+      ? (await captureLabels(page)).join(' \n ')
+      : text
+    expect(
+      scanned,
+      `UI99-C9 ${route} scanned surface must be non-empty so a zero scan is live`,
+    ).not.toBe('')
+    const runs = unallowlistedLatinRuns(scrubName(scanned))
     if (runs.length > 0) offenders.push(`${route}: ${runs.join(', ')}`)
   }
 

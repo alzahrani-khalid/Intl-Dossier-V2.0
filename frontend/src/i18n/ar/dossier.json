@@ -101,6 +101,7 @@
     "select_sensitivity": "اختر مستوى السرية...",
     "type_selected": "نوع (أنواع)",
     "status_selected": "حالة (حالات)",
+    "status_selected_count": "{{n}} حالة (حالات) محددة",
     "sensitivity_selected": "مستوى (مستويات)",
     "search_type": "البحث في الأنواع...",
     "search_status": "البحث في الحالات...",
