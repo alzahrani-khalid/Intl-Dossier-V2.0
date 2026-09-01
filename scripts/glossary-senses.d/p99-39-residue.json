@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "decision": "RULING-P99-528 (D-17/D-18 residue): the closing census's 11 surviving occurrences were adjudicated one at a time against the EN source string. 4 rows whose English says \"Dossiers\" or \"countries\" were REWRITTEN to the ruled term and are deliberately absent here. The 7 below carry a genuinely different sense and are listed with their exact key path, per the census contract that an occurrence is either rewritten or classified - never silently tolerated.",
+  "entries": [
+    {
+      "term": "ملف",
+      "file": "frontend/src/i18n/ar/form-wizard.json",
+      "keyPath": "organization.engagement_profile",
+      "sense": "profile-page-or-summary",
+      "reason": "EN source is \"Engagement profile\" - a profile field on the organization wizard, not a dossier object."
+    },
+    {
+      "term": "ملف",
+      "file": "frontend/src/i18n/ar/intake.json",
+      "keyPath": "validation.fileTooLarge",
+      "sense": "computer-file-or-attachment",
+      "reason": "EN source is \"File exceeds maximum size\" - upload validation. The base pattern misses it because lowercase 'file' is followed by 'T' in fileTooLarge, matching neither branch."
+    },
+    {
+      "term": "ملف",
+      "file": "frontend/src/i18n/ar/validation.json",
+      "keyPath": "file_invalid_type",
+      "sense": "computer-file-or-attachment",
+      "reason": "EN source is \"This file type is not supported\". The base pattern cannot match a key whose first token is 'file', because ^[^:]+: has already consumed the separator it requires."
+    },
+    {
+      "term": "ملف",
+      "file": "frontend/src/i18n/ar/validation.json",
+      "keyPath": "file_too_large",
+      "sense": "computer-file-or-attachment",
+      "reason": "EN source is \"The file is too large\". Same first-token gap in the base pattern."
+    },
+    {
+      "term": "ملف",
+      "file": "frontend/src/i18n/ar/validation.json",
+      "keyPath": "total_size_exceeded",
+      "sense": "computer-file-or-attachment",
+      "reason": "EN source is \"The total file size exceeds the limit\". No key-path pattern can ever classify this row - the key carries no file token at all, only the Arabic value does."
+    },
+    {
+      "term": "منصب",
+      "file": "frontend/src/i18n/ar/empty-states.json",
+      "keyPath": "list.elected_official.firstDescription",
+      "sense": "office-post-or-job-title",
+      "reason": "EN source is \"Create an elected-official dossier to track office, term, and contact details.\" - elected office, not a stance. Sibling key list.elected_official.description is already ruled this way in the base file."
+    },
+    {
+      "term": "منصب",
+      "file": "frontend/src/i18n/ar/empty-states.json",
+      "keyPath": "list.elected_official.hint",
+      "sense": "office-post-or-job-title",
+      "reason": "EN source is \"Elected-official dossiers keep office and term information current\" - same office sense as its ruled sibling."
+    }
+  ]
+}

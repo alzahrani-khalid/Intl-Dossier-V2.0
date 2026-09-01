@@ -231,7 +231,7 @@ const rows = [
     ruledTerm: 'الإدارة',
     termPattern: '^الإدارة$',
     titleSourcePath: 'frontend/src/routes/_protected/admin/ai-settings.tsx',
-    titleSourceContains: "t('settings.title', 'AI Settings')",
+    titleSourceContains: "t('settings.title')",
   },
   {
     labelKey: 'navigation.taskQueue',
