@@ -2,10 +2,10 @@
 phase: 99-arabic-coverage
 plan: 39
 status: complete
-attempt: 6
-verified_at_local: 2026-09-02T06:16:47+03:00
-verified_at_utc: 2026-09-02T03:16:47Z
-head: c26c392010921745352426b90abb01536176e33d
+attempt: 7
+verified_at_local: 2026-09-02T06:36:38+03:00
+verified_at_utc: 2026-09-02T03:36:38Z
+head: f7d0add0758f67b6c3b51e84458e6345ff7a443a
 ---
 
 # Phase 99 consolidated re-proof register
@@ -20,14 +20,18 @@ per-test evidence: `99-ar02-dates` 8/8, `99-ar03-leak` 10/10 including all three
 `UI99-C7 ar banner` fixture states.
 
 **Which session produced what.** The instrument battery and the two per-spec runs are attempt 5's
-session. All three plan-owned typed gates were **re-run in attempt 6** from command text extracted
-byte-exact from `99-39-PLAN.md`, after review found attempt 5 had written them into the record as
-`bash <oracle 1>` placeholders rather than as commands; attempt 6 changed no instrument, no spec
-and no oracle, only this register and the SUMMARY. Every capture is this task's own — none is
-quoted from another task's summary.
+session. All three plan-owned typed gates, both completion-contract negative controls, the
+date-format control and the provenance read were **re-run in attempt 7**, from command text
+extracted byte-exact from `99-39-PLAN.md`. Attempt 7 changed no instrument, no spec and no oracle
+— only this register and the SUMMARY. It re-ran them because review found the record carried
+`EXIT=` lines its displayed commands could not emit, a prose description in place of the
+date-format control's command, and a provenance command that could not produce its own labelled
+output. Each is now recorded as a command whose displayed form emits exactly the recorded bytes:
+every gate line ends in `; printf 'EXIT=%s\n' "$?"`, so the block's single `EXIT=` line is the
+command's own. Every capture is this task's own — none is quoted from another task's summary.
 
 `head` above is the tree this attempt's evidence was taken against; this record's own commit is
-that commit's child, so `git show c26c39201:<path>` shows the previous revision of this file rather
+that commit's child, so `git show f7d0add07:<path>` shows the previous revision of this file rather
 than this one.
 
 Nothing in this register is quoted from an earlier summary. Every number below was produced by a
@@ -82,24 +86,32 @@ The gate's stated verdict line, from the run recorded in `99-39-SUMMARY.md` §5:
 rendered battery executed by THIS gate: 18/18 (ar02 8 + ar03 10)
 ```
 
-**Which branch of the guard has actually been exercised, stated precisely.** Attempt 6 invoked the
-unchanged gate twice. The first invocation found TCP 5173 held by a server rooted **in this
-worktree** — leaked by this task's own earlier runs — so it took the **own-holder reuse** branch,
-exported `PW_REUSE=1`, and then hung when that leaked server died mid-run and was killed at a
-ten-minute ceiling. The second invocation found the port free and took the **no-holder** branch:
-Playwright started and supervised its own dev server rooted in this worktree, and that is the run
-that reports 18/18 above.
+**Which branch of the guard has actually been exercised, stated precisely.** Attempt 7 measured
+TCP 5173 free before invoking the gate, so the guard took the **no-holder** branch: it neither
+reused nor refused, and Playwright started and supervised its own dev server rooted in this
+worktree. That is the run reporting 18/18 above.
 
-The **foreign-holder** branch has therefore never been exercised by a live foreign holder in
-attempt 5 or 6; an earlier revision of this register said it had, conflating the own-holder path
-with it, and that claim is withdrawn. What is known about that branch is that attempts 0 through 4
-each took it against PID 95414 and exited 3, which is the branch behaving correctly. A holder rooted
-anywhere else is refused, never silently reused.
+The **own-holder reuse** branch has been exercised twice, both times against a server this task
+itself leaked, and both times it cost a run. Attempt 6's first invocation reused a leaked server
+that then died mid-run, and the gate hung until it was killed at a ten-minute ceiling. The
+attempt-6 gate run judged by the engine reused another and came back red. The branch is behaving
+as written — the holder genuinely was rooted in this worktree — but reuse is only safe while the
+server's supervisor is alive, and a leaked server has by definition outlived its supervisor. That
+is why attempt 7 measures the port before the gate and reaps its own leak after it
+(`99-39-SUMMARY.md` §5b), leaving the port with no holder for the next runner.
+
+The **foreign-holder** branch has not been exercised by a live foreign holder in attempts 5, 6 or
+7; an earlier revision of this register said it had, conflating the own-holder path with it, and
+that claim is withdrawn. What is known about that branch is that attempts 0 through 4 each took it
+against PID 95414 and exited 3, which is the branch behaving correctly. A holder rooted anywhere
+else is refused, never silently reused.
 
 The earlier register said RULING-P99-537 forbade *terminating* a foreign holder. That was an
 overreach and is corrected here: RULING-P99-537 forbids **silently reusing** a holder not rooted
 in this worktree. Not killing a main-checkout process is still correct, but the reason is
 **authority** — it is another tree's process and outside this task's write scope — not the ruling.
+The reaper in §5b encodes exactly that split: it resolves each holder's working directory first,
+reaps only holders rooted in this worktree, and prints a refusal for anything else.
 
 ## D-19 reversal record
 
@@ -215,18 +227,23 @@ The honest reading remains **34 substantive + 5 waived on machine evidence, not 
 
 ## Residue and bounds register
 
-- **RESOLVED — the P99-39 port blocker.** The foreign main-checkout holder of TCP 5173 that
-  blocked attempts 0 through 4 was released before this attempt. The unchanged typed gate then ran
-  and exited 0. No process outside this worktree was touched at any point.
-- **OPEN, engine residue, still needs a ruling:** the rendered oracle invokes Playwright ad hoc, so
-  `playwright.config.ts`'s `pw-run-reaped.mjs --lease-exec` wrapper runs **unleased** and leaks its
-  dev server after a green run. This reproduced twice inside this task: the plan gate leaked a
-  server, and the per-spec `99-ar02-dates` run leaked another that then failed `99-ar03-leak` with
-  `http://localhost:5173 is already used`. The in-repo fix is to route the oracle through
-  `scripts/pw-run-reaped.mjs --` RUN mode as P99-08's oracle does, or to reap after each run. That
-  is plan text outside this task's write scope. Consequence for the next runner: P99-40 and P99-41
-  share these specs and will meet a holder — theirs to reuse if it is rooted in their own tree,
-  and to refuse if it is not.
+- **RESOLVED — the P99-39 foreign-holder blocker.** The foreign main-checkout holder of TCP 5173
+  that blocked attempts 0 through 4 was released before attempt 5. The unchanged typed gate has run
+  and exited 0 since. No process outside this worktree was touched at any point.
+- **CONTAINED, not fixed — this task's own leaked dev server.** The rendered oracle invokes
+  Playwright ad hoc, so `playwright.config.ts`'s `pw-run-reaped.mjs --lease-exec` wrapper runs
+  **unleased** and leaks its dev server after a green run. That leak, not a foreign process, is
+  what turned a previously green rendered gate red: the leak was still bound when the gate ran
+  again, the guard correctly took its own-holder reuse branch, and the orphaned server died under
+  the run. Attempt 7 therefore measures the port before invoking the gate and reaps its own leak
+  after it, holder by holder, touching only holders rooted in this worktree; the port is left with
+  no holder. That contains the symptom for the next runner without removing the leak.
+- **OPEN, engine residue, still needs a ruling:** the unleased wrapper itself. The in-repo fix is to
+  route the oracle through `scripts/pw-run-reaped.mjs --` RUN mode as P99-08's oracle does, so the
+  wrapper reaps what it spawned. That is plan text, outside this task's write scope. Consequence
+  for the next runner: P99-40 and P99-41 share these specs, so each should measure the port before
+  its gate and reap after it — a holder is theirs to reuse if it is rooted in their own tree, and
+  to refuse if it is not.
 - **OPEN — D-38:** the overseer's written sign-off, per the table above.
 - **Phase 102:** D-21's working ~7,086-site dot-to-colon convention tail (new scope, after flatten,
   with resolution checks); COPY-09's three literals (`HelpPage:166`, `useBriefingBooks:164-165`,
