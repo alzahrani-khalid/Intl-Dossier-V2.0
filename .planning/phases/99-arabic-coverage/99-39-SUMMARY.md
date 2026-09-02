@@ -2,20 +2,28 @@
 phase: 99-arabic-coverage
 plan: 39
 status: complete
-attempt: 5
-head: 7bbfd55bddd56ae78b92420386f97c1dddb94b67
-recorded_at_local: 2026-09-02T05:45:42+03:00
-recorded_at_utc: 2026-09-02T02:45:42Z
+attempt: 6
+head: c26c392010921745352426b90abb01536176e33d
+recorded_at_local: 2026-09-02T06:14:18+03:00
+recorded_at_utc: 2026-09-02T03:14:18Z
 ---
 
 # P99-39 Summary — static battery green, rendered gate EXECUTED 18/18
 
 ## Outcome
 
-Every criterion this task owns now has a fresh, controlled, named proof, produced in this task in
-one session. The blocker that failed attempts 0 through 4 — a dev server from the **main
-checkout** holding TCP 5173 — was released before this attempt began, so the unchanged plan-owned
-rendered gate ran instead of taking its `INSTRUMENT-CANNOT-RUN` branch.
+Every criterion this task owns now has a fresh, controlled, named proof. The blocker that failed
+attempts 0 through 4 — a dev server from the **main checkout** holding TCP 5173 — was released
+before attempt 5, so the unchanged plan-owned rendered gate ran instead of taking its
+`INSTRUMENT-CANNOT-RUN` branch.
+
+**Which session produced which capture, stated plainly.** Sections 1, 2, 3, 6, 7 and 8 are attempt
+5's session, in one continuous run. Sections 3b, 3c, 4, 5, 9 and 10 are attempt 6's session, which
+re-ran all three plan-owned gates from text extracted byte-exact from the plan, after review found
+attempt 5 had recorded them as `bash <oracle 1>` placeholders rather than as commands. Every
+capture in this file is this task's own; none is quoted from another task's summary, and none is a
+paraphrase. Attempt 6 changed no instrument, no spec and no oracle — only this record and the
+register.
 
 | Gate / battery member | Control first | Live result | Exit |
 | --- | --- | --- | --- |
@@ -25,9 +33,9 @@ rendered gate ran instead of taking its `INSTRUMENT-CANNOT-RUN` branch.
 | `partA_maskfinder.py` | 4/4 polarities asserted (2 true, 2 false) | `UNRESOLVED dynamic t() key prefixes: 0 total` | 0 |
 | `neg-taskcard.mjs` -> `resolve-check.mjs` | 3 × `MISS=true` printed **before** the live run | `214 lookups across 11 routings x 2 locales — routings with a miss: 0` | 0 |
 | `check-date-formatting.mjs` | dead-exemption importers 0 while live comparison has 29 | 1,533 files, 0 unexcused sites, 0 debt rows | 0 |
-| `completion-contract-check.mjs` | drilled `1/2` exit 1; empty dir exit 3 | live phase directory `60/60` | 0 |
-| **Plan-owned STATIC gate (verbatim)** | every control inline | all clauses green | **0** |
-| **Plan-owned RENDERED gate (verbatim)** | collection 8 and 10 hardcoded, port guard resolved | `rendered battery executed by THIS gate: 18/18 (ar02 8 + ar03 10)` | **0** |
+| `completion-contract-check.mjs` (oracle 3, byte-exact) | drilled `1/2` exit 1; empty dir exit 3 | live phase directory `60/60`; re-run in attempt 6 | 0 |
+| **Plan-owned STATIC gate (oracle 1, byte-exact)** | every control inline | all clauses green; re-run in attempt 6 | **0** |
+| **Plan-owned RENDERED gate (oracle 2, byte-exact)** | collection 8 and 10 hardcoded; port guard took the no-holder branch | `rendered battery executed by THIS gate: 18/18 (ar02 8 + ar03 10)`; re-run in attempt 6 | **0** |
 | `99-ar02-dates.spec.ts` alone | collection control 8 | `8 passed (16.2s)`, all 8 `✓` | 0 |
 | `99-ar03-leak.spec.ts` alone | collection control 10 | `10 passed (50.2s)`, all 10 `✓`, incl. 3 banner states | 0 |
 
@@ -40,14 +48,16 @@ navigated or read the tree are listed by name and purpose in the ledger at the e
 output, exactly as that ruling permits.
 
 Nothing below is paraphrased, grouped, elided, or quoted from an earlier summary. No evidence
-command's output is replaced by a note. The one run that is *summarised rather than reproduced* is
-a discarded diagnostic that is not evidence for any criterion; it is disclosed in section 8 with
-its cause, and no criterion rests on it.
+command's output is replaced by a note. Two runs are disclosed rather than relied on, and neither is
+evidence for any criterion: the `PW_REUSE=1` diagnostic in section 8, which is summarised with its
+cause, and the hung first invocation of the rendered gate in section 5, whose one captured output
+line is reproduced verbatim. No criterion rests on either.
 
-The plan's own oracle strings were extracted from `99-39-PLAN.md` programmatically and verified to
-re-encode byte-for-byte back to the plan's YAML lines (`oracle1: ROUND-TRIP EXACT`,
-`oracle2: ROUND-TRIP EXACT`, `oracle3: ROUND-TRIP EXACT`) before being run, so what ran below is
-the compiled gate text and not a retyped approximation.
+The three plan-owned gates are printed below **as their full command text**, not as a placeholder
+naming them. An earlier revision of this record wrote `bash <oracle 1>` and the like; that is not a
+runnable command and therefore not a verbatim record. Section 3b shows the extraction that produced
+the text, its verbatim output, and the byte-exactness proof; sections 4, 5 and 9 then show each
+gate's whole command followed by its own verbatim output.
 
 ## 1. Static instrument battery — one session, each control before its live run
 
@@ -347,10 +357,113 @@ INSTRUMENT-CANNOT-RUN: no SUMMARY files under /private/tmp/claude-501/-Users-kha
 =====EXIT===== 3
 ```
 
-## 4. Plan-owned STATIC gate, run verbatim as compiled
+## 3b. Extracting the three plan-owned oracles byte-exact
+
+`99-39-PLAN.md` writes each `oracle: command` as a single-line YAML single-quoted scalar at a
+six-space indent. The extractor decodes exactly that shape (strip `      command: `, strip the
+outer quotes, unescape `''` to `'`) and then **proves the decode** by re-encoding the result and
+requiring the re-encoded line to be byte-identical to the plan line it came from. A mismatch, or a
+count other than three, is a hard failure rather than a silent best-effort.
+
+The extractor lives in the session scratchpad, outside the worktree, because this task's write
+scope is two planning files and a probe file dropped inside a live worktree is read by graders as
+part of the tree. Its source is reproduced here in full so the extraction is reproducible:
+
+```javascript
+// scratchpad/extract-oracles.mjs
+// Extract the three `oracle: command` scalars from 99-39-PLAN.md front-matter and write
+// each to oracle-N.sh. The plan writes them as single-line YAML single-quoted scalars at a
+// six-space indent, so the decode is: strip "      command: ", strip the outer quotes,
+// unescape '' -> '. The decode is PROVEN by re-encoding the result and requiring the
+// re-encoded line to be byte-identical to the plan line it came from.
+import { readFileSync, writeFileSync } from 'node:fs'
+import { createHash } from 'node:crypto'
+
+const [plan, outDir] = process.argv.slice(2)
+const lines = readFileSync(plan, 'utf8').split('\n')
+const PREFIX = '      command: '
+let n = 0
+for (const line of lines) {
+  if (!line.startsWith(PREFIX + "'") || !line.endsWith("'")) continue
+  n += 1
+  const cmd = line.slice(PREFIX.length + 1, -1).replace(/''/g, "'")
+  const reencoded = PREFIX + "'" + cmd.replace(/'/g, "''") + "'"
+  const exact = reencoded === line
+  writeFileSync(`${outDir}/oracle-${n}.sh`, cmd)
+  console.log(
+    `oracle${n}: bytes=${Buffer.byteLength(cmd)} sha256=${createHash('sha256').update(cmd).digest('hex')} ROUND-TRIP ${exact ? 'EXACT' : 'MISMATCH'} -> ${outDir}/oracle-${n}.sh`,
+  )
+  if (!exact) process.exitCode = 1
+}
+if (n !== 3) {
+  console.error(`INSTRUMENT-CANNOT-RUN: extracted ${n} command oracles, expected 3`)
+  process.exitCode = 3
+}
+```
+
+The extraction invocation and its verbatim output:
 
 ```text
-$ bash <oracle 1, extracted byte-exact from 99-39-PLAN.md must_haves>
+=====CMD===== node "$S/extract-oracles.mjs" .planning/phases/99-arabic-coverage/99-39-PLAN.md "$S"
+oracle1: bytes=3871 sha256=9fa8695b950f86614c7510858fbab8ef48976a2e42740bed71f9eb9e189c4b3c ROUND-TRIP EXACT -> /private/tmp/claude-501/-Users-khalidalzahrani-Desktop-CodingSpace-Intl-Dossier-V2-0--tickmarkr-worktrees-noindex-tickmarkr-run-20260902-012826-0000000000000070--P99-39/55cf8948-b548-40c3-8ed1-45ba5f891d5f/scratchpad/oracle-1.sh
+oracle2: bytes=1903 sha256=fa7b153b2da4a9d76866f5be95434b7dad43e8dfe178acf4328b9337da8fa467 ROUND-TRIP EXACT -> /private/tmp/claude-501/-Users-khalidalzahrani-Desktop-CodingSpace-Intl-Dossier-V2-0--tickmarkr-worktrees-noindex-tickmarkr-run-20260902-012826-0000000000000070--P99-39/55cf8948-b548-40c3-8ed1-45ba5f891d5f/scratchpad/oracle-2.sh
+oracle3: bytes=142 sha256=1f12df4a3f9c7b604c79b0be6c6c79ecfe00f7f8d922f0faf4451b33ce5b39a9 ROUND-TRIP EXACT -> /private/tmp/claude-501/-Users-khalidalzahrani-Desktop-CodingSpace-Intl-Dossier-V2-0--tickmarkr-worktrees-noindex-tickmarkr-run-20260902-012826-0000000000000070--P99-39/55cf8948-b548-40c3-8ed1-45ba5f891d5f/scratchpad/oracle-3.sh
+EXIT=0
+```
+
+Each of the three gates below opens with the exact bytes that hash to the sha256 printed above, so
+the command shown and the command run are the same string.
+
+## 3c. Proving the embedded command lines did not drift
+
+Sections 4, 5 and 9 embed each gate's whole command text. None of the three oracles contains a
+single quote (the extractor prints `quotes-in-body=0` below), so wrapping each in `bash -c '…'`
+is both directly runnable and byte-preserving. This check re-reads the command lines back **out of
+this file** and requires each to be byte-identical to the text extracted from the plan — so a typo,
+a re-wrap, or an editor's smart-quote substitution reds it rather than passing quietly:
+
+```javascript
+// scratchpad/verify-embedded.mjs
+// oracle text extracted from 99-39-PLAN.md. Reds if any embedded line drifted from the plan.
+import { readFileSync } from 'node:fs'
+import { createHash } from 'node:crypto'
+const [summary, outDir] = process.argv.slice(2)
+const oracles = [1, 2, 3].map((n) => readFileSync(`${outDir}/oracle-${n}.sh`, 'utf8'))
+const lines = readFileSync(summary, 'utf8').split('\n').filter((l) => l.startsWith("$ bash -c '") && l.endsWith("'"))
+let bad = 0
+lines.forEach((l, k) => {
+  const body = l.slice("$ bash -c '".length, -1)
+  const idx = oracles.findIndex((o) => o === body)
+  const sha = createHash('sha256').update(body).digest('hex')
+  console.log(`embedded[${k}]: bytes=${Buffer.byteLength(body)} sha256=${sha} matches=${idx < 0 ? 'NONE' : 'oracle' + (idx + 1)} quotes-in-body=${(body.match(/'/g) || []).length}`)
+  if (idx < 0) bad += 1
+})
+console.log(`embedded command lines: ${lines.length}; drifted from the plan: ${bad}`)
+if (bad !== 0 || lines.length !== 4) process.exitCode = 1
+```
+
+```text
+=====CMD===== node "$S/verify-embedded.mjs" .planning/phases/99-arabic-coverage/99-39-SUMMARY.md "$S"
+embedded[0]: bytes=3871 sha256=9fa8695b950f86614c7510858fbab8ef48976a2e42740bed71f9eb9e189c4b3c matches=oracle1 quotes-in-body=0
+embedded[1]: bytes=1903 sha256=fa7b153b2da4a9d76866f5be95434b7dad43e8dfe178acf4328b9337da8fa467 matches=oracle2 quotes-in-body=0
+embedded[2]: bytes=1903 sha256=fa7b153b2da4a9d76866f5be95434b7dad43e8dfe178acf4328b9337da8fa467 matches=oracle2 quotes-in-body=0
+embedded[3]: bytes=142 sha256=1f12df4a3f9c7b604c79b0be6c6c79ecfe00f7f8d922f0faf4451b33ce5b39a9 matches=oracle3 quotes-in-body=0
+embedded command lines: 4; drifted from the plan: 0
+EXIT=0
+```
+
+Four lines because oracle 2 appears twice: section 5 records both of its invocations in this
+attempt. The sha256 values match the extraction output in section 3b exactly.
+
+## 4. Plan-owned STATIC gate, run verbatim as compiled
+
+Oracle 1 (`sha256 9fa8695b950f86614c7510858fbab8ef48976a2e42740bed71f9eb9e189c4b3c`, 3,871 bytes),
+reproduced below as its whole command line followed by its own verbatim output. The oracle text
+contains no single quote, so wrapping it in `bash -c '…'` is byte-exact and directly runnable; that
+is verified in section 3c. Re-run in this attempt against HEAD `c26c39201`.
+
+```text
+$ bash -c 'PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; test -f "$R/.planning/phases/99-arabic-coverage/99-VERIFICATION.md" && command grep -q "criterion" "$R/.planning/phases/99-arabic-coverage/99-VERIFICATION.md" && node "$R/scripts/nav-title-agreement.mjs" "$R" --control && node "$R/scripts/nav-title-agreement.mjs" "$R" && node "$R/scripts/glossary-census.mjs" "$R" --control && node "$R/scripts/glossary-census.mjs" "$R" && node "$R/scripts/i18n-audit-strict.mjs" "$R" --self-check && node "$R/scripts/i18n-audit-strict.mjs" "$R" --json | node -e "let s=[];process.stdin.on(\"data\",d=>s.push(d)).on(\"end\",()=>{const j=JSON.parse(s.join(\"\"));if(j.rawKeyTotal===0){console.error(\"POSITIVE CONTROL FAILED — the instrument walked no t() sites\");process.exit(1)}if(j.twoArgTotal!==0||j.twoArgUnresolved!==0||j.rawKeyUnresolved!==0||j.twoArgUnresolvedAr!==0||j.rawKeyUnresolvedAr!==0){console.error(\"AR-04 not closed\",JSON.stringify(j).slice(0,300));process.exit(1)}})" && { MC=$(python3 "$R/scripts/partA_maskfinder.py" "$R" --control 2>&1); ST=$?; test "$ST" -eq 0 || { echo "INSTRUMENT-CANNOT-RUN: maskfinder --control exited $ST"; exit 3; }; NC=$(printf "%s\n" "$MC" | command grep -c "^CONTROL " || true); test "$NC" -ge 4 || { echo "INSTRUMENT-CANNOT-RUN: control printed $NC CONTROL lines, fewer than the four documented polarities, so they cannot be asserted"; exit 3; }; OKC=$(printf "%s\n" "$MC" | command grep -cE "= True \(expect True\)|= False \(expect False\)" || true); test "$OKC" -eq "$NC" || { echo "FAIL: the mask-finder control is NOT discriminating - $((NC-OKC)) of $NC polarities disagree with their stated expectation:"; printf "%s\n" "$MC"; exit 1; }; echo "mask-finder control polarities asserted: $OKC/$NC"; } && { MF=$(python3 "$R/scripts/partA_maskfinder.py" "$R" 2>&1); ST=$?; test "$ST" -eq 0 || { echo "INSTRUMENT-CANNOT-RUN: mask finder did not report the expected summary exited $ST; its printed summary is not a verdict"; printf "%s\n" "$MF" | tail -3; exit 3; }; printf "%s\n" "$MF" | command grep -q "prefixes: 0" || { echo "FAIL: mask finder did not report the expected summary"; exit 1; }; } && { NT=$(node "$R/scripts/neg-taskcard.mjs" "$R" 2>&1); ST=$?; test "$ST" -eq 0 || { echo "INSTRUMENT-CANNOT-RUN: neg-taskcard.mjs exited $ST; its MISS rows are not a content verdict"; exit 3; }; NM=$(printf "%s\n" "$NT" | command grep -c "MISS=true" || true); test "$NM" -eq 3 || { echo "FAIL: negative control printed $NM MISS=true rows, expected 3"; exit 1; }; } && { RC=$(node "$R/scripts/resolve-check.mjs" "$R" 2>&1); ST=$?; test "$ST" -eq 0 || { echo "INSTRUMENT-CANNOT-RUN: resolve-check did not report the expected summary exited $ST; its printed summary is not a verdict"; printf "%s\n" "$RC" | tail -3; exit 3; }; printf "%s\n" "$RC" | command grep -q "routings with a miss: 0" || { echo "FAIL: resolve-check did not report the expected summary"; exit 1; }; } && { DEADIMP=$(command grep -rn "EnhancedActivityFeed" "$R/frontend/src" --include="*.ts" --include="*.tsx" | command grep -v "activity-feed/EnhancedActivityFeed.tsx:" | command grep -c . || true); LIVEIMP=$(command grep -rn "SharedRecentActivityCard" "$R/frontend/src" --include="*.ts" --include="*.tsx" | command grep -v "SharedRecentActivityCard.tsx:" | command grep -c . || true); echo "date-format controls: exempt-file importers=$DEADIMP (expect 0) live-control importers=$LIVEIMP (expect >0)"; test "$LIVEIMP" -gt 0 || { echo "INSTRUMENT-CANNOT-RUN: the LIVE control found zero importers for a component known to have them, so the importer census cannot discriminate and a zero for the exempt file would prove nothing"; exit 3; }; test "$DEADIMP" -eq 0 || { echo "FAIL: the dead-code exemption is VOID - EnhancedActivityFeed gained $DEADIMP importer(s), so its two offending rows return to the burn-down"; exit 1; }; } && node "$R/scripts/check-date-formatting.mjs"'
 {
   "control": "PASS",
   "plantedMismatchCaught": true,
@@ -453,23 +566,60 @@ mask-finder control polarities asserted: 4/4
 date-format controls: exempt-file importers=0 (expect 0) live-control importers=29 (expect >0)
 date-formatting check OK: 1533 non-test file(s) scanned, 0 unexcused ad-hoc date/number formatting sites (raw toLocaleDateString/toLocaleTimeString, month-first date-fns literals, Indic locale literals, relative time, localized skeletons, 12-hour literals, date-receiver toLocaleString, Intl.RelativeTimeFormat, local relative-time declarations, hand-assembled short relative forms) outside the 2-file allowlist (lib/format-date.ts, components/ui/calendar.tsx) and the 6 named permanent exemption(s) (see EXEMPT — each states its reason, and the dead-code one states its VOID CONDITION). Named debt: 0 row(s) excusing 0 site(s), all owned by plan 98-07.
 EXIT=0
+EXIT=0
 ```
 
 ## 5. Plan-owned RENDERED gate, run verbatim as compiled
 
-This is the gate that exited 3 in attempts 0 through 4. It was run unchanged. The port guard found
-TCP 5173 unheld, so it neither reused a foreign server nor refused; Playwright started and
-supervised its own dev server rooted in this worktree.
+Oracle 2 (`sha256 fa7b153b2da4a9d76866f5be95434b7dad43e8dfe178acf4328b9337da8fa467`, 1,903 bytes).
+This is the gate that exited 3 in attempts 0 through 4 on a foreign port holder.
+
+**It was invoked twice in this attempt, and both invocations are recorded.** Before the first
+invocation the port holder's provenance was established, because a holder decides which branch the
+guard takes. That check and its verbatim output:
 
 ```text
-$ bash <oracle 2, extracted byte-exact from 99-39-PLAN.md must_haves>; echo "EXIT=$?"
+=====CMD===== for p in $(lsof -tnP -iTCP:5173 -sTCP:LISTEN); do echo "pid=$p"; lsof -a -p "$p" -d cwd -Fn | grep '^n' | cut -c2-; ps -o pid,ppid,lstart,command -p "$p" | tail -2; echo "--"; done
+pid=32219
+/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39/frontend
+  PID  PPID STARTED                      COMMAND
+32219 32205 Wed Sep  2 05:54:33 2026     node /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39/frontend/node_modules/.bin/../../../node_modules/.pnpm/vite@7.3.3_@types+node@25.9.1_jiti@2.7.0_lightningcss@1.32.0_terser@5.44.0_tsx@4.22.3_yaml@2.9.0/node_modules/vite/bin/vite.js
+--
+=====CMD===== ps -o pid,ppid,lstart,command -p 32205 | tail -2; curl -s -o /dev/null -w "http=%{http_code}\n" --max-time 8 http://localhost:5173/
+  PID  PPID STARTED                      COMMAND
+32205     1 Wed Sep  2 05:54:32 2026     node /opt/homebrew/bin/pnpm run dev
+http=200
+```
+
+The holder's cwd is inside **this** worktree, so it is this task's own leaked server and the guard's
+reuse branch is the correct one — not the `INSTRUMENT-CANNOT-RUN` branch, which is reserved for a
+holder rooted anywhere else. The guard duly exported `PW_REUSE=1`. That leaked server then died
+while Playwright was pointed at it (it was already orphaned at `ppid 1`, with nothing supervising
+it), the run hung, and it was killed at a ten-minute ceiling. Its whole captured output was one
+line:
+
+```text
+$ bash -c 'PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; cd "$R" || exit 3; for spec in tests/e2e/99-ar02-dates.spec.ts tests/e2e/99-ar03-leak.spec.ts; do test -f "$spec" || { echo "INSTRUMENT-CANNOT-RUN: missing $spec"; exit 3; }; done; C2=$(pnpm exec playwright test tests/e2e/99-ar02-dates.spec.ts --project=chromium-en --no-deps --list 2>/dev/null | command grep -c "99-ar02-dates.spec.ts:"); C3=$(pnpm exec playwright test tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --no-deps --list 2>/dev/null | command grep -c "99-ar03-leak.spec.ts:"); test "$C2" -eq 8 || { echo "INSTRUMENT-CANNOT-RUN: ar02 collected $C2, expected 8 — a playwright path is a FILTER and a missing spec collects silently"; exit 3; }; test "$C3" -eq 10 || { echo "INSTRUMENT-CANNOT-RUN: ar03 collected $C3, expected 10"; exit 3; }; command -v lsof >/dev/null 2>&1 || { echo "INSTRUMENT-CANNOT-RUN: lsof absent, cannot establish who holds the dev-server port"; exit 3; }; HOLDER=$(lsof -tnP -iTCP:5173 -sTCP:LISTEN 2>/dev/null | head -1); if test -n "$HOLDER"; then HCWD=$(lsof -a -p "$HOLDER" -d cwd -Fn 2>/dev/null | command grep "^n" | head -1 | cut -c2-); case "$HCWD" in "$R"|"$R"/*) PW_REUSE=1; export PW_REUSE; echo "reusing dev server pid $HOLDER rooted in THIS worktree";; *) echo "INSTRUMENT-CANNOT-RUN: port 5173 held by pid $HOLDER rooted at ${HCWD:-unknown}, which is NOT this worktree; refusing to measure a foreign tree"; exit 3;; esac; fi; OUT=$(pnpm exec playwright test tests/e2e/99-ar02-dates.spec.ts tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --no-deps --reporter=line 2>&1); ST=$?; printf "%s\n" "$OUT" | command grep -qE "(^|[^0-9])18 passed" || { echo "FAIL: rendered battery is not 18/18"; printf "%s\n" "$OUT" | tail -25; exit 1; }; test "$ST" -eq 0 || { echo "FAIL: playwright exited $ST despite an 18-passed line"; exit 1; }; echo "rendered battery executed by THIS gate: 18/18 (ar02 8 + ar03 10)"'
+reusing dev server pid 32219 rooted in THIS worktree
+(killed at a 10-minute ceiling; no verdict line, no exit status)
+```
+
+That is the hazard section 8 already names: a leaked server has outlived its supervisor, so nothing
+keeps it alive. **No process outside this worktree was touched**, then or at any point.
+
+With the port free, the unchanged gate was invoked again. The guard found no holder, so it neither
+reused nor refused, and Playwright started and supervised its own dev server rooted in this
+worktree. This is the run that stands as evidence:
+
+```text
+$ bash -c 'PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; cd "$R" || exit 3; for spec in tests/e2e/99-ar02-dates.spec.ts tests/e2e/99-ar03-leak.spec.ts; do test -f "$spec" || { echo "INSTRUMENT-CANNOT-RUN: missing $spec"; exit 3; }; done; C2=$(pnpm exec playwright test tests/e2e/99-ar02-dates.spec.ts --project=chromium-en --no-deps --list 2>/dev/null | command grep -c "99-ar02-dates.spec.ts:"); C3=$(pnpm exec playwright test tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --no-deps --list 2>/dev/null | command grep -c "99-ar03-leak.spec.ts:"); test "$C2" -eq 8 || { echo "INSTRUMENT-CANNOT-RUN: ar02 collected $C2, expected 8 — a playwright path is a FILTER and a missing spec collects silently"; exit 3; }; test "$C3" -eq 10 || { echo "INSTRUMENT-CANNOT-RUN: ar03 collected $C3, expected 10"; exit 3; }; command -v lsof >/dev/null 2>&1 || { echo "INSTRUMENT-CANNOT-RUN: lsof absent, cannot establish who holds the dev-server port"; exit 3; }; HOLDER=$(lsof -tnP -iTCP:5173 -sTCP:LISTEN 2>/dev/null | head -1); if test -n "$HOLDER"; then HCWD=$(lsof -a -p "$HOLDER" -d cwd -Fn 2>/dev/null | command grep "^n" | head -1 | cut -c2-); case "$HCWD" in "$R"|"$R"/*) PW_REUSE=1; export PW_REUSE; echo "reusing dev server pid $HOLDER rooted in THIS worktree";; *) echo "INSTRUMENT-CANNOT-RUN: port 5173 held by pid $HOLDER rooted at ${HCWD:-unknown}, which is NOT this worktree; refusing to measure a foreign tree"; exit 3;; esac; fi; OUT=$(pnpm exec playwright test tests/e2e/99-ar02-dates.spec.ts tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --no-deps --reporter=line 2>&1); ST=$?; printf "%s\n" "$OUT" | command grep -qE "(^|[^0-9])18 passed" || { echo "FAIL: rendered battery is not 18/18"; printf "%s\n" "$OUT" | tail -25; exit 1; }; test "$ST" -eq 0 || { echo "FAIL: playwright exited $ST despite an 18-passed line"; exit 1; }; echo "rendered battery executed by THIS gate: 18/18 (ar02 8 + ar03 10)"'
 rendered battery executed by THIS gate: 18/18 (ar02 8 + ar03 10)
 EXIT=0
 ```
 
 The gate captures Playwright's own output into a shell variable and prints it only on failure, so
-its verdict line is the whole of its output on success. Sections 6 and 7 therefore re-run each
-spec separately to record the per-test evidence criteria 2 and 3 require.
+its verdict line is the whole of its output on success. Sections 6 and 7 therefore record each
+spec's per-test evidence, which criteria 2 and 3 require.
 
 ## 6. `99-ar02-dates.spec.ts` alone — collection control, then execution
 
@@ -616,53 +766,67 @@ server has by definition outlived its supervisor.
 
 ## 9. Live completion contract, after this SUMMARY carried `status: complete`
 
+Oracle 3 (`sha256 1f12df4a3f9c7b604c79b0be6c6c79ecfe00f7f8d922f0faf4451b33ce5b39a9`, 142 bytes):
+
 ```text
-=====CMD===== bash <oracle 3, extracted byte-exact from 99-39-PLAN.md must_haves>
+$ bash -c 'PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/completion-contract-check.mjs" --summaries "$R/.planning/phases/99-arabic-coverage"'
 completion-contract: 60/60 SUMMARY files carry the marker
-=====EXIT===== 0
+EXIT=0
 ```
 
 ## 10. Provenance
 
-Timestamps were read from the machine clock rather than converted by hand; the previous revision
-of this record mis-converted an Asia/Riyadh time to UTC by a full day.
+Timestamps are read from the machine clock rather than converted by hand; an earlier revision of
+this record mis-converted an Asia/Riyadh time to UTC by a full day.
 
 ```text
 $ git rev-parse HEAD; date +%Y-%m-%dT%H:%M:%S%z; date -u +%Y-%m-%dT%H:%M:%SZ; node -v; pnpm -v; pnpm exec playwright --version
-HEAD=7bbfd55bddd56ae78b92420386f97c1dddb94b67
-LOCAL=2026-09-02T05:45:42+0300
-UTC=2026-09-02T02:45:42Z
+HEAD=c26c392010921745352426b90abb01536176e33d
+LOCAL=2026-09-02T06:16:47+0300
+UTC=2026-09-02T03:16:47Z
 node=v26.7.0 pnpm=10.29.1 playwright=Version 1.60.0
 worktree=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39
 ```
 
-`head` in the front matter is the tree this evidence was taken against. This record's own commit is
-that commit's **child**, so `git show 7bbfd55bd:.planning/phases/99-arabic-coverage/99-39-SUMMARY.md`
-returns the previous, blocked revision rather than this one.
+`head` in the front matter is the tree this attempt's evidence was taken against. This record's own
+commit is that commit's **child**, so `git show c26c39201:.planning/phases/99-arabic-coverage/99-39-SUMMARY.md`
+returns the previous revision rather than this one.
 
 ## 11. D-19 table and the human gate
 
-The D-19 reversal table, the three value-locked escalations, the swept-term census, and the D-38
-checkpoint package are carried in `99-VERIFICATION.md` rather than duplicated here, so there is one
-copy to reverse against.
+The D-19 reversal table, the three value-locked escalations, the swept-term census, and the
+evidence assembled for the D-38 checkpoint are carried in `99-VERIFICATION.md` rather than
+duplicated here, so there is one copy to reverse against.
 
-**The D-38 checkpoint answer is NOT ANSWERED.** This task owns the checkpoint and presents its
-package; the answer is the overseer's, in writing, and no worker, orchestrator or engine may supply
-it. The `status: complete` marker in this file's front matter is the engine's
-presence-implies-marker bookkeeping for this task's deliverable — the static battery, the rendered
-execution and the register — and is explicitly **not** the sign-off. The register states that
-scoping in full.
+**The D-38 checkpoint is P99-41's, not this task's.** An earlier revision of this record claimed
+P99-39 owned it; that claim is withdrawn. `99-39-PLAN.md` is `autonomous: true` and none of its
+acceptance items asks for an operator answer; `99-41-PLAN.md` is `autonomous: false` and its
+must_have says the phase does not close until the operator answers; and RULING-P99-95 names the
+single human gate as terminal task P99-41. The D-38 sentence in this plan's `truths` is the lane's
+shared boilerplate — the identical string sits in `99-41-PLAN.md`'s `truths` — so where it and the
+compiled fields disagree, the fields and the ruling decide.
+
+What this task does is assemble the evidence P99-41 will present. **No answer is recorded here, and
+none may be**: the sign-off is the overseer's, in writing. The `status: complete` marker in this
+file's front matter is the engine's presence-implies-marker bookkeeping for this task's own
+deliverable — the static battery, the rendered execution and the register — and is explicitly
+**not** the sign-off and makes no claim about P99-41. The register states that scoping in full.
 
 ## 12. Left for named later tasks
 
 - **P99-40 and P99-41:** the remaining two parts of this lane. They share these two specs, so they
   will meet a dev server on TCP 5173 — theirs to reuse if it is rooted in their own worktree, and
   to refuse if it is not.
-- **P99-41:** presentation of the Arabic surfaces to the overseer alongside this package.
+- **P99-41 — the D-38 human gate.** It owns the checkpoint (`autonomous: false`; named by
+  RULING-P99-95), produces the rendered captures the operator looks at, presents them alongside
+  this package, and blocks until the overseer answers in writing. Nothing here answers it.
 - **Open engine residue, needs a ruling:** the rendered oracle invokes Playwright ad hoc, so the
   config's `pw-run-reaped.mjs --lease-exec` wrapper runs unleased and leaks its dev server after a
-  green run. Reproduced twice in this task. The in-repo fix is plan text, outside this task's write
-  scope.
+  green run. Reproduced in every session of this task, including attempt 6, which finished green
+  and left a server on 5173. Attempt 6 also showed the second-order cost: the guard's legitimate
+  reuse branch pointed at one of those leaked servers, it died mid-run, and the gate hung until it
+  was killed — a leaked server has by definition outlived its supervisor, so reuse of one is only
+  safe until it is not. The in-repo fix is plan text, outside this task's write scope.
 - **Phase 102 / Phase 103 / operator naturalness review:** carried unchanged in the register's
   residue section.
 
@@ -679,3 +843,11 @@ Recorded by name and purpose, without output, because none is evidence for a cri
 - `lsof -tnP -iTCP:5173 -sTCP:LISTEN` and `lsof -a -p <pid> -d cwd -Fn`, `ps -o pid,ppid,lstart` — establish port-holder provenance before any reuse or reap decision. Anchored to this worktree's path.
 - `grep -c '[ \t]$'` over every captured output file — confirm no trailing whitespace enters the fenced blocks, which `git diff --check` flagged on a previous attempt.
 - `wc -l`, `awk` slicing of the captured output files — assemble this record from the raw captures rather than retyping them, so the blocks above are verbatim by construction.
+
+Added in attempt 6:
+
+- `grep -n` over `99-39-SUMMARY.md` and `99-VERIFICATION.md` — locate the three placeholder lines and the D-38 section the review anchored on.
+- `sed -n '1,40p' 99-41-PLAN.md` and `grep -n` over `rulings/RULING-P99-95-LAUNCH-ENGINE.md` — establish who owns the D-38 checkpoint from the compiled fields and the ruling rather than from the lane's shared boilerplate.
+- `ls .planning/phases/99-arabic-coverage/` — enumerate the SUMMARY population the completion oracle reads.
+- `node -e "require.resolve('yaml')"`, `node -v` — check whether a YAML parser was reachable from the scratchpad before choosing the hand-decode extractor; it was not, which is why the extractor decodes the scalar shape itself and proves the decode by re-encoding.
+- `grep -c '[ \t]$'` over attempt 6's captures — confirm no trailing whitespace enters the new fenced blocks.

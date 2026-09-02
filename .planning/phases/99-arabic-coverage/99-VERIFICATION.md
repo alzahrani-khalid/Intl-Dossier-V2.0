@@ -2,10 +2,10 @@
 phase: 99-arabic-coverage
 plan: 39
 status: complete
-attempt: 5
-verified_at_local: 2026-09-02T05:45:42+03:00
-verified_at_utc: 2026-09-02T02:45:42Z
-head: 7bbfd55bddd56ae78b92420386f97c1dddb94b67
+attempt: 6
+verified_at_local: 2026-09-02T06:16:47+03:00
+verified_at_utc: 2026-09-02T03:16:47Z
+head: c26c392010921745352426b90abb01536176e33d
 ---
 
 # Phase 99 consolidated re-proof register
@@ -13,15 +13,22 @@ head: 7bbfd55bddd56ae78b92420386f97c1dddb94b67
 ## Verdict
 
 The consolidated re-proof is **complete for every criterion this task owns**. All four criteria
-were re-proved fresh in this task, in one session, each instrument preceded by its own control.
-The plan-owned rendered gate — blocked in attempts 0 through 4 by a foreign dev server on TCP
-5173 — **executed** this time and reported `18/18 (ar02 8 + ar03 10)` with exit status 0. Each
-spec was then run separately for per-test evidence: `99-ar02-dates` 8/8, `99-ar03-leak` 10/10
-including all three `UI99-C7 ar banner` fixture states.
+have a controlled, named proof, each instrument preceded by its own control. The plan-owned
+rendered gate — blocked in attempts 0 through 4 by a foreign dev server on TCP 5173 — **executed**
+and reported `18/18 (ar02 8 + ar03 10)` with exit status 0. Each spec was then run separately for
+per-test evidence: `99-ar02-dates` 8/8, `99-ar03-leak` 10/10 including all three
+`UI99-C7 ar banner` fixture states.
 
-`head` above is the tree the evidence was taken against; this record's own commit is that
-commit's child, so `git show 7bbfd55bd:<path>` shows the previous, blocked revision of this file
-rather than this one.
+**Which session produced what.** The instrument battery and the two per-spec runs are attempt 5's
+session. All three plan-owned typed gates were **re-run in attempt 6** from command text extracted
+byte-exact from `99-39-PLAN.md`, after review found attempt 5 had written them into the record as
+`bash <oracle 1>` placeholders rather than as commands; attempt 6 changed no instrument, no spec
+and no oracle, only this register and the SUMMARY. Every capture is this task's own — none is
+quoted from another task's summary.
+
+`head` above is the tree this attempt's evidence was taken against; this record's own commit is
+that commit's child, so `git show c26c39201:<path>` shows the previous revision of this file rather
+than this one.
 
 Nothing in this register is quoted from an earlier summary. Every number below was produced by a
 command run in this task, and each of those commands is reproduced with its verbatim output in
@@ -65,20 +72,29 @@ The population is exactly these two files under `chromium-en`, `--no-deps`:
 Outside: every other Playwright spec and project, screenshots or prose from older waves,
 diagnostic alternate-port runs, and any response served by another checkout.
 
-At the start of this attempt TCP 5173 was **unheld** — the main-checkout dev server that blocked
-attempts 0 through 4 (PID 95414, rooted at `.../Intl-Dossier-V2.0/frontend`) was gone. The port
-guard therefore did not take its `INSTRUMENT-CANNOT-RUN` branch, `PW_REUSE` was never set for the
-gate, and Playwright started and supervised its own dev server rooted in this worktree. The gate's
-own verdict line was:
+The main-checkout dev server that blocked attempts 0 through 4 (PID 95414, rooted at
+`.../Intl-Dossier-V2.0/frontend`) was released before attempt 5. **No process outside this worktree
+was touched by this task at any point**, then or since.
+
+The gate's stated verdict line, from the run recorded in `99-39-SUMMARY.md` §5:
 
 ```text
 rendered battery executed by THIS gate: 18/18 (ar02 8 + ar03 10)
 ```
 
-The guard's foreign-holder branch was still exercised as a live control during this task: the
-per-spec `99-ar03-leak` run found TCP 5173 held, resolved the holder's cwd, and proceeded only
-after confirming it was rooted in **this** worktree — a server leaked seconds earlier by this
-task's own `99-ar02-dates` run. A holder rooted anywhere else is refused.
+**Which branch of the guard has actually been exercised, stated precisely.** Attempt 6 invoked the
+unchanged gate twice. The first invocation found TCP 5173 held by a server rooted **in this
+worktree** — leaked by this task's own earlier runs — so it took the **own-holder reuse** branch,
+exported `PW_REUSE=1`, and then hung when that leaked server died mid-run and was killed at a
+ten-minute ceiling. The second invocation found the port free and took the **no-holder** branch:
+Playwright started and supervised its own dev server rooted in this worktree, and that is the run
+that reports 18/18 above.
+
+The **foreign-holder** branch has therefore never been exercised by a live foreign holder in
+attempt 5 or 6; an earlier revision of this register said it had, conflating the own-holder path
+with it, and that claim is withdrawn. What is known about that branch is that attempts 0 through 4
+each took it against PID 95414 and exited 3, which is the branch behaving correctly. A holder rooted
+anywhere else is refused, never silently reused.
 
 The earlier register said RULING-P99-537 forbade *terminating* a foreign holder. That was an
 overreach and is corrected here: RULING-P99-537 forbids **silently reusing** a holder not rooted
@@ -112,16 +128,32 @@ ESCALATED-UNRULED OBJECT-TERM MISMATCH	common:navigation.newEvent="فعالية 
 The swept terms are the seven ruled rows in the census above; each reports `unclassified=0`
 individually, so the operator can reverse any single row without disturbing the others.
 
-## D-38 human gate — owned by THIS task, presented, answer OPEN
+## D-38 human gate — OWNED BY P99-41; this task prepares its evidence handoff
 
-This task owns the D-38 checkpoint. The earlier revision of this register deferred ownership to
-P99-41; that deferral was wrong and is withdrawn. The checkpoint package is assembled and
-presented **here**.
+**The D-38 checkpoint owner is P99-41, not this task.** The previous revision of this register
+claimed P99-39 owned it. That claim was wrong and is withdrawn. It is settled by the compiled
+design, not by a worker's reading of it:
 
-Every surface the plan requires the operator to see now has an executed, named, green rendered
-result in this task:
+- `99-39-PLAN.md` front matter carries `autonomous: true`, and none of its six `must_haves`
+  requires an operator answer.
+- `99-41-PLAN.md` front matter carries `autonomous: false`, and its must_have states: *"The human
+  checkpoint presents: the 404, the intake queue, the search chips, a dated surface, the /activity
+  relative-time surface and the position banner rendered under ar, plus the D-19 tie-break list
+  from the nav-title lane — and the phase does not close until the operator answers"*.
+- `rulings/RULING-P99-95-LAUNCH-ENGINE.md` names it twice: *"one human gate: terminal task
+  P99-41"* and *"Human gate P99-41 remains blocked for the operator"*.
 
-| Surface the plan names for sign-off | Executed test | Result in this task |
+The D-38 sentence in `99-39-PLAN.md`'s `truths` — *"this plan is the phase's human gate"* — is
+the lane's shared boilerplate: the identical string appears in `99-41-PLAN.md`'s `truths`. Where
+the boilerplate and the compiled fields disagree, the fields and the ruling decide, and both name
+P99-41. Reassigning ownership to a completed autonomous task would let an open landing decision
+read as settled.
+
+**What this task does own:** assembling the evidence P99-41 will put in front of the operator.
+Every surface the checkpoint must present now has an executed, named, green rendered result
+produced in this task, so P99-41 inherits a package rather than an assertion:
+
+| Surface the checkpoint must present | Executed test | Result in this task |
 | --- | --- | --- |
 | The 404 page in Arabic | `UI99-C5 ar 404` | `✓ (8.4s)` — with `UI99-C5 en control 404 ✓ (6.5s)` beside it |
 | `/my-work/intake` in Arabic | `UI99-C6 ar intake queue` | `✓ (8.4s)` — with `UI99-C6 en control intake queue ✓ (6.5s)` beside it |
@@ -130,28 +162,31 @@ result in this task:
 | `/activity` relative time | `UI99-C3 ar /activity relative time` | `✓ (11.6s)` — with `UI99-C3 en control ✓ (12.6s)` |
 | The position banner in all three seeded states | `UI99-C7 ar banner under_review` / `approved` / `published` | `✓ (11.0s)` / `✓ (8.2s)` / `✓ (11.1s)` |
 
-Also presented: the D-19 tie-break table and the three escalated pairs above, the swept-term
-census, and the residue register below.
+Also prepared for that handoff: the D-19 tie-break table and the three escalated pairs above, the
+swept-term census, and the residue register below.
 
-**Bounded honestly:** the plan's wording asks for rendered *captures*. This task's write scope is
-exactly two planning files, so image artifacts cannot be committed from here. What is presented is
-the executed per-test evidence naming each surface, reproduced verbatim in `99-39-SUMMARY.md`.
+**Bounded honestly, and this bound is P99-41's to close, not this task's.** The checkpoint asks the
+operator to see rendered *captures*. This task's write scope is exactly two planning files, so no
+image artifact can be committed from here, and executed per-test evidence is **not** a substitute
+for a capture the operator looks at. What is handed over is the evidence that each named surface
+renders and passes; producing the captures themselves, presenting them, and blocking on the answer
+belong to P99-41, which is `autonomous: false` for exactly that reason.
 
-**The answer itself is OPEN.** D-38 states that a human product or visual sign-off is never
-auto-answered, and this plan restates it: *"the rendered sign-off is a HUMAN judgment, never
-auto-answered by a worker, the orchestrator, or the engine"*. No worker may fill the slot below,
-and this one has not.
+**The answer is not this task's to record.** D-38 states that a human product or visual sign-off is
+never auto-answered, and both lane plans restate it: *"the rendered sign-off is a HUMAN judgment,
+never auto-answered by a worker, the orchestrator, or the engine"*.
 
-| Checkpoint | Who decides | Answer |
-| --- | --- | --- |
-| Phase 99 rendered/product sign-off, and the D-19 reversal window | Overseer, in writing; the orchestrator then executes `tickmarkr approve` | **NOT ANSWERED — awaiting the overseer.** No worker, orchestrator, or engine answer is recorded, and none may be. |
+| Checkpoint | Owning task | Who decides | Answer |
+| --- | --- | --- | --- |
+| Phase 99 rendered/product sign-off, and the D-19 reversal window | **P99-41** (`autonomous: false`) | Overseer, in writing; the orchestrator then executes `tickmarkr approve` | **OPEN — not reached.** P99-41 has not run. No worker, orchestrator, or engine answer is recorded, and none may be. |
 
 **What `status: complete` in the front matter does and does not mean.** It is the engine's
 presence-implies-marker bookkeeping for *this task's deliverable* — the static battery, the
 rendered execution, and this register — which is what the completion-contract oracle measures and
-what the next compile reads to decide whether to re-dispatch P99-39. It is **not** a phase release
-and **not** a sign-off; it does not answer the checkpoint above, and the phase must not be closed
-on the strength of this marker.
+what the next compile reads to decide whether to re-dispatch P99-39. P99-39 is `autonomous: true`
+and its acceptance items do not include a checkpoint answer, so the marker is honest here. It is
+**not** a phase release and **not** a sign-off; it does not answer the checkpoint above, it makes
+no claim about P99-41, and the phase must not be closed on the strength of it.
 
 ## Decision coverage
 
@@ -163,7 +198,7 @@ on the strength of this marker.
 | D-09 | One spec path per invocation, file existence asserted, and the expected counts hardcoded at 8 and 10 before execution — a spec path is a filter, never proof of existence. |
 | D-19 | The reversal table, the three escalated pairs, and the per-row swept-term census are presented while the human window is open. |
 | D-35 | Every leg D-35 named as undriven at HEAD is now executed green: the 404, the ar intake queue, the `/search` chips, and all three position-banner states. None closes on "NOT CONSTRUCTED". |
-| D-38 | Owned by this task, package presented above, answer recorded as **NOT ANSWERED** and left for the overseer. The `status: complete` marker is explicitly scoped so it cannot be read as the sign-off. |
+| D-38 | The checkpoint is **P99-41's** (`autonomous: false`, named by RULING-P99-95); this task is `autonomous: true` and prepares its evidence handoff, leaving the answer unrecorded and the rendered captures to P99-41. The `status: complete` marker is explicitly scoped so it cannot be read as the sign-off. |
 
 ## Honored-evidence table for the five citation-truth waivers
 
