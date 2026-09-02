@@ -2,9 +2,9 @@
 phase: 99-arabic-coverage
 plan: 40
 status: blocked
-head: 4f3a18468006a29385153597195598f81d1c54e7
-recorded_at_local: 2026-09-02T13:00:19+03:00
-recorded_at_utc: 2026-09-02T10:00:19Z
+head: f8034ff533aee4370e2c9716f855054ca596cc22
+recorded_at_local: 2026-09-02T13:16:38+03:00
+recorded_at_utc: 2026-09-02T10:16:38Z
 ---
 
 # P99-40 Summary — rendered battery blocked by a foreign dev server
@@ -21,6 +21,11 @@ The holder was neither reused nor terminated, and no alternate-port or earlier-w
 substituted. Therefore this task has no fresh 8/8 result, no fresh 10/10 result, and no fresh
 outcome for the three banner fixtures. The front matter intentionally does not say
 `status: complete`; the completion contract must continue to read P99-40 as pending.
+
+The repair re-attempt reran both unchanged commands at 13:16 local. They again collected 8 and 10
+and again exited 3 on PID 39807 before execution. A five-check, 40-second port recheck observed the
+same PID and foreign cwd throughout. No newer written overseer ruling authorizes a bound or gives
+this worker authority to terminate the other tree's process.
 
 There is no constructed-status waiver. No unrunnable leg is called a pass, and no bound is
 recorded: the only permitted bound would require an overseer's written ruling quoted with its

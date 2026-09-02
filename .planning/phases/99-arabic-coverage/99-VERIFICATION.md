@@ -3,9 +3,9 @@ phase: 99-arabic-coverage
 plan: 40
 status: blocked
 attempt: 0
-verified_at_local: 2026-09-02T13:00:19+03:00
-verified_at_utc: 2026-09-02T10:00:19Z
-head: 4f3a18468006a29385153597195598f81d1c54e7
+verified_at_local: 2026-09-02T13:16:38+03:00
+verified_at_utc: 2026-09-02T10:16:38Z
+head: f8034ff533aee4370e2c9716f855054ca596cc22
 ---
 
 # Phase 99 consolidated re-proof register — P99-40 rendered battery
@@ -84,6 +84,9 @@ seconds found the same PID and cwd each time. The exact commands and complete ou
 `99-40-SUMMARY.md`. No foreign process was touched. This is an unrunnable condition, not a bound
 or a pass; P99-40 remains RED until the owner releases the holder and both unchanged commands run
 green.
+
+`RULING-P99-537` forbids silently reusing a foreign holder; leaving another tree's process alone
+rests on this task's authority boundary rather than on that ruling.
 
 P99-39's earlier `8 passed` and `10 passed` results remain historical evidence only. They prove the
 specs have run in this phase, but the acceptance language explicitly requires P99-40's own gate,
