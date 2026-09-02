@@ -2,10 +2,10 @@
 phase: 99-arabic-coverage
 plan: 41
 status: complete
-attempt: 3
-verified_at_local: 2026-09-02T23:07:04+03:00
-verified_at_utc: 2026-09-02T20:07:04Z
-head: b2b91836b0afd2889c7c3b68c57388572d85880d
+attempt: 4
+verified_at_local: 2026-09-02T23:28:38+03:00
+verified_at_utc: 2026-09-02T20:28:38Z
+head: 01cd074d1a36b38295fdc9eb26f710205c46af4b
 ---
 
 # Phase 99 consolidated re-proof register — P99-41 residue and operator sign-off
@@ -22,12 +22,18 @@ English `title_en` under Arabic, and that defect was repaired at `2a79b80da`, wh
 records. This register does not treat `2a79b80da` as the sign-off — the sign-off is the ruling and
 the journal event; the commit is the repair the checkpoint caused.
 
-The static battery was re-run fresh in this attempt at
-`b2b91836b0afd2889c7c3b68c57388572d85880d`; all twelve members exited 0 and their outputs are
-reproduced in `99-41-SUMMARY.md`. **Both rendered specs were also run fresh in this attempt at that
-HEAD and both are green: 8/8 and 10/10, 18/18 together, every leg post-repair.** No criterion here
-leans on a P99-40 green: the earlier AR-03 run predates `2a79b80da` and is recorded as lineage only,
-never as evidence.
+The static battery was re-run at this register's recorded HEAD,
+`01cd074d1a36b38295fdc9eb26f710205c46af4b`: all fourteen recorded command blocks across its thirteen
+battery sections exited 0, each one re-executed and diffed against its transcribed output by a
+comparator that is itself drilled, all of it reproduced in `99-41-SUMMARY.md`. The `neg-taskcard`
+negative control is gated by an assertion on its printed rows, because that script exits 0 whatever
+it prints. **Both rendered specs ran in this task and both are green: 8/8 and 10/10, 18/18 together,
+every leg post-repair.** Precisely: the two rendered runs executed at
+`b2b91836b0afd2889c7c3b68c57388572d85880d`, and the only commits between that and the recorded HEAD
+are doc-only — `git diff --name-only b2b91836b..01cd074d1` lists exactly the two files this task
+owns and **zero** files outside `.planning/`, so nothing those specs exercise changed underneath
+them. No criterion here leans on a P99-40 green: the earlier AR-03 run predates `2a79b80da` and is
+recorded as lineage only, never as evidence.
 
 There are zero authorized bounds. Nothing in this register is closed on a source grep, on bundle
 text, or on an instrument refusal.
@@ -39,7 +45,7 @@ text, or on an instrument refusal.
 | 1. One Arabic term per core object, and each nav label agrees with its page-title object term | P99-23–29; consolidated by P99-39/P99-41 | Fresh `nav-title-agreement.mjs` control/live and `glossary-census.mjs` control/`--census` | Planted mismatch caught with a true agreement retained; planted illegal senses caught with legal senses retained | **GREEN, fresh at recorded HEAD.** 28/28 adjudicated, 25 agreements, 3 value-locked escalations, zero defects; 17,022 Arabic leaves across 129 files, `ruled=1657 allowlisted=292 UNCLASSIFIED=0`. |
 | 2. Arabic dates/times, no English weekday or month names, deliberate Latin digits | P99-09; P99-41 typed gate | Exactly one existing `99-ar02-dates.spec.ts` path under `chromium-en --no-deps`; `EXP=8` literal | Three Arabic absolute-date legs beside three English controls; Arabic and English relative-time legs paired | **GREEN, rendered fresh in this attempt.** Collected 8 = expected 8; `pw-run-reaped` verdict `clean`; Playwright `expected: 8, unexpected: 0, flaky: 0, skipped: 0`. |
 | 3. No English under `dir="rtl"` on the named surfaces | P99-04/05/06/08 and P99-40/P99-41 | Exactly one existing `99-ar03-leak.spec.ts` path; `EXP=10` literal | English controls exist for 404/intake and all three fixture banner leaves collect | **GREEN, rendered fresh in this attempt, post-repair.** Collected 10 = expected 10; verdict `clean`; `expected: 10, unexpected: 0, flaky: 0, skipped: 0`, including all three `UI99-C7` banner states at a HEAD that contains `2a79b80da`. |
-| 4. No English-default mask and no unresolved key under the shipped resolver | P99-30–38 and P99-45–62; consolidated by P99-39/P99-41 | Fresh strict self-check/live, mask control/live, TaskCard negative control, resolver live, and date-format control/live | Strict fixture walks 10 masks and 2 raw keys; mask four-polarity control; 3 TaskCard misses plus resolver miss/hit controls; dead-import zero beside 29 live importers | **GREEN, fresh at recorded HEAD.** 1,532 files, `twoArgTotal=0`, `rawKeyTotal=8518`, all EN/AR unresolved counters 0; mask prefixes 0; 214 bilingual lookups with 0 misses; date debt 0. |
+| 4. No English-default mask and no unresolved key under the shipped resolver | P99-30–38 and P99-45–62; consolidated by P99-39/P99-41 | Fresh strict self-check/live, mask control/live, TaskCard negative control, resolver live, and date-format control/live | Strict fixture walks 10 masks and 2 raw keys; mask four-polarity control; 3 TaskCard misses **asserted on the text** (the script exits 0 unconditionally, so its status is not a verdict) with that assertion drilled, plus resolver miss/hit controls; dead-import zero beside 29 live importers | **GREEN, fresh at recorded HEAD.** 1,532 files, `twoArgTotal=0`, `rawKeyTotal=8518`, all EN/AR unresolved counters 0; mask prefixes 0; 214 bilingual lookups with 0 misses; date debt 0. |
 
 ## Fresh static population register
 

@@ -2,9 +2,9 @@
 phase: 99-arabic-coverage
 plan: 41
 status: complete
-head: b2b91836b0afd2889c7c3b68c57388572d85880d
-recorded_at_local: 2026-09-02T23:07:04+03:00
-recorded_at_utc: 2026-09-02T20:07:04Z
+head: 01cd074d1a36b38295fdc9eb26f710205c46af4b
+recorded_at_local: 2026-09-02T23:28:38+03:00
+recorded_at_utc: 2026-09-02T20:28:38Z
 ---
 
 # P99-41 Summary — residue register and operator checkpoint
@@ -25,12 +25,15 @@ refusals were a `codex` sandbox that could not read the birth identity of a fore
 holder; that safety refusal was correct and is retained below unchanged. This attempt runs in a
 sandbox that can read process birth identity, port 5173 was unheld, and the guard let both
 invocations through: `99-ar02-dates` 8/8 and `99-ar03-leak` 10/10 — 18/18 — with the wrapper
-publishing verdict `clean` for each, at a HEAD that contains the position-heading repair. No row in
-the register now leans on a P99-40 green.
+publishing verdict `clean` for each, at `b2b91836b`, which contains the position-heading repair. No
+row in the register now leans on a P99-40 green. The only commits between that HEAD and this
+record's are doc-only, proven below, so nothing those specs exercise moved underneath them.
 
 The static battery was also re-executed in this attempt and every member's output was compared
-byte-for-byte against the block transcribed here: **12/12 identical, 12/12 exit 0.** There are no
-authorized bounds and nothing is recorded NOT CONSTRUCTED.
+byte-for-byte against the block transcribed here by a comparator that is itself drilled: **14/14
+identical, 14/14 exit 0** at this record's own HEAD. The `neg-taskcard` negative control is now gated
+by a text assertion on its printed rows rather than by its exit code, which that script returns as 0
+unconditionally by design. There are no authorized bounds and nothing is recorded NOT CONSTRUCTED.
 
 ## Acceptance items
 
@@ -49,7 +52,7 @@ authorized bounds and nothing is recorded NOT CONSTRUCTED.
 | --- | --- | --- | --- |
 | strict audit | self-check PASS; fixture `twoArgTotal=10`, `rawKeyTotal=2`, all 18 predicates true | 1,532 production files; `twoArgTotal=0`; `rawKeyTotal=8518`; every EN/AR unresolved counter 0 | 0 |
 | maskfinder | four true/false polarities agree with their expectations | unresolved dynamic prefixes 0 | 0 |
-| resolver | TaskCard prints exactly 3 `MISS=true`; live checker also prints positive and negative controls | 214 bilingual lookups over 11 routings; misses 0 | 0 |
+| resolver | TaskCard negative control **text-asserted** — exactly 3 `MISS=true`, 0 `MISS=false`, 1 resolving contrast row, and the assertion itself drilled against a doctored copy; live checker also prints positive and negative controls | 214 bilingual lookups over 11 routings; misses 0 | 0 |
 | nav/title | planted mismatch caught; positive agreement preserved | 28 adjudicated; 25 agreements; 3 value-locked escalations; defect counters 0 | 0 |
 | glossary census | planted illegal senses caught and legal senses retained | Fresh `--census`: 17,022 Arabic leaves in 129 files; ruled 1,657; allowlisted 292; unclassified 0 | 0 |
 | date-format checker | dead exemption importers 0 beside 29 live-control importers | 1,533 files; unexcused sites 0; named debt 0 | 0 |
@@ -59,28 +62,91 @@ authorized bounds and nothing is recorded NOT CONSTRUCTED.
 
 ### Battery re-execution ledger for this attempt
 
-Every static member above was re-executed at `b2b91836b0afd2889c7c3b68c57388572d85880d` in this
-attempt and its stdout/stderr compared programmatically against the block transcribed under *Fresh
-evidence commands and verbatim output*:
+Every static member below was re-executed in this attempt and its combined stdout/stderr compared
+byte-for-byte against the block transcribed beside it. The previous revision asserted
+`12 / 12 IDENTICAL` without showing the comparison that produced it; that omission is repaired here
+— the comparator, its output, and a drill proving it can report a difference are all recorded. It
+re-executes the recorded `~~~sh` blocks themselves, so it grades exactly what a reader sees, and it
+reads this file rather than a helper on disk.
 
-~~~text
-IDENTICAL strict-selfcheck
-IDENTICAL strict-json
-IDENTICAL mask-control
-IDENTICAL mask-live
-IDENTICAL neg-taskcard
-IDENTICAL resolve-check
-IDENTICAL nav-control
-IDENTICAL nav-live
-IDENTICAL gloss-control
-IDENTICAL gloss-census
-IDENTICAL datefmt-control
-IDENTICAL datefmt-live
-identical: 12 / 12
+One hazard is worth naming, because the first draft of this comparator walked into it: quoting the
+script inside the very file it parses put a second copy of the section heading into that file, and a
+naive first-occurrence lookup then sliced the region at the script's own source text. The version
+below anchors on newline-delimited headings, asserts each occurs exactly once, and refuses to report
+a green if the parse yields fewer pairs than the battery has members.
+
+Command:
+
+~~~sh
+PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; python3 - "$R" "${TKR_DOC:-$R/.planning/phases/99-arabic-coverage/99-41-SUMMARY.md}" <<'PY'
+import re,subprocess,sys,hashlib,difflib
+ROOT,DOC=sys.argv[1],sys.argv[2]
+s=open(DOC,encoding='utf-8').read()
+# anchor on real headings (newline-delimited): this script's own source is quoted inside the file
+def head(h):
+    i=s.index('\n## '+h+'\n')
+    assert s.count('\n## '+h+'\n')==1, h
+    return i
+region=s[head('Fresh evidence commands and verbatim output'):head('Criterion-2 gate command: the rendered run')]
+pairs=re.findall(r'Command:\n\n~~~sh\n(.*?)\n~~~\n\nVerbatim stdout/stderr:\n\n~~~text\n(.*?)\n~~~',region,re.S)
+assert len(pairs)>=13, 'parser found %d pairs — refusing to report a green on a mis-parse'%len(pairs)
+print('sections=%d command/output pairs=%d'%(len(re.findall(r'\n### ([^\n]+)',region)),len(pairs)))
+ok=0
+for i,(cmd,exp) in enumerate(pairs,1):
+    p=subprocess.run(['zsh','-c',cmd],cwd=ROOT,capture_output=True,text=True)
+    got=(p.stdout+p.stderr).rstrip('\n'); exp=exp.rstrip('\n'); same=got==exp; ok+=same
+    print('%s pair %2d exit=%d md5=%s :: %s'%('IDENTICAL' if same else 'DIFFERS  ',i,p.returncode,hashlib.md5(got.encode()).hexdigest()[:8],cmd.split('\n')[0][:58]))
+    if not same:
+        for l in list(difflib.unified_diff(exp.split('\n'),got.split('\n'),'recorded','rerun',lineterm=''))[:8]: print('   '+l)
+print('identical: %d / %d'%(ok,len(pairs)))
+sys.exit(0 if ok==len(pairs) else 1)
+PY
+TKR_ST=$?; printf 'EXIT=%s\n' "$TKR_ST"; exit "$TKR_ST"
 ~~~
 
-So the blocks below are this attempt's output as much as the previous attempt's; they are not a
-green carried forward from an earlier wave.
+Verbatim stdout/stderr:
+
+~~~text
+sections=13 command/output pairs=14
+IDENTICAL pair  1 exit=0 md5=a8c3af4e :: PATH="/opt/homebrew/bin:$PATH" node scripts/i18n-audit-str
+IDENTICAL pair  2 exit=0 md5=5a7ed01a :: PATH="/opt/homebrew/bin:$PATH" node scripts/i18n-audit-str
+IDENTICAL pair  3 exit=0 md5=ee571f22 :: PATH="/opt/homebrew/bin:$PATH" python3 scripts/partA_maskf
+IDENTICAL pair  4 exit=0 md5=82629919 :: PATH="/opt/homebrew/bin:$PATH" python3 scripts/partA_maskf
+IDENTICAL pair  5 exit=0 md5=30273a13 :: PATH="/opt/homebrew/bin:$PATH"; OUT=$(node scripts/neg-tas
+IDENTICAL pair  6 exit=0 md5=3e37c814 :: PATH="/opt/homebrew/bin:$PATH"; OUT=$(node scripts/neg-tas
+IDENTICAL pair  7 exit=0 md5=5cd5f339 :: PATH="/opt/homebrew/bin:$PATH" node scripts/resolve-check.
+IDENTICAL pair  8 exit=0 md5=d19db23b :: PATH="/opt/homebrew/bin:$PATH" node scripts/nav-title-agre
+IDENTICAL pair  9 exit=0 md5=dd1aa563 :: PATH="/opt/homebrew/bin:$PATH" node scripts/nav-title-agre
+IDENTICAL pair 10 exit=0 md5=a50b6523 :: PATH="/opt/homebrew/bin:$PATH" node scripts/glossary-censu
+IDENTICAL pair 11 exit=0 md5=bfb5380a :: PATH="/opt/homebrew/bin:$PATH" node scripts/glossary-censu
+IDENTICAL pair 12 exit=0 md5=cd693063 :: PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; DEADIMP=$(comman
+IDENTICAL pair 13 exit=0 md5=c4852984 :: PATH="/opt/homebrew/bin:$PATH" node scripts/check-date-for
+IDENTICAL pair 14 exit=0 md5=9855ba8f :: node scripts/completion-contract-check.mjs --summaries .pl
+identical: 14 / 14
+EXIT=0
+~~~
+
+**The comparator can fire.** Re-pointed through `TKR_DOC` at a copy of this file whose transcribed
+maskfinder line was doctored from `0 total` to `7 total`, it names the offending pair, prints the
+diff, and exits 1 (head and tail shown):
+
+~~~text
+sections=13 command/output pairs=14
+IDENTICAL pair  1 exit=0 md5=a8c3af4e :: PATH="/opt/homebrew/bin:$PATH" node scripts/i18n-audit-str
+IDENTICAL pair  2 exit=0 md5=5a7ed01a :: PATH="/opt/homebrew/bin:$PATH" node scripts/i18n-audit-str
+IDENTICAL pair  3 exit=0 md5=ee571f22 :: PATH="/opt/homebrew/bin:$PATH" python3 scripts/partA_maskf
+DIFFERS   pair  4 exit=0 md5=82629919 :: PATH="/opt/homebrew/bin:$PATH" python3 scripts/partA_maskf
+   --- recorded
+   ...
+IDENTICAL pair 14 exit=0 md5=9855ba8f :: node scripts/completion-contract-check.mjs --summaries .pl
+identical: 13 / 14
+EXIT=1
+~~~
+
+So the blocks below are this attempt's output as much as the previous attempt's; they are not greens
+carried forward from an earlier wave. `neg-taskcard` now contributes **two** pairs — its text
+assertion and that assertion's own drill — which is why the count is 14 rather than the 12 claimed
+before.
 
 ## Fresh evidence commands and verbatim output
 
@@ -268,12 +334,19 @@ Verbatim stdout/stderr:
 UNRESOLVED dynamic t() key prefixes: 0 total  (0 mask a raw value -> criterion 1; 0 render a RAW KEY -> criterion 2)
 EXIT=0
 ~~~
-### TaskCard negative control
+### TaskCard negative control — gated by a text assertion, not by its exit code
+
+`scripts/neg-taskcard.mjs` **always exits 0**; its own header says so and requires the caller to
+assert the rows. Forwarding `$?` from it is therefore not a verdict, and the previous revision of
+this record did exactly that. The recorded command below captures stdout/stderr and makes the
+verdict the *text*: exactly three `MISS=true` rows, zero `MISS=false` rows, and one resolving
+contrast row. That last one is the positive polarity — without it a probe that printed `MISS=true`
+for everything, including a routing that resolves, would pass.
 
 Command:
 
 ~~~sh
-PATH="/opt/homebrew/bin:$PATH" node scripts/neg-taskcard.mjs "$PWD"; TKR_ST=$?; printf 'EXIT=%s\n' "$TKR_ST"; exit "$TKR_ST"
+PATH="/opt/homebrew/bin:$PATH"; OUT=$(node scripts/neg-taskcard.mjs "$PWD" 2>&1); ST=$?; printf '%s\n' "$OUT"; test "$ST" -eq 0 || { echo "INSTRUMENT-CANNOT-RUN: neg-taskcard exited $ST"; exit 3; }; MT=$(printf '%s\n' "$OUT" | command grep -c 'MISS=true'); MF=$(printf '%s\n' "$OUT" | command grep -c 'MISS=false'); CN=$(printf '%s\n' "$OUT" | command grep -c 'ns=assignments -> "Low"'); echo "TEXT-ASSERT MISS=true rows=$MT (require exactly 3); MISS=false rows=$MF (require 0); resolving-contrast rows=$CN (require 1)"; test "$MT" -eq 3 && test "$MF" -eq 0 && test "$CN" -eq 1; TKR_ST=$?; printf 'EXIT=%s\n' "$TKR_ST"; exit "$TKR_ST"
 ~~~
 
 Verbatim stdout/stderr:
@@ -285,8 +358,32 @@ Verbatim stdout/stderr:
   TaskCard t('work_item.task') ns=translation -> "work_item.task"  MISS=true
   (for contrast, the family that DOES hold these:)
   t('priority.low') ns=assignments -> "Low"
+TEXT-ASSERT MISS=true rows=3 (require exactly 3); MISS=false rows=0 (require 0); resolving-contrast rows=1 (require 1)
 EXIT=0
 ~~~
+
+Now `EXIT=0` is the assertion's own status rather than the script's unconditional one. That still
+leaves one question a zero can never answer by itself: **can the assertion fire?** Drilled by
+feeding the same predicate the same run's captured stdout with one `MISS=true` row removed:
+
+Command:
+
+~~~sh
+PATH="/opt/homebrew/bin:$PATH"; OUT=$(node scripts/neg-taskcard.mjs "$PWD" 2>&1); DRILL=$(printf '%s\n' "$OUT" | command grep -v "work_item.task"); MT=$(printf '%s\n' "$DRILL" | command grep -c 'MISS=true'); MF=$(printf '%s\n' "$DRILL" | command grep -c 'MISS=false'); CN=$(printf '%s\n' "$DRILL" | command grep -c 'ns=assignments -> "Low"'); echo "DRILL (one MISS=true row removed from the captured stdout) MISS=true rows=$MT (require exactly 3); MISS=false rows=$MF (require 0); resolving-contrast rows=$CN (require 1)"; if test "$MT" -eq 3 && test "$MF" -eq 0 && test "$CN" -eq 1; then echo "DRILL-FAILED: predicate PASSED doctored output — the text assertion is vacuous"; DR=1; else echo "DRILL-PASSED: predicate REJECTED doctored output — the text assertion can fire"; DR=0; fi; printf 'EXIT=%s\n' "$DR"; exit "$DR"
+~~~
+
+Verbatim stdout/stderr:
+
+~~~text
+DRILL (one MISS=true row removed from the captured stdout) MISS=true rows=2 (require exactly 3); MISS=false rows=0 (require 0); resolving-contrast rows=1 (require 1)
+DRILL-PASSED: predicate REJECTED doctored output — the text assertion can fire
+EXIT=0
+~~~
+
+So the resolver zero recorded below stands beside a negative control that is itself validated: the
+three known-broken `TaskCard` routings are still broken, a routing that resolves is still seen to
+resolve, and the predicate that says so rejects an output missing one of those rows.
+
 ### Resolution check live
 
 Command:
@@ -568,7 +665,35 @@ PASS | expected | UI99-C10 ar tajawal
 **The three banner-state outcomes, called out as the lane's SUMMARY contract requires:**
 `UI99-C7 ar banner under_review` PASS, `UI99-C7 ar banner approved` PASS, `UI99-C7 ar banner
 published` PASS — all three at a HEAD containing `2a79b80da`, so this is the first AR-03 run that
-grades the repaired heading rather than preceding it.
+executed **after** the position-heading repair rather than before it. It does **not** grade that
+heading: `UI99-C7` asserts on the read-only banner element only, which is exactly why a person
+caught the English `<h1>` that this suite passed over. What the post-repair run establishes is that
+the repair broke none of the banner behaviour these three legs do assert.
+
+## The rendered runs and this record's HEAD
+
+Both rendered runs above executed at `b2b91836b0afd2889c7c3b68c57388572d85880d`. This record is
+written on top of that commit, so its front-matter `head` is later. That gap is doc-only, and this
+is the observation rather than the assertion:
+
+Command:
+
+~~~sh
+A=b2b91836b0afd2889c7c3b68c57388572d85880d; B=01cd074d1a36b38295fdc9eb26f710205c46af4b; git diff --name-only "$A".."$B"; N=$(git diff --name-only "$A".."$B" | command grep -v '^\.planning/' | command grep -c . || true); T=$(git diff --name-only "$A".."$B" | command grep -c . || true); echo "files changed=$T ; files outside .planning/=$N (require 0)"; test "$N" -eq 0; TKR_ST=$?; printf 'EXIT=%s\n' "$TKR_ST"; exit "$TKR_ST"
+~~~
+
+Verbatim stdout/stderr:
+
+~~~text
+.planning/phases/99-arabic-coverage/99-41-SUMMARY.md
+.planning/phases/99-arabic-coverage/99-VERIFICATION.md
+files changed=2 ; files outside .planning/=0 (require 0)
+EXIT=0
+~~~
+
+Two files changed, both of them the two this task owns, and zero outside `.planning/`. No source, no
+i18n bundle, no spec and no instrument moved between those runs and this record, so the 8/8 and
+10/10 describe the tree being shipped.
 
 ## Prior-attempt refusals, retained unchanged
 
@@ -637,8 +762,10 @@ denied it — a host permission wall, recorded as a tier exception, not a substi
 **The `or named what must change` branch was exercised too.** Capturing surface 6 exposed that the
 position detail page rendered `title_en` as its `<h1>` in Arabic mode. `RULING-P99-544` records the
 repair at `2a79b80da` and that it was *"verified in BOTH directions, suites still 18/18"*; this
-attempt's own AR-03 run reproduces that independently, above. `UI99-C7` was green on that page
-throughout, because it asserts on the read-only banner element and not the heading.
+attempt's own runs independently reproduce the **suite half** of that — 8/8 and 10/10 — but not the
+both-directions heading check, which stays a ruling-quoted claim. `UI99-C7` was green on that page
+throughout, because it asserts on the read-only banner element and not the heading, so no automated
+leg in this phase grades the `<h1>` in either direction.
 
 ### Why this worker still does not treat the commit as the sign-off
 
@@ -728,5 +855,10 @@ Diagnostics not used as greens: `lsof`/`ps` attribution of ports 5001 and 5173 b
 invocation; the two prior-attempt safety-wrapper refusals. The Playwright reports the wrapper
 publishes under `test-results/` and `.pw-reports/` are instrument artifacts, not tracked paths;
 `git status --porcelain` was empty after both runs.
+
+The battery comparator was developed and its drill fixture (a doctored copy of this file) was
+written **outside the worktree**, in the session scratchpad, so no probe of this record left a file
+inside the tree a grader reads. The comparator as recorded above needs none of that: it is
+self-contained and re-runnable from this file alone.
 
 No tracked path outside the two-path P99-41 allowlist changed.
