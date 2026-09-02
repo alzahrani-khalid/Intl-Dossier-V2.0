@@ -2,10 +2,10 @@
 phase: 99-arabic-coverage
 plan: 39
 status: complete
-attempt: 7
-verified_at_local: 2026-09-02T06:36:38+03:00
-verified_at_utc: 2026-09-02T03:36:38Z
-head: f7d0add0758f67b6c3b51e84458e6345ff7a443a
+attempt: 8
+verified_at_local: 2026-09-02T07:01:04+03:00
+verified_at_utc: 2026-09-02T04:01:04Z
+head: 1cdf4b364240ac6e62e0775c0841af4993747e92
 ---
 
 # Phase 99 consolidated re-proof register
@@ -19,11 +19,13 @@ and reported `18/18 (ar02 8 + ar03 10)` with exit status 0. Each spec was then r
 per-test evidence: `99-ar02-dates` 8/8, `99-ar03-leak` 10/10 including all three
 `UI99-C7 ar banner` fixture states.
 
-**Which session produced what.** The instrument battery and the two per-spec runs are attempt 5's
+**Which session produced what.** The instrument battery is attempt 5's
 session. All three plan-owned typed gates, both completion-contract negative controls, the
 date-format control and the provenance read were **re-run in attempt 7**, from command text
-extracted byte-exact from `99-39-PLAN.md`. Attempt 7 changed no instrument, no spec and no oracle
-— only this register and the SUMMARY. It re-ran them because review found the record carried
+extracted byte-exact from `99-39-PLAN.md`. The two per-spec runs were **re-run in attempt 8**
+with their actual wrapper/pipeline output recorded, including collection headers/totals, counts,
+statuses, and port/reap lines. Attempts 7 and 8 changed no instrument, no spec and no oracle —
+only this register and the SUMMARY. It re-ran them because review found the record carried
 `EXIT=` lines its displayed commands could not emit, a prose description in place of the
 date-format control's command, and a provenance command that could not produce its own labelled
 output. Each is now recorded as a command whose displayed form emits exactly the recorded bytes:
@@ -31,7 +33,7 @@ every gate line ends in `; printf 'EXIT=%s\n' "$?"`, so the block's single `EXIT
 command's own. Every capture is this task's own — none is quoted from another task's summary.
 
 `head` above is the tree this attempt's evidence was taken against; this record's own commit is
-that commit's child, so `git show f7d0add07:<path>` shows the previous revision of this file rather
+that commit's child, so `git show 1cdf4b364:<path>` shows the previous revision of this file rather
 than this one.
 
 Nothing in this register is quoted from an earlier summary. Every number below was produced by a
@@ -43,8 +45,8 @@ command run in this task, and each of those commands is reproduced with its verb
 | Criterion | Closing plan(s) | Fresh oracle in this task | Control beside the result | Observed result |
 | --- | --- | --- | --- | --- |
 | 1. One Arabic term per core object, and each nav label agrees with its page-title object term | P99-23–29; consolidated by P99-39 | `nav-title-agreement.mjs` control then live; `glossary-census.mjs` control, live verdict, then `--census` over every ruled row repo-wide | Nav control caught a planted mismatch and preserved a true agreement. Glossary control caught the unlisted profile sense, the planted plural, the planted brief-plural and the planted دوسييه, while preserving the legal senses. | **GREEN.** Nav/title `28/28 adjudicated; 25 agree; 3 escalated; 0 unruled mismatch; 0 missing anchor; 0 missing navigation locale key; 0 duplicate term pattern; 0 cross-matching term row; 0 row coverage issue; 0 common repair issue; 0 decision artifact issue`. Glossary `17022 Arabic leaf values across 129 file(s)`, all seven ruled rows drilled, `classification totals: ruled=1657 allowlisted=292 UNCLASSIFIED=0`. |
-| 2. Arabic dates/times, no English weekday or month names, deliberate Latin digits | P99-09 and the P99-39 consolidated gate | Plan-owned typed Playwright gate, then `99-ar02-dates.spec.ts` alone for per-test evidence | Collection control ran first and hardcoded 8; the static date checker carries the 29-importer live control beside the zero exempt-file importers. | **GREEN.** Collection 8; execution `8 passed (16.2s)`, exit 0, every one of the eight listed tests `✓`. Static date checker: `1533 non-test file(s) scanned, 0 unexcused ad-hoc date/number formatting sites`, named debt `0 row(s) excusing 0 site(s)`. |
-| 3. No English under `dir="rtl"` — 404, intake queue, search chips, Latin-run scan, Tajawal, and the three fixture-driven position banners | P99-04/05/06/08; consolidated by P99-39 | Plan-owned typed Playwright gate, then `99-ar03-leak.spec.ts` alone for per-test evidence | Collection control ran first and hardcoded 10, and the three banner tests are named inside that ten. | **GREEN.** Collection 10; execution `10 passed (50.2s)`, exit 0. The three fixture-driven banners each passed by name: `UI99-C7 ar banner under_review (11.0s)`, `UI99-C7 ar banner approved (8.2s)`, `UI99-C7 ar banner published (11.1s)`. No leg is recorded `NOT CONSTRUCTED`. |
+| 2. Arabic dates/times, no English weekday or month names, deliberate Latin digits | P99-09 and the P99-39 consolidated gate | Plan-owned typed Playwright gate, then `99-ar02-dates.spec.ts` alone for per-test evidence | Collection control ran first and hardcoded 8; the static date checker carries the 29-importer live control beside the zero exempt-file importers. | **GREEN.** Collection 8; execution `8 passed (15.5s)`, exit 0, every one of the eight listed tests `✓`. Static date checker: `1533 non-test file(s) scanned, 0 unexcused ad-hoc date/number formatting sites`, named debt `0 row(s) excusing 0 site(s)`. |
+| 3. No English under `dir="rtl"` — 404, intake queue, search chips, Latin-run scan, Tajawal, and the three fixture-driven position banners | P99-04/05/06/08; consolidated by P99-39 | Plan-owned typed Playwright gate, then `99-ar03-leak.spec.ts` alone for per-test evidence | Collection control ran first and hardcoded 10, and the three banner tests are named inside that ten. | **GREEN.** Collection 10; execution `10 passed (49.3s)`, exit 0. The three fixture-driven banners each passed by name: `UI99-C7 ar banner under_review (11.4s)`, `UI99-C7 ar banner approved (7.8s)`, `UI99-C7 ar banner published (10.7s)`. No leg is recorded `NOT CONSTRUCTED`. |
 | 4. No English-default mask and no unresolved key under the shipped resolver | P99-30–38 and P99-45–62; consolidated by P99-39 | strict audit `--self-check` then live `--json`; maskfinder `--control` then live; `neg-taskcard` **before** `resolve-check` | Strict self-check passes its 18 named predicates and the live `rawKeyTotal=8518` is the positive control against a walked-nothing zero. Maskfinder asserts two-true/two-false polarities. `neg-taskcard` prints its three `MISS=true` rows first, so the live routing zero cannot be a dead instrument. | **GREEN.** Strict audit `scannedFiles: 1532`, `twoArgTotal: 0`, `rawKeyTotal: 8518`, and `twoArgUnresolved / rawKeyUnresolved / twoArgUnresolvedEn / rawKeyUnresolvedEn / twoArgUnresolvedAr / rawKeyUnresolvedAr` all `0`. Maskfinder `UNRESOLVED dynamic t() key prefixes: 0 total`. Resolution `214 lookups across 11 routings x 2 locales — routings with a miss: 0`. Negative control 3/3 `MISS=true`. |
 
 No earlier SUMMARY contributes a green to this table. Earlier summaries are used only for lineage,
@@ -167,12 +169,12 @@ produced in this task, so P99-41 inherits a package rather than an assertion:
 
 | Surface the checkpoint must present | Executed test | Result in this task |
 | --- | --- | --- |
-| The 404 page in Arabic | `UI99-C5 ar 404` | `✓ (8.4s)` — with `UI99-C5 en control 404 ✓ (6.5s)` beside it |
-| `/my-work/intake` in Arabic | `UI99-C6 ar intake queue` | `✓ (8.4s)` — with `UI99-C6 en control intake queue ✓ (6.5s)` beside it |
-| The `/search` chips | `UI99-C8 ar search chips` | `✓ (6.5s)` |
-| One dated surface | `UI99-C1C2C4 ar /calendar`, `ar /dossiers`, `ar /events` | `✓ (13.6s)`, `✓ (13.7s)`, `✓ (12.1s)` — each with its `en control` green |
-| `/activity` relative time | `UI99-C3 ar /activity relative time` | `✓ (11.6s)` — with `UI99-C3 en control ✓ (12.6s)` |
-| The position banner in all three seeded states | `UI99-C7 ar banner under_review` / `approved` / `published` | `✓ (11.0s)` / `✓ (8.2s)` / `✓ (11.1s)` |
+| The 404 page in Arabic | `UI99-C5 ar 404` | `✓ (8.8s)` — with `UI99-C5 en control 404 ✓ (6.2s)` beside it |
+| `/my-work/intake` in Arabic | `UI99-C6 ar intake queue` | `✓ (8.6s)` — with `UI99-C6 en control intake queue ✓ (6.2s)` beside it |
+| The `/search` chips | `UI99-C8 ar search chips` | `✓ (6.0s)` |
+| One dated surface | `UI99-C1C2C4 ar /calendar`, `ar /dossiers`, `ar /events` | `✓ (12.4s)`, `✓ (13.0s)`, `✓ (12.0s)` — each with its `en control` green |
+| `/activity` relative time | `UI99-C3 ar /activity relative time` | `✓ (12.7s)` — with `UI99-C3 en control ✓ (13.0s)` |
+| The position banner in all three seeded states | `UI99-C7 ar banner under_review` / `approved` / `published` | `✓ (11.4s)` / `✓ (7.8s)` / `✓ (10.7s)` |
 
 Also prepared for that handoff: the D-19 tie-break table and the three escalated pairs above, the
 swept-term census, and the residue register below.
@@ -235,9 +237,9 @@ The honest reading remains **34 substantive + 5 waived on machine evidence, not 
   **unleased** and leaks its dev server after a green run. That leak, not a foreign process, is
   what turned a previously green rendered gate red: the leak was still bound when the gate ran
   again, the guard correctly took its own-holder reuse branch, and the orphaned server died under
-  the run. Attempt 7 therefore measures the port before invoking the gate and reaps its own leak
-  after it, holder by holder, touching only holders rooted in this worktree; the port is left with
-  no holder. That contains the symptom for the next runner without removing the leak.
+  the run. Attempts 7 and 8 therefore measured the port before invoking rendered legs and reaped their own
+  leaks after them, holder by holder, touching only holders rooted in this worktree; the port is
+  left with no holder. That contains the symptom for the next runner without removing the leak.
 - **OPEN, engine residue, still needs a ruling:** the unleased wrapper itself. The in-repo fix is to
   route the oracle through `scripts/pw-run-reaped.mjs --` RUN mode as P99-08's oracle does, so the
   wrapper reaps what it spawned. That is plan text, outside this task's write scope. Consequence

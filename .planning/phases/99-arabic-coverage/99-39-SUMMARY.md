@@ -2,10 +2,10 @@
 phase: 99-arabic-coverage
 plan: 39
 status: complete
-attempt: 7
-head: f7d0add0758f67b6c3b51e84458e6345ff7a443a
-recorded_at_local: 2026-09-02T06:36:38+03:00
-recorded_at_utc: 2026-09-02T03:36:38Z
+attempt: 8
+head: 1cdf4b364240ac6e62e0775c0841af4993747e92
+recorded_at_local: 2026-09-02T07:01:04+03:00
+recorded_at_utc: 2026-09-02T04:01:04Z
 ---
 
 # P99-39 Summary — static battery green, rendered gate EXECUTED 18/18
@@ -21,12 +21,14 @@ guard correctly took its **own-holder reuse** branch, and the orphaned server di
 Attempt 7 measured the port free before invoking the gate, and reaps its own leak afterwards
 (section 5b), so the port is left with no holder.
 
-**Which session produced which capture, stated plainly.** Sections 1, 2, 6, 7 and 8 are attempt
-5's session, in one continuous run. Sections 1b, 3, 3b, 3c, 4, 5, 5b, 9 and 10 are attempt 7's
+**Which session produced which capture, stated plainly.** Sections 1, 2 and 8 are attempt 5's
+session, in one continuous run. Sections 1b, 3, 3b, 3c, 4, 5, 5b, 9 and 10 are attempt 7's
 session, which re-ran all three plan-owned gates, both completion-contract negative controls, the
-date-format control and the provenance read. Every capture in this file is this task's own; none
-is quoted from another task's summary, and none is a paraphrase. Neither attempt 6 nor attempt 7
-changed any instrument, spec or oracle — only this record and the register.
+date-format control and the provenance read. Sections 6, 7 and 7b are attempt 8's session, which
+re-ran the two per-spec Playwright controls/executions with the actual wrapper output recorded.
+Every capture in this file is this task's own; none is quoted from another task's summary, and
+none is a paraphrase. Attempts 6, 7 and 8 changed no instrument, spec or oracle — only this record
+and the register.
 
 | Gate / battery member | Control first | Live result | Exit |
 | --- | --- | --- | --- |
@@ -39,8 +41,8 @@ changed any instrument, spec or oracle — only this record and the register.
 | `completion-contract-check.mjs` (oracle 3, byte-exact) | drilled `1/2` exit 1; empty dir exit 3 — both re-run in attempt 7, §3 | live phase directory `60/60` (§9) | 0 |
 | **Plan-owned STATIC gate (oracle 1, byte-exact)** | every control inline | all clauses green; re-run in attempt 7 (§4) | **0** |
 | **Plan-owned RENDERED gate (oracle 2, byte-exact)** | collection 8 and 10 hardcoded; port measured free, so the guard took the no-holder branch | `rendered battery executed by THIS gate: 18/18 (ar02 8 + ar03 10)`; re-run in attempt 7 (§5) | **0** |
-| `99-ar02-dates.spec.ts` alone | collection control 8 | `8 passed (16.2s)`, all 8 `✓` | 0 |
-| `99-ar03-leak.spec.ts` alone | collection control 10 | `10 passed (50.2s)`, all 10 `✓`, incl. 3 banner states | 0 |
+| `99-ar02-dates.spec.ts` alone | collection control 8 | `8 passed (15.5s)`, all 8 `✓` | 0 |
+| `99-ar03-leak.spec.ts` alone | collection control 10 | `10 passed (49.3s)`, all 10 `✓`, incl. 3 banner states | 0 |
 
 ## Which output rule this record applies
 
@@ -654,8 +656,9 @@ EXIT=0
 ```
 
 The gate captures Playwright's own output into a shell variable and prints it only on failure, so
-its verdict line is the whole of its output on success. Sections 6 and 7 therefore record each
-spec's per-test evidence, which criteria 2 and 3 require.
+its verdict line is the whole of its output on success. Sections 6 and 7 therefore re-run each
+spec with an explicit wrapper that prints the collection/execution commands it runs, derives the
+hardcoded count, prints the status, and records/reaps any worktree-local dev-server holder.
 
 ## 5b. Reaping this task's own leaked dev server, so the next gate run starts clean
 
@@ -679,11 +682,55 @@ Port 5173 is left with no holder. The engine residue itself — the unleased wra
 and named in section 12; this reap is a cleanup, not a fix.
 
 
-## 6. `99-ar02-dates.spec.ts` alone — collection control, then execution
+## 6. `99-ar02-dates.spec.ts` alone — wrapper-recorded collection control, then execution
+
+This section corrects the RULING-P99-538 attribution defect from the previous revision: the command
+recorded here is the wrapper/pipeline, not a bare `pnpm` command. The wrapper emits the `=====CMD=====`
+inner command lines, captures each inner command's stdout/stderr, derives the hardcoded `COUNT`, prints
+`PIPESTATUS0`, asserts the count/status, records TCP 5173, and refuses any foreign holder.
 
 ```text
+$ FORCE_COLOR=0 bash -c '
+set +e
+PATH="/opt/homebrew/bin:$PATH"
+R="$1"; SPEC="$2"; EXPECT="$3"; LABEL="$4"
+cd "$R" || exit 3
+holders() { lsof -tnP -iTCP:5173 -sTCP:LISTEN 2>/dev/null | paste -sd " " -; }
+printf "##### --list COLLECTION CONTROL: %s\n" "$LABEL"
+printf "=====CMD===== FORCE_COLOR=0 pnpm exec playwright test %s --project=chromium-en --no-deps --list\n" "$SPEC"
+if ! test -f "$SPEC"; then printf "INSTRUMENT-CANNOT-RUN: missing %s\n" "$SPEC"; exit 3; fi
+OUT=$(FORCE_COLOR=0 pnpm exec playwright test "$SPEC" --project=chromium-en --no-deps --list 2>&1); ST=$?
+printf "%s\n" "$OUT"
+COUNT=$(printf "%s\n" "$OUT" | command grep -c "$(basename "$SPEC"):")
+printf "=====COUNT===== %s\n" "$COUNT"
+printf "=====PIPESTATUS0===== %s\n" "$ST"
+if test "$COUNT" -ne "$EXPECT"; then printf "INSTRUMENT-CANNOT-RUN: %s collected %s, expected %s\n" "$LABEL" "$COUNT" "$EXPECT"; exit 3; fi
+if test "$ST" -ne 0; then printf "INSTRUMENT-CANNOT-RUN: %s collection exited %s\n" "$LABEL" "$ST"; exit 3; fi
+printf "##### port before %s execution:\n" "$LABEL"
+HOLDERS=$(holders)
+printf "%s\n" "$HOLDERS"
+for pid in $HOLDERS; do
+  HCWD=$(lsof -a -p "$pid" -d cwd -Fn 2>/dev/null | command grep "^n" | head -1 | cut -c2-)
+  case "$HCWD" in "$R"|"$R"/*) PP=$(ps -o ppid= -p "$pid" | tr -d " "); printf "reaping OWN leaked holder pid %s (parent %s) rooted at %s\n" "$pid" "$PP" "$HCWD"; kill "$PP" 2>/dev/null; kill "$pid" 2>/dev/null;; *) printf "INSTRUMENT-CANNOT-RUN: port 5173 held by pid %s rooted at %s, which is NOT this worktree\n" "$pid" "${HCWD:-unknown}"; exit 3;; esac
+done
+if test -n "$HOLDERS"; then sleep 2; printf "port after pre-run reap: [%s]\n" "$(holders)"; fi
+printf "##### EXECUTION (own server, no reuse): %s\n" "$LABEL"
+printf "=====CMD===== FORCE_COLOR=0 pnpm exec playwright test %s --project=chromium-en --no-deps --reporter=list\n" "$SPEC"
+OUT=$(FORCE_COLOR=0 pnpm exec playwright test "$SPEC" --project=chromium-en --no-deps --reporter=list 2>&1); ST=$?
+printf "%s\n" "$OUT"
+printf "=====PIPESTATUS0===== %s\n" "$ST"
+printf "##### port after %s:\n" "$LABEL"
+holders
+printf "=====PORT-STATUS===== %s\n" "$?"
+printf "%s\n" "$OUT" | command grep -qE "(^|[^0-9])${EXPECT} passed" || { printf "FAIL: %s did not report %s passed\n" "$LABEL" "$EXPECT"; exit 1; }
+if test "$ST" -ne 0; then printf "FAIL: %s exited %s\n" "$LABEL" "$ST"; exit 1; fi
+' sh "$PWD" tests/e2e/99-ar02-dates.spec.ts 8 99-ar02-dates
 ##### --list COLLECTION CONTROL: 99-ar02-dates
-=====CMD===== pnpm exec playwright test tests/e2e/99-ar02-dates.spec.ts --project=chromium-en --no-deps --list
+=====CMD===== FORCE_COLOR=0 pnpm exec playwright test tests/e2e/99-ar02-dates.spec.ts --project=chromium-en --no-deps --list
+(node:4408) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+◇ injected env (9) from .env.test // tip: ⌁ auth for agents [www.vestauth.com]
+Listing tests:
   [chromium-en] › 99-ar02-dates.spec.ts:186:5 › UI99-C1C2C4 ar /calendar
   [chromium-en] › 99-ar02-dates.spec.ts:190:5 › UI99-C1C2C4 ar /dossiers
   [chromium-en] › 99-ar02-dates.spec.ts:194:5 › UI99-C1C2C4 ar /events
@@ -692,36 +739,110 @@ and named in section 12; this reap is a cleanup, not a fix.
   [chromium-en] › 99-ar02-dates.spec.ts:206:5 › UI99-C1 en control /events
   [chromium-en] › 99-ar02-dates.spec.ts:210:5 › UI99-C3 ar /activity relative time
   [chromium-en] › 99-ar02-dates.spec.ts:232:5 › UI99-C3 en control /activity relative time
+Total: 8 tests in 1 file
 =====COUNT===== 8
+=====PIPESTATUS0===== 0
+##### port before 99-ar02-dates execution:
+
 ##### EXECUTION (own server, no reuse): 99-ar02-dates
-=====CMD===== pnpm exec playwright test tests/e2e/99-ar02-dates.spec.ts --project=chromium-en --no-deps --reporter=list
+=====CMD===== FORCE_COLOR=0 pnpm exec playwright test tests/e2e/99-ar02-dates.spec.ts --project=chromium-en --no-deps --reporter=list
+(node:4426) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+◇ injected env (9) from .env.test // tip: ◈ encrypted .env [www.dotenvx.com]
 [WebServer] pw-run-reaped --lease-exec: PW_LEASE_* env absent — running UNLEASED (ad-hoc invocation)
 [WebServer] • turbo 2.9.14
 
 Running 8 tests using 8 workers
 
-  ✓  8 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:210:5 › UI99-C3 ar /activity relative time (11.6s)
-  ✓  7 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:194:5 › UI99-C1C2C4 ar /events (12.1s)
-  ✓  3 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:206:5 › UI99-C1 en control /events (12.3s)
-  ✓  4 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:232:5 › UI99-C3 en control /activity relative time (12.6s)
-  ✓  5 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:202:5 › UI99-C1 en control /dossiers (12.8s)
-  ✓  6 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:198:5 › UI99-C1 en control /calendar (13.0s)
-  ✓  1 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:186:5 › UI99-C1C2C4 ar /calendar (13.6s)
-  ✓  2 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:190:5 › UI99-C1C2C4 ar /dossiers (13.7s)
+(node:4805) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:4806) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:4807) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:4808) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:4809) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:4811) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:4804) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:4810) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+◇ injected env (0) from .env.test // tip: ⌘ suppress logs { quiet: true }
+◇ injected env (0) from .env.test // tip: ⌘ suppress logs { quiet: true }
+◇ injected env (0) from .env.test // tip: ⌘ suppress logs { quiet: true }
+◇ injected env (0) from .env.test // tip: ⌁ auth for agents [www.vestauth.com]
+◇ injected env (0) from .env.test // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+◇ injected env (0) from .env.test // tip: ⌘ enable debugging { debug: true }
+◇ injected env (0) from .env.test // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+◇ injected env (0) from .env.test // tip: ◈ encrypted .env [www.dotenvx.com]
+  ✓  3 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:206:5 › UI99-C1 en control /events (11.5s)
+  ✓  1 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:194:5 › UI99-C1C2C4 ar /events (12.0s)
+  ✓  8 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:186:5 › UI99-C1C2C4 ar /calendar (12.4s)
+  ✓  2 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:198:5 › UI99-C1 en control /calendar (12.6s)
+  ✓  4 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:210:5 › UI99-C3 ar /activity relative time (12.7s)
+  ✓  6 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:232:5 › UI99-C3 en control /activity relative time (13.0s)
+  ✓  5 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:190:5 › UI99-C1C2C4 ar /dossiers (13.0s)
+  ✓  7 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:202:5 › UI99-C1 en control /dossiers (13.0s)
 
-  8 passed (16.2s)
+  8 passed (15.5s)
 =====PIPESTATUS0===== 0
 ##### port after 99-ar02-dates:
-3965
+4784
+=====PORT-STATUS===== 0
 ```
 
-## 7. `99-ar03-leak.spec.ts` alone — collection control, then execution
+## 7. `99-ar03-leak.spec.ts` alone — wrapper-recorded collection control, then execution
 
-The collection control, listing all ten tests including the three banner fixtures:
+Same wrapper contract as section 6, with `EXPECT=10`. The `port before` block shows the wrapper
+found and reaped only the holder rooted in this worktree that section 6 had just leaked; a foreign
+holder would have exited 3 before execution.
 
 ```text
+$ FORCE_COLOR=0 bash -c '
+set +e
+PATH="/opt/homebrew/bin:$PATH"
+R="$1"; SPEC="$2"; EXPECT="$3"; LABEL="$4"
+cd "$R" || exit 3
+holders() { lsof -tnP -iTCP:5173 -sTCP:LISTEN 2>/dev/null | paste -sd " " -; }
+printf "##### --list COLLECTION CONTROL: %s\n" "$LABEL"
+printf "=====CMD===== FORCE_COLOR=0 pnpm exec playwright test %s --project=chromium-en --no-deps --list\n" "$SPEC"
+if ! test -f "$SPEC"; then printf "INSTRUMENT-CANNOT-RUN: missing %s\n" "$SPEC"; exit 3; fi
+OUT=$(FORCE_COLOR=0 pnpm exec playwright test "$SPEC" --project=chromium-en --no-deps --list 2>&1); ST=$?
+printf "%s\n" "$OUT"
+COUNT=$(printf "%s\n" "$OUT" | command grep -c "$(basename "$SPEC"):")
+printf "=====COUNT===== %s\n" "$COUNT"
+printf "=====PIPESTATUS0===== %s\n" "$ST"
+if test "$COUNT" -ne "$EXPECT"; then printf "INSTRUMENT-CANNOT-RUN: %s collected %s, expected %s\n" "$LABEL" "$COUNT" "$EXPECT"; exit 3; fi
+if test "$ST" -ne 0; then printf "INSTRUMENT-CANNOT-RUN: %s collection exited %s\n" "$LABEL" "$ST"; exit 3; fi
+printf "##### port before %s execution:\n" "$LABEL"
+HOLDERS=$(holders)
+printf "%s\n" "$HOLDERS"
+for pid in $HOLDERS; do
+  HCWD=$(lsof -a -p "$pid" -d cwd -Fn 2>/dev/null | command grep "^n" | head -1 | cut -c2-)
+  case "$HCWD" in "$R"|"$R"/*) PP=$(ps -o ppid= -p "$pid" | tr -d " "); printf "reaping OWN leaked holder pid %s (parent %s) rooted at %s\n" "$pid" "$PP" "$HCWD"; kill "$PP" 2>/dev/null; kill "$pid" 2>/dev/null;; *) printf "INSTRUMENT-CANNOT-RUN: port 5173 held by pid %s rooted at %s, which is NOT this worktree\n" "$pid" "${HCWD:-unknown}"; exit 3;; esac
+done
+if test -n "$HOLDERS"; then sleep 2; printf "port after pre-run reap: [%s]\n" "$(holders)"; fi
+printf "##### EXECUTION (own server, no reuse): %s\n" "$LABEL"
+printf "=====CMD===== FORCE_COLOR=0 pnpm exec playwright test %s --project=chromium-en --no-deps --reporter=list\n" "$SPEC"
+OUT=$(FORCE_COLOR=0 pnpm exec playwright test "$SPEC" --project=chromium-en --no-deps --reporter=list 2>&1); ST=$?
+printf "%s\n" "$OUT"
+printf "=====PIPESTATUS0===== %s\n" "$ST"
+printf "##### port after %s:\n" "$LABEL"
+holders
+printf "=====PORT-STATUS===== %s\n" "$?"
+printf "%s\n" "$OUT" | command grep -qE "(^|[^0-9])${EXPECT} passed" || { printf "FAIL: %s did not report %s passed\n" "$LABEL" "$EXPECT"; exit 1; }
+if test "$ST" -ne 0; then printf "FAIL: %s exited %s\n" "$LABEL" "$ST"; exit 1; fi
+' sh "$PWD" tests/e2e/99-ar03-leak.spec.ts 10 99-ar03-leak
 ##### --list COLLECTION CONTROL: 99-ar03-leak
-=====CMD===== pnpm exec playwright test tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --no-deps --list
+=====CMD===== FORCE_COLOR=0 pnpm exec playwright test tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --no-deps --list
+(node:5246) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+◇ injected env (9) from .env.test // tip: ◈ encrypted .env [www.dotenvx.com]
+◇ injected env (0) from .env.test // tip: ⌘ suppress logs { quiet: true }
+Listing tests:
   [chromium-en] › 99-ar03-leak.spec.ts:164:5 › UI99-C5 ar 404
   [chromium-en] › 99-ar03-leak.spec.ts:181:5 › UI99-C5 en control 404
   [chromium-en] › 99-ar03-leak.spec.ts:195:5 › UI99-C6 ar intake queue
@@ -732,26 +853,44 @@ The collection control, listing all ten tests including the three banner fixture
   [chromium-en] › 99-ar03-leak.spec.ts:240:5 › UI99-C8 ar search chips
   [chromium-en] › 99-ar03-leak.spec.ts:261:5 › UI99-C9 ar latin run scan
   [chromium-en] › 99-ar03-leak.spec.ts:332:5 › UI99-C10 ar tajawal
+Total: 10 tests in 1 file
 =====COUNT===== 10
-```
-
-Execution. The first attempt at this run failed with
-`http://localhost:5173 is already used` because the `99-ar02-dates` run in section 6 had leaked
-its dev server — the engine residue named in the register. The holder's working directory was
-resolved before anything was touched, proving it was rooted in **this** worktree and spawned by
-this task's own previous run; only then was it reaped. A holder rooted anywhere else takes the
-refusal branch and is never touched.
-
-```text
-reaping OWN leaked holder pid 3965 (parent 3872) rooted at /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39/frontend
-port after reap: []
+=====PIPESTATUS0===== 0
+##### port before 99-ar03-leak execution:
+4784
+reaping OWN leaked holder pid 4784 (parent 4673) rooted at /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39/frontend
+port after pre-run reap: []
 ##### EXECUTION (own server, no reuse): 99-ar03-leak
-=====CMD===== pnpm exec playwright test tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --no-deps --reporter=list
+=====CMD===== FORCE_COLOR=0 pnpm exec playwright test tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --no-deps --reporter=list
+(node:5327) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+◇ injected env (9) from .env.test // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
 [WebServer] pw-run-reaped --lease-exec: PW_LEASE_* env absent — running UNLEASED (ad-hoc invocation)
 [WebServer] • turbo 2.9.14
+◇ injected env (0) from .env.test // tip: ◈ secrets for agents [www.dotenvx.com]
 
 Running 10 tests using 5 workers
 
+(node:5606) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:5609) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:5605) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:5607) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:5608) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+◇ injected env (0) from .env.test // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+◇ injected env (0) from .env.test // tip: ◈ secrets for agents [www.dotenvx.com]
+◇ injected env (0) from .env.test // tip: ⌘ enable debugging { debug: true }
+◇ injected env (0) from .env.test // tip: ◈ secrets for agents [www.dotenvx.com]
+◇ injected env (0) from .env.test // tip: ⌘ override existing { override: true }
+◇ injected env (0) from .env.test // tip: ⌘ override existing { override: true }
+◇ injected env (0) from .env.test // tip: ◈ secrets for agents [www.dotenvx.com]
+◇ injected env (0) from .env.test // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+◇ injected env (0) from .env.test // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+◇ injected env (0) from .env.test // tip: ◈ encrypted .env [www.dotenvx.com]
 [P99-C7] verified positions CHECK constraints before INSERT:
 check_correction_fields: CHECK ((((emergency_correction = false) AND (corrected_at IS NULL) AND (corrected_by IS NULL) AND (correction_reason IS NULL)) OR ((emergency_correction = true) AND (corrected_at IS NOT NULL) AND (corrected_by IS NOT NULL) AND (correction_reason IS NOT NULL))))
 check_title_ar_not_empty: CHECK ((char_length(TRIM(BOTH FROM title_ar)) > 0))
@@ -787,24 +926,35 @@ check_title_en_not_empty: CHECK ((char_length(TRIM(BOTH FROM title_en)) > 0))
 positions_consistency_score_check: CHECK (((consistency_score >= 0) AND (consistency_score <= 100)))
 positions_current_stage_check: CHECK (((current_stage >= 0) AND (current_stage <= 10)))
 positions_status_check: CHECK ((status = ANY (ARRAY['draft'::text, 'under_review'::text, 'approved'::text, 'published'::text])))
-[P99-C7] seeded position ids: {"under_review":"43ce32b5-8568-4a29-8f7a-af30357dd954","approved":"c26f18af-c16c-4af4-95df-a13d3b15d250","published":"68dd933c-dfcf-40af-9b46-866946f18cb6"}
-[P99-C7] seeded position ids: {"under_review":"d2c0c0f0-08fb-4a98-8681-21790832fc82","approved":"a76ec85d-9fa2-4c75-9802-722e8b1fa1ef","published":"96ff41f5-b59f-4a00-8c56-2701879946d8"}
-[P99-C7] seeded position ids: {"under_review":"abc0f528-5119-467a-b5c2-6305bed29484","approved":"cfac3c7b-aa8f-4727-bea6-6c1987ff855c","published":"63e3b3aa-c69f-411c-82be-1fbffd9ad885"}
-[P99-C7] seeded position ids: {"under_review":"772e1cb6-5c2f-4006-99b0-7b6623d8a439","approved":"a5037ea2-229b-4736-baf9-4d5261f168fa","published":"9952e121-93ba-4adc-92bb-f273a7c2777b"}
-[P99-C7] seeded position ids: {"under_review":"de95529d-a0ce-40d5-bc94-ec9949e1d359","approved":"23b9b00f-1933-457b-8714-7b8c25886a4f","published":"36b56f45-9288-4e18-b73e-a92ab44ba557"}
-  ✓   5 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:195:5 › UI99-C6 ar intake queue (8.4s)
-  ✓   4 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:164:5 › UI99-C5 ar 404 (8.4s)
-  ✓   3 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:228:5 › UI99-C7 ar banner under_review (11.0s)
-  ✓   1 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:236:5 › UI99-C7 ar banner published (11.1s)
-  ✓   6 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:212:5 › UI99-C6 en control intake queue (6.5s)
-  ✓   7 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:181:5 › UI99-C5 en control 404 (6.5s)
-  ✓   9 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:240:5 › UI99-C8 ar search chips (6.5s)
-  ✓   8 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:232:5 › UI99-C7 ar banner approved (8.2s)
-  ✓   2 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:261:5 › UI99-C9 ar latin run scan (39.0s)
-  ✓  10 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:332:5 › UI99-C10 ar tajawal (7.2s)
+[P99-C7] seeded position ids: {"under_review":"03bed408-ada7-4a33-ab0b-fd2082cf6c31","approved":"ffe4fc80-41a1-4465-8c3a-05e06b840eb6","published":"626c08cc-f58e-4ec0-a43b-a4617526a37f"}
+[P99-C7] seeded position ids: {"under_review":"87300332-da1d-4fae-a7ac-ef326c07c221","approved":"bd25487b-6402-4621-a64a-d084d1e2b045","published":"a7f1a56c-cdcc-4a9c-a348-f0d8b8ab9a08"}
+[P99-C7] seeded position ids: {"under_review":"552fb09d-6efe-497a-a66a-6ac3c596629d","approved":"02a512dd-bddd-4ac7-9a39-21b847040b3f","published":"d67ac918-234d-4518-99a6-830a0d6712aa"}
+[P99-C7] seeded position ids: {"under_review":"91479035-4aaa-4c1b-866d-e662bb914d6c","approved":"e50ba942-f749-4f4c-bf56-1b5fe40b8df7","published":"de2736fb-a31a-446f-8337-fa825cfeafcc"}
+[P99-C7] seeded position ids: {"under_review":"fe62c956-a393-41d3-a926-811e70c6c5fd","approved":"ef732321-2168-4aae-a2fc-a24c36ffd926","published":"08ba61f3-bb04-4b54-bb0e-b1d058b2b59a"}
+  ✓   4 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:195:5 › UI99-C6 ar intake queue (8.6s)
+  ✓   5 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:164:5 › UI99-C5 ar 404 (8.8s)
+  ✓   1 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:236:5 › UI99-C7 ar banner published (10.7s)
+  ✓   3 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:228:5 › UI99-C7 ar banner under_review (11.4s)
+  ✓   6 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:212:5 › UI99-C6 en control intake queue (6.2s)
+  ✓   7 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:181:5 › UI99-C5 en control 404 (6.2s)
+  ✓   8 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:240:5 › UI99-C8 ar search chips (6.0s)
+  ✓   9 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:232:5 › UI99-C7 ar banner approved (7.8s)
+  ✓   2 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:261:5 › UI99-C9 ar latin run scan (38.5s)
+  ✓  10 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:332:5 › UI99-C10 ar tajawal (6.6s)
 
-  10 passed (50.2s)
+  10 passed (49.3s)
 =====PIPESTATUS0===== 0
+##### port after 99-ar03-leak:
+5518
+=====PORT-STATUS===== 0
+```
+
+## 7b. Reaping the attempt-8 per-spec leak
+
+```text
+$ bash -c 'PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; for p in $(lsof -tnP -iTCP:5173 -sTCP:LISTEN 2>/dev/null); do HCWD=$(lsof -a -p "$p" -d cwd -Fn 2>/dev/null | grep "^n" | head -1 | cut -c2-); case "$HCWD" in "$R"|"$R"/*) PP=$(ps -o ppid= -p "$p" | tr -d " "); echo "reaping OWN leaked holder pid $p (parent $PP) rooted at $HCWD"; kill "$PP" 2>/dev/null; kill "$p" 2>/dev/null;; *) echo "REFUSING foreign holder pid $p rooted at ${HCWD:-unknown}"; exit 3;; esac; done; sleep 2; echo "port 5173 holders after attempt-8 final reap: [$(lsof -tnP -iTCP:5173 -sTCP:LISTEN 2>/dev/null | paste -sd " " -)]"'
+reaping OWN leaked holder pid 5518 (parent 5479) rooted at /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39/frontend
+port 5173 holders after attempt-8 final reap: []
 ```
 
 ## 8. Disclosed discarded diagnostic — not evidence for any criterion
@@ -841,15 +991,15 @@ this record mis-converted an Asia/Riyadh time to UTC by a full day. The command 
 
 ```text
 $ printf 'HEAD=%s\nLOCAL=%s\nUTC=%s\nnode=%s pnpm=%s playwright=%s\nworktree=%s\n' "$(git rev-parse HEAD)" "$(date +%Y-%m-%dT%H:%M:%S%z)" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$(node -v)" "$(pnpm -v)" "$(pnpm exec playwright --version)" "$PWD"
-HEAD=f7d0add0758f67b6c3b51e84458e6345ff7a443a
-LOCAL=2026-09-02T06:36:38+0300
-UTC=2026-09-02T03:36:38Z
+HEAD=1cdf4b364240ac6e62e0775c0841af4993747e92
+LOCAL=2026-09-02T07:01:04+0300
+UTC=2026-09-02T04:01:04Z
 node=v26.7.0 pnpm=10.29.1 playwright=Version 1.60.0
 worktree=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39
 ```
 
 `HEAD` above is the tree this attempt's evidence was taken against. This record's own commit is
-that commit's **child**, so `git show f7d0add07:.planning/phases/99-arabic-coverage/99-39-SUMMARY.md`
+that commit's **child**, so `git show 1cdf4b364:.planning/phases/99-arabic-coverage/99-39-SUMMARY.md`
 returns the previous revision rather than this one.
 
 
@@ -884,8 +1034,8 @@ deliverable — the static battery, the rendered execution and the register — 
   this package, and blocks until the overseer answers in writing. Nothing here answers it.
 - **Open engine residue, needs a ruling:** the rendered oracle invokes Playwright ad hoc, so the
   config's `pw-run-reaped.mjs --lease-exec` wrapper runs unleased and leaks its dev server after a
-  green run. Reproduced in every session of this task, attempt 7 included — its green gate run left
-  pid 69328 bound, reaped in section 5b. The second-order cost is what made attempt 6 red: the
+  green run. Reproduced in every session of this task, attempts 7 and 8 included — attempt 7
+  left pid 69328 bound and attempt 8 left pid 5518 bound; both were reaped in sections 5b/7b. The second-order cost is what made attempt 6 red: the
   guard's legitimate own-holder reuse branch pointed at one of those leaked servers, it died
   mid-run, and the gate hung until it was killed. A leaked server has by definition outlived its
   supervisor, so reuse of one is only safe until it is not. Reaping after each run, as this attempt
@@ -925,3 +1075,8 @@ Added in attempt 7:
 - `python3` splicing of this file against the capture files — assemble the record from the raw captures rather than retyping them, so every fenced block is verbatim by construction.
 - `diff` of two consecutive `verify-embedded.mjs` runs — confirm splicing its own output into section 3c does not change what it reports.
 - `git diff --check` — confirm no trailing whitespace enters the new fenced blocks.
+
+Added in attempt 8:
+
+- `FORCE_COLOR=0 bash -c <per-spec wrapper>` — re-run sections 6 and 7 with the actual wrapper output recorded, including list headers, totals, counts, statuses and port/reap lines.
+- `lsof` / `ps` inside the per-spec wrapper and final reaper — prove holders were rooted in this worktree before reaping them.
