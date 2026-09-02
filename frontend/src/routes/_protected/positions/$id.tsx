@@ -39,7 +39,8 @@ export const Route = createFileRoute('/_protected/positions/$id')({
 
 function PositionDetailLayout() {
   const { id } = Route.useParams()
-  const { t } = useTranslation('positions')
+  const { t, i18n } = useTranslation('positions')
+  const isRTL = i18n.language === 'ar'
   const navigate = useNavigate()
   const { data: position, isLoading } = usePosition(id)
   const submitPosition = useSubmitPosition()
@@ -109,12 +110,14 @@ function PositionDetailLayout() {
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold">{position.title_en}</h1>
+            <h1 className="text-3xl font-bold">{isRTL ? position.title_ar : position.title_en}</h1>
             <Badge variant={getStatusColor(position.status)}>
               {t(`status.${position.status}`, position.status)}
             </Badge>
           </div>
-          <p className="text-sm text-muted-foreground">{position.title_ar}</p>
+          <p className="text-sm text-muted-foreground">
+            {isRTL ? position.title_en : position.title_ar}
+          </p>
         </div>
 
         <div className="flex gap-2">
