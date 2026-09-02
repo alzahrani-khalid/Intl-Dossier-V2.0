@@ -2,17 +2,18 @@
 phase: 99-arabic-coverage
 plan: 39
 status: blocked
-attempt: 3
-head: 7101b876bfbfb444dab5ab71b0d95007c10568ce
-recorded_at_local: 2026-09-02T05:15:15+03:00
-recorded_at_utc: 2026-09-02T02:15:15Z
+attempt: 4
+head: 2998b7cdad476ecc8569a3b16d2bb7f91ffa704d
+recorded_at_local: 2026-09-02T05:32:07+03:00
+recorded_at_utc: 2026-09-02T02:32:07Z
 ---
 
 # P99-39 Summary — static battery green, rendered gate blocked
 
 ## Outcome
 
-Attempt 3 of this task re-ran every evidence command in this record; the blocker is unchanged.
+Attempt 4 of this task re-ran every evidence command in this record (section 17); the blocker is
+unchanged for the fourth consecutive attempt.
 The static battery is green. This task is **not complete** and the front-matter intentionally
 does not say `status: complete`: the plan-owned rendered oracle exited 3 before Playwright
 execution because PID 95414 holds port 5173 from the main checkout's `frontend` directory,
@@ -23,7 +24,7 @@ The holder's provenance is established in section 14. It was spawned at 04:37:35
 tickmarkr run's own baseline pass, which executed this task's rendered oracle in the main checkout
 before any worker was dispatched (section 15). The oracle invokes Playwright ad hoc, so the
 config's `pw-run-reaped.mjs --lease-exec` wrapper ran unleased and detached, and the dev server
-outlived the baseline. Attempts 0, 1, 2, and this one have all refused the same holder.
+outlived the baseline. Attempts 0 through 4 have all refused the same holder.
 Terminating a process in the main checkout is outside this task's authority; release rests with
 the harness operator, and the structural fix is a plan-text change named under the unblock
 condition.
@@ -37,8 +38,10 @@ This record applies **RULING-P99-538**. Every command whose output is evidence f
 control, instrument, population, or blocker appears below with verbatim output. Commands used only
 to navigate or read are listed by command and purpose without embedding their read output. No
 prior SUMMARY output is presented as a fresh green. The outputs in sections 1 to 11 were produced
-in attempt 1 and re-produced byte-identically in attempt 3 by the comparator in section 13; the
-comparator's own two DIFF rows (provenance and scope) are its discriminating control.
+in attempt 1 and re-produced byte-identically in attempt 3 by the comparator in section 13 and again
+in attempt 4 by the same comparator in section 17; the comparator's own DIFF rows (provenance and
+scope, plus in attempt 4 the attempt-stamped census and the growing journal) are its discriminating
+control.
 
 ## Battery result table
 
@@ -55,6 +58,8 @@ comparator's own two DIFF rows (provenance and scope) are its discriminating con
 | rendered own typed gate | **INSTRUMENT-CANNOT-RUN (exit 3)**: foreign holder on TCP 5173; no test executed |
 | attempt-3 comparator over all 20 recorded pairs | 18 SAME (every instrument, control, gate) / 2 DIFF (provenance, scope) as expected |
 | holder provenance census (attempt 3) | ESTABLISHED: baseline-spawned under the harness session environment, main checkout, zero established connections |
+| attempt-4 comparator over all 23 recorded pairs | 19 SAME (every instrument, control, gate, port recheck, population re-derivation) / 4 DIFF (provenance, attempt-stamped census, appended journal, scope) as expected |
+| holder provenance census (attempt 4) | UNCHANGED: same two PIDs, same 04:37:35 birth, same main-checkout cwd, zero established connections |
 
 ## Evidence commands and verbatim outputs
 
@@ -500,7 +505,9 @@ INSTRUMENT-CANNOT-RUN: port 5173 held by pid 95414 rooted at /Users/khalidalzahr
 Process exit status: `3`.
 
 Attempt 3 re-ran this exact command from 05:13:40 to 05:13:41 local (02:13:40Z); the output and
-exit status were identical (section 13, row 15).
+exit status were identical (section 13, row 15). Attempt 4 re-ran it inside the section-17 comparator
+window (05:28:28 to 05:28:34 local, 02:28:28Z); output and exit status identical again (section 17,
+row 15).
 
 This output proves the existence and hardcoded collection checks did not fail before the port
 branch, but it does **not** prove either spec executed. No 18-line reporter output exists.
@@ -673,10 +680,23 @@ LOCAL=2026-09-02T05:15:15+0300 +03
 UTC=2026-09-02T02:15:15Z
 ```
 
+Verbatim output at the attempt-4 evidence timestamp (the two modified paths are this record and
+the register, mid-edit):
+
+```text
+2998b7cdad476ecc8569a3b16d2bb7f91ffa704d
+LOCAL=2026-09-02T05:32:07+0300 +03
+UTC=2026-09-02T02:32:07Z
+ M .planning/phases/99-arabic-coverage/99-39-SUMMARY.md
+ M .planning/phases/99-arabic-coverage/99-VERIFICATION.md
+```
+
 The UTC conversion is three hours behind Asia/Riyadh and remains on 2026-09-02. `head` is the
 tree the evidence was taken against; this record's own commit is that sha's child, so
 `git show <head>:<path>` shows the previous record, not this one. Attempt 1 took its evidence at
-`e2a21dc853b8c66b6769b7de7838427201ccf6b0` on 2026-09-02T01:46:11Z.
+`e2a21dc853b8c66b6769b7de7838427201ccf6b0` on 2026-09-02T01:46:11Z; attempt 3 at
+`7101b876bfbfb444dab5ab71b0d95007c10568ce`, and its record landed as `2998b7cdad476ecc8569a3b16d2bb7f91ffa704d`,
+which is the tree attempt 4 measured.
 
 ### 13. Attempt-3 freshness comparator over every recorded evidence pair
 
@@ -878,6 +898,124 @@ C2=8 C3=10
 Total: 10 tests in 1 file
 ```
 
+### 17. Attempt-4 freshness comparator, holder census, and journal tail
+
+The comparator of section 13 was re-run unchanged in attempt 4. The file now pairs 23 commands,
+not 20, because sections 14 to 16 were appended after the attempt-3 comparator ran. Launcher,
+fenced as text so it is not re-paired:
+
+```text
+S=<scratchpad>; W="$PWD"; S="$S" W="$W" python3 "$S/rerun.py"
+```
+
+Verbatim output:
+
+```text
+START_LOCAL=2026-09-02T05:28:28+0300
+01 rc=0 SAME lines=   6  1. Nav-title control, then live 28-row population
+02 rc=0 SAME lines=   5  1. Nav-title control, then live 28-row population
+03 rc=0 SAME lines=  23  2. Glossary control, live verdict, then every-row census
+04 rc=0 SAME lines=   2  2. Glossary control, live verdict, then every-row census
+05 rc=0 SAME lines=  28  2. Glossary control, live verdict, then every-row census
+06 rc=0 SAME lines=  67  3. Strict audit self-check, then live bilingual population
+07 rc=0 SAME lines=  58  3. Strict audit self-check, then live bilingual population
+08 rc=0 SAME lines=   5  4. Dynamic-prefix mask control, then live zero
+09 rc=0 SAME lines=   2  4. Dynamic-prefix mask control, then live zero
+10 rc=0 SAME lines=   7  5. Resolution negative/positive control first, then live routings
+11 rc=0 SAME lines=  33  5. Resolution negative/positive control first, then live routings
+12 rc=0 SAME lines=   2  6. Date-format exemption control, then live scan
+13 rc=0 SAME lines=   2  6. Date-format exemption control, then live scan
+14 rc=0 SAME lines=   4  7. Completion-contract negative control
+15 rc=3 SAME lines=   1  8. Plan-owned typed rendered gate
+16 rc=0 SAME lines= 102  9. Exact plan-owned static gate
+17 rc=0 SAME lines=   3  10. Live completion-contract result after the blocked SUMMARY existed
+18 rc=0 SAME lines=   1  11. Final non-mutating port recheck
+19 rc=0 DIFF lines=   3  12. Provenance
+20 rc=1 DIFF lines=  27  14. Holder provenance census (attempt 3)
+21 rc=0 DIFF lines=  47  15. Harness journal projection for this run
+22 rc=0 SAME lines=   5  16. Rendered population re-derivation (attempt 3)
+23 rc=1 DIFF lines=   2  Scope and whitespace gate
+pairs= 23
+RERUN_EXIT=0
+END_LOCAL=2026-09-02T05:28:34+0300
+```
+
+Rows 1 to 18 and 22 are every instrument, control, gate, port recheck, and population
+re-derivation in this record; each re-ran in attempt 4 and matched its recorded output byte for
+byte with the recorded exit status (row 15 is the rendered gate at exit 3; row 16 the static gate
+at exit 0; row 17 the live completion contract at 59/60). The four DIFF rows are expected: row 19
+(clock and HEAD moved), row 20 (the census prints this worker's session id and attempt number),
+row 21 (the journal grew by attempt 3's gate results and attempt 4's dispatch), and row 23 (no
+file had changed yet when the comparator ran).
+
+Holder provenance census re-run in attempt 4. Command (byte-identical to section 14):
+
+```sh
+( echo "# ps"; ps -o pid,ppid,tty,lstart,command -p 95315,95414 | sed -E 's#/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend/node_modules/[^ ]*vite/bin/vite.js#<main>/frontend/node_modules/.../vite/bin/vite.js#'; echo "# lsof cwd"; for p in 95315 95414; do printf '%s cwd=' "$p"; lsof -a -p "$p" -d cwd -Fn 2>/dev/null | grep '^n' | cut -c2-; done; echo "# env subset of 95315 (tokens and bridge ids deliberately omitted)"; ps -E -o command -p 95315 | tr ' ' '\n' | grep -E '^(CLAUDECODE|CLAUDE_CODE_SESSION_ID|CLAUDE_CODE_CHILD_SESSION|CLAUDE_CODE_ENTRYPOINT|INIT_CWD|NODE_ENV|npm_lifecycle_event|npm_command|TERM_PROGRAM|SHLVL)=' | sort; echo "# tickmarkr daemon 7125 env subset"; ps -E -o command -p 7125 | tr ' ' '\n' | grep -E '^(CLAUDE_CODE_SESSION_ID|TERM_PROGRAM|PWD)=' | sort; echo "# this worker"; env | grep -E '^(CLAUDE_CODE_SESSION_ID|TICKMARKR_PANE_IDENTITY)=' | sort; echo "# established connections to 95414"; lsof -a -p 95414 -iTCP -sTCP:ESTABLISHED 2>/dev/null | grep -c . )
+```
+
+Verbatim output:
+
+```text
+# ps
+  PID  PPID TTY      STARTED                      COMMAND
+95315     1 ??       Wed Sep  2 04:37:35 2026     node /opt/homebrew/bin/pnpm run dev
+95414 95315 ??       Wed Sep  2 04:37:35 2026     node <main>/frontend/node_modules/.../vite/bin/vite.js
+# lsof cwd
+95315 cwd=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend
+95414 cwd=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend
+# env subset of 95315 (tokens and bridge ids deliberately omitted)
+CLAUDECODE=1
+CLAUDE_CODE_CHILD_SESSION=1
+CLAUDE_CODE_ENTRYPOINT=cli
+CLAUDE_CODE_SESSION_ID=7612e2e5-873e-4698-be3e-e02b08bac89a
+INIT_CWD=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0
+NODE_ENV=development
+SHLVL=6
+TERM_PROGRAM=WarpTerminal
+npm_command=run-script
+npm_lifecycle_event=dev
+# tickmarkr daemon 7125 env subset
+CLAUDE_CODE_SESSION_ID=7612e2e5-873e-4698-be3e-e02b08bac89a
+PWD=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0
+TERM_PROGRAM=WarpTerminal
+# this worker
+CLAUDE_CODE_SESSION_ID=56bdcf46-06b6-4b18-9ada-d86751ad89dd
+TICKMARKR_PANE_IDENTITY=worker · P99-39 · attempt 4 · run-20260902-012826-0000000000000070
+# established connections to 95414
+0
+```
+
+The only lines that differ from section 14 are the two under `# this worker`. The holder is the
+same pair of processes, born at the same second, rooted in the same main-checkout directory, with
+no client connected. Its owning session is the overseer's `claude --resume 7612e2e5-…` (PID 3145)
+under `herdr`, whose shell spawned the tickmarkr daemon; this worker's peer-session listing showed
+no name that maps to that PID with certainty, so no release request was sent to a guessed session.
+
+Harness journal projection re-run in attempt 4 with the section-15 command. The first 34 lines
+were compared to the section-15 block with `diff` (exit 0, prefix identical); the lines appended
+since that projection are:
+
+```text
+2026-09-02T02:23:02.773Z worker-result P99-39 attempt= None  Rendered gate still exits 3 because port 5173 is held by PIDs 95315/95414, which this run's own baseline pass leaked from the main checkout; static ba
+2026-09-02T02:23:31.748Z gate-result P99-39 attempt= 3 build exit 0
+2026-09-02T02:23:42.749Z gate-result P99-39 attempt= 3 lint exit 0
+2026-09-02T02:23:42.781Z gate-result P99-39 attempt= 3 evidence 3 commit(s):
+.../phases/99-arabic-coverage/99-39-SUMMARY.md     | 982 +++++++++++++++++++++
+ .../phases/99-arabic-coverage/99-VERIFICATION.md   | 167
+2026-09-02T02:23:42.802Z gate-result P99-39 attempt= 3 scope all 2 changed files in scope
+2026-09-02T02:24:16.860Z gate-result P99-39 attempt= 3 test exit 1 but only pre-existing failures (forgiven)
+2026-09-02T02:24:19.364Z gate-result P99-39 attempt= 3 acceptance oracle failed: $ PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; cd "$R" || exit 3; for spec in tests/e2e/99-ar02-dates.spec.ts tests/e2e/99-ar03-leak.spec.
+2026-09-02T02:25:02.671Z gate-result P99-39 attempt= 3 review reviewer codex:gpt-5.6-sol (openai): requested changes (2 material)
+- [material] Material acceptance failure: criteria 2 and 3 have no fresh executed
+2026-09-02T02:25:02.688Z escalation P99-39 attempt= 4  retry
+2026-09-02T02:25:02.701Z task-dispatch P99-39 attempt= 4
+```
+
+Attempt 3 passed build, lint, evidence, scope, and test, failed the rendered acceptance oracle at
+the same port guard, and was returned by review on the same two material findings this attempt
+was dispatched to fix. Neither finding is resolvable without the foreign holder's release.
+
 ## Read/navigation command ledger (RULING-P99-538)
 
 These commands only read or located context; their output is not criterion evidence and is not
@@ -915,6 +1053,15 @@ embedded:
   the P99-08 and P99-39 baseline warnings; the projection that is evidence is section 15.
 - Attempt 3: `grep -c 'pnpm run dev'` over the overseer session transcript — zero hits, so the
   spawn was not a typed command; it came from an oracle the harness ran.
+- Attempt 4: `git log --oneline -5`, `git status --short --branch`, `git rev-parse HEAD` — confirm
+  the three prior-attempt commits are present and the tree is clean.
+- Attempt 4: `ps -o pid,ppid,lstart,command` walks from 95414 up to `launchd` and from the daemon's
+  shell 7119 up through 3145 (`claude --resume 7612e2e5-…`), `-zsh`, `herdr server` — re-establishes
+  that the holder and the daemon share the overseer session; `env | grep HERDR_ENV` — unset.
+- Attempt 4: peer-session listing (`ListAgents`) — no listed name maps to PID 3145 with certainty.
+- Attempt 4: `sed -n '20,30p;84,86p;95,127p' 99-39-PLAN.md` — re-read the rendered oracle, the
+  "unrunnable leg leaves this task red and parks by name" clause, RULING-P99-538, and the
+  front-matter clause; `awk` extracted the section-13 comparator source into the scratchpad.
 
 ## D-19 table presented for later human gate
 

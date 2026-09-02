@@ -2,18 +2,18 @@
 phase: 99-arabic-coverage
 plan: 39
 status: blocked
-attempt: 3
-verified_at_local: 2026-09-02T05:15:15+03:00
-verified_at_utc: 2026-09-02T02:15:15Z
-head: 7101b876bfbfb444dab5ab71b0d95007c10568ce
+attempt: 4
+verified_at_local: 2026-09-02T05:32:07+03:00
+verified_at_utc: 2026-09-02T02:32:07Z
+head: 2998b7cdad476ecc8569a3b16d2bb7f91ffa704d
 ---
 
 # Phase 99 consolidated re-proof register
 
 ## Verdict
 
-The fresh static battery is green, re-run in attempt 3 with every recorded output reproduced byte
-for byte (99-39-SUMMARY.md section 13). The consolidated re-proof is **not complete**: the
+The fresh static battery is green, re-run in attempts 3 and 4 with every recorded instrument,
+control, and gate output reproduced byte for byte (99-39-SUMMARY.md sections 13 and 17). The consolidated re-proof is **not complete**: the
 plan-owned rendered gate collected the hardcoded 8- and 10-test populations, then correctly exited
 3 before execution because TCP 5173 is held by PID 95414 rooted at
 `/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend`, outside this worktree.
@@ -26,7 +26,9 @@ spawned at 04:37:35 local by this tickmarkr run's own baseline pass, which execu
 rendered oracle in the main checkout before any worker existed. Because the oracle invokes
 Playwright ad hoc, the config's lease writer ran unleased and detached and the dev server outlived
 the baseline. The blocker is therefore the harness's own leak, not a human's server, and attempts
-0 through 3 have all refused it. Release rests with the harness operator. `head` above is the
+0 through 4 have all refused it; attempt 4's census (99-39-SUMMARY.md section 17) found the same
+two PIDs, the same birth second, the same cwd, and zero connections. Release rests with the
+harness operator. `head` above is the
 tree the evidence was taken against; this record's own commit is its child.
 
 ## Criterion -> plan -> oracle -> observed result
@@ -76,7 +78,9 @@ No process was killed, no holder identity was disguised, no alternate port was t
 plan-owned gate, and no `18 passed` line was asserted. Attempt 3 re-ran the unchanged gate from
 05:13:40 to 05:13:41 local on 2026-09-02 (02:13:40Z) with identical output and exit status 3; the
 collection counts were separately re-derived at 8 and 10, with the three `UI99-C7 ar banner`
-tests listed inside the ten.
+tests listed inside the ten. Attempt 4 re-ran the unchanged gate again at 05:28 local (02:28Z)
+inside the section-17 comparator with identical output and exit status 3, and the population
+re-derivation again listed 8, 10, and the three banner tests.
 
 The harness's baseline pass recorded this same oracle as "already passes before any work exists"
 at 01:39:15Z, which means the baseline executed the 18 tests green in the main checkout at base
