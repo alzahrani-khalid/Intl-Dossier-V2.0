@@ -1,58 +1,48 @@
 ---
 phase: 99-arabic-coverage
-plan: 39
-status: complete
-attempt: 8
-verified_at_local: 2026-09-02T07:01:04+03:00
-verified_at_utc: 2026-09-02T04:01:04Z
-head: 1cdf4b364240ac6e62e0775c0841af4993747e92
+plan: 40
+status: blocked
+attempt: 0
+verified_at_local: 2026-09-02T13:00:19+03:00
+verified_at_utc: 2026-09-02T10:00:19Z
+head: 4f3a18468006a29385153597195598f81d1c54e7
 ---
 
-# Phase 99 consolidated re-proof register
+# Phase 99 consolidated re-proof register — P99-40 rendered battery
 
 ## Verdict
 
-The consolidated re-proof is **complete for every criterion this task owns**. All four criteria
-have a controlled, named proof, each instrument preceded by its own control. The plan-owned
-rendered gate — blocked in attempts 0 through 4 by a foreign dev server on TCP 5173 — **executed**
-and reported `18/18 (ar02 8 + ar03 10)` with exit status 0. Each spec was then run separately for
-per-test evidence: `99-ar02-dates` 8/8, `99-ar03-leak` 10/10 including all three
-`UI99-C7 ar banner` fixture states.
+P99-40 is **RED and PARKED to OVERSEER by name**. Its two own command oracles each proved the
+target file exists and collected exactly its hardcoded one-file population — 8 for
+`99-ar02-dates.spec.ts`, 10 for `99-ar03-leak.spec.ts` — then both exited 3 before Playwright
+execution. PID 39807 holds TCP 5173 from
+`/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend`, outside this worktree.
+The task neither reused nor terminated that foreign holder and did not substitute an alternate
+port or P99-39's earlier green.
 
-**Which session produced what.** The instrument battery is attempt 5's
-session. All three plan-owned typed gates, both completion-contract negative controls, the
-date-format control and the provenance read were **re-run in attempt 7**, from command text
-extracted byte-exact from `99-39-PLAN.md`. The two per-spec runs were **re-run in attempt 8**
-with their actual wrapper/pipeline output recorded, including collection headers/totals, counts,
-statuses, and port/reap lines. Attempts 7 and 8 changed no instrument, no spec and no oracle —
-only this register and the SUMMARY. It re-ran them because review found the record carried
-`EXIT=` lines its displayed commands could not emit, a prose description in place of the
-date-format control's command, and a provenance command that could not produce its own labelled
-output. Each is now recorded as a command whose displayed form emits exactly the recorded bytes:
-every gate line ends in `; printf 'EXIT=%s\n' "$?"`, so the block's single `EXIT=` line is the
-command's own. Every capture is this task's own — none is quoted from another task's summary.
+Consequently P99-40 has no own 8/8 result, no own 10/10 result, and no own result for the three
+banner fixtures. Collection is not execution. No unrunnable leg is called a pass and no bound is
+recorded; P99-40 has no written overseer ruling id that permits one. Owner release followed by the
+unchanged two oracles is required. The complete commands, their verbatim output, and exit status 3
+are recorded in `99-40-SUMMARY.md`.
 
-`head` above is the tree this attempt's evidence was taken against; this record's own commit is
-that commit's child, so `git show 1cdf4b364:<path>` shows the previous revision of this file rather
-than this one.
-
-Nothing in this register is quoted from an earlier summary. Every number below was produced by a
-command run in this task, and each of those commands is reproduced with its verbatim output in
-`99-39-SUMMARY.md`.
+The static and rendered results attributed below to P99-39 remain lineage evidence only. They are
+retained because this is the consolidated phase register, but none discharges P99-40's explicit
+"run by THIS gate" acceptance items.
 
 ## Criterion -> plan -> oracle -> observed result
 
 | Criterion | Closing plan(s) | Fresh oracle in this task | Control beside the result | Observed result |
 | --- | --- | --- | --- | --- |
-| 1. One Arabic term per core object, and each nav label agrees with its page-title object term | P99-23–29; consolidated by P99-39 | `nav-title-agreement.mjs` control then live; `glossary-census.mjs` control, live verdict, then `--census` over every ruled row repo-wide | Nav control caught a planted mismatch and preserved a true agreement. Glossary control caught the unlisted profile sense, the planted plural, the planted brief-plural and the planted دوسييه, while preserving the legal senses. | **GREEN.** Nav/title `28/28 adjudicated; 25 agree; 3 escalated; 0 unruled mismatch; 0 missing anchor; 0 missing navigation locale key; 0 duplicate term pattern; 0 cross-matching term row; 0 row coverage issue; 0 common repair issue; 0 decision artifact issue`. Glossary `17022 Arabic leaf values across 129 file(s)`, all seven ruled rows drilled, `classification totals: ruled=1657 allowlisted=292 UNCLASSIFIED=0`. |
-| 2. Arabic dates/times, no English weekday or month names, deliberate Latin digits | P99-09 and the P99-39 consolidated gate | Plan-owned typed Playwright gate, then `99-ar02-dates.spec.ts` alone for per-test evidence | Collection control ran first and hardcoded 8; the static date checker carries the 29-importer live control beside the zero exempt-file importers. | **GREEN.** Collection 8; execution `8 passed (15.5s)`, exit 0, every one of the eight listed tests `✓`. Static date checker: `1533 non-test file(s) scanned, 0 unexcused ad-hoc date/number formatting sites`, named debt `0 row(s) excusing 0 site(s)`. |
-| 3. No English under `dir="rtl"` — 404, intake queue, search chips, Latin-run scan, Tajawal, and the three fixture-driven position banners | P99-04/05/06/08; consolidated by P99-39 | Plan-owned typed Playwright gate, then `99-ar03-leak.spec.ts` alone for per-test evidence | Collection control ran first and hardcoded 10, and the three banner tests are named inside that ten. | **GREEN.** Collection 10; execution `10 passed (49.3s)`, exit 0. The three fixture-driven banners each passed by name: `UI99-C7 ar banner under_review (11.4s)`, `UI99-C7 ar banner approved (7.8s)`, `UI99-C7 ar banner published (10.7s)`. No leg is recorded `NOT CONSTRUCTED`. |
-| 4. No English-default mask and no unresolved key under the shipped resolver | P99-30–38 and P99-45–62; consolidated by P99-39 | strict audit `--self-check` then live `--json`; maskfinder `--control` then live; `neg-taskcard` **before** `resolve-check` | Strict self-check passes its 18 named predicates and the live `rawKeyTotal=8518` is the positive control against a walked-nothing zero. Maskfinder asserts two-true/two-false polarities. `neg-taskcard` prints its three `MISS=true` rows first, so the live routing zero cannot be a dead instrument. | **GREEN.** Strict audit `scannedFiles: 1532`, `twoArgTotal: 0`, `rawKeyTotal: 8518`, and `twoArgUnresolved / rawKeyUnresolved / twoArgUnresolvedEn / rawKeyUnresolvedEn / twoArgUnresolvedAr / rawKeyUnresolvedAr` all `0`. Maskfinder `UNRESOLVED dynamic t() key prefixes: 0 total`. Resolution `214 lookups across 11 routings x 2 locales — routings with a miss: 0`. Negative control 3/3 `MISS=true`. |
+| 1. One Arabic term per core object, and each nav label agrees with its page-title object term | P99-23–29; consolidated by P99-39 | P99-39's control/live nav and glossary battery; outside P99-40's rendered-only population | The P99-39 controls remain named; P99-40 did not rerun them. | **LINEAGE GREEN, not a P99-40 claim.** Nav/title 28/28 adjudicated with 25 agreements and 3 value-locked escalations; glossary 17,022 leaves in 129 files with zero unclassified. |
+| 2. Arabic dates/times, no English weekday or month names, deliberate Latin digits | P99-09; P99-39 lineage; P99-40 own rendered gate | P99-40 exact one-path `99-ar02-dates.spec.ts` command | File existence plus `EXP=8` collected exactly 8 before the port identity guard. | **RED in P99-40.** Collected 8, executed 0, exit 3 on foreign PID 39807. P99-39's earlier 8/8 does not discharge this task's own-gate item. |
+| 3. No English under `dir="rtl"` — 404, intake queue, search chips, Latin-run scan, Tajawal, and the three fixture-driven position banners | P99-04/05/06/08; P99-39 lineage; P99-40 own rendered gate | P99-40 exact one-path `99-ar03-leak.spec.ts` command | File existence plus `EXP=10` collected exactly 10; the source population includes all three banner leaves. | **RED in P99-40.** Collected 10, executed 0, exit 3 on foreign PID 39807. The three banner legs have no P99-40 outcome. No constructed-status or bound substitute is used. |
+| 4. No English-default mask and no unresolved key under the shipped resolver | P99-30–38 and P99-45–62; consolidated by P99-39 | P99-39's strict/mask/resolve battery; outside P99-40's rendered-only population | The P99-39 controls remain named; P99-40 did not rerun them. | **LINEAGE GREEN, not a P99-40 claim.** Strict zero, maskfinder zero, and 214-route resolution zero remain registered. |
 
-No earlier SUMMARY contributes a green to this table. Earlier summaries are used only for lineage,
-population bounds, and named residues.
+No earlier SUMMARY contributes a green to either P99-40 rendered row. Earlier summaries are used
+only for lineage, population history, and named residues.
 
-## Static battery register
+## Static battery register — P99-39 lineage, outside P99-40's rendered-only population
 
 | Instrument | Population and what falls outside it | Fresh control -> live result |
 | --- | --- | --- |
@@ -64,12 +54,13 @@ population bounds, and named residues.
 | Date-format checker | 1,533 non-test frontend files, with a 2-file allowlist and six named permanent exemptions; an import census guards the dead-code exemption. Outside: runtime rendering, test files, and the named allowlist and exemptions. | dead-code exemption importers `0` while the live comparison component has `29` -> zero unexcused sites, zero debt |
 | Completion contract | Every `99-NN-SUMMARY.md` that exists in the phase directory. Outside: summaries not yet written — the guard asserts presence-implies-marker, never existence. An empty directory is refused rather than passed. | drilled directory with one marked and one markerless member -> `1/2` and exit 1; empty directory -> `INSTRUMENT-CANNOT-RUN` and exit 3 -> live phase directory `60/60`, exit 0 |
 
-Both plan-owned typed gates were then run verbatim as compiled. The static gate exited 0 and the
-rendered gate exited 0. Their full outputs are in `99-39-SUMMARY.md`.
+P99-39 ran both of its typed gates verbatim and recorded them in `99-39-SUMMARY.md`. That history
+does not satisfy either P99-40 command truth.
 
 ## Rendered population and the port guard
 
-The population is exactly these two files under `chromium-en`, `--no-deps`:
+P99-40's rendered population is exactly two independent invocations under `chromium-en`,
+`--no-deps`, with one path per invocation:
 
 - `tests/e2e/99-ar02-dates.spec.ts`: hardcoded expected count 8.
 - `tests/e2e/99-ar03-leak.spec.ts`: hardcoded expected count 10, including
@@ -78,42 +69,25 @@ The population is exactly these two files under `chromium-en`, `--no-deps`:
 Outside: every other Playwright spec and project, screenshots or prose from older waves,
 diagnostic alternate-port runs, and any response served by another checkout.
 
-The main-checkout dev server that blocked attempts 0 through 4 (PID 95414, rooted at
-`.../Intl-Dossier-V2.0/frontend`) was released before attempt 5. **No process outside this worktree
-was touched by this task at any point**, then or since.
-
-The gate's stated verdict line, from the run recorded in `99-39-SUMMARY.md` §5:
+P99-40's own observed results are:
 
 ```text
-rendered battery executed by THIS gate: 18/18 (ar02 8 + ar03 10)
+collected-from-target-spec=99-ar02-dates.spec.ts count=8 expected=8
+INSTRUMENT-CANNOT-RUN: port 5173 held by pid 39807 rooted at /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend, which is NOT this worktree; refusing to measure a foreign tree
+
+collected-from-target-spec=99-ar03-leak.spec.ts count=10 expected=10
+INSTRUMENT-CANNOT-RUN: port 5173 held by pid 39807 rooted at /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend, which is NOT this worktree; refusing to measure a foreign tree
 ```
 
-**Which branch of the guard has actually been exercised, stated precisely.** Attempt 7 measured
-TCP 5173 free before invoking the gate, so the guard took the **no-holder** branch: it neither
-reused nor refused, and Playwright started and supervised its own dev server rooted in this
-worktree. That is the run reporting 18/18 above.
+Each command exited 3 after collection and before Playwright execution. Three later checks over 20
+seconds found the same PID and cwd each time. The exact commands and complete output are in
+`99-40-SUMMARY.md`. No foreign process was touched. This is an unrunnable condition, not a bound
+or a pass; P99-40 remains RED until the owner releases the holder and both unchanged commands run
+green.
 
-The **own-holder reuse** branch has been exercised twice, both times against a server this task
-itself leaked, and both times it cost a run. Attempt 6's first invocation reused a leaked server
-that then died mid-run, and the gate hung until it was killed at a ten-minute ceiling. The
-attempt-6 gate run judged by the engine reused another and came back red. The branch is behaving
-as written — the holder genuinely was rooted in this worktree — but reuse is only safe while the
-server's supervisor is alive, and a leaked server has by definition outlived its supervisor. That
-is why attempt 7 measures the port before the gate and reaps its own leak after it
-(`99-39-SUMMARY.md` §5b), leaving the port with no holder for the next runner.
-
-The **foreign-holder** branch has not been exercised by a live foreign holder in attempts 5, 6 or
-7; an earlier revision of this register said it had, conflating the own-holder path with it, and
-that claim is withdrawn. What is known about that branch is that attempts 0 through 4 each took it
-against PID 95414 and exited 3, which is the branch behaving correctly. A holder rooted anywhere
-else is refused, never silently reused.
-
-The earlier register said RULING-P99-537 forbade *terminating* a foreign holder. That was an
-overreach and is corrected here: RULING-P99-537 forbids **silently reusing** a holder not rooted
-in this worktree. Not killing a main-checkout process is still correct, but the reason is
-**authority** — it is another tree's process and outside this task's write scope — not the ruling.
-The reaper in §5b encodes exactly that split: it resolves each holder's working directory first,
-reaps only holders rooted in this worktree, and prints a refusal for anything else.
+P99-39's earlier `8 passed` and `10 passed` results remain historical evidence only. They prove the
+specs have run in this phase, but the acceptance language explicitly requires P99-40's own gate,
+so they cannot be quoted forward to close these rows.
 
 ## D-19 reversal record
 
@@ -142,9 +116,9 @@ ESCALATED-UNRULED OBJECT-TERM MISMATCH	common:navigation.newEvent="فعالية 
 The swept terms are the seven ruled rows in the census above; each reports `unclassified=0`
 individually, so the operator can reverse any single row without disturbing the others.
 
-## D-38 human gate — OWNED BY P99-41; this task prepares its evidence handoff
+## D-38 human gate — OWNED BY P99-41; P99-39 prepared the lineage handoff
 
-**The D-38 checkpoint owner is P99-41, not this task.** The previous revision of this register
+**The D-38 checkpoint owner is P99-41, not P99-40.** An earlier revision of this register
 claimed P99-39 owned it. That claim was wrong and is withdrawn. It is settled by the compiled
 design, not by a worker's reading of it:
 
@@ -163,11 +137,12 @@ the boilerplate and the compiled fields disagree, the fields and the ruling deci
 P99-41. Reassigning ownership to a completed autonomous task would let an open landing decision
 read as settled.
 
-**What this task does own:** assembling the evidence P99-41 will put in front of the operator.
-Every surface the checkpoint must present now has an executed, named, green rendered result
-produced in this task, so P99-41 inherits a package rather than an assertion:
+**What P99-39 produced:** an evidence package P99-41 can put in front of the operator. Every
+surface the checkpoint must present has a named historical green from P99-39. P99-40 did not
+refresh those results because its own two executions were blocked; this table is lineage, not an
+own-gate verdict:
 
-| Surface the checkpoint must present | Executed test | Result in this task |
+| Surface the checkpoint must present | Executed test | Historical P99-39 result |
 | --- | --- | --- |
 | The 404 page in Arabic | `UI99-C5 ar 404` | `✓ (8.8s)` — with `UI99-C5 en control 404 ✓ (6.2s)` beside it |
 | `/my-work/intake` in Arabic | `UI99-C6 ar intake queue` | `✓ (8.6s)` — with `UI99-C6 en control intake queue ✓ (6.2s)` beside it |
@@ -179,14 +154,11 @@ produced in this task, so P99-41 inherits a package rather than an assertion:
 Also prepared for that handoff: the D-19 tie-break table and the three escalated pairs above, the
 swept-term census, and the residue register below.
 
-**Bounded honestly, and this bound is P99-41's to close, not this task's.** The checkpoint asks the
-operator to see rendered *captures*. This task's write scope is exactly two planning files, so no
-image artifact can be committed from here, and executed per-test evidence is **not** a substitute
-for a capture the operator looks at. What is handed over is the evidence that each named surface
-renders and passes; producing the captures themselves, presenting them, and blocking on the answer
-belong to P99-41, which is `autonomous: false` for exactly that reason.
+**Deferred responsibility, not a bound:** the checkpoint asks the operator to see rendered
+*captures*. P99-41 produces and presents those captures and blocks on the answer. P99-40 records no
+bounded item; no overseer ruling id authorizes one.
 
-**The answer is not this task's to record.** D-38 states that a human product or visual sign-off is
+**The answer is not P99-40's to record.** D-38 states that a human product or visual sign-off is
 never auto-answered, and both lane plans restate it: *"the rendered sign-off is a HUMAN judgment,
 never auto-answered by a worker, the orchestrator, or the engine"*.
 
@@ -194,13 +166,10 @@ never auto-answered by a worker, the orchestrator, or the engine"*.
 | --- | --- | --- | --- |
 | Phase 99 rendered/product sign-off, and the D-19 reversal window | **P99-41** (`autonomous: false`) | Overseer, in writing; the orchestrator then executes `tickmarkr approve` | **OPEN — not reached.** P99-41 has not run. No worker, orchestrator, or engine answer is recorded, and none may be. |
 
-**What `status: complete` in the front matter does and does not mean.** It is the engine's
-presence-implies-marker bookkeeping for *this task's deliverable* — the static battery, the
-rendered execution, and this register — which is what the completion-contract oracle measures and
-what the next compile reads to decide whether to re-dispatch P99-39. P99-39 is `autonomous: true`
-and its acceptance items do not include a checkpoint answer, so the marker is honest here. It is
-**not** a phase release and **not** a sign-off; it does not answer the checkpoint above, it makes
-no claim about P99-41, and the phase must not be closed on the strength of it.
+**Why the front matter is `status: blocked`.** P99-40's deliverable requires both rendered specs
+to execute under its own gates. They did not. The absent `status: complete` marker is intentional:
+the next compile must continue to read P99-40 as pending. This status is neither a phase release
+nor a D-38 answer.
 
 ## Decision coverage
 
@@ -211,8 +180,8 @@ no claim about P99-41, and the phase must not be closed on the strength of it.
 | D-07 | Criteria 2 and 3 close on executed rendered surfaces, not on a source grep; both Playwright specs are `command:` truths in the plan's own acceptance. |
 | D-09 | One spec path per invocation, file existence asserted, and the expected counts hardcoded at 8 and 10 before execution — a spec path is a filter, never proof of existence. |
 | D-19 | The reversal table, the three escalated pairs, and the per-row swept-term census are presented while the human window is open. |
-| D-35 | Every leg D-35 named as undriven at HEAD is now executed green: the 404, the ar intake queue, the `/search` chips, and all three position-banner states. None closes on "NOT CONSTRUCTED". |
-| D-38 | The checkpoint is **P99-41's** (`autonomous: false`, named by RULING-P99-95); this task is `autonomous: true` and prepares its evidence handoff, leaving the answer unrecorded and the rendered captures to P99-41. The `status: complete` marker is explicitly scoped so it cannot be read as the sign-off. |
+| D-35 | P99-39 historically drove the 404, ar intake, `/search` chips, and all three banner states. P99-40's own executions are blocked and remain RED; no constructed-status substitute or bound is recorded. |
+| D-38 | The checkpoint is **P99-41's** (`autonomous: false`, named by RULING-P99-95). P99-40 records no answer and its `status: blocked` cannot be read as sign-off. |
 
 ## Honored-evidence table for the five citation-truth waivers
 
@@ -229,10 +198,16 @@ The honest reading remains **34 substantive + 5 waived on machine evidence, not 
 
 ## Residue and bounds register
 
+- **BOUNDED ITEMS: none.** P99-40 has no written overseer ruling with a ruling id authorizing a
+  bound. Every item below is an explicit blocker, residue, deferred scope, escalation, or closed
+  historical population — none is a bounded pass.
+- **OPEN — P99-40 instrument blocker; PARKED to OVERSEER:** PID 39807 holds TCP 5173 from the main
+  checkout's `frontend` directory, outside this worktree. Both own gates collected their fixed
+  populations then exited 3 before execution. Owner release and unchanged reruns are required.
 - **RESOLVED — the P99-39 foreign-holder blocker.** The foreign main-checkout holder of TCP 5173
   that blocked attempts 0 through 4 was released before attempt 5. The unchanged typed gate has run
   and exited 0 since. No process outside this worktree was touched at any point.
-- **CONTAINED, not fixed — this task's own leaked dev server.** The rendered oracle invokes
+- **CONTAINED P99-39 history, not fixed — its leaked dev server.** The rendered oracle invokes
   Playwright ad hoc, so `playwright.config.ts`'s `pw-run-reaped.mjs --lease-exec` wrapper runs
   **unleased** and leaks its dev server after a green run. That leak, not a foreign process, is
   what turned a previously green rendered gate red: the leak was still bound when the gate ran
@@ -242,26 +217,37 @@ The honest reading remains **34 substantive + 5 waived on machine evidence, not 
   left with no holder. That contains the symptom for the next runner without removing the leak.
 - **OPEN, engine residue, still needs a ruling:** the unleased wrapper itself. The in-repo fix is to
   route the oracle through `scripts/pw-run-reaped.mjs --` RUN mode as P99-08's oracle does, so the
-  wrapper reaps what it spawned. That is plan text, outside this task's write scope. Consequence
-  for the next runner: P99-40 and P99-41 share these specs, so each should measure the port before
-  its gate and reap after it — a holder is theirs to reuse if it is rooted in their own tree, and
-  to refuse if it is not.
+  wrapper reaps what it spawned. P99-40's plan already uses that RUN mode; it never reached the
+  wrapper because the foreign-holder guard stopped first.
 - **OPEN — D-38:** the overseer's written sign-off, per the table above.
 - **Phase 102:** D-21's working ~7,086-site dot-to-colon convention tail (new scope, after flatten,
   with resolution checks); COPY-09's three literals (`HelpPage:166`, `useBriefingBooks:164-165`,
   `PositionTrackerCard:93`); EDGECOPY-01's two edge functions; GUIDE-HOLLOW-01's seven bodies.
 - **Phase 103:** the 39 criterion-1 members Phase 98 triaged by reading.
 - **Operator naturalness review:** Arabic quality outside the seven ruled glossary rows.
-- **Nav/title overseer rulings:** `admin`, `taskQueue` and `newEvent` remain explicit escalations,
-  never agreements.
-- **Named lane handoffs:** `positions:draftBanner` remains an un-authored fourth banner branch; the
-  `common:optional`, `afterActions.*`, `contributors`, `days`, reminder-shape and WorkItemLinker
-  handoffs remain named in P99-13/P99-43. The double-prefixed authoring queue was closed by later
-  source re-pointing, and this task's fresh strict/mask/resolve zeros find no AR-04 remainder from it.
+- **Nav/title overseer escalations:** `navigation.admin`, `navigation.taskQueue`, and
+  `navigation.newEvent` remain value-locked escalations, never agreements or worker-invented
+  repairs.
+- **Closed double-prefixed population, named:** the 37 historical `common:common.*` source keys
+  were `about`, `actions.approve`, `actions.complete`, `actions.copy`, `actions.dismiss`,
+  `actions.generate`, `actions.moveUp`, `actions.next`, `actions.openMenu`, `actions.previous`,
+  `actions.refresh`, `actions.reject`, `actions.remove`, `actions.test`, `actions.thumbsDown`,
+  `actions.thumbsUp`, `actions.toggleSection`, `actions.toggleWatch`, `actions.viewDetails`,
+  `back`, `cancel`, `clear`, `close`, `delete`, `edit`, `error`, `export`, `loading`, `next`,
+  `notYetAvailable`, `previous`, `reorder`, `save`, `saving`, `select`, `success`, and `view`.
+  Later source repointing drove the live double-prefix count to zero; this is a named closed
+  population, not a P99-40 green.
+- **Named lane handoffs:** `common:optional`; `common:tasks.sla.approaching`;
+  `common:afterActions.decisions.item`; `common:afterActions.confidence`;
+  `common:afterActions.commitments.{tracking,statuses,priorities}.*`; `common:contributors`;
+  `common:days`; the scalar/object reminder-shape clash at
+  `common:waitingQueue.reminder.{noAssignee,success,error}`; `WorkItemLinker.tsx`'s eight raw-key
+  `common` sites; and `positions:draftBanner`. They remain named handoffs rather than being
+  silently converted into bounds.
 
 ## What this task does not own
 
 Per the plan's population statement: every other task's files, the exogenous paths (D-03), the
 ROADMAP and REQUIREMENTS row flips and register close-out acts (the overseer's, never a plan's),
-and every obligation this task's acceptance items do not name — those belong to the lane parts
-named in `depends_on`, and to P99-40 and P99-41 after it.
+and every obligation P99-40's acceptance items do not name — those belong to the lane parts named
+in `depends_on` and to P99-41 after it.
