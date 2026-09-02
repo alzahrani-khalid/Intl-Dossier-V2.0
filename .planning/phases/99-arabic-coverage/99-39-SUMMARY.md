@@ -2,20 +2,31 @@
 phase: 99-arabic-coverage
 plan: 39
 status: blocked
-head: e2a21dc853b8c66b6769b7de7838427201ccf6b0
-recorded_at_local: 2026-09-02T04:46:11+03:00
-recorded_at_utc: 2026-09-02T01:46:11Z
+attempt: 3
+head: 7101b876bfbfb444dab5ab71b0d95007c10568ce
+recorded_at_local: 2026-09-02T05:15:15+03:00
+recorded_at_utc: 2026-09-02T02:15:15Z
 ---
 
 # P99-39 Summary — static battery green, rendered gate blocked
 
 ## Outcome
 
-The static battery was re-derived fresh and is green. This task is **not complete** and the
-front-matter intentionally does not say `status: complete`: the plan-owned rendered oracle exited
-3 before Playwright execution because PID 95414 holds port 5173 from the main checkout's
-`frontend` directory, outside this worktree. RULING-P99-537 requires exactly that refusal. I did
-not terminate the process, reuse it, disguise its cwd, or substitute an alternate-port run.
+Attempt 3 of this task re-ran every evidence command in this record; the blocker is unchanged.
+The static battery is green. This task is **not complete** and the front-matter intentionally
+does not say `status: complete`: the plan-owned rendered oracle exited 3 before Playwright
+execution because PID 95414 holds port 5173 from the main checkout's `frontend` directory,
+outside this worktree. RULING-P99-537 requires exactly that refusal. I did not terminate the
+process, reuse it, disguise its cwd, or substitute an alternate-port run.
+
+The holder's provenance is established in section 14. It was spawned at 04:37:35 local by this
+tickmarkr run's own baseline pass, which executed this task's rendered oracle in the main checkout
+before any worker was dispatched (section 15). The oracle invokes Playwright ad hoc, so the
+config's `pw-run-reaped.mjs --lease-exec` wrapper ran unleased and detached, and the dev server
+outlived the baseline. Attempts 0, 1, 2, and this one have all refused the same holder.
+Terminating a process in the main checkout is outside this task's authority; release rests with
+the harness operator, and the structural fix is a plan-text change named under the unblock
+condition.
 
 The typed gate's collection controls reached the required 8 and 10 populations before the port
 guard. Because execution never began, there is no `18 passed` result, no fresh 8/8 or 10/10 result,
@@ -25,7 +36,9 @@ also not answered by this worker; P99-41 remains the human-checkpoint owner.
 This record applies **RULING-P99-538**. Every command whose output is evidence for a criterion,
 control, instrument, population, or blocker appears below with verbatim output. Commands used only
 to navigate or read are listed by command and purpose without embedding their read output. No
-prior SUMMARY output is presented as a fresh green.
+prior SUMMARY output is presented as a fresh green. The outputs in sections 1 to 11 were produced
+in attempt 1 and re-produced byte-identically in attempt 3 by the comparator in section 13; the
+comparator's own two DIFF rows (provenance and scope) are its discriminating control.
 
 ## Battery result table
 
@@ -40,6 +53,8 @@ prior SUMMARY output is presented as a fresh green.
 | completion marker negative control | PASS: markerless fixture drilled 1/2 and instrument exited 1 |
 | exact P99-39 static command oracle | PASS: exit 0 after this register existed |
 | rendered own typed gate | **INSTRUMENT-CANNOT-RUN (exit 3)**: foreign holder on TCP 5173; no test executed |
+| attempt-3 comparator over all 20 recorded pairs | 18 SAME (every instrument, control, gate) / 2 DIFF (provenance, scope) as expected |
+| holder provenance census (attempt 3) | ESTABLISHED: baseline-spawned under the harness session environment, main checkout, zero established connections |
 
 ## Evidence commands and verbatim outputs
 
@@ -484,6 +499,9 @@ INSTRUMENT-CANNOT-RUN: port 5173 held by pid 95414 rooted at /Users/khalidalzahr
 
 Process exit status: `3`.
 
+Attempt 3 re-ran this exact command from 05:13:40 to 05:13:41 local (02:13:40Z); the output and
+exit status were identical (section 13, row 15).
+
 This output proves the existence and hardcoded collection checks did not fail before the port
 branch, but it does **not** prove either spec executed. No 18-line reporter output exists.
 
@@ -647,15 +665,218 @@ Command:
 git rev-parse HEAD; date '+LOCAL=%Y-%m-%dT%H:%M:%S%z %Z'; TZ=UTC date '+UTC=%Y-%m-%dT%H:%M:%SZ'; git status --short
 ```
 
-Verbatim output at the evidence timestamp:
+Verbatim output at the attempt-3 evidence timestamp:
 
 ```text
-e2a21dc853b8c66b6769b7de7838427201ccf6b0
-LOCAL=2026-09-02T04:46:11+0300 +03
-UTC=2026-09-02T01:46:11Z
+7101b876bfbfb444dab5ab71b0d95007c10568ce
+LOCAL=2026-09-02T05:15:15+0300 +03
+UTC=2026-09-02T02:15:15Z
 ```
 
-The UTC conversion is three hours behind Asia/Riyadh and remains on 2026-09-02.
+The UTC conversion is three hours behind Asia/Riyadh and remains on 2026-09-02. `head` is the
+tree the evidence was taken against; this record's own commit is that sha's child, so
+`git show <head>:<path>` shows the previous record, not this one. Attempt 1 took its evidence at
+`e2a21dc853b8c66b6769b7de7838427201ccf6b0` on 2026-09-02T01:46:11Z.
+
+### 13. Attempt-3 freshness comparator over every recorded evidence pair
+
+Command (the comparator source is embedded so the run is reproducible; it pairs every
+`Command:` + ```sh block in this file with the ```text block that follows it, re-runs the command
+with `bash -c` in the worktree, and reports SAME only when stdout+stderr equals the recorded
+block byte for byte; the launcher is fenced as text so the comparator does not re-pair itself):
+
+```text
+S=<scratchpad>; W="$PWD"; S="$S" W="$W" python3 "$S/rerun.py"
+```
+
+```python
+import re,subprocess,os
+S=os.environ['S']; W=os.environ['W']
+doc=open(f'{W}/.planning/phases/99-arabic-coverage/99-39-SUMMARY.md',encoding='utf-8').read()
+heads=sorted([(m.start(),m.group(1)) for m in re.finditer(r'^#{2,3} (.+)$',doc,re.M)])
+def head_for(pos):
+    h=None
+    for p,t in heads:
+        if p<=pos: h=t
+    return h
+n=0; report=[]
+for m in re.finditer(r'^Command[^\n]*:\n\n```sh\n(.*?)\n```\n\n(?:Verbatim output[^\n]*)\n\n```text\n(.*?)\n```',doc,re.M|re.S):
+    n+=1
+    cmd,rec=m.group(1),m.group(2)
+    r=subprocess.run(['bash','-c',cmd],cwd=W,capture_output=True,text=True)
+    got=(r.stdout+r.stderr).rstrip('\n')
+    report.append((n,head_for(m.start()),r.returncode,'SAME' if got==rec.rstrip('\n') else 'DIFF',len(got.splitlines())))
+for n,h,rc,st,ln in report:
+    print(f'{n:02d} rc={rc} {st:4s} lines={ln:4d}  {h}')
+print('pairs=',n)
+```
+
+Verbatim output (run at 05:14 local against the record as it stood before this attempt's edits):
+
+```text
+01 rc=0 SAME lines=   6  1. Nav-title control, then live 28-row population
+02 rc=0 SAME lines=   5  1. Nav-title control, then live 28-row population
+03 rc=0 SAME lines=  23  2. Glossary control, live verdict, then every-row census
+04 rc=0 SAME lines=   2  2. Glossary control, live verdict, then every-row census
+05 rc=0 SAME lines=  28  2. Glossary control, live verdict, then every-row census
+06 rc=0 SAME lines=  67  3. Strict audit self-check, then live bilingual population
+07 rc=0 SAME lines=  58  3. Strict audit self-check, then live bilingual population
+08 rc=0 SAME lines=   5  4. Dynamic-prefix mask control, then live zero
+09 rc=0 SAME lines=   2  4. Dynamic-prefix mask control, then live zero
+10 rc=0 SAME lines=   7  5. Resolution negative/positive control first, then live routings
+11 rc=0 SAME lines=  33  5. Resolution negative/positive control first, then live routings
+12 rc=0 SAME lines=   2  6. Date-format exemption control, then live scan
+13 rc=0 SAME lines=   2  6. Date-format exemption control, then live scan
+14 rc=0 SAME lines=   4  7. Completion-contract negative control
+15 rc=3 SAME lines=   1  8. Plan-owned typed rendered gate
+16 rc=0 SAME lines= 102  9. Exact plan-owned static gate
+17 rc=0 SAME lines=   3  10. Live completion-contract result after the blocked SUMMARY existed
+18 rc=0 SAME lines=   1  11. Final non-mutating port recheck
+19 rc=0 DIFF lines=   3  12. Provenance
+20 rc=1 DIFF lines=   2  Scope and whitespace gate
+pairs= 20
+```
+
+Rows 1 to 18 are every instrument, control, gate, and port recheck in this record: each re-ran in
+this attempt and matched its recorded output exactly, with the recorded exit status (row 15 is
+the rendered gate at exit 3; row 16 is the static gate at exit 0). Rows 19 and 20 differ because
+HEAD and the clock moved and because no file had changed yet when the comparator ran; those two
+expected DIFF rows show the comparator is capable of reporting a difference.
+
+### 14. Holder provenance census (attempt 3)
+
+Command:
+
+```sh
+( echo "# ps"; ps -o pid,ppid,tty,lstart,command -p 95315,95414 | sed -E 's#/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend/node_modules/[^ ]*vite/bin/vite.js#<main>/frontend/node_modules/.../vite/bin/vite.js#'; echo "# lsof cwd"; for p in 95315 95414; do printf '%s cwd=' "$p"; lsof -a -p "$p" -d cwd -Fn 2>/dev/null | grep '^n' | cut -c2-; done; echo "# env subset of 95315 (tokens and bridge ids deliberately omitted)"; ps -E -o command -p 95315 | tr ' ' '\n' | grep -E '^(CLAUDECODE|CLAUDE_CODE_SESSION_ID|CLAUDE_CODE_CHILD_SESSION|CLAUDE_CODE_ENTRYPOINT|INIT_CWD|NODE_ENV|npm_lifecycle_event|npm_command|TERM_PROGRAM|SHLVL)=' | sort; echo "# tickmarkr daemon 7125 env subset"; ps -E -o command -p 7125 | tr ' ' '\n' | grep -E '^(CLAUDE_CODE_SESSION_ID|TERM_PROGRAM|PWD)=' | sort; echo "# this worker"; env | grep -E '^(CLAUDE_CODE_SESSION_ID|TICKMARKR_PANE_IDENTITY)=' | sort; echo "# established connections to 95414"; lsof -a -p 95414 -iTCP -sTCP:ESTABLISHED 2>/dev/null | grep -c . )
+```
+
+Verbatim output:
+
+```text
+# ps
+  PID  PPID TTY      STARTED                      COMMAND
+95315     1 ??       Wed Sep  2 04:37:35 2026     node /opt/homebrew/bin/pnpm run dev
+95414 95315 ??       Wed Sep  2 04:37:35 2026     node <main>/frontend/node_modules/.../vite/bin/vite.js
+# lsof cwd
+95315 cwd=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend
+95414 cwd=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend
+# env subset of 95315 (tokens and bridge ids deliberately omitted)
+CLAUDECODE=1
+CLAUDE_CODE_CHILD_SESSION=1
+CLAUDE_CODE_ENTRYPOINT=cli
+CLAUDE_CODE_SESSION_ID=7612e2e5-873e-4698-be3e-e02b08bac89a
+INIT_CWD=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0
+NODE_ENV=development
+SHLVL=6
+TERM_PROGRAM=WarpTerminal
+npm_command=run-script
+npm_lifecycle_event=dev
+# tickmarkr daemon 7125 env subset
+CLAUDE_CODE_SESSION_ID=7612e2e5-873e-4698-be3e-e02b08bac89a
+PWD=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0
+TERM_PROGRAM=WarpTerminal
+# this worker
+CLAUDE_CODE_SESSION_ID=6b33b6e5-11e6-4a41-b596-6d52166ede0a
+TICKMARKR_PANE_IDENTITY=worker · P99-39 · attempt 3 · run-20260902-012826-0000000000000070
+# established connections to 95414
+0
+```
+
+The holder's full environment also carries a Claude Code messaging token and a bridge session id.
+Both keys are filtered out of the grep above because printing a live token into a tracked file is
+the hazard; nothing else is omitted. What the census establishes: both processes were born at
+04:37:35 local, are orphaned (ppid 1, no TTY), sit in the main checkout's `frontend`, and carry
+the same `CLAUDE_CODE_SESSION_ID` as the tickmarkr daemon (PID 7125), not this worker's. They were
+started by a `pnpm` invoked from the main checkout root (`INIT_CWD`) with `NODE_ENV=development`,
+which is the Playwright `webServer` command in `playwright.config.ts`. No client is connected.
+
+### 15. Harness journal projection for this run
+
+Command (a field projection of this run's `journal.jsonl` in the main checkout, read only; raw lines embed full oracle text and are not reproduced; every printed line is right-stripped so no trailing whitespace enters this file):
+
+```sh
+RUN=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/runs/run-20260902-012826-0000000000000070; python3 - "$RUN/journal.jsonl" <<'EOF'
+import json,sys
+for line in open(sys.argv[1]):
+    e=json.loads(line); ev=e["event"]; t=e.get("taskId"); d=e.get("data",{})
+    if ev=="run-start": s=" ".join(map(str,[e["ts"],ev,"pid=",d.get("pid"),"baseRef=",d.get("baseRef")]))
+    elif ev=="baseline-warning" and t=="P99-39": s=" ".join(map(str,[e["ts"],ev,t,"kind=",d.get("kind"),"oracles=",len(d.get("oracles",[])),"reason=",d.get("reason","")[:110]+"..."]))
+    elif ev in("task-dispatch","worker-result","gate-result","escalation","review-retry") and t=="P99-39":
+        extra=d.get("summary") or d.get("details") or d.get("step") or ""
+        s=" ".join(map(str,[e["ts"],ev,t,"attempt=",d.get("attempt"),d.get("gate",""),str(extra)[:150]]))
+    else: continue
+    print("\n".join(l.rstrip() for l in s.rstrip().split("\n")))
+EOF
+```
+
+Verbatim output (timestamps are UTC; add three hours for Asia/Riyadh):
+
+```text
+2026-09-02T01:30:35.994Z run-start pid= 7125 baseRef= e2a21dc853b8c66b6769b7de7838427201ccf6b0
+2026-09-02T01:39:15.264Z baseline-warning P99-39 kind= vacuous-oracle oracles= 2 reason= vacuous acceptance oracle on P99-39: already passes before any work exists — $ PATH="/opt/homebrew/bin:$PATH";...
+2026-09-02T01:39:17.330Z task-dispatch P99-39 attempt= 0
+2026-09-02T01:41:15.192Z worker-result P99-39 attempt= None  The mandated rendered gate cannot run against a foreign port holder, and the required D-38 human sign-off remains absent.
+2026-09-02T01:41:15.333Z gate-result P99-39 attempt= 0 evidence no commits — worker claimed work but committed nothing
+2026-09-02T01:41:15.348Z escalation P99-39 attempt= 1  retry
+2026-09-02T01:41:15.367Z task-dispatch P99-39 attempt= 1
+2026-09-02T01:54:32.329Z worker-result P99-39 attempt= None  Static proof is green, but the required rendered 18-testgate could not run because port 5173 is held by a foreign checkout.
+2026-09-02T01:55:00.600Z gate-result P99-39 attempt= 1 build exit 0
+2026-09-02T01:55:11.190Z gate-result P99-39 attempt= 1 lint exit 0
+2026-09-02T01:55:11.220Z gate-result P99-39 attempt= 1 evidence 1 commit(s):
+.../phases/99-arabic-coverage/99-39-SUMMARY.md     | 738 +++++++++++++++++++++
+ .../phases/99-arabic-coverage/99-VERIFICATION.md   | 140
+2026-09-02T01:55:11.239Z gate-result P99-39 attempt= 1 scope all 2 changed files in scope
+2026-09-02T01:55:43.147Z gate-result P99-39 attempt= 1 test exit 1 but only pre-existing failures (forgiven)
+2026-09-02T01:55:45.778Z gate-result P99-39 attempt= 1 acceptance oracle failed: $ PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; cd "$R" || exit 3; for spec in tests/e2e/99-ar02-dates.spec.ts tests/e2e/99-ar03-leak.spec.
+2026-09-02T02:00:17.792Z gate-result P99-39 attempt= 1 review review re-route: kimi:kimi-code/k3 produced no parseable verdict; replaced by claude-code:fable
+reviewer claude-code:fable (anthropic): requested chan
+2026-09-02T02:00:17.792Z review-retry P99-39 attempt= None review
+2026-09-02T02:00:17.811Z escalation P99-39 attempt= 2  retry
+2026-09-02T02:00:17.824Z task-dispatch P99-39 attempt= 2
+2026-09-02T02:01:58.522Z worker-result P99-39 attempt= None  Rendered proof cannot execute until the foreign main-checkout process releases TCP 5173.
+2026-09-02T02:02:24.987Z gate-result P99-39 attempt= 2 build exit 0
+2026-09-02T02:02:34.755Z gate-result P99-39 attempt= 2 lint exit 0
+2026-09-02T02:02:34.786Z gate-result P99-39 attempt= 2 evidence 2 commit(s):
+.../phases/99-arabic-coverage/99-39-SUMMARY.md     | 738 +++++++++++++++++++++
+ .../phases/99-arabic-coverage/99-VERIFICATION.md   | 140
+2026-09-02T02:02:34.804Z gate-result P99-39 attempt= 2 scope all 2 changed files in scope
+2026-09-02T02:03:05.842Z gate-result P99-39 attempt= 2 test exit 1 but only pre-existing failures (forgiven)
+2026-09-02T02:03:08.397Z gate-result P99-39 attempt= 2 acceptance oracle failed: $ PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; cd "$R" || exit 3; for spec in tests/e2e/99-ar02-dates.spec.ts tests/e2e/99-ar03-leak.spec.
+2026-09-02T02:07:13.462Z gate-result P99-39 attempt= 2 review reviewer claude-code:fable (anthropic): requested changes (2 material)
+- [material] Acceptance criteria 2 and 3 (99-ar02 8/8 and 99-ar03 10/10 execute
+2026-09-02T02:07:13.489Z escalation P99-39 attempt= 3  escalate
+2026-09-02T02:07:14.017Z task-dispatch P99-39 attempt= 3
+```
+
+The run started its baseline pass at 01:30:35Z with the daemon at PID 7125 and base ref
+`e2a21dc85`. The holder was born at 01:37:35Z (04:37:35 local), inside that pass. At 01:39:15Z the
+baseline recorded P99-39's rendered oracle as "already passes before any work exists", which is
+only possible if the baseline executed that oracle to a green 18/18 in the main checkout; the
+port guard found 5173 free at that moment, Playwright started the `webServer`, and the server
+survived Playwright's exit. Two seconds later attempt 0 was dispatched, and every attempt since
+has refused that same holder. That baseline green is the harness's measurement in the main
+checkout at the base ref; it is recorded here as provenance only and is not claimed as this
+task's own gate result. This projection grows as the journal grows, so a later comparator run is
+expected to report it DIFF by exactly the events appended after this attempt.
+
+### 16. Rendered population re-derivation (attempt 3)
+
+Command:
+
+```sh
+PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; cd "$R"; C2=$(pnpm exec playwright test tests/e2e/99-ar02-dates.spec.ts --project=chromium-en --no-deps --list 2>/dev/null | command grep -c "99-ar02-dates.spec.ts:"); C3=$(pnpm exec playwright test tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --no-deps --list 2>/dev/null | command grep -c "99-ar03-leak.spec.ts:"); echo "C2=$C2 C3=$C3"; pnpm exec playwright test tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --no-deps --list 2>/dev/null | command grep -E "banner|Total"
+```
+
+Verbatim output:
+
+```text
+C2=8 C3=10
+  [chromium-en] › 99-ar03-leak.spec.ts:228:5 › UI99-C7 ar banner under_review
+  [chromium-en] › 99-ar03-leak.spec.ts:232:5 › UI99-C7 ar banner approved
+  [chromium-en] › 99-ar03-leak.spec.ts:236:5 › UI99-C7 ar banner published
+Total: 10 tests in 1 file
+```
 
 ## Read/navigation command ledger (RULING-P99-538)
 
@@ -679,8 +900,21 @@ embedded:
 - `rg`/`tail` over context/research and P99-13/15/16/22/40/43 records — assemble deferred residue,
   D-19, double-prefix, and named-handoff bounds without importing their greens.
 - `lsof -a -p 95414 -d cwd -Fn` — independently read the foreign holder cwd after the typed gate
-  had already refused it. `ps` was attempted read-only but the sandbox returned `operation not
-  permitted`; no process state changed.
+  had already refused it. In attempt 1 `ps` returned `operation not permitted`; in attempt 3 `ps`
+  worked and its evidence is in section 14. No process state changed in either attempt.
+- Attempt 3: `ps -o ppid= -p <pid>` walked from the daemon's shell (7119) up through
+  `claude --resume 7612e2e5-…` (3145), `-zsh`, and `herdr server` — establishes that the daemon and
+  the holder share the overseer session's environment.
+- Attempt 3: `grep -nE 'detached|setsid|unref\(|lease-exec|PW_LEASE' scripts/pw-run-reaped.mjs` —
+  locates the `detached: true` spawn (line 1925) and the "PW_LEASE_* env absent — running
+  UNLEASED (ad-hoc invocation)" branch (line 1711) that explain why the baseline's server
+  outlived Playwright.
+- Attempt 3: `grep -nE '"dev"' <main>/package.json` — confirms the root `dev` script starts the
+  frontend through turbo, which is why a root-invoked `pnpm run dev` holds `frontend` as its cwd.
+- Attempt 3: `python3` over the run's `baseline.json` and `journal.jsonl` — read event types and
+  the P99-08 and P99-39 baseline warnings; the projection that is evidence is section 15.
+- Attempt 3: `grep -c 'pnpm run dev'` over the overseer session transcript — zero hits, so the
+  spawn was not a typed command; it came from an oracle the harness ran.
 
 ## D-19 table presented for later human gate
 
@@ -732,7 +966,17 @@ SCOPE_EXIT=0
 
 ## Exact unblock condition
 
-The owner of PID 95414 must release TCP 5173. Then the unchanged typed gate must collect 8 and 10,
-execute all 18, match `(^|[^0-9])18 passed` (not anchored at line start and not matching 118), and
-observe Playwright exit 0. After that, rerun the static plan oracle and the completion-contract
+Immediate release: the harness operator terminates PID 95315 (`pnpm run dev`, ppid 1) and its
+child PID 95414 (vite), both rooted in the main checkout's `frontend`, with zero established
+connections at the census. Then the unchanged typed gate must collect 8 and 10, execute all 18,
+match `(^|[^0-9])18 passed` (not anchored at line start and not matching 118), and observe
+Playwright exit 0. After that, rerun the static plan oracle and the completion-contract
 negative/live pair, change this front-matter to `status: complete`, and record the new outputs.
+
+Structural: the same leak recurs from the first green run of this oracle in any tree, because the
+oracle invokes Playwright ad hoc and the config's lease writer then runs unleased and detached.
+Once P99-39's own gate runs green in its worktree, the leaked server would be rooted in this
+worktree and therefore foreign to the P99-40 and P99-41 gates that run the same specs. The
+in-repo fix is to route the oracle through `scripts/pw-run-reaped.mjs --` (RUN mode, which mints
+a lease and reaps its own server) as P99-08's oracle already does, or to reap after the baseline
+pass. Either is a plan-text or engine change outside this task's write scope and needs a ruling.

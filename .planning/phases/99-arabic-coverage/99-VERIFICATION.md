@@ -2,22 +2,32 @@
 phase: 99-arabic-coverage
 plan: 39
 status: blocked
-verified_at_local: 2026-09-02T04:46:11+03:00
-verified_at_utc: 2026-09-02T01:46:11Z
-head: e2a21dc853b8c66b6769b7de7838427201ccf6b0
+attempt: 3
+verified_at_local: 2026-09-02T05:15:15+03:00
+verified_at_utc: 2026-09-02T02:15:15Z
+head: 7101b876bfbfb444dab5ab71b0d95007c10568ce
 ---
 
 # Phase 99 consolidated re-proof register
 
 ## Verdict
 
-The fresh static battery is green. The consolidated re-proof is **not complete**: the plan-owned
-rendered gate collected the hardcoded 8- and 10-test populations, then correctly exited 3 before
-execution because TCP 5173 is held by PID 95414 rooted at
+The fresh static battery is green, re-run in attempt 3 with every recorded output reproduced byte
+for byte (99-39-SUMMARY.md section 13). The consolidated re-proof is **not complete**: the
+plan-owned rendered gate collected the hardcoded 8- and 10-test populations, then correctly exited
+3 before execution because TCP 5173 is held by PID 95414 rooted at
 `/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend`, outside this worktree.
 RULING-P99-537 forbids reusing that foreign holder. Terminating a process rooted in the main
 checkout is outside this task's authority. Consequently criteria 2 and 3 have no fresh executed
 result from this task, and no prior or alternate-port result is used as a substitute.
+
+Attempt 3 established the holder's provenance (99-39-SUMMARY.md sections 14 and 15): it was
+spawned at 04:37:35 local by this tickmarkr run's own baseline pass, which executed this task's
+rendered oracle in the main checkout before any worker existed. Because the oracle invokes
+Playwright ad hoc, the config's lease writer ran unleased and detached and the dev server outlived
+the baseline. The blocker is therefore the harness's own leak, not a human's server, and attempts
+0 through 3 have all refused it. Release rests with the harness operator. `head` above is the
+tree the evidence was taken against; this record's own commit is its child.
 
 ## Criterion -> plan -> oracle -> observed result
 
@@ -63,7 +73,15 @@ INSTRUMENT-CANNOT-RUN: port 5173 held by pid 95414 rooted at /Users/khalidalzahr
 ```
 
 No process was killed, no holder identity was disguised, no alternate port was treated as the
-plan-owned gate, and no `18 passed` line was asserted.
+plan-owned gate, and no `18 passed` line was asserted. Attempt 3 re-ran the unchanged gate from
+05:13:40 to 05:13:41 local on 2026-09-02 (02:13:40Z) with identical output and exit status 3; the
+collection counts were separately re-derived at 8 and 10, with the three `UI99-C7 ar banner`
+tests listed inside the ten.
+
+The harness's baseline pass recorded this same oracle as "already passes before any work exists"
+at 01:39:15Z, which means the baseline executed the 18 tests green in the main checkout at base
+ref `e2a21dc85`. That is provenance for the leak, not this task's gate result, and it is not
+entered in the criterion table.
 
 ## D-19 reversal record
 
@@ -113,6 +131,13 @@ earned**.
 - **P99-39 blocking instrument condition:** a foreign-worktree holder owns TCP 5173. Authorized
   owner release, followed by the unchanged typed gate, is required. This is not a product residue
   and is not a bounded pass.
+- **Engine residue, needs a ruling:** the P99-39 rendered oracle invokes Playwright ad hoc, so
+  the config's `pw-run-reaped.mjs --lease-exec` wrapper runs unleased and detached and leaks its
+  dev server after every green run, including the harness's baseline pass in the main checkout.
+  The leaked server is foreign to every other tree, so the port guard blocks the next gate that
+  runs these specs (P99-40 and P99-41 after P99-39's own). The in-repo fix is to route the oracle
+  through `scripts/pw-run-reaped.mjs --` RUN mode, as P99-08's oracle does, or to reap after the
+  baseline. This is plan text outside this task's write scope.
 - **D-38:** human visual/product sign-off is not answered here. P99-41 owns presentation of the
   Arabic surfaces and the overseer's written decision.
 - **Phase 102:** D-21's working ~7,086-site dot-to-colon convention tail (new scope, after flatten,
@@ -130,7 +155,9 @@ earned**.
 
 ## Required continuation
 
-After the owner releases the foreign holder, rerun the exact P99-39 rendered command oracle. Only
+The harness operator releases PID 95315 (`pnpm run dev`, ppid 1) and its child PID 95414 (vite),
+both rooted in the main checkout's `frontend` with zero established connections at the attempt-3
+census. Then rerun the exact P99-39 rendered command oracle. Only
 an unanchored-but-digit-bounded `18 passed` match **and** Playwright exit status 0 can close
 criteria 2 and 3. Then rerun the exact static oracle, rerun the completion negative/live pair after
 writing a `status: complete` SUMMARY, and hand the rendered surfaces to P99-41's human gate.
