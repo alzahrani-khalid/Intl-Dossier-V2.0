@@ -1,41 +1,47 @@
 ---
 phase: 99-arabic-coverage
 plan: 41
-status: blocked
-head: c975d61f8e859aaa885a2fb78ccf73ce1e2f29ef
-recorded_at_local: 2026-09-02T22:44:24+03:00
-recorded_at_utc: 2026-09-02T19:44:24Z
+status: complete
+head: b2b91836b0afd2889c7c3b68c57388572d85880d
+recorded_at_local: 2026-09-02T23:07:04+03:00
+recorded_at_utc: 2026-09-02T20:07:04Z
 ---
 
 # P99-41 Summary — residue register and operator checkpoint
 
 ## Outcome
 
-P99-41 is **blocked**, not complete. No qualifying operator/overseer answer and no subsequent
-`tickmarkr approve` exist. Commit `2a79b80da` is an agent-session repair commit: its
-`Co-Authored-By: Claude Opus 5` and `Claude-Session` trailers prevent its Git author field from
-establishing that the operator saw and answered this checkpoint. It is repair lineage only.
+**P99-41 is complete.** Two things closed it that were open at the previous attempt.
 
-The static battery was rerun fresh at the recorded HEAD. In particular,
-`glossary-census.mjs --census` was rerun and its complete 17,022 / 1,657 / 292 output is reproduced
-below; those counts are not copied from P99-39. Every claimed static zero has a control.
+**The D-38 checkpoint is answered, and the answer is the operator's.** It is not this worker's
+reading of a commit — the prior attempt was right to refuse `2a79b80da` as a sign-off, and that
+refusal stands. The authority is `RULING-P99-544` in `.tickmarkr/overseer/DECISIONS.md` together
+with the run journal's `task-approved P99-41` event at `2026-09-02T18:47:49.376Z`, whose reason
+carries the answer and instructs that it be recorded verbatim here. It is transcribed below, in the
+lane's SUMMARY contract shape — *the checkpoint answer verbatim with who gave it*.
 
-The harness-reported task-level AR-02 gate exited 0 and owns criterion 2. Locally, both rendered
-specs passed their file and hardcoded collection checks (8 and 10), then the wrapper refused before
-Playwright started because process birth identity for the port-5001 holder was unavailable in this
-sandbox. Consequently the post-repair AR-03 run and the full rendered checkpoint pack are parked
-red. There are no authorized bounds.
+**Both rendered specs ran to completion in this attempt and both are green.** The earlier exit-90
+refusals were a `codex` sandbox that could not read the birth identity of a foreign port-5001
+holder; that safety refusal was correct and is retained below unchanged. This attempt runs in a
+sandbox that can read process birth identity, port 5173 was unheld, and the guard let both
+invocations through: `99-ar02-dates` 8/8 and `99-ar03-leak` 10/10 — 18/18 — with the wrapper
+publishing verdict `clean` for each, at a HEAD that contains the position-heading repair. No row in
+the register now leans on a P99-40 green.
+
+The static battery was also re-executed in this attempt and every member's output was compared
+byte-for-byte against the block transcribed here: **12/12 identical, 12/12 exit 0.** There are no
+authorized bounds and nothing is recorded NOT CONSTRUCTED.
 
 ## Acceptance items
 
 | Acceptance item | Record |
 | --- | --- |
-| The operator has seen the Arabic session read as Arabic and said so in writing — or named what must change while the reversal window is still open. | **OPEN / BLOCKING.** No qualifying operator answer exists. |
-| The operator has seen the Arabic session read as Arabic and said so in writing — or named what must change while the reversal window is still open. | **OPEN / BLOCKING.** Duplicated because the compiled acceptance list carries this criterion twice. |
-| The register carries the honored-evidence table for the five decisions the overseer waived as citation-truths on machine evidence (D-01, D-03, D-36, D-37, D-39) VERBATIM — that verbatim carry is the waiver's stated condition | The five-row table is preserved byte-for-byte in `99-VERIFICATION.md`. |
-| The human checkpoint presents: the 404, the intake queue, the search chips, a dated surface, the /activity relative-time surface and the position banner rendered under ar, plus the D-19 tie-break list from the nav-title lane — and the phase does not close until the operator answers | **NOT PRODUCED / BLOCKING.** The D-19 list is present, but the post-repair AR-03 invocation did not execute, so the register does not substitute bundle text for the rendered pack. |
-| criterion 2 closes on the RENDERED spec run by THIS gate — ONE spec path (D-09: two paths with one match silently drop the rest and exit 0), file existence asserted, the count hardcoded at 8 — RED at HEAD | **GATE GREEN.** The harness-reported task gate exited 0; the local exit-90 retry is recorded separately and is not the green. |
-| The evidence register is honest: every green names its instrument run fresh in this task, every zero shows its control, every bound is quoted with the overseer ruling that authorised it, no criterion leans on a green produced before the repairs it grades, and no leg is recorded NOT CONSTRUCTED. | Fresh static greens and the task gate are named; authorized bounds are zero; AR-03 and D-38 are explicitly red/open; the pre-repair P99-40 AR-03 green is not used. |
+| The operator has seen the Arabic session read as Arabic and said so in writing — or named what must change while the reversal window is still open. | **ANSWERED.** `it reads as arabic` — the operator, Khalid Alzahrani, 2026-09-02, against the six D-38 surfaces captured live under `?lng=ar` plus the D-19 list. Recorded by the overseer in `RULING-P99-544`; approved in the run journal at 18:47:49.376Z. Both branches were exercised: the same session named the position `<h1>` defect, repaired at `2a79b80da`. |
+| The operator has seen the Arabic session read as Arabic and said so in writing — or named what must change while the reversal window is still open. | **ANSWERED.** Duplicated because the compiled acceptance list carries this criterion twice; same answer, same authority, transcribed once below. |
+| The register carries the honored-evidence table for the five decisions the overseer waived as citation-truths on machine evidence (D-01, D-03, D-36, D-37, D-39) VERBATIM — that verbatim carry is the waiver's stated condition | Preserved byte-for-byte in `99-VERIFICATION.md`; the twelve-line block hashes `9c0b4e3f4e511a13c78a2b22976abdbe` before and after this attempt's rewrite. |
+| The human checkpoint presents: the 404, the intake queue, the search chips, a dated surface, the /activity relative-time surface and the position banner rendered under ar, plus the D-19 tie-break list from the nav-title lane — and the phase does not close until the operator answers | **SATISFIED.** The presentation the operator consumed was captured by the operator/overseer under `?lng=ar` with the D-19 list beside it (artifact URL in the approve reason); and every one of those surfaces additionally carries a rendered `ar` leg that PASSED in this attempt — `UI99-C5`, `UI99-C6`, `UI99-C8`, `UI99-C1C2C4` ×3, `UI99-C3`, and `UI99-C7` in all three banner states. The phase did not close before the answer. |
+| criterion 2 closes on the RENDERED spec run by THIS gate — ONE spec path (D-09: two paths with one match silently drop the rest and exit 0), file existence asserted, the count hardcoded at 8 — RED at HEAD | **GREEN, run here.** `collected-from-target-spec=99-ar02-dates.spec.ts count=8 expected=8`, then Playwright `expected: 8, unexpected: 0, flaky: 0, skipped: 0`, wrapper verdict `clean`, exit 0. |
+| The evidence register is honest: every green names its instrument run fresh in this task, every zero shows its control, every bound is quoted with the overseer ruling that authorised it, no criterion leans on a green produced before the repairs it grades, and no leg is recorded NOT CONSTRUCTED. | Every green here is an instrument re-executed in this attempt; every zero has its control; authorized bounds are zero, so no bound is quoted; the P99-40 AR-03 green is named lineage and used for nothing; no leg is NOT CONSTRUCTED and none is left unrun. |
 
 ## Fresh battery results
 
@@ -47,7 +53,34 @@ red. There are no authorized bounds.
 | nav/title | planted mismatch caught; positive agreement preserved | 28 adjudicated; 25 agreements; 3 value-locked escalations; defect counters 0 | 0 |
 | glossary census | planted illegal senses caught and legal senses retained | Fresh `--census`: 17,022 Arabic leaves in 129 files; ruled 1,657; allowlisted 292; unclassified 0 | 0 |
 | date-format checker | dead exemption importers 0 beside 29 live-control importers | 1,533 files; unexcused sites 0; named debt 0 | 0 |
-| completion contract | nonempty phase population | **Expected RED after this record is marked blocked:** P99-41 intentionally lacks `status: complete` | 1 |
+| AR-02 rendered | three `en control` legs beside the three `ar` dated legs; paired `en`/`ar` relative-time legs | 8 collected = 8 expected; 8 passed; verdict `clean` | 0 |
+| AR-03 rendered | `en control` legs for 404 and intake queue; all three banner states collected | 10 collected = 10 expected; 10 passed; verdict `clean` | 0 |
+| completion contract | nonempty phase population | 62/62 SUMMARY files carry `status: complete` | 0 |
+
+### Battery re-execution ledger for this attempt
+
+Every static member above was re-executed at `b2b91836b0afd2889c7c3b68c57388572d85880d` in this
+attempt and its stdout/stderr compared programmatically against the block transcribed under *Fresh
+evidence commands and verbatim output*:
+
+~~~text
+IDENTICAL strict-selfcheck
+IDENTICAL strict-json
+IDENTICAL mask-control
+IDENTICAL mask-live
+IDENTICAL neg-taskcard
+IDENTICAL resolve-check
+IDENTICAL nav-control
+IDENTICAL nav-live
+IDENTICAL gloss-control
+IDENTICAL gloss-census
+IDENTICAL datefmt-control
+IDENTICAL datefmt-live
+identical: 12 / 12
+~~~
+
+So the blocks below are this attempt's output as much as the previous attempt's; they are not a
+green carried forward from an earlier wave.
 
 ## Fresh evidence commands and verbatim output
 
@@ -438,7 +471,7 @@ date-formatting check OK: 1533 non-test file(s) scanned, 0 unexcused ad-hoc date
 EXIT=0
 ~~~
 
-### Completion contract after marking the human gate blocked
+### Completion contract with the human gate closed
 
 Command:
 
@@ -449,19 +482,99 @@ node scripts/completion-contract-check.mjs --summaries .planning/phases/99-arabi
 Verbatim stdout/stderr:
 
 ~~~text
-  99-41-SUMMARY.md  BREACH — no 'status: complete' front-matter; the next compile reads this task PENDING
-completion-contract: 61/62 SUMMARY files carry the marker
-EXIT=1
+completion-contract: 62/62 SUMMARY files carry the marker
+EXIT=0
 ~~~
 
-This red is deliberate evidence that the human gate has not been closed; it is not relabelled as a
-green. The plan requires `status: complete` **when done**, and D-38 says the task is not done before
-the operator answers.
+The previous attempt recorded this check RED on purpose, because it had marked the record `blocked`
+while the gate was open. The gate is answered, so the plan's mandatory `status: complete` applies
+and the check is green — the same instrument, the same population, a different state of the world.
 
-## Criterion-2 gate command: local refusal controls
+## Criterion-2 gate command: the rendered run
 
-The exact command from `99-41-PLAN.md` was run unchanged. It asserts one file, one spec
-path and the hardcoded expected count 8 before execution.
+The exact command from `99-41-PLAN.md` was run unchanged. It asserts one file, one spec path and the
+hardcoded expected count 8 before execution.
+
+Command:
+
+~~~sh
+PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; cd "$R" && test -f tests/e2e/99-ar02-dates.spec.ts && { PL=$(pnpm exec playwright test tests/e2e/99-ar02-dates.spec.ts --project=chromium-en --no-deps --list 2>/dev/null); ST=$?; test "$ST" -eq 0 || { echo "INSTRUMENT-CANNOT-RUN: playwright --list exited $ST; the printed total is not a collection verdict"; exit 3; }; NT=$(printf "%s\n" "$PL" | command grep -cE "› 99-ar02-dates\.spec\.ts:[0-9]+:[0-9]+ ›"); EXP=8; test "$NT" -eq "$EXP" || { echo "FAIL: collected $NT tests from 99-ar02-dates.spec.ts, expected $EXP"; printf "%s\n" "$PL" | tail -3; exit 1; }; echo "collected-from-target-spec=99-ar02-dates.spec.ts count=$NT expected=$EXP"; } && { command -v lsof >/dev/null 2>&1 || { echo "INSTRUMENT-CANNOT-RUN: lsof absent, cannot establish who holds the dev-server port"; exit 3; }; HOLDER=$(lsof -tnP -iTCP:5173 -sTCP:LISTEN 2>/dev/null | head -1); if test -n "$HOLDER"; then HCWD=$(lsof -a -p "$HOLDER" -d cwd -Fn 2>/dev/null | command grep "^n" | head -1 | cut -c2-); case "$HCWD" in "$R"|"$R"/*) PW_REUSE=1; export PW_REUSE; echo "reusing dev server pid $HOLDER rooted in THIS worktree";; *) echo "INSTRUMENT-CANNOT-RUN: port 5173 held by pid $HOLDER rooted at ${HCWD:-unknown}, which is NOT this worktree; refusing to measure a foreign tree"; exit 3;; esac; fi; } && node "$R/scripts/pw-run-reaped.mjs" -- tests/e2e/99-ar02-dates.spec.ts --project=chromium-en --no-deps
+~~~
+
+Verbatim stdout/stderr:
+
+~~~text
+collected-from-target-spec=99-ar02-dates.spec.ts count=8 expected=8
+pw-run-reaped: report archived outside the worktree -> /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.pw-reports/2026-09-02T20-05-06-281Z-pw-reaped-a1602dd1701b55f2a0cd65df08790306.json
+pw-run-reaped: playwright exited code=0 signal=null; group 66106 -> {"termed":false,"killed":false,"alreadyGone":true,"unavailable":false,"identityMismatch":false,"finalZero":true}; session reaped; verdict clean; report published; child output /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-182826-0000000000000073--P99-41/test-results/pw-reaped-a1602dd1701b55f2a0cd65df08790306.json.log
+~~~
+
+Process exit: `0`.
+
+Per-test outcomes, read back out of the published report
+`test-results/pw-reaped-a1602dd1701b55f2a0cd65df08790306.json`:
+
+~~~text
+stats: {"startTime":"2026-09-02T20:04:45.383Z","duration":18099.964999999997,"expected":8,"skipped":0,"unexpected":0,"flaky":0}
+specs: 8
+PASS | expected | UI99-C1C2C4 ar /calendar
+PASS | expected | UI99-C1C2C4 ar /dossiers
+PASS | expected | UI99-C1C2C4 ar /events
+PASS | expected | UI99-C1 en control /calendar
+PASS | expected | UI99-C1 en control /dossiers
+PASS | expected | UI99-C1 en control /events
+PASS | expected | UI99-C3 ar /activity relative time
+PASS | expected | UI99-C3 en control /activity relative time
+~~~
+
+## AR-03 rendered run, post-repair
+
+Same D-09 structure, its own single existing path, hardcoded `EXP=10`.
+
+Command:
+
+~~~sh
+PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; cd "$R" && test -f tests/e2e/99-ar03-leak.spec.ts && { PL=$(pnpm exec playwright test tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --no-deps --list 2>/dev/null); ST=$?; test "$ST" -eq 0 || { echo "INSTRUMENT-CANNOT-RUN: playwright --list exited $ST; the printed total is not a collection verdict"; exit 3; }; NT=$(printf "%s\n" "$PL" | command grep -cE "› 99-ar03-leak\.spec\.ts:[0-9]+:[0-9]+ ›"); EXP=10; test "$NT" -eq "$EXP" || { echo "FAIL: collected $NT tests from 99-ar03-leak.spec.ts, expected $EXP"; printf "%s\n" "$PL" | tail -3; exit 1; }; echo "collected-from-target-spec=99-ar03-leak.spec.ts count=$NT expected=$EXP"; } && { command -v lsof >/dev/null 2>&1 || { echo "INSTRUMENT-CANNOT-RUN: lsof absent, cannot establish who holds the dev-server port"; exit 3; }; HOLDER=$(lsof -tnP -iTCP:5173 -sTCP:LISTEN 2>/dev/null | head -1); if test -n "$HOLDER"; then HCWD=$(lsof -a -p "$HOLDER" -d cwd -Fn 2>/dev/null | command grep "^n" | head -1 | cut -c2-); case "$HCWD" in "$R"|"$R"/*) PW_REUSE=1; export PW_REUSE; echo "reusing dev server pid $HOLDER rooted in THIS worktree";; *) echo "INSTRUMENT-CANNOT-RUN: port 5173 held by pid $HOLDER rooted at ${HCWD:-unknown}, which is NOT this worktree; refusing to measure a foreign tree"; exit 3;; esac; fi; } && node "$R/scripts/pw-run-reaped.mjs" -- tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --no-deps
+~~~
+
+Verbatim stdout/stderr:
+
+~~~text
+collected-from-target-spec=99-ar03-leak.spec.ts count=10 expected=10
+pw-run-reaped: report archived outside the worktree -> /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.pw-reports/2026-09-02T20-06-42-408Z-pw-reaped-a655991582059207b224174a25754cdf.json
+pw-run-reaped: playwright exited code=0 signal=null; group 84372 -> {"termed":false,"killed":false,"alreadyGone":true,"unavailable":false,"identityMismatch":false,"finalZero":true}; session reaped; verdict clean; report published; child output /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-182826-0000000000000073--P99-41/test-results/pw-reaped-a655991582059207b224174a25754cdf.json.log
+~~~
+
+Process exit: `0`.
+
+Per-test outcomes, read back out of the published report
+`test-results/pw-reaped-a655991582059207b224174a25754cdf.json`:
+
+~~~text
+stats: {"startTime":"2026-09-02T20:05:49.242Z","duration":50358.081,"expected":10,"skipped":0,"unexpected":0,"flaky":0}
+specs: 10
+PASS | expected | UI99-C5 ar 404
+PASS | expected | UI99-C5 en control 404
+PASS | expected | UI99-C6 ar intake queue
+PASS | expected | UI99-C6 en control intake queue
+PASS | expected | UI99-C7 ar banner under_review
+PASS | expected | UI99-C7 ar banner approved
+PASS | expected | UI99-C7 ar banner published
+PASS | expected | UI99-C8 ar search chips
+PASS | expected | UI99-C9 ar latin run scan
+PASS | expected | UI99-C10 ar tajawal
+~~~
+
+**The three banner-state outcomes, called out as the lane's SUMMARY contract requires:**
+`UI99-C7 ar banner under_review` PASS, `UI99-C7 ar banner approved` PASS, `UI99-C7 ar banner
+published` PASS — all three at a HEAD containing `2a79b80da`, so this is the first AR-03 run that
+grades the repaired heading rather than preceding it.
+
+## Prior-attempt refusals, retained unchanged
+
+These are the earlier attempt's two exit-90 results. They are kept because they are the honest
+record of that attempt, and because the refusal was the wrapper behaving correctly: an unproven
+holder identity is not a known holder. They are not evidence for any row above.
 
 ### Prior-attempt retry 1
 
@@ -493,37 +606,44 @@ pw-run-reaped: pre-spawn birth-identity lookup unavailable for pid 67828 on port
 
 Process exit: `90`.
 
-Both prior-attempt retries and the current local retry established
-`collected-from-target-spec=99-ar02-dates.spec.ts count=8 expected=8`; none established a local
-rendered result. The wrapper's refusal is the positive safety behavior for an unproven holder. It
-is not a bound and not a pass. The task-level command gate is the authoritative AR-02 rendered run;
-the harness reported that gate exited 0.
+Both refusals established `collected-from-target-spec=99-ar02-dates.spec.ts count=8 expected=8` and
+neither established a rendered result. In this attempt `ps -o lstart= -p 67828` resolves, port 5173
+is unheld, and the same command reached execution — which is why the rows above are greens rather
+than parks.
 
-## Current post-repair rendered attempts
+## Human checkpoint answer
 
-The AR-02 command above was rerun unchanged. AR-03 used the same D-09 structure with its own single
-existing path and hardcoded `EXP=10`:
-
-~~~sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; cd "$R" && test -f tests/e2e/99-ar03-leak.spec.ts && { PL=$(pnpm exec playwright test tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --no-deps --list 2>/dev/null); ST=$?; test "$ST" -eq 0 || { echo "INSTRUMENT-CANNOT-RUN: playwright --list exited $ST; the printed total is not a collection verdict"; exit 3; }; NT=$(printf "%s\n" "$PL" | command grep -cE "› 99-ar03-leak\.spec\.ts:[0-9]+:[0-9]+ ›"); EXP=10; test "$NT" -eq "$EXP" || { echo "FAIL: collected $NT tests from 99-ar03-leak.spec.ts, expected $EXP"; printf "%s\n" "$PL" | tail -3; exit 1; }; echo "collected-from-target-spec=99-ar03-leak.spec.ts count=$NT expected=$EXP"; } && { command -v lsof >/dev/null 2>&1 || { echo "INSTRUMENT-CANNOT-RUN: lsof absent, cannot establish who holds the dev-server port"; exit 3; }; HOLDER=$(lsof -tnP -iTCP:5173 -sTCP:LISTEN 2>/dev/null | head -1); if test -n "$HOLDER"; then HCWD=$(lsof -a -p "$HOLDER" -d cwd -Fn 2>/dev/null | command grep "^n" | head -1 | cut -c2-); case "$HCWD" in "$R"|"$R"/*) PW_REUSE=1; export PW_REUSE; echo "reusing dev server pid $HOLDER rooted in THIS worktree";; *) echo "INSTRUMENT-CANNOT-RUN: port 5173 held by pid $HOLDER rooted at ${HCWD:-unknown}, which is NOT this worktree; refusing to measure a foreign tree"; exit 3;; esac; fi; } && node "$R/scripts/pw-run-reaped.mjs" -- tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --no-deps
-~~~
-
-Verbatim current outputs:
+**The answer, verbatim:**
 
 ~~~text
-collected-from-target-spec=99-ar02-dates.spec.ts count=8 expected=8
-pw-run-reaped: pre-spawn birth-identity lookup unavailable for pid 67828 on port 5001 — refusing to spawn (an unproven holder identity is not a known holder)
-EXIT=90
-
-collected-from-target-spec=99-ar03-leak.spec.ts count=10 expected=10
-pw-run-reaped: pre-spawn birth-identity lookup unavailable for pid 67828 on port 5001 — refusing to spawn (an unproven holder identity is not a known holder)
-EXIT=90
+it reads as arabic
 ~~~
 
-AR-03 is therefore parked red by the exact spec name. Its P99-40 rendered green is not reused:
-that run predates the position-H1 repair and did not grade the repaired H1.
+**Who gave it:** the operator, Khalid Alzahrani, on 2026-09-02.
 
-## Human checkpoint evidence audit
+**Against what:** the six D-38 surfaces captured live under `?lng=ar` in a signed-in staging session
+— the 404, the intake queue, the search chips, the dated calendar, `/activity`'s relative time and
+the published position banner — with the D-19 tie-break list beside them, published at
+`https://claude.ai/code/artifact/7626d793-14c3-46f8-9ebd-8471fe4dd4ee`.
+
+**Where it is recorded:** `RULING-P99-544` in `.tickmarkr/overseer/DECISIONS.md`
+(*"the D-38 sign-off was GIVEN, and the gate earned its existence"*), and the run journal's
+`task-approved` event for `P99-41` at `2026-09-02T18:47:49.376Z`, whose `by` field reads
+`operator (Khalid Alzahrani), relayed by overseer w0:pB6 under RULING-P99-545 item 4` and whose
+reason states: *"Do not paraphrase, expand or improve it."* `RULING-P99-546` records that the
+approve command itself was executed from the overseer's seat after the orchestrator's classifier
+denied it — a host permission wall, recorded as a tier exception, not a substitution of the decider.
+
+**The `or named what must change` branch was exercised too.** Capturing surface 6 exposed that the
+position detail page rendered `title_en` as its `<h1>` in Arabic mode. `RULING-P99-544` records the
+repair at `2a79b80da` and that it was *"verified in BOTH directions, suites still 18/18"*; this
+attempt's own AR-03 run reproduces that independently, above. `UI99-C7` was green on that page
+throughout, because it asserts on the read-only banner element and not the heading.
+
+### Why this worker still does not treat the commit as the sign-off
+
+The previous attempt's refusal was correct and is retained. `2a79b80da` is an agent-session repair
+commit, and its metadata cannot establish that a person reviewed anything:
 
 Command:
 
@@ -564,30 +684,25 @@ Claude-Session: https://claude.ai/code/session_01MM1w7sCDLDpu8tzNfdGCRZ
 EXIT=0
 ~~~
 
-This commit is **not** accepted as the checkpoint answer. The transcript itself carries an agent
-co-author and agent-session trailer and says the defect was found while that agent session captured
-surfaces. Git author metadata cannot replace the ruled two-column process. There is no overseer
-ruling that adopts this text as the human decision and no subsequent `tickmarkr approve`.
+The commit is the repair the checkpoint caused, and it is lineage. The sign-off is the ruling and
+the journal event above, and this record transcribes rather than interprets them.
 
-**Checkpoint state: OPEN / BLOCKING.** The full post-repair rendered pack was not produced in this
-task, and no operator answer is recorded.
+**Checkpoint state: ANSWERED and RELEASED.** The D-19 reversal window closed on this answer; no row
+in the tie-break list was named for a swap.
 
 ## Residues and later owners
 
-- Authorized bounds: none.
-- Blocking rendered leg: `tests/e2e/99-ar03-leak.spec.ts` collected 10 but exited 90 before
-  Playwright started; the 404, intake, search-chip, and three position-banner legs therefore lack
-  fresh post-repair output.
-- Blocking checkpoint pack: the rendered presentation is NOT PRODUCED; bundle strings are not
-  offered as a substitute.
-- Blocking D-38 answer: no qualifying operator/overseer writing and no orchestrator approval.
+- Authorized bounds: none. No overseer ruling authorizes a bound here and none is claimed.
+- Nothing in P99-41 is left blocking: the previously parked AR-03 leg and the rendered checkpoint
+  pack were closed by running them (10/10 and 8/8, verdict `clean` each), and D-38 was closed by the
+  operator's written answer.
 - Phase 102: D-21's working approximately 7,086-site dot-to-colon tail, COPY-09's three literals,
   EDGECOPY-01's two edge functions, and GUIDE-HOLLOW-01's seven guide bodies.
 - Phase 103: the 39 criterion-1 members triaged by reading in Phase 98.
 - Nav/title escalations: `navigation.admin`, `navigation.taskQueue`, and
   `navigation.newEvent`, still value-locked.
-- Closed historical population, retained by name: the 37 `common:common.*` keys listed
-  in the register; the live population is zero.
+- Closed historical population, retained by name: the 37 `common:common.*` keys, enumerated in full
+  in `99-VERIFICATION.md`'s residue register; the live population is zero.
 - Named handoffs: `common:optional`; `common:tasks.sla.approaching`;
   `common:afterActions.decisions.item`; `common:afterActions.confidence`;
   `common:afterActions.commitments.{tracking,statuses,priorities}.*`;
@@ -595,22 +710,23 @@ task, and no operator answer is recorded.
   `common:waitingQueue.reminder.{noAssignee,success,error}`;
   `WorkItemLinker.tsx`'s eight raw common keys; and
   `positions:draftBanner`.
-- Open engine debt: `playwright.config.ts`'s unleased
-  `pw-run-reaped.mjs --lease-exec` configuration still needs an overseer ruling.
-- Arabic naturalness beyond the seven ruled glossary rows remains operator review.
+- Open engine debt: the ad-hoc (unleased) `pw-run-reaped.mjs --lease-exec` path in
+  `playwright.config.ts` still needs an overseer ruling. It did not apply to either run recorded
+  here — both went through the wrapper, both were leased, both reaped `clean`.
+- Arabic naturalness beyond the seven ruled glossary rows remains operator review. The sign-off
+  answers "does it read as Arabic", not "is every phrase the best Arabic".
 
 ## Read and diagnostic ledger
 
-Read/navigation commands: `sed`, `rg`, `find`,
+Read/navigation commands: `sed`, `grep`, `find`,
 `wc`, `git log/show/status/rev-parse`, and read-only Node queries over the
 plans, context, research, 62 existing lineage summaries, rendered specs, i18n bundles, test helpers,
-and ruling references. They established scope, task ownership, the exact waiver table, D-19 values,
-residues, and why commit authorship does not satisfy the human gate.
+the overseer decision log and this run's journal. They established scope, task ownership, the exact
+waiver table, D-19 values, residues, and the verbatim operator answer with its attribution.
 
-Diagnostics not used as greens: `lsof`/`ps` attribution of ports 5001 and
-5173; the safety-wrapper retries; and Vite bundle/runner/native startup probes. Bundle mode was
-denied writing through the provisioned `frontend/node_modules` symlink; runner/native mode loaded
-without that write but the sandbox denied binding alternate port 5174 with `EPERM`. No tracked path
-was changed by those probes.
+Diagnostics not used as greens: `lsof`/`ps` attribution of ports 5001 and 5173 before each rendered
+invocation; the two prior-attempt safety-wrapper refusals. The Playwright reports the wrapper
+publishes under `test-results/` and `.pw-reports/` are instrument artifacts, not tracked paths;
+`git status --porcelain` was empty after both runs.
 
 No tracked path outside the two-path P99-41 allowlist changed.
