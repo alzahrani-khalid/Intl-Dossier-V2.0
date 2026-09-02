@@ -2,10 +2,10 @@
 phase: 99-arabic-coverage
 plan: 41
 status: complete
-attempt: 4
-verified_at_local: 2026-09-02T23:28:38+03:00
-verified_at_utc: 2026-09-02T20:28:38Z
-head: 01cd074d1a36b38295fdc9eb26f710205c46af4b
+attempt: 5
+verified_at_local: 2026-09-02T23:50:20+03:00
+verified_at_utc: 2026-09-02T20:50:20Z
+head: a03e199e57c0e2743a81f5f00b291e86e684252e
 ---
 
 # Phase 99 consolidated re-proof register — P99-41 residue and operator sign-off
@@ -23,14 +23,16 @@ records. This register does not treat `2a79b80da` as the sign-off — the sign-o
 the journal event; the commit is the repair the checkpoint caused.
 
 The static battery was re-run at this register's recorded HEAD,
-`01cd074d1a36b38295fdc9eb26f710205c46af4b`: all fourteen recorded command blocks across its thirteen
-battery sections exited 0, each one re-executed and diffed against its transcribed output by a
-comparator that is itself drilled, all of it reproduced in `99-41-SUMMARY.md`. The `neg-taskcard`
+`a03e199e57c0e2743a81f5f00b291e86e684252e`: all fourteen recorded command blocks across its thirteen
+battery sections were re-executed and graded by a comparator that carries that exact population by
+name and refuses any other, and that passes a pair only on identical output **and** exit 0 —
+**14/14** — with the comparator itself drilled against a dropped section, an identical-output
+nonzero exit, and a doctored output, all of it reproduced in `99-41-SUMMARY.md`. The `neg-taskcard`
 negative control is gated by an assertion on its printed rows, because that script exits 0 whatever
 it prints. **Both rendered specs ran in this task and both are green: 8/8 and 10/10, 18/18 together,
 every leg post-repair.** Precisely: the two rendered runs executed at
 `b2b91836b0afd2889c7c3b68c57388572d85880d`, and the only commits between that and the recorded HEAD
-are doc-only — `git diff --name-only b2b91836b..01cd074d1` lists exactly the two files this task
+are doc-only — `git diff --name-only b2b91836b..a03e199e5` lists exactly the two files this task
 owns and **zero** files outside `.planning/`, so nothing those specs exercise changed underneath
 them. No criterion here leans on a P99-40 green: the earlier AR-03 run predates `2a79b80da` and is
 recorded as lineage only, never as evidence.

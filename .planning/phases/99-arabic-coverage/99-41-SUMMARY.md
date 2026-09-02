@@ -2,9 +2,9 @@
 phase: 99-arabic-coverage
 plan: 41
 status: complete
-head: 01cd074d1a36b38295fdc9eb26f710205c46af4b
-recorded_at_local: 2026-09-02T23:28:38+03:00
-recorded_at_utc: 2026-09-02T20:28:38Z
+head: a03e199e57c0e2743a81f5f00b291e86e684252e
+recorded_at_local: 2026-09-02T23:50:20+03:00
+recorded_at_utc: 2026-09-02T20:50:20Z
 ---
 
 # P99-41 Summary — residue register and operator checkpoint
@@ -30,10 +30,13 @@ row in the register now leans on a P99-40 green. The only commits between that H
 record's are doc-only, proven below, so nothing those specs exercise moved underneath them.
 
 The static battery was also re-executed in this attempt and every member's output was compared
-byte-for-byte against the block transcribed here by a comparator that is itself drilled: **14/14
-identical, 14/14 exit 0** at this record's own HEAD. The `neg-taskcard` negative control is now gated
-by a text assertion on its printed rows rather than by its exit code, which that script returns as 0
-unconditionally by design. There are no authorized bounds and nothing is recorded NOT CONSTRUCTED.
+byte-for-byte against the block transcribed here by a comparator that carries the battery's exact
+population by name — thirteen sections, fourteen pairs — and passes a pair only on identical output
+**and** exit 0: **14/14** at this record's own HEAD, with the comparator drilled against a dropped
+section, an identical-output nonzero exit, and a doctored output. The `neg-taskcard` negative control
+is gated by a text assertion on its printed rows rather than by its exit code, which that script
+returns as 0 unconditionally by design. There are no authorized bounds and nothing is recorded NOT
+CONSTRUCTED.
 
 ## Acceptance items
 
@@ -65,15 +68,20 @@ unconditionally by design. There are no authorized bounds and nothing is recorde
 Every static member below was re-executed in this attempt and its combined stdout/stderr compared
 byte-for-byte against the block transcribed beside it. The previous revision asserted
 `12 / 12 IDENTICAL` without showing the comparison that produced it; that omission is repaired here
-— the comparator, its output, and a drill proving it can report a difference are all recorded. It
-re-executes the recorded `~~~sh` blocks themselves, so it grades exactly what a reader sees, and it
-reads this file rather than a helper on disk.
+— the comparator, its output, and the drills proving it can report each kind of failure it gates are
+all recorded. It re-executes the recorded `~~~sh` blocks themselves, so it grades exactly what a
+reader sees, and it reads this file rather than a helper on disk.
 
-One hazard is worth naming, because the first draft of this comparator walked into it: quoting the
-script inside the very file it parses put a second copy of the section heading into that file, and a
-naive first-occurrence lookup then sliced the region at the script's own source text. The version
-below anchors on newline-delimited headings, asserts each occurs exactly once, and refuses to report
-a green if the parse yields fewer pairs than the battery has members.
+Two hazards are worth naming, because earlier drafts of this comparator walked into both. First,
+quoting the script inside the very file it parses put a second copy of the section heading into
+that file, and a naive first-occurrence lookup then sliced the region at the script's own source
+text; the version below anchors on newline-delimited headings and asserts each occurs exactly once.
+Second, the previous revision's comparator was unsound in two ways a reviewer caught: it accepted
+any parse of thirteen or more pairs, so a silently dropped pair still graded green, and it counted a
+pair as passed on output equality alone, so a command that reproduced its recorded text but exited
+nonzero still graded green. The version below carries the battery's exact population — thirteen
+sections and fourteen command/output pairs, each named — and refuses to grade anything else; and a
+pair passes only when its output is identical **and** its exit status is 0.
 
 Command:
 
@@ -84,22 +92,36 @@ ROOT,DOC=sys.argv[1],sys.argv[2]
 s=open(DOC,encoding='utf-8').read()
 # anchor on real headings (newline-delimited): this script's own source is quoted inside the file
 def head(h):
-    i=s.index('\n## '+h+'\n')
     assert s.count('\n## '+h+'\n')==1, h
-    return i
+    return s.index('\n## '+h+'\n')
 region=s[head('Fresh evidence commands and verbatim output'):head('Criterion-2 gate command: the rendered run')]
-pairs=re.findall(r'Command:\n\n~~~sh\n(.*?)\n~~~\n\nVerbatim stdout/stderr:\n\n~~~text\n(.*?)\n~~~',region,re.S)
-assert len(pairs)>=13, 'parser found %d pairs — refusing to report a green on a mis-parse'%len(pairs)
-print('sections=%d command/output pairs=%d'%(len(re.findall(r'\n### ([^\n]+)',region)),len(pairs)))
+# the battery's exact population, by section identity: 13 sections, 14 command/output pairs
+EXPECTED=[('Strict audit self-check',1),('Strict audit live JSON',1),('Dynamic-prefix maskfinder control',1),
+ ('Dynamic-prefix maskfinder live',1),('TaskCard negative control — gated by a text assertion, not by its exit code',2),
+ ('Resolution check live',1),('Nav/title planted control',1),('Nav/title live',1),('Glossary census planted control',1),
+ ('Glossary census live, with the full fresh census',1),('Date-format exemption/importer controls',1),
+ ('Date-format checker live',1),('Completion contract with the human gate closed',1)]
+PAIR=re.compile(r'Command:\n\n~~~sh\n(.*?)\n~~~\n\nVerbatim stdout/stderr:\n\n~~~text\n(.*?)\n~~~',re.S)
+found=[(sec.split('\n',1)[0],PAIR.findall(sec)) for sec in re.split(r'\n### ',region)[1:]]
+shape=[(n,len(ps)) for n,ps in found]
+if shape!=EXPECTED:
+    print('POPULATION MISMATCH — refusing to grade a battery that is not the recorded one')
+    for l in difflib.unified_diff(['%d × %s'%(c,n) for n,c in EXPECTED],['%d × %s'%(c,n) for n,c in shape],'expected','found',lineterm='',n=0): print('   '+l)
+    sys.exit(2)
+pairs=[(n,c,o) for n,ps in found for c,o in ps]
+assert len(pairs)==14 and sum(c for _,c in EXPECTED)==14
+print('sections=%d/13 command/output pairs=%d/14 — population matches by name'%(len(shape),len(pairs)))
 ok=0
-for i,(cmd,exp) in enumerate(pairs,1):
+for i,(sec,cmd,exp) in enumerate(pairs,1):
     p=subprocess.run(['zsh','-c',cmd],cwd=ROOT,capture_output=True,text=True)
-    got=(p.stdout+p.stderr).rstrip('\n'); exp=exp.rstrip('\n'); same=got==exp; ok+=same
-    print('%s pair %2d exit=%d md5=%s :: %s'%('IDENTICAL' if same else 'DIFFERS  ',i,p.returncode,hashlib.md5(got.encode()).hexdigest()[:8],cmd.split('\n')[0][:58]))
+    got=(p.stdout+p.stderr).rstrip('\n'); exp=exp.rstrip('\n'); same=got==exp; zero=p.returncode==0
+    passed=same and zero; ok+=passed
+    print('%s pair %2d exit=%d %s md5=%s :: %s'%('PASS' if passed else 'FAIL',i,p.returncode,'IDENTICAL' if same else 'DIFFERS  ',hashlib.md5(got.encode()).hexdigest()[:8],sec[:44]))
     if not same:
         for l in list(difflib.unified_diff(exp.split('\n'),got.split('\n'),'recorded','rerun',lineterm=''))[:8]: print('   '+l)
-print('identical: %d / %d'%(ok,len(pairs)))
-sys.exit(0 if ok==len(pairs) else 1)
+    if not zero: print('   exit status %d is not 0 — identical output does not rescue a nonzero exit'%p.returncode)
+print('passed (identical output AND exit 0): %d / 14'%ok)
+sys.exit(0 if ok==14 else 1)
 PY
 TKR_ST=$?; printf 'EXIT=%s\n' "$TKR_ST"; exit "$TKR_ST"
 ~~~
@@ -107,46 +129,100 @@ TKR_ST=$?; printf 'EXIT=%s\n' "$TKR_ST"; exit "$TKR_ST"
 Verbatim stdout/stderr:
 
 ~~~text
-sections=13 command/output pairs=14
-IDENTICAL pair  1 exit=0 md5=a8c3af4e :: PATH="/opt/homebrew/bin:$PATH" node scripts/i18n-audit-str
-IDENTICAL pair  2 exit=0 md5=5a7ed01a :: PATH="/opt/homebrew/bin:$PATH" node scripts/i18n-audit-str
-IDENTICAL pair  3 exit=0 md5=ee571f22 :: PATH="/opt/homebrew/bin:$PATH" python3 scripts/partA_maskf
-IDENTICAL pair  4 exit=0 md5=82629919 :: PATH="/opt/homebrew/bin:$PATH" python3 scripts/partA_maskf
-IDENTICAL pair  5 exit=0 md5=30273a13 :: PATH="/opt/homebrew/bin:$PATH"; OUT=$(node scripts/neg-tas
-IDENTICAL pair  6 exit=0 md5=3e37c814 :: PATH="/opt/homebrew/bin:$PATH"; OUT=$(node scripts/neg-tas
-IDENTICAL pair  7 exit=0 md5=5cd5f339 :: PATH="/opt/homebrew/bin:$PATH" node scripts/resolve-check.
-IDENTICAL pair  8 exit=0 md5=d19db23b :: PATH="/opt/homebrew/bin:$PATH" node scripts/nav-title-agre
-IDENTICAL pair  9 exit=0 md5=dd1aa563 :: PATH="/opt/homebrew/bin:$PATH" node scripts/nav-title-agre
-IDENTICAL pair 10 exit=0 md5=a50b6523 :: PATH="/opt/homebrew/bin:$PATH" node scripts/glossary-censu
-IDENTICAL pair 11 exit=0 md5=bfb5380a :: PATH="/opt/homebrew/bin:$PATH" node scripts/glossary-censu
-IDENTICAL pair 12 exit=0 md5=cd693063 :: PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; DEADIMP=$(comman
-IDENTICAL pair 13 exit=0 md5=c4852984 :: PATH="/opt/homebrew/bin:$PATH" node scripts/check-date-for
-IDENTICAL pair 14 exit=0 md5=9855ba8f :: node scripts/completion-contract-check.mjs --summaries .pl
-identical: 14 / 14
+sections=13/13 command/output pairs=14/14 — population matches by name
+PASS pair  1 exit=0 IDENTICAL md5=a8c3af4e :: Strict audit self-check
+PASS pair  2 exit=0 IDENTICAL md5=5a7ed01a :: Strict audit live JSON
+PASS pair  3 exit=0 IDENTICAL md5=ee571f22 :: Dynamic-prefix maskfinder control
+PASS pair  4 exit=0 IDENTICAL md5=82629919 :: Dynamic-prefix maskfinder live
+PASS pair  5 exit=0 IDENTICAL md5=30273a13 :: TaskCard negative control — gated by a text 
+PASS pair  6 exit=0 IDENTICAL md5=3e37c814 :: TaskCard negative control — gated by a text 
+PASS pair  7 exit=0 IDENTICAL md5=5cd5f339 :: Resolution check live
+PASS pair  8 exit=0 IDENTICAL md5=d19db23b :: Nav/title planted control
+PASS pair  9 exit=0 IDENTICAL md5=dd1aa563 :: Nav/title live
+PASS pair 10 exit=0 IDENTICAL md5=a50b6523 :: Glossary census planted control
+PASS pair 11 exit=0 IDENTICAL md5=bfb5380a :: Glossary census live, with the full fresh ce
+PASS pair 12 exit=0 IDENTICAL md5=cd693063 :: Date-format exemption/importer controls
+PASS pair 13 exit=0 IDENTICAL md5=c4852984 :: Date-format checker live
+PASS pair 14 exit=0 IDENTICAL md5=9855ba8f :: Completion contract with the human gate clos
+passed (identical output AND exit 0): 14 / 14
 EXIT=0
 ~~~
 
-**The comparator can fire.** Re-pointed through `TKR_DOC` at a copy of this file whose transcribed
-maskfinder line was doctored from `0 total` to `7 total`, it names the offending pair, prints the
-diff, and exits 1 (head and tail shown):
+**The comparator can fire, on each of the three causes it gates.** Each drill re-points the same
+recorded command through `TKR_DOC` at a doctored copy of this file written outside the worktree; the
+battery commands themselves still run in this worktree, so only the doctoring differs.
+
+**Drill 1 — a dropped pair.** The copy omits the `Nav/title planted control` section entirely, so
+the parse yields thirteen pairs. The previous `>= 13` guard accepted exactly that; this one refuses
+before running a single command:
 
 ~~~text
-sections=13 command/output pairs=14
-IDENTICAL pair  1 exit=0 md5=a8c3af4e :: PATH="/opt/homebrew/bin:$PATH" node scripts/i18n-audit-str
-IDENTICAL pair  2 exit=0 md5=5a7ed01a :: PATH="/opt/homebrew/bin:$PATH" node scripts/i18n-audit-str
-IDENTICAL pair  3 exit=0 md5=ee571f22 :: PATH="/opt/homebrew/bin:$PATH" python3 scripts/partA_maskf
-DIFFERS   pair  4 exit=0 md5=82629919 :: PATH="/opt/homebrew/bin:$PATH" python3 scripts/partA_maskf
+POPULATION MISMATCH — refusing to grade a battery that is not the recorded one
+   --- expected
+   +++ found
+   @@ -7 +6,0 @@
+   -1 × Nav/title planted control
+EXIT=2
+~~~
+
+**Drill 2 — identical output, nonzero exit.** The copy's maskfinder-live command ends in `exit 1`
+instead of `exit "$TKR_ST"`, so it prints exactly the recorded text — including its own `EXIT=0`
+line — and then exits 1. The previous comparator counted that identical; this one fails the pair:
+
+~~~text
+sections=13/13 command/output pairs=14/14 — population matches by name
+PASS pair  1 exit=0 IDENTICAL md5=a8c3af4e :: Strict audit self-check
+PASS pair  2 exit=0 IDENTICAL md5=5a7ed01a :: Strict audit live JSON
+PASS pair  3 exit=0 IDENTICAL md5=ee571f22 :: Dynamic-prefix maskfinder control
+FAIL pair  4 exit=1 IDENTICAL md5=82629919 :: Dynamic-prefix maskfinder live
+   exit status 1 is not 0 — identical output does not rescue a nonzero exit
+PASS pair  5 exit=0 IDENTICAL md5=30273a13 :: TaskCard negative control — gated by a text 
+PASS pair  6 exit=0 IDENTICAL md5=3e37c814 :: TaskCard negative control — gated by a text 
+PASS pair  7 exit=0 IDENTICAL md5=5cd5f339 :: Resolution check live
+PASS pair  8 exit=0 IDENTICAL md5=d19db23b :: Nav/title planted control
+PASS pair  9 exit=0 IDENTICAL md5=dd1aa563 :: Nav/title live
+PASS pair 10 exit=0 IDENTICAL md5=a50b6523 :: Glossary census planted control
+PASS pair 11 exit=0 IDENTICAL md5=bfb5380a :: Glossary census live, with the full fresh ce
+PASS pair 12 exit=0 IDENTICAL md5=cd693063 :: Date-format exemption/importer controls
+PASS pair 13 exit=0 IDENTICAL md5=c4852984 :: Date-format checker live
+PASS pair 14 exit=0 IDENTICAL md5=9855ba8f :: Completion contract with the human gate clos
+passed (identical output AND exit 0): 13 / 14
+EXIT=1
+~~~
+
+**Drill 3 — a doctored recorded output.** The copy's transcribed maskfinder line reads `7 total`
+instead of `0 total`; the comparator names the pair, prints the diff, and exits 1:
+
+~~~text
+sections=13/13 command/output pairs=14/14 — population matches by name
+PASS pair  1 exit=0 IDENTICAL md5=a8c3af4e :: Strict audit self-check
+PASS pair  2 exit=0 IDENTICAL md5=5a7ed01a :: Strict audit live JSON
+PASS pair  3 exit=0 IDENTICAL md5=ee571f22 :: Dynamic-prefix maskfinder control
+FAIL pair  4 exit=0 DIFFERS   md5=82629919 :: Dynamic-prefix maskfinder live
    --- recorded
-   ...
-IDENTICAL pair 14 exit=0 md5=9855ba8f :: node scripts/completion-contract-check.mjs --summaries .pl
-identical: 13 / 14
+   +++ rerun
+   @@ -1,2 +1,2 @@
+   -UNRESOLVED dynamic t() key prefixes: 7 total  (0 mask a raw value -> criterion 1; 0 render a RAW KEY -> criterion 2)
+   +UNRESOLVED dynamic t() key prefixes: 0 total  (0 mask a raw value -> criterion 1; 0 render a RAW KEY -> criterion 2)
+    EXIT=0
+PASS pair  5 exit=0 IDENTICAL md5=30273a13 :: TaskCard negative control — gated by a text 
+PASS pair  6 exit=0 IDENTICAL md5=3e37c814 :: TaskCard negative control — gated by a text 
+PASS pair  7 exit=0 IDENTICAL md5=5cd5f339 :: Resolution check live
+PASS pair  8 exit=0 IDENTICAL md5=d19db23b :: Nav/title planted control
+PASS pair  9 exit=0 IDENTICAL md5=dd1aa563 :: Nav/title live
+PASS pair 10 exit=0 IDENTICAL md5=a50b6523 :: Glossary census planted control
+PASS pair 11 exit=0 IDENTICAL md5=bfb5380a :: Glossary census live, with the full fresh ce
+PASS pair 12 exit=0 IDENTICAL md5=cd693063 :: Date-format exemption/importer controls
+PASS pair 13 exit=0 IDENTICAL md5=c4852984 :: Date-format checker live
+PASS pair 14 exit=0 IDENTICAL md5=9855ba8f :: Completion contract with the human gate clos
+passed (identical output AND exit 0): 13 / 14
 EXIT=1
 ~~~
 
 So the blocks below are this attempt's output as much as the previous attempt's; they are not greens
-carried forward from an earlier wave. `neg-taskcard` now contributes **two** pairs — its text
-assertion and that assertion's own drill — which is why the count is 14 rather than the 12 claimed
-before.
+carried forward from an earlier wave. `neg-taskcard` contributes **two** pairs — its text assertion
+and that assertion's own drill — which is why the population is 14 rather than the 12 claimed
+before, and the comparator now holds that population by name rather than by a lower bound.
 
 ## Fresh evidence commands and verbatim output
 
@@ -679,7 +755,7 @@ is the observation rather than the assertion:
 Command:
 
 ~~~sh
-A=b2b91836b0afd2889c7c3b68c57388572d85880d; B=01cd074d1a36b38295fdc9eb26f710205c46af4b; git diff --name-only "$A".."$B"; N=$(git diff --name-only "$A".."$B" | command grep -v '^\.planning/' | command grep -c . || true); T=$(git diff --name-only "$A".."$B" | command grep -c . || true); echo "files changed=$T ; files outside .planning/=$N (require 0)"; test "$N" -eq 0; TKR_ST=$?; printf 'EXIT=%s\n' "$TKR_ST"; exit "$TKR_ST"
+A=b2b91836b0afd2889c7c3b68c57388572d85880d; B=a03e199e57c0e2743a81f5f00b291e86e684252e; git diff --name-only "$A".."$B"; N=$(git diff --name-only "$A".."$B" | command grep -v '^\.planning/' | command grep -c . || true); T=$(git diff --name-only "$A".."$B" | command grep -c . || true); echo "files changed=$T ; files outside .planning/=$N (require 0)"; test "$N" -eq 0; TKR_ST=$?; printf 'EXIT=%s\n' "$TKR_ST"; exit "$TKR_ST"
 ~~~
 
 Verbatim stdout/stderr:
@@ -856,8 +932,8 @@ invocation; the two prior-attempt safety-wrapper refusals. The Playwright report
 publishes under `test-results/` and `.pw-reports/` are instrument artifacts, not tracked paths;
 `git status --porcelain` was empty after both runs.
 
-The battery comparator was developed and its drill fixture (a doctored copy of this file) was
-written **outside the worktree**, in the session scratchpad, so no probe of this record left a file
+The battery comparator was developed and its three drill fixtures (doctored copies of this file)
+were written **outside the worktree**, in the session scratchpad, so no probe of this record left a file
 inside the tree a grader reads. The comparator as recorded above needs none of that: it is
 self-contained and re-runnable from this file alone.
 
