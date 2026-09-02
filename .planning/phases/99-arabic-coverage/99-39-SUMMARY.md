@@ -1,114 +1,78 @@
 ---
 phase: 99-arabic-coverage
 plan: 39
-status: blocked
-attempt: 4
-head: 2998b7cdad476ecc8569a3b16d2bb7f91ffa704d
-recorded_at_local: 2026-09-02T05:32:07+03:00
-recorded_at_utc: 2026-09-02T02:32:07Z
+status: complete
+attempt: 5
+head: 7bbfd55bddd56ae78b92420386f97c1dddb94b67
+recorded_at_local: 2026-09-02T05:45:42+03:00
+recorded_at_utc: 2026-09-02T02:45:42Z
 ---
 
-# P99-39 Summary — static battery green, rendered gate blocked
+# P99-39 Summary — static battery green, rendered gate EXECUTED 18/18
 
 ## Outcome
 
-Attempt 4 of this task re-ran every evidence command in this record (section 17); the blocker is
-unchanged for the fourth consecutive attempt.
-The static battery is green. This task is **not complete** and the front-matter intentionally
-does not say `status: complete`: the plan-owned rendered oracle exited 3 before Playwright
-execution because PID 95414 holds port 5173 from the main checkout's `frontend` directory,
-outside this worktree. RULING-P99-537 requires exactly that refusal. I did not terminate the
-process, reuse it, disguise its cwd, or substitute an alternate-port run.
+Every criterion this task owns now has a fresh, controlled, named proof, produced in this task in
+one session. The blocker that failed attempts 0 through 4 — a dev server from the **main
+checkout** holding TCP 5173 — was released before this attempt began, so the unchanged plan-owned
+rendered gate ran instead of taking its `INSTRUMENT-CANNOT-RUN` branch.
 
-The holder's provenance is established in section 14. It was spawned at 04:37:35 local by this
-tickmarkr run's own baseline pass, which executed this task's rendered oracle in the main checkout
-before any worker was dispatched (section 15). The oracle invokes Playwright ad hoc, so the
-config's `pw-run-reaped.mjs --lease-exec` wrapper ran unleased and detached, and the dev server
-outlived the baseline. Attempts 0 through 4 have all refused the same holder.
-Terminating a process in the main checkout is outside this task's authority; release rests with
-the harness operator, and the structural fix is a plan-text change named under the unblock
-condition.
+| Gate / battery member | Control first | Live result | Exit |
+| --- | --- | --- | --- |
+| `nav-title-agreement.mjs` | planted mismatch caught, true agreement preserved | 28/28 adjudicated; 25 agree; 3 escalated; all defect counters 0 | 0 |
+| `glossary-census.mjs` | 4 planted illegal senses caught, legal senses preserved | 17,022 leaves / 129 files; `ruled=1657 allowlisted=292 UNCLASSIFIED=0` | 0 |
+| `i18n-audit-strict.mjs` | `--self-check` 18/18 predicates, fixture `rawKeyTotal: 2` | `scannedFiles: 1532`, `twoArgTotal: 0`, `rawKeyTotal: 8518`, all 6 unresolved counters 0 | 0 |
+| `partA_maskfinder.py` | 4/4 polarities asserted (2 true, 2 false) | `UNRESOLVED dynamic t() key prefixes: 0 total` | 0 |
+| `neg-taskcard.mjs` -> `resolve-check.mjs` | 3 × `MISS=true` printed **before** the live run | `214 lookups across 11 routings x 2 locales — routings with a miss: 0` | 0 |
+| `check-date-formatting.mjs` | dead-exemption importers 0 while live comparison has 29 | 1,533 files, 0 unexcused sites, 0 debt rows | 0 |
+| `completion-contract-check.mjs` | drilled `1/2` exit 1; empty dir exit 3 | live phase directory `60/60` | 0 |
+| **Plan-owned STATIC gate (verbatim)** | every control inline | all clauses green | **0** |
+| **Plan-owned RENDERED gate (verbatim)** | collection 8 and 10 hardcoded, port guard resolved | `rendered battery executed by THIS gate: 18/18 (ar02 8 + ar03 10)` | **0** |
+| `99-ar02-dates.spec.ts` alone | collection control 8 | `8 passed (16.2s)`, all 8 `✓` | 0 |
+| `99-ar03-leak.spec.ts` alone | collection control 10 | `10 passed (50.2s)`, all 10 `✓`, incl. 3 banner states | 0 |
 
-The typed gate's collection controls reached the required 8 and 10 populations before the port
-guard. Because execution never began, there is no `18 passed` result, no fresh 8/8 or 10/10 result,
-and no fresh three-banner-state result. Criteria 2 and 3 remain red by missing execution. D-38 is
-also not answered by this worker; P99-41 remains the human-checkpoint owner.
+## Which output rule this record applies
 
-This record applies **RULING-P99-538**. Every command whose output is evidence for a criterion,
-control, instrument, population, or blocker appears below with verbatim output. Commands used only
-to navigate or read are listed by command and purpose without embedding their read output. No
-prior SUMMARY output is presented as a fresh green. The outputs in sections 1 to 11 were produced
-in attempt 1 and re-produced byte-identically in attempt 3 by the comparator in section 13 and again
-in attempt 4 by the same comparator in section 17; the comparator's own DIFF rows (provenance and
-scope, plus in attempt 4 the attempt-stamped census and the growing journal) are its discriminating
-control.
+This record applies **RULING-P99-538**. Every command whose output is EVIDENCE for a criterion —
+each instrument, each control, each typed gate, each spec run, and each population re-derivation —
+is reproduced below with its command and its **verbatim, unedited** output. Commands that only
+navigated or read the tree are listed by name and purpose in the ledger at the end, without their
+output, exactly as that ruling permits.
 
-## Battery result table
+Nothing below is paraphrased, grouped, elided, or quoted from an earlier summary. No evidence
+command's output is replaced by a note. The one run that is *summarised rather than reproduced* is
+a discarded diagnostic that is not evidence for any criterion; it is disclosed in section 8 with
+its cause, and no criterion rests on it.
 
-| Battery member | Result in this task |
-| --- | --- |
-| nav-title control / 28-row live walk | PASS / PASS: 28 adjudicated, 25 agree, 3 escalated, zero unruled defects |
-| glossary control / repo-wide live / drilled census | PASS / PASS / PASS: 129 files, 17,022 leaves, zero unclassified |
-| strict self-check / live bilingual audit | PASS / PASS: 1,532 files, `twoArgTotal=0`, `rawKeyTotal=8518`, every unresolved counter zero |
-| maskfinder control / live | PASS / PASS: four polarities agree, zero prefixes |
-| neg-taskcard / resolve-check | PASS / PASS: 3 × `MISS=true`, 214 lookups, zero routing misses |
-| date exemption/import control / live scan | PASS / PASS: live importer control 29, zero unexcused sites, zero debt |
-| completion marker negative control | PASS: markerless fixture drilled 1/2 and instrument exited 1 |
-| exact P99-39 static command oracle | PASS: exit 0 after this register existed |
-| rendered own typed gate | **INSTRUMENT-CANNOT-RUN (exit 3)**: foreign holder on TCP 5173; no test executed |
-| attempt-3 comparator over all 20 recorded pairs | 18 SAME (every instrument, control, gate) / 2 DIFF (provenance, scope) as expected |
-| holder provenance census (attempt 3) | ESTABLISHED: baseline-spawned under the harness session environment, main checkout, zero established connections |
-| attempt-4 comparator over all 23 recorded pairs | 19 SAME (every instrument, control, gate, port recheck, population re-derivation) / 4 DIFF (provenance, attempt-stamped census, appended journal, scope) as expected |
-| holder provenance census (attempt 4) | UNCHANGED: same two PIDs, same 04:37:35 birth, same main-checkout cwd, zero established connections |
+The plan's own oracle strings were extracted from `99-39-PLAN.md` programmatically and verified to
+re-encode byte-for-byte back to the plan's YAML lines (`oracle1: ROUND-TRIP EXACT`,
+`oracle2: ROUND-TRIP EXACT`, `oracle3: ROUND-TRIP EXACT`) before being run, so what ran below is
+the compiled gate text and not a retyped approximation.
 
-## Evidence commands and verbatim outputs
+## 1. Static instrument battery — one session, each control before its live run
 
-### 1. Nav-title control, then live 28-row population
-
-Command:
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/nav-title-agreement.mjs" "$R" --control; ST=$?; echo "EXIT_CODE=$ST"; exit "$ST"
-```
-
-Verbatim output:
+The whole battery ran as one script, in this order, so no live zero appears before the control
+that proves the instrument can be non-zero. `neg-taskcard` deliberately precedes `resolve-check`,
+which the previous revision of this record got the wrong way round.
 
 ```text
+##### 1. nav-title-agreement --control (CONTROL FIRST)
+=====CMD===== node /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39/scripts/nav-title-agreement.mjs /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39 --control
 {
   "control": "PASS",
   "plantedMismatchCaught": true,
   "positiveAgreementPreserved": true
 }
-EXIT_CODE=0
-```
-
-Command:
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/nav-title-agreement.mjs" "$R"; ST=$?; echo "EXIT_CODE=$ST"; exit "$ST"
-```
-
-Verbatim output:
-
-```text
+=====EXIT===== 0
+##### 2. nav-title-agreement live
+=====CMD===== node /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39/scripts/nav-title-agreement.mjs /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39
 nav/title walk: 28/28 adjudicated; 25 agree; 3 escalated; 0 unruled mismatch; 0 missing anchor; 0 missing navigation locale key; 0 duplicate term pattern; 0 cross-matching term row; 0 row coverage issue; 0 common repair issue; 0 decision artifact issue
 ESCALATED-UNRULED OBJECT-TERM MISMATCH	common:navigation.admin="الإدارة"	ai-admin:settings.title="إعدادات الذكاء الاصطناعي"	ruled=الإدارة
 ESCALATED-UNRULED OBJECT-TERM MISMATCH	common:navigation.taskQueue="قائمة المهام"	assignments:queue.title="قائمة انتظار التعيينات"	ruled=قائمة المهام
 ESCALATED-UNRULED OBJECT-TERM MISMATCH	common:navigation.newEvent="فعالية جديدة"	calendar:new_event.title="إدخال تقويم جديد"	ruled=فعالية جديدة
-EXIT_CODE=0
-```
-
-### 2. Glossary control, live verdict, then every-row census
-
-Command:
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/glossary-census.mjs" "$R" --control; ST=$?; echo "EXIT_CODE=$ST"; exit "$ST"
-```
-
-Verbatim output:
-
-```text
+=====EXIT===== 0
+##### 3. glossary-census --control (CONTROL FIRST)
+=====CMD===== node /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39/scripts/glossary-census.mjs /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39 --control
 {
   "control": "PASS",
   "realFilePreserved": true,
@@ -131,72 +95,13 @@ Verbatim output:
   "allowlistedBriefPluralCount": 1,
   "plantedUnclassifiedBriefPluralCount": 1
 }
-EXIT_CODE=0
-```
-
-Command:
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/glossary-census.mjs" "$R"; ST=$?; echo "EXIT_CODE=$ST"; exit "$ST"
-```
-
-Verbatim output:
-
-```text
+=====EXIT===== 0
+##### 4. glossary-census live
+=====CMD===== node /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39/scripts/glossary-census.mjs /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39
 UNCLASSIFIED glossary occurrences: 0
-EXIT_CODE=0
-```
-
-Command:
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/glossary-census.mjs" "$R" --census; ST=$?; echo "EXIT_CODE=$ST"; exit "$ST"
-```
-
-Verbatim output:
-
-```text
-glossary census: 17022 Arabic leaf values across 129 file(s)
-dossier	ruled=دوسيه	before=143	after=685	unclassified=0
-  دوسيه	ruled-term	occurrences=685	lines=673	values=674	files=86	ruled=685	allowlisted=0	unclassified=0
-  دوسييه	competing-term	occurrences=2	lines=2	values=2	files=1	ruled=0	allowlisted=2	unclassified=0
-  ملف	competing-term	occurrences=141	lines=135	values=135	files=25	ruled=0	allowlisted=141	unclassified=0
-engagement	ruled=مشاركة / المشاركات	before=17	after=333	unclassified=0
-  مشاركة	ruled-term	occurrences=333	lines=319	values=330	files=71	ruled=333	allowlisted=0	unclassified=0
-  ارتباط	competing-term	occurrences=17	lines=17	values=17	files=7	ruled=0	allowlisted=17	unclassified=0
-brief-artifact	ruled=ملخص / الملخصات	before=77	after=284	unclassified=0
-  ملخص	ruled-term	occurrences=284	lines=277	values=277	files=56	ruled=284	allowlisted=0	unclassified=0
-  موجز	competing-term	occurrences=22	lines=22	values=22	files=9	ruled=0	allowlisted=22	unclassified=0
-  إحاطة	competing-term	occurrences=55	lines=54	values=55	files=12	ruled=0	allowlisted=55	unclassified=0
-  إحاطات	competing-term	occurrences=0	lines=0	values=0	files=0	ruled=0	allowlisted=0	unclassified=0
-briefing-session	ruled=إحاطة	before=0	after=55	unclassified=0
-  إحاطة	ruled-term	occurrences=55	lines=54	values=55	files=12	ruled=55	allowlisted=0	unclassified=0
-stance	ruled=موقف / المواقف	before=55	after=223	unclassified=0
-  موقف	ruled-term	occurrences=223	lines=217	values=217	files=39	ruled=223	allowlisted=0	unclassified=0
-  منصب	competing-term	occurrences=46	lines=46	values=46	files=11	ruled=0	allowlisted=46	unclassified=0
-  مناصب	competing-term	occurrences=9	lines=9	values=9	files=6	ruled=0	allowlisted=9	unclassified=0
-country	ruled=الدول	before=0	after=59	unclassified=0
-  الدول	ruled-term	occurrences=59	lines=59	values=59	files=25	ruled=59	allowlisted=0	unclassified=0
-  البلدان	competing-term	occurrences=0	lines=0	values=0	files=0	ruled=0	allowlisted=0	unclassified=0
-intake-vs-waiting-queue	ruled=قائمة الاستقبال / قائمة الانتظار	before=0	after=18	unclassified=0
-  قائمة الاستقبال	ruled-term	occurrences=4	lines=4	values=4	files=2	ruled=4	allowlisted=0	unclassified=0
-  قائمة الانتظار	ruled-term	occurrences=14	lines=14	values=14	files=2	ruled=14	allowlisted=0	unclassified=0
-classification totals: ruled=1657 allowlisted=292 UNCLASSIFIED=0
-UNCLASSIFIED glossary occurrences: 0
-EXIT_CODE=0
-```
-
-### 3. Strict audit self-check, then live bilingual population
-
-Command:
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/i18n-audit-strict.mjs" "$R" --self-check; ST=$?; echo "EXIT_CODE=$ST"; exit "$ST"
-```
-
-Verbatim output:
-
-```text
+=====EXIT===== 0
+##### 5. i18n-audit-strict --self-check (CONTROL FIRST)
+=====CMD===== node /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39/scripts/i18n-audit-strict.mjs /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39 --self-check
 {
   "selfCheck": "PASS",
   "passed": true,
@@ -263,18 +168,9 @@ Verbatim output:
     "defectiveModelVisiblyReclassified": true
   }
 }
-EXIT_CODE=0
-```
-
-Command:
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/i18n-audit-strict.mjs" "$R" --json; ST=$?; echo "EXIT_CODE=$ST"; exit "$ST"
-```
-
-Verbatim output:
-
-```text
+=====EXIT===== 0
+##### 6. i18n-audit-strict --json live
+=====CMD===== node /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39/scripts/i18n-audit-strict.mjs /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39 --json
 {
   "root": "/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39",
   "scannedRoot": "/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39/frontend/src",
@@ -332,77 +228,29 @@ Verbatim output:
   "sites": [],
   "nonKeys": []
 }
-EXIT_CODE=0
-```
-
-The live `rawKeyTotal=8518` is the positive control against a walked-nothing zero. The plan's
-JSON assertion explicitly fails when `rawKeyTotal===0`; the self-check ran first and proves both
-test exclusion and nonempty positive fixtures.
-
-### 4. Dynamic-prefix mask control, then live zero
-
-Command:
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; python3 "$R/scripts/partA_maskfinder.py" "$R" --control; ST=$?; echo "EXIT_CODE=$ST"; exit "$ST"
-```
-
-Verbatim output:
-
-```text
+=====EXIT===== 0
+##### 7. partA_maskfinder --control (CONTROL FIRST)
+=====CMD===== python3 /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39/scripts/partA_maskfinder.py /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39 --control
 CONTROL resolves(intelligence-signals, "severity") = True (expect True)
 CONTROL resolves(common, "waitingQueue.statuses")  = True (expect True)
 CONTROL resolves(common, "waitingQueue.status")    = False (expect False)
 CONTROL resolves(common, "waitingQueue.priority")  = False (expect False)
-EXIT_CODE=0
-```
-
-Command:
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; python3 "$R/scripts/partA_maskfinder.py" "$R"; ST=$?; echo "EXIT_CODE=$ST"; exit "$ST"
-```
-
-Verbatim output:
-
-```text
+=====EXIT===== 0
+##### 8. partA_maskfinder live
+=====CMD===== python3 /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39/scripts/partA_maskfinder.py /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39
 UNRESOLVED dynamic t() key prefixes: 0 total  (0 mask a raw value -> criterion 1; 0 render a RAW KEY -> criterion 2)
-EXIT_CODE=0
-```
-
-### 5. Resolution negative/positive control first, then live routings
-
-`neg-taskcard.mjs` is the instrument's required external negative control and includes a resolving
-contrast. It was run before `resolve-check.mjs`, so the live routing rows are not the first evidence
-from the resolution harness.
-
-Command:
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/neg-taskcard.mjs" "$R"; ST=$?; echo "EXIT_CODE=$ST"; exit "$ST"
-```
-
-Verbatim output:
-
-```text
+=====EXIT===== 0
+##### 9. neg-taskcard (NEGATIVE CONTROL for resolve-check, RUN BEFORE IT)
+=====CMD===== node /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39/scripts/neg-taskcard.mjs /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39
 🌐 i18next is made possible by our own product, Locize — consider powering your project with managed localization (AI, CDN, integrations): https://locize.com 💙
   TaskCard t('priority.low') ns=translation -> "priority.low"  MISS=true
   TaskCard t('status.in_progress') ns=translation -> "status.in_progress"  MISS=true
   TaskCard t('work_item.task') ns=translation -> "work_item.task"  MISS=true
   (for contrast, the family that DOES hold these:)
   t('priority.low') ns=assignments -> "Low"
-EXIT_CODE=0
-```
-
-Command:
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/resolve-check.mjs" "$R"; ST=$?; echo "EXIT_CODE=$ST"; exit "$ST"
-```
-
-Verbatim output:
-
-```text
+=====EXIT===== 0
+##### 10. resolve-check live
+=====CMD===== node /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39/scripts/resolve-check.mjs /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39
 🌐 i18next is made possible by our own product, Locize — consider powering your project with managed localization (AI, CDN, integrations): https://locize.com 💙
 
 ===== locale en (fallbackLng disabled, so an en miss cannot borrow en) =====
@@ -435,94 +283,74 @@ CONTROL negative: t('sourceType.__not_a_real_member__') -> "sourceType.__not_a_r
 CONTROL positive: t('sourceType.human_entered') -> "Human entered" ; detected-as-miss=false
 
 214 lookups across 11 routings x 2 locales — routings with a miss: 0
-EXIT_CODE=0
-```
-
-### 6. Date-format exemption control, then live scan
-
-Command:
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; DEADIMP=$(command grep -rn "EnhancedActivityFeed" "$R/frontend/src" --include="*.ts" --include="*.tsx" | command grep -v "activity-feed/EnhancedActivityFeed.tsx:" | command grep -c . || true); LIVEIMP=$(command grep -rn "SharedRecentActivityCard" "$R/frontend/src" --include="*.ts" --include="*.tsx" | command grep -v "SharedRecentActivityCard.tsx:" | command grep -c . || true); echo "date-format controls: exempt-file importers=$DEADIMP (expect 0) live-control importers=$LIVEIMP (expect >0)"; test "$LIVEIMP" -gt 0 || exit 3; test "$DEADIMP" -eq 0; ST=$?; echo "EXIT_CODE=$ST"; exit "$ST"
-```
-
-Verbatim output:
-
-```text
+=====EXIT===== 0
+##### 11. date-format importer census (LIVE control + exempt-file census)
+=====CMD===== grep -rn EnhancedActivityFeed / SharedRecentActivityCard importer census
 date-format controls: exempt-file importers=0 (expect 0) live-control importers=29 (expect >0)
-EXIT_CODE=0
-```
-
-Command:
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/check-date-formatting.mjs"; ST=$?; echo "EXIT_CODE=$ST"; exit "$ST"
-```
-
-Verbatim output:
-
-```text
+=====EXIT===== 0
+##### 12. check-date-formatting live
+=====CMD===== node /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39/scripts/check-date-formatting.mjs
 date-formatting check OK: 1533 non-test file(s) scanned, 0 unexcused ad-hoc date/number formatting sites (raw toLocaleDateString/toLocaleTimeString, month-first date-fns literals, Indic locale literals, relative time, localized skeletons, 12-hour literals, date-receiver toLocaleString, Intl.RelativeTimeFormat, local relative-time declarations, hand-assembled short relative forms) outside the 2-file allowlist (lib/format-date.ts, components/ui/calendar.tsx) and the 6 named permanent exemption(s) (see EXEMPT — each states its reason, and the dead-code one states its VOID CONDITION). Named debt: 0 row(s) excusing 0 site(s), all owned by plan 98-07.
-EXIT_CODE=0
+=====EXIT===== 0
 ```
 
-### 7. Completion-contract negative control
+## 2. Glossary census over every ruled row, repo-wide
 
-Command:
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; TMP=$(mktemp -d /tmp/p99-39-completion.XXXXXX); printf '%s\n' '---' 'status: complete' '---' '# controlled complete summary' > "$TMP/99-01-SUMMARY.md"; printf '%s\n' '# controlled markerless summary' > "$TMP/99-02-SUMMARY.md"; node "$R/scripts/completion-contract-check.mjs" --summaries "$TMP"; ST=$?; echo "CONTROL_EXPECTED_EXIT_CODE=$ST"; test "$ST" -eq 1; ST=$?; echo "EXIT_CODE=$ST"; exit "$ST"
-```
-
-Verbatim output:
+The live verdict above is a single zero; this is the drilled per-row census behind it, which is
+what criterion 1 requires. Every one of the seven ruled rows reports `unclassified=0` on its own.
 
 ```text
+=====CMD===== node scripts/glossary-census.mjs $R --census
+glossary census: 17022 Arabic leaf values across 129 file(s)
+dossier	ruled=دوسيه	before=143	after=685	unclassified=0
+  دوسيه	ruled-term	occurrences=685	lines=673	values=674	files=86	ruled=685	allowlisted=0	unclassified=0
+  دوسييه	competing-term	occurrences=2	lines=2	values=2	files=1	ruled=0	allowlisted=2	unclassified=0
+  ملف	competing-term	occurrences=141	lines=135	values=135	files=25	ruled=0	allowlisted=141	unclassified=0
+engagement	ruled=مشاركة / المشاركات	before=17	after=333	unclassified=0
+  مشاركة	ruled-term	occurrences=333	lines=319	values=330	files=71	ruled=333	allowlisted=0	unclassified=0
+  ارتباط	competing-term	occurrences=17	lines=17	values=17	files=7	ruled=0	allowlisted=17	unclassified=0
+brief-artifact	ruled=ملخص / الملخصات	before=77	after=284	unclassified=0
+  ملخص	ruled-term	occurrences=284	lines=277	values=277	files=56	ruled=284	allowlisted=0	unclassified=0
+  موجز	competing-term	occurrences=22	lines=22	values=22	files=9	ruled=0	allowlisted=22	unclassified=0
+  إحاطة	competing-term	occurrences=55	lines=54	values=55	files=12	ruled=0	allowlisted=55	unclassified=0
+  إحاطات	competing-term	occurrences=0	lines=0	values=0	files=0	ruled=0	allowlisted=0	unclassified=0
+briefing-session	ruled=إحاطة	before=0	after=55	unclassified=0
+  إحاطة	ruled-term	occurrences=55	lines=54	values=55	files=12	ruled=55	allowlisted=0	unclassified=0
+stance	ruled=موقف / المواقف	before=55	after=223	unclassified=0
+  موقف	ruled-term	occurrences=223	lines=217	values=217	files=39	ruled=223	allowlisted=0	unclassified=0
+  منصب	competing-term	occurrences=46	lines=46	values=46	files=11	ruled=0	allowlisted=46	unclassified=0
+  مناصب	competing-term	occurrences=9	lines=9	values=9	files=6	ruled=0	allowlisted=9	unclassified=0
+country	ruled=الدول	before=0	after=59	unclassified=0
+  الدول	ruled-term	occurrences=59	lines=59	values=59	files=25	ruled=59	allowlisted=0	unclassified=0
+  البلدان	competing-term	occurrences=0	lines=0	values=0	files=0	ruled=0	allowlisted=0	unclassified=0
+intake-vs-waiting-queue	ruled=قائمة الاستقبال / قائمة الانتظار	before=0	after=18	unclassified=0
+  قائمة الاستقبال	ruled-term	occurrences=4	lines=4	values=4	files=2	ruled=4	allowlisted=0	unclassified=0
+  قائمة الانتظار	ruled-term	occurrences=14	lines=14	values=14	files=2	ruled=14	allowlisted=0	unclassified=0
+classification totals: ruled=1657 allowlisted=292 UNCLASSIFIED=0
+UNCLASSIFIED glossary occurrences: 0
+=====EXIT===== 0
+```
+
+## 3. Completion-contract negative controls
+
+The previous revision of this record described the required markerless-SUMMARY drill without
+running it. It is run here. A drilled directory holding one marked and one markerless SUMMARY must
+report `1/2` and exit 1, and an empty directory must be refused with exit 3 rather than passed.
+
+```text
+=====CMD===== node "$R/scripts/completion-contract-check.mjs" --summaries "$D/markerless"   # 99-01 carries the marker, 99-02 does not
   99-02-SUMMARY.md  BREACH — no 'status: complete' front-matter; the next compile reads this task PENDING
 completion-contract: 1/2 SUMMARY files carry the marker
-CONTROL_EXPECTED_EXIT_CODE=1
-EXIT_CODE=0
+=====EXIT===== 1
+=====CMD===== node "$R/scripts/completion-contract-check.mjs" --summaries "$D/empty"        # empty population
+INSTRUMENT-CANNOT-RUN: no SUMMARY files under /private/tmp/claude-501/-Users-khalidalzahrani-Desktop-CodingSpace-Intl-Dossier-V2-0--tickmarkr-worktrees-noindex-tickmarkr-run-20260902-012826-0000000000000070--P99-39/830e64ec-8789-4c49-b83e-eb262d7592d2/scratchpad/cc-drill/empty; an empty population proves nothing
+=====EXIT===== 3
 ```
 
-The pre-task phase directory contained 59 SUMMARY files and all 59 carried the marker. This task's
-SUMMARY now exists with `status: blocked`, deliberately making the live completion contract red
-until the rendered blocker is resolved; claiming 60/60 would be the exact completion bypass the
-guard exists to prevent.
-
-### 8. Plan-owned typed rendered gate
-
-Command (verbatim from the P99-39 command oracle):
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; cd "$R" || exit 3; for spec in tests/e2e/99-ar02-dates.spec.ts tests/e2e/99-ar03-leak.spec.ts; do test -f "$spec" || { echo "INSTRUMENT-CANNOT-RUN: missing $spec"; exit 3; }; done; C2=$(pnpm exec playwright test tests/e2e/99-ar02-dates.spec.ts --project=chromium-en --no-deps --list 2>/dev/null | command grep -c "99-ar02-dates.spec.ts:"); C3=$(pnpm exec playwright test tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --no-deps --list 2>/dev/null | command grep -c "99-ar03-leak.spec.ts:"); test "$C2" -eq 8 || { echo "INSTRUMENT-CANNOT-RUN: ar02 collected $C2, expected 8 — a playwright path is a FILTER and a missing spec collects silently"; exit 3; }; test "$C3" -eq 10 || { echo "INSTRUMENT-CANNOT-RUN: ar03 collected $C3, expected 10"; exit 3; }; command -v lsof >/dev/null 2>&1 || { echo "INSTRUMENT-CANNOT-RUN: lsof absent, cannot establish who holds the dev-server port"; exit 3; }; HOLDER=$(lsof -tnP -iTCP:5173 -sTCP:LISTEN 2>/dev/null | head -1); if test -n "$HOLDER"; then HCWD=$(lsof -a -p "$HOLDER" -d cwd -Fn 2>/dev/null | command grep "^n" | head -1 | cut -c2-); case "$HCWD" in "$R"|"$R"/*) PW_REUSE=1; export PW_REUSE; echo "reusing dev server pid $HOLDER rooted in THIS worktree";; *) echo "INSTRUMENT-CANNOT-RUN: port 5173 held by pid $HOLDER rooted at ${HCWD:-unknown}, which is NOT this worktree; refusing to measure a foreign tree"; exit 3;; esac; fi; OUT=$(pnpm exec playwright test tests/e2e/99-ar02-dates.spec.ts tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --no-deps --reporter=line 2>&1); ST=$?; printf "%s\n" "$OUT" | command grep -qE "(^|[^0-9])18 passed" || { echo "FAIL: rendered battery is not 18/18"; printf "%s\n" "$OUT" | tail -25; exit 1; }; test "$ST" -eq 0 || { echo "FAIL: playwright exited $ST despite an 18-passed line"; exit 1; }; echo "rendered battery executed by THIS gate: 18/18 (ar02 8 + ar03 10)"
-```
-
-Verbatim output:
+## 4. Plan-owned STATIC gate, run verbatim as compiled
 
 ```text
-INSTRUMENT-CANNOT-RUN: port 5173 held by pid 95414 rooted at /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend, which is NOT this worktree; refusing to measure a foreign tree
-```
-
-Process exit status: `3`.
-
-Attempt 3 re-ran this exact command from 05:13:40 to 05:13:41 local (02:13:40Z); the output and
-exit status were identical (section 13, row 15). Attempt 4 re-ran it inside the section-17 comparator
-window (05:28:28 to 05:28:34 local, 02:28:28Z); output and exit status identical again (section 17,
-row 15).
-
-This output proves the existence and hardcoded collection checks did not fail before the port
-branch, but it does **not** prove either spec executed. No 18-line reporter output exists.
-
-### 9. Exact plan-owned static gate
-
-Command (verbatim from the P99-39 command oracle, with exit reporting appended):
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; test -f "$R/.planning/phases/99-arabic-coverage/99-VERIFICATION.md" && command grep -q "criterion" "$R/.planning/phases/99-arabic-coverage/99-VERIFICATION.md" && node "$R/scripts/nav-title-agreement.mjs" "$R" --control && node "$R/scripts/nav-title-agreement.mjs" "$R" && node "$R/scripts/glossary-census.mjs" "$R" --control && node "$R/scripts/glossary-census.mjs" "$R" && node "$R/scripts/i18n-audit-strict.mjs" "$R" --self-check && node "$R/scripts/i18n-audit-strict.mjs" "$R" --json | node -e "let s=[];process.stdin.on(\"data\",d=>s.push(d)).on(\"end\",()=>{const j=JSON.parse(s.join(\"\"));if(j.rawKeyTotal===0){console.error(\"POSITIVE CONTROL FAILED — the instrument walked no t() sites\");process.exit(1)}if(j.twoArgTotal!==0||j.twoArgUnresolved!==0||j.rawKeyUnresolved!==0||j.twoArgUnresolvedAr!==0||j.rawKeyUnresolvedAr!==0){console.error(\"AR-04 not closed\",JSON.stringify(j).slice(0,300));process.exit(1)}})" && { MC=$(python3 "$R/scripts/partA_maskfinder.py" "$R" --control 2>&1); ST=$?; test "$ST" -eq 0 || { echo "INSTRUMENT-CANNOT-RUN: maskfinder --control exited $ST"; exit 3; }; NC=$(printf "%s\n" "$MC" | command grep -c "^CONTROL " || true); test "$NC" -ge 4 || { echo "INSTRUMENT-CANNOT-RUN: control printed $NC CONTROL lines, fewer than the four documented polarities, so they cannot be asserted"; exit 3; }; OKC=$(printf "%s\n" "$MC" | command grep -cE "= True \(expect True\)|= False \(expect False\)" || true); test "$OKC" -eq "$NC" || { echo "FAIL: the mask-finder control is NOT discriminating - $((NC-OKC)) of $NC polarities disagree with their stated expectation:"; printf "%s\n" "$MC"; exit 1; }; echo "mask-finder control polarities asserted: $OKC/$NC"; } && { MF=$(python3 "$R/scripts/partA_maskfinder.py" "$R" 2>&1); ST=$?; test "$ST" -eq 0 || { echo "INSTRUMENT-CANNOT-RUN: mask finder did not report the expected summary exited $ST; its printed summary is not a verdict"; printf "%s\n" "$MF" | tail -3; exit 3; }; printf "%s\n" "$MF" | command grep -q "prefixes: 0" || { echo "FAIL: mask finder did not report the expected summary"; exit 1; }; } && { NT=$(node "$R/scripts/neg-taskcard.mjs" "$R" 2>&1); ST=$?; test "$ST" -eq 0 || { echo "INSTRUMENT-CANNOT-RUN: neg-taskcard.mjs exited $ST; its MISS rows are not a content verdict"; exit 3; }; NM=$(printf "%s\n" "$NT" | command grep -c "MISS=true" || true); test "$NM" -eq 3 || { echo "FAIL: negative control printed $NM MISS=true rows, expected 3"; exit 1; }; } && { RC=$(node "$R/scripts/resolve-check.mjs" "$R" 2>&1); ST=$?; test "$ST" -eq 0 || { echo "INSTRUMENT-CANNOT-RUN: resolve-check did not report the expected summary exited $ST; its printed summary is not a verdict"; printf "%s\n" "$RC" | tail -3; exit 3; }; printf "%s\n" "$RC" | command grep -q "routings with a miss: 0" || { echo "FAIL: resolve-check did not report the expected summary"; exit 1; }; } && { DEADIMP=$(command grep -rn "EnhancedActivityFeed" "$R/frontend/src" --include="*.ts" --include="*.tsx" | command grep -v "activity-feed/EnhancedActivityFeed.tsx:" | command grep -c . || true); LIVEIMP=$(command grep -rn "SharedRecentActivityCard" "$R/frontend/src" --include="*.ts" --include="*.tsx" | command grep -v "SharedRecentActivityCard.tsx:" | command grep -c . || true); echo "date-format controls: exempt-file importers=$DEADIMP (expect 0) live-control importers=$LIVEIMP (expect >0)"; test "$LIVEIMP" -gt 0 || { echo "INSTRUMENT-CANNOT-RUN: the LIVE control found zero importers for a component known to have them, so the importer census cannot discriminate and a zero for the exempt file would prove nothing"; exit 3; }; test "$DEADIMP" -eq 0 || { echo "FAIL: the dead-code exemption is VOID - EnhancedActivityFeed gained $DEADIMP importer(s), so its two offending rows return to the burn-down"; exit 1; }; } && node "$R/scripts/check-date-formatting.mjs"; ST=$?; echo "EXIT_CODE=$ST"; exit "$ST"
-```
-
-Verbatim output:
-
-```text
+$ bash <oracle 1, extracted byte-exact from 99-39-PLAN.md must_haves>
 {
   "control": "PASS",
   "plantedMismatchCaught": true,
@@ -624,506 +452,230 @@ UNCLASSIFIED glossary occurrences: 0
 mask-finder control polarities asserted: 4/4
 date-format controls: exempt-file importers=0 (expect 0) live-control importers=29 (expect >0)
 date-formatting check OK: 1533 non-test file(s) scanned, 0 unexcused ad-hoc date/number formatting sites (raw toLocaleDateString/toLocaleTimeString, month-first date-fns literals, Indic locale literals, relative time, localized skeletons, 12-hour literals, date-receiver toLocaleString, Intl.RelativeTimeFormat, local relative-time declarations, hand-assembled short relative forms) outside the 2-file allowlist (lib/format-date.ts, components/ui/calendar.tsx) and the 6 named permanent exemption(s) (see EXEMPT — each states its reason, and the dead-code one states its VOID CONDITION). Named debt: 0 row(s) excusing 0 site(s), all owned by plan 98-07.
-EXIT_CODE=0
+EXIT=0
 ```
 
-The strict JSON, live maskfinder, `neg-taskcard`, and `resolve-check` outputs are intentionally
-captured and asserted inside the typed command, so the gate prints only their asserted summaries;
-their complete fresh raw outputs appear in §§3–5 above.
+## 5. Plan-owned RENDERED gate, run verbatim as compiled
 
-### 10. Live completion-contract result after the blocked SUMMARY existed
-
-Command:
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/completion-contract-check.mjs" --summaries "$R/.planning/phases/99-arabic-coverage"; ST=$?; echo "EXIT_CODE=$ST"; exit 0
-```
-
-Verbatim output:
+This is the gate that exited 3 in attempts 0 through 4. It was run unchanged. The port guard found
+TCP 5173 unheld, so it neither reused a foreign server nor refused; Playwright started and
+supervised its own dev server rooted in this worktree.
 
 ```text
-  99-39-SUMMARY.md  BREACH — no 'status: complete' front-matter; the next compile reads this task PENDING
-completion-contract: 59/60 SUMMARY files carry the marker
-EXIT_CODE=1
+$ bash <oracle 2, extracted byte-exact from 99-39-PLAN.md must_haves>; echo "EXIT=$?"
+rendered battery executed by THIS gate: 18/18 (ar02 8 + ar03 10)
+EXIT=0
 ```
 
-This is an honest failure, not an acceptance result. The marker must not turn green until the
-rendered own-gate result exists.
+The gate captures Playwright's own output into a shell variable and prints it only on failure, so
+its verdict line is the whole of its output on success. Sections 6 and 7 therefore re-run each
+spec separately to record the per-test evidence criteria 2 and 3 require.
 
-### 11. Final non-mutating port recheck
-
-Command:
-
-```sh
-HOLDER=$(lsof -tnP -iTCP:5173 -sTCP:LISTEN 2>/dev/null | head -1); if test -z "$HOLDER"; then echo PORT_5173_FREE; else HCWD=$(lsof -a -p "$HOLDER" -d cwd -Fn 2>/dev/null | command grep '^n' | head -1 | cut -c2-); echo "PORT_5173_HOLDER=$HOLDER CWD=$HCWD"; fi
-```
-
-Verbatim output:
+## 6. `99-ar02-dates.spec.ts` alone — collection control, then execution
 
 ```text
-PORT_5173_HOLDER=95414 CWD=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend
+##### --list COLLECTION CONTROL: 99-ar02-dates
+=====CMD===== pnpm exec playwright test tests/e2e/99-ar02-dates.spec.ts --project=chromium-en --no-deps --list
+  [chromium-en] › 99-ar02-dates.spec.ts:186:5 › UI99-C1C2C4 ar /calendar
+  [chromium-en] › 99-ar02-dates.spec.ts:190:5 › UI99-C1C2C4 ar /dossiers
+  [chromium-en] › 99-ar02-dates.spec.ts:194:5 › UI99-C1C2C4 ar /events
+  [chromium-en] › 99-ar02-dates.spec.ts:198:5 › UI99-C1 en control /calendar
+  [chromium-en] › 99-ar02-dates.spec.ts:202:5 › UI99-C1 en control /dossiers
+  [chromium-en] › 99-ar02-dates.spec.ts:206:5 › UI99-C1 en control /events
+  [chromium-en] › 99-ar02-dates.spec.ts:210:5 › UI99-C3 ar /activity relative time
+  [chromium-en] › 99-ar02-dates.spec.ts:232:5 › UI99-C3 en control /activity relative time
+=====COUNT===== 8
+##### EXECUTION (own server, no reuse): 99-ar02-dates
+=====CMD===== pnpm exec playwright test tests/e2e/99-ar02-dates.spec.ts --project=chromium-en --no-deps --reporter=list
+[WebServer] pw-run-reaped --lease-exec: PW_LEASE_* env absent — running UNLEASED (ad-hoc invocation)
+[WebServer] • turbo 2.9.14
+
+Running 8 tests using 8 workers
+
+  ✓  8 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:210:5 › UI99-C3 ar /activity relative time (11.6s)
+  ✓  7 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:194:5 › UI99-C1C2C4 ar /events (12.1s)
+  ✓  3 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:206:5 › UI99-C1 en control /events (12.3s)
+  ✓  4 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:232:5 › UI99-C3 en control /activity relative time (12.6s)
+  ✓  5 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:202:5 › UI99-C1 en control /dossiers (12.8s)
+  ✓  6 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:198:5 › UI99-C1 en control /calendar (13.0s)
+  ✓  1 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:186:5 › UI99-C1C2C4 ar /calendar (13.6s)
+  ✓  2 [chromium-en] › tests/e2e/99-ar02-dates.spec.ts:190:5 › UI99-C1C2C4 ar /dossiers (13.7s)
+
+  8 passed (16.2s)
+=====PIPESTATUS0===== 0
+##### port after 99-ar02-dates:
+3965
 ```
 
-### 12. Provenance
+## 7. `99-ar03-leak.spec.ts` alone — collection control, then execution
 
-Command:
-
-```sh
-git rev-parse HEAD; date '+LOCAL=%Y-%m-%dT%H:%M:%S%z %Z'; TZ=UTC date '+UTC=%Y-%m-%dT%H:%M:%SZ'; git status --short
-```
-
-Verbatim output at the attempt-3 evidence timestamp:
+The collection control, listing all ten tests including the three banner fixtures:
 
 ```text
-7101b876bfbfb444dab5ab71b0d95007c10568ce
-LOCAL=2026-09-02T05:15:15+0300 +03
-UTC=2026-09-02T02:15:15Z
-```
-
-Verbatim output at the attempt-4 evidence timestamp (the two modified paths are this record and
-the register, mid-edit):
-
-```text
-2998b7cdad476ecc8569a3b16d2bb7f91ffa704d
-LOCAL=2026-09-02T05:32:07+0300 +03
-UTC=2026-09-02T02:32:07Z
- M .planning/phases/99-arabic-coverage/99-39-SUMMARY.md
- M .planning/phases/99-arabic-coverage/99-VERIFICATION.md
-```
-
-The UTC conversion is three hours behind Asia/Riyadh and remains on 2026-09-02. `head` is the
-tree the evidence was taken against; this record's own commit is that sha's child, so
-`git show <head>:<path>` shows the previous record, not this one. Attempt 1 took its evidence at
-`e2a21dc853b8c66b6769b7de7838427201ccf6b0` on 2026-09-02T01:46:11Z; attempt 3 at
-`7101b876bfbfb444dab5ab71b0d95007c10568ce`, and its record landed as `2998b7cdad476ecc8569a3b16d2bb7f91ffa704d`,
-which is the tree attempt 4 measured.
-
-### 13. Attempt-3 freshness comparator over every recorded evidence pair
-
-Command (the comparator source is embedded so the run is reproducible; it pairs every
-`Command:` + ```sh block in this file with the ```text block that follows it, re-runs the command
-with `bash -c` in the worktree, and reports SAME only when stdout+stderr equals the recorded
-block byte for byte; the launcher is fenced as text so the comparator does not re-pair itself):
-
-```text
-S=<scratchpad>; W="$PWD"; S="$S" W="$W" python3 "$S/rerun.py"
-```
-
-```python
-import re,subprocess,os
-S=os.environ['S']; W=os.environ['W']
-doc=open(f'{W}/.planning/phases/99-arabic-coverage/99-39-SUMMARY.md',encoding='utf-8').read()
-heads=sorted([(m.start(),m.group(1)) for m in re.finditer(r'^#{2,3} (.+)$',doc,re.M)])
-def head_for(pos):
-    h=None
-    for p,t in heads:
-        if p<=pos: h=t
-    return h
-n=0; report=[]
-for m in re.finditer(r'^Command[^\n]*:\n\n```sh\n(.*?)\n```\n\n(?:Verbatim output[^\n]*)\n\n```text\n(.*?)\n```',doc,re.M|re.S):
-    n+=1
-    cmd,rec=m.group(1),m.group(2)
-    r=subprocess.run(['bash','-c',cmd],cwd=W,capture_output=True,text=True)
-    got=(r.stdout+r.stderr).rstrip('\n')
-    report.append((n,head_for(m.start()),r.returncode,'SAME' if got==rec.rstrip('\n') else 'DIFF',len(got.splitlines())))
-for n,h,rc,st,ln in report:
-    print(f'{n:02d} rc={rc} {st:4s} lines={ln:4d}  {h}')
-print('pairs=',n)
-```
-
-Verbatim output (run at 05:14 local against the record as it stood before this attempt's edits):
-
-```text
-01 rc=0 SAME lines=   6  1. Nav-title control, then live 28-row population
-02 rc=0 SAME lines=   5  1. Nav-title control, then live 28-row population
-03 rc=0 SAME lines=  23  2. Glossary control, live verdict, then every-row census
-04 rc=0 SAME lines=   2  2. Glossary control, live verdict, then every-row census
-05 rc=0 SAME lines=  28  2. Glossary control, live verdict, then every-row census
-06 rc=0 SAME lines=  67  3. Strict audit self-check, then live bilingual population
-07 rc=0 SAME lines=  58  3. Strict audit self-check, then live bilingual population
-08 rc=0 SAME lines=   5  4. Dynamic-prefix mask control, then live zero
-09 rc=0 SAME lines=   2  4. Dynamic-prefix mask control, then live zero
-10 rc=0 SAME lines=   7  5. Resolution negative/positive control first, then live routings
-11 rc=0 SAME lines=  33  5. Resolution negative/positive control first, then live routings
-12 rc=0 SAME lines=   2  6. Date-format exemption control, then live scan
-13 rc=0 SAME lines=   2  6. Date-format exemption control, then live scan
-14 rc=0 SAME lines=   4  7. Completion-contract negative control
-15 rc=3 SAME lines=   1  8. Plan-owned typed rendered gate
-16 rc=0 SAME lines= 102  9. Exact plan-owned static gate
-17 rc=0 SAME lines=   3  10. Live completion-contract result after the blocked SUMMARY existed
-18 rc=0 SAME lines=   1  11. Final non-mutating port recheck
-19 rc=0 DIFF lines=   3  12. Provenance
-20 rc=1 DIFF lines=   2  Scope and whitespace gate
-pairs= 20
-```
-
-Rows 1 to 18 are every instrument, control, gate, and port recheck in this record: each re-ran in
-this attempt and matched its recorded output exactly, with the recorded exit status (row 15 is
-the rendered gate at exit 3; row 16 is the static gate at exit 0). Rows 19 and 20 differ because
-HEAD and the clock moved and because no file had changed yet when the comparator ran; those two
-expected DIFF rows show the comparator is capable of reporting a difference.
-
-### 14. Holder provenance census (attempt 3)
-
-Command:
-
-```sh
-( echo "# ps"; ps -o pid,ppid,tty,lstart,command -p 95315,95414 | sed -E 's#/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend/node_modules/[^ ]*vite/bin/vite.js#<main>/frontend/node_modules/.../vite/bin/vite.js#'; echo "# lsof cwd"; for p in 95315 95414; do printf '%s cwd=' "$p"; lsof -a -p "$p" -d cwd -Fn 2>/dev/null | grep '^n' | cut -c2-; done; echo "# env subset of 95315 (tokens and bridge ids deliberately omitted)"; ps -E -o command -p 95315 | tr ' ' '\n' | grep -E '^(CLAUDECODE|CLAUDE_CODE_SESSION_ID|CLAUDE_CODE_CHILD_SESSION|CLAUDE_CODE_ENTRYPOINT|INIT_CWD|NODE_ENV|npm_lifecycle_event|npm_command|TERM_PROGRAM|SHLVL)=' | sort; echo "# tickmarkr daemon 7125 env subset"; ps -E -o command -p 7125 | tr ' ' '\n' | grep -E '^(CLAUDE_CODE_SESSION_ID|TERM_PROGRAM|PWD)=' | sort; echo "# this worker"; env | grep -E '^(CLAUDE_CODE_SESSION_ID|TICKMARKR_PANE_IDENTITY)=' | sort; echo "# established connections to 95414"; lsof -a -p 95414 -iTCP -sTCP:ESTABLISHED 2>/dev/null | grep -c . )
-```
-
-Verbatim output:
-
-```text
-# ps
-  PID  PPID TTY      STARTED                      COMMAND
-95315     1 ??       Wed Sep  2 04:37:35 2026     node /opt/homebrew/bin/pnpm run dev
-95414 95315 ??       Wed Sep  2 04:37:35 2026     node <main>/frontend/node_modules/.../vite/bin/vite.js
-# lsof cwd
-95315 cwd=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend
-95414 cwd=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend
-# env subset of 95315 (tokens and bridge ids deliberately omitted)
-CLAUDECODE=1
-CLAUDE_CODE_CHILD_SESSION=1
-CLAUDE_CODE_ENTRYPOINT=cli
-CLAUDE_CODE_SESSION_ID=7612e2e5-873e-4698-be3e-e02b08bac89a
-INIT_CWD=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0
-NODE_ENV=development
-SHLVL=6
-TERM_PROGRAM=WarpTerminal
-npm_command=run-script
-npm_lifecycle_event=dev
-# tickmarkr daemon 7125 env subset
-CLAUDE_CODE_SESSION_ID=7612e2e5-873e-4698-be3e-e02b08bac89a
-PWD=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0
-TERM_PROGRAM=WarpTerminal
-# this worker
-CLAUDE_CODE_SESSION_ID=6b33b6e5-11e6-4a41-b596-6d52166ede0a
-TICKMARKR_PANE_IDENTITY=worker · P99-39 · attempt 3 · run-20260902-012826-0000000000000070
-# established connections to 95414
-0
-```
-
-The holder's full environment also carries a Claude Code messaging token and a bridge session id.
-Both keys are filtered out of the grep above because printing a live token into a tracked file is
-the hazard; nothing else is omitted. What the census establishes: both processes were born at
-04:37:35 local, are orphaned (ppid 1, no TTY), sit in the main checkout's `frontend`, and carry
-the same `CLAUDE_CODE_SESSION_ID` as the tickmarkr daemon (PID 7125), not this worker's. They were
-started by a `pnpm` invoked from the main checkout root (`INIT_CWD`) with `NODE_ENV=development`,
-which is the Playwright `webServer` command in `playwright.config.ts`. No client is connected.
-
-### 15. Harness journal projection for this run
-
-Command (a field projection of this run's `journal.jsonl` in the main checkout, read only; raw lines embed full oracle text and are not reproduced; every printed line is right-stripped so no trailing whitespace enters this file):
-
-```sh
-RUN=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/runs/run-20260902-012826-0000000000000070; python3 - "$RUN/journal.jsonl" <<'EOF'
-import json,sys
-for line in open(sys.argv[1]):
-    e=json.loads(line); ev=e["event"]; t=e.get("taskId"); d=e.get("data",{})
-    if ev=="run-start": s=" ".join(map(str,[e["ts"],ev,"pid=",d.get("pid"),"baseRef=",d.get("baseRef")]))
-    elif ev=="baseline-warning" and t=="P99-39": s=" ".join(map(str,[e["ts"],ev,t,"kind=",d.get("kind"),"oracles=",len(d.get("oracles",[])),"reason=",d.get("reason","")[:110]+"..."]))
-    elif ev in("task-dispatch","worker-result","gate-result","escalation","review-retry") and t=="P99-39":
-        extra=d.get("summary") or d.get("details") or d.get("step") or ""
-        s=" ".join(map(str,[e["ts"],ev,t,"attempt=",d.get("attempt"),d.get("gate",""),str(extra)[:150]]))
-    else: continue
-    print("\n".join(l.rstrip() for l in s.rstrip().split("\n")))
-EOF
-```
-
-Verbatim output (timestamps are UTC; add three hours for Asia/Riyadh):
-
-```text
-2026-09-02T01:30:35.994Z run-start pid= 7125 baseRef= e2a21dc853b8c66b6769b7de7838427201ccf6b0
-2026-09-02T01:39:15.264Z baseline-warning P99-39 kind= vacuous-oracle oracles= 2 reason= vacuous acceptance oracle on P99-39: already passes before any work exists — $ PATH="/opt/homebrew/bin:$PATH";...
-2026-09-02T01:39:17.330Z task-dispatch P99-39 attempt= 0
-2026-09-02T01:41:15.192Z worker-result P99-39 attempt= None  The mandated rendered gate cannot run against a foreign port holder, and the required D-38 human sign-off remains absent.
-2026-09-02T01:41:15.333Z gate-result P99-39 attempt= 0 evidence no commits — worker claimed work but committed nothing
-2026-09-02T01:41:15.348Z escalation P99-39 attempt= 1  retry
-2026-09-02T01:41:15.367Z task-dispatch P99-39 attempt= 1
-2026-09-02T01:54:32.329Z worker-result P99-39 attempt= None  Static proof is green, but the required rendered 18-testgate could not run because port 5173 is held by a foreign checkout.
-2026-09-02T01:55:00.600Z gate-result P99-39 attempt= 1 build exit 0
-2026-09-02T01:55:11.190Z gate-result P99-39 attempt= 1 lint exit 0
-2026-09-02T01:55:11.220Z gate-result P99-39 attempt= 1 evidence 1 commit(s):
-.../phases/99-arabic-coverage/99-39-SUMMARY.md     | 738 +++++++++++++++++++++
- .../phases/99-arabic-coverage/99-VERIFICATION.md   | 140
-2026-09-02T01:55:11.239Z gate-result P99-39 attempt= 1 scope all 2 changed files in scope
-2026-09-02T01:55:43.147Z gate-result P99-39 attempt= 1 test exit 1 but only pre-existing failures (forgiven)
-2026-09-02T01:55:45.778Z gate-result P99-39 attempt= 1 acceptance oracle failed: $ PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; cd "$R" || exit 3; for spec in tests/e2e/99-ar02-dates.spec.ts tests/e2e/99-ar03-leak.spec.
-2026-09-02T02:00:17.792Z gate-result P99-39 attempt= 1 review review re-route: kimi:kimi-code/k3 produced no parseable verdict; replaced by claude-code:fable
-reviewer claude-code:fable (anthropic): requested chan
-2026-09-02T02:00:17.792Z review-retry P99-39 attempt= None review
-2026-09-02T02:00:17.811Z escalation P99-39 attempt= 2  retry
-2026-09-02T02:00:17.824Z task-dispatch P99-39 attempt= 2
-2026-09-02T02:01:58.522Z worker-result P99-39 attempt= None  Rendered proof cannot execute until the foreign main-checkout process releases TCP 5173.
-2026-09-02T02:02:24.987Z gate-result P99-39 attempt= 2 build exit 0
-2026-09-02T02:02:34.755Z gate-result P99-39 attempt= 2 lint exit 0
-2026-09-02T02:02:34.786Z gate-result P99-39 attempt= 2 evidence 2 commit(s):
-.../phases/99-arabic-coverage/99-39-SUMMARY.md     | 738 +++++++++++++++++++++
- .../phases/99-arabic-coverage/99-VERIFICATION.md   | 140
-2026-09-02T02:02:34.804Z gate-result P99-39 attempt= 2 scope all 2 changed files in scope
-2026-09-02T02:03:05.842Z gate-result P99-39 attempt= 2 test exit 1 but only pre-existing failures (forgiven)
-2026-09-02T02:03:08.397Z gate-result P99-39 attempt= 2 acceptance oracle failed: $ PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; cd "$R" || exit 3; for spec in tests/e2e/99-ar02-dates.spec.ts tests/e2e/99-ar03-leak.spec.
-2026-09-02T02:07:13.462Z gate-result P99-39 attempt= 2 review reviewer claude-code:fable (anthropic): requested changes (2 material)
-- [material] Acceptance criteria 2 and 3 (99-ar02 8/8 and 99-ar03 10/10 execute
-2026-09-02T02:07:13.489Z escalation P99-39 attempt= 3  escalate
-2026-09-02T02:07:14.017Z task-dispatch P99-39 attempt= 3
-```
-
-The run started its baseline pass at 01:30:35Z with the daemon at PID 7125 and base ref
-`e2a21dc85`. The holder was born at 01:37:35Z (04:37:35 local), inside that pass. At 01:39:15Z the
-baseline recorded P99-39's rendered oracle as "already passes before any work exists", which is
-only possible if the baseline executed that oracle to a green 18/18 in the main checkout; the
-port guard found 5173 free at that moment, Playwright started the `webServer`, and the server
-survived Playwright's exit. Two seconds later attempt 0 was dispatched, and every attempt since
-has refused that same holder. That baseline green is the harness's measurement in the main
-checkout at the base ref; it is recorded here as provenance only and is not claimed as this
-task's own gate result. This projection grows as the journal grows, so a later comparator run is
-expected to report it DIFF by exactly the events appended after this attempt.
-
-### 16. Rendered population re-derivation (attempt 3)
-
-Command:
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; cd "$R"; C2=$(pnpm exec playwright test tests/e2e/99-ar02-dates.spec.ts --project=chromium-en --no-deps --list 2>/dev/null | command grep -c "99-ar02-dates.spec.ts:"); C3=$(pnpm exec playwright test tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --no-deps --list 2>/dev/null | command grep -c "99-ar03-leak.spec.ts:"); echo "C2=$C2 C3=$C3"; pnpm exec playwright test tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --no-deps --list 2>/dev/null | command grep -E "banner|Total"
-```
-
-Verbatim output:
-
-```text
-C2=8 C3=10
+##### --list COLLECTION CONTROL: 99-ar03-leak
+=====CMD===== pnpm exec playwright test tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --no-deps --list
+  [chromium-en] › 99-ar03-leak.spec.ts:164:5 › UI99-C5 ar 404
+  [chromium-en] › 99-ar03-leak.spec.ts:181:5 › UI99-C5 en control 404
+  [chromium-en] › 99-ar03-leak.spec.ts:195:5 › UI99-C6 ar intake queue
+  [chromium-en] › 99-ar03-leak.spec.ts:212:5 › UI99-C6 en control intake queue
   [chromium-en] › 99-ar03-leak.spec.ts:228:5 › UI99-C7 ar banner under_review
   [chromium-en] › 99-ar03-leak.spec.ts:232:5 › UI99-C7 ar banner approved
   [chromium-en] › 99-ar03-leak.spec.ts:236:5 › UI99-C7 ar banner published
-Total: 10 tests in 1 file
+  [chromium-en] › 99-ar03-leak.spec.ts:240:5 › UI99-C8 ar search chips
+  [chromium-en] › 99-ar03-leak.spec.ts:261:5 › UI99-C9 ar latin run scan
+  [chromium-en] › 99-ar03-leak.spec.ts:332:5 › UI99-C10 ar tajawal
+=====COUNT===== 10
 ```
 
-### 17. Attempt-4 freshness comparator, holder census, and journal tail
-
-The comparator of section 13 was re-run unchanged in attempt 4. The file now pairs 23 commands,
-not 20, because sections 14 to 16 were appended after the attempt-3 comparator ran. Launcher,
-fenced as text so it is not re-paired:
+Execution. The first attempt at this run failed with
+`http://localhost:5173 is already used` because the `99-ar02-dates` run in section 6 had leaked
+its dev server — the engine residue named in the register. The holder's working directory was
+resolved before anything was touched, proving it was rooted in **this** worktree and spawned by
+this task's own previous run; only then was it reaped. A holder rooted anywhere else takes the
+refusal branch and is never touched.
 
 ```text
-S=<scratchpad>; W="$PWD"; S="$S" W="$W" python3 "$S/rerun.py"
+reaping OWN leaked holder pid 3965 (parent 3872) rooted at /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39/frontend
+port after reap: []
+##### EXECUTION (own server, no reuse): 99-ar03-leak
+=====CMD===== pnpm exec playwright test tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --no-deps --reporter=list
+[WebServer] pw-run-reaped --lease-exec: PW_LEASE_* env absent — running UNLEASED (ad-hoc invocation)
+[WebServer] • turbo 2.9.14
+
+Running 10 tests using 5 workers
+
+[P99-C7] verified positions CHECK constraints before INSERT:
+check_correction_fields: CHECK ((((emergency_correction = false) AND (corrected_at IS NULL) AND (corrected_by IS NULL) AND (correction_reason IS NULL)) OR ((emergency_correction = true) AND (corrected_at IS NOT NULL) AND (corrected_by IS NOT NULL) AND (correction_reason IS NOT NULL))))
+check_title_ar_not_empty: CHECK ((char_length(TRIM(BOTH FROM title_ar)) > 0))
+check_title_en_not_empty: CHECK ((char_length(TRIM(BOTH FROM title_en)) > 0))
+positions_consistency_score_check: CHECK (((consistency_score >= 0) AND (consistency_score <= 100)))
+positions_current_stage_check: CHECK (((current_stage >= 0) AND (current_stage <= 10)))
+positions_status_check: CHECK ((status = ANY (ARRAY['draft'::text, 'under_review'::text, 'approved'::text, 'published'::text])))
+[P99-C7] verified positions CHECK constraints before INSERT:
+check_correction_fields: CHECK ((((emergency_correction = false) AND (corrected_at IS NULL) AND (corrected_by IS NULL) AND (correction_reason IS NULL)) OR ((emergency_correction = true) AND (corrected_at IS NOT NULL) AND (corrected_by IS NOT NULL) AND (correction_reason IS NOT NULL))))
+check_title_ar_not_empty: CHECK ((char_length(TRIM(BOTH FROM title_ar)) > 0))
+check_title_en_not_empty: CHECK ((char_length(TRIM(BOTH FROM title_en)) > 0))
+positions_consistency_score_check: CHECK (((consistency_score >= 0) AND (consistency_score <= 100)))
+positions_current_stage_check: CHECK (((current_stage >= 0) AND (current_stage <= 10)))
+positions_status_check: CHECK ((status = ANY (ARRAY['draft'::text, 'under_review'::text, 'approved'::text, 'published'::text])))
+[P99-C7] verified positions CHECK constraints before INSERT:
+check_correction_fields: CHECK ((((emergency_correction = false) AND (corrected_at IS NULL) AND (corrected_by IS NULL) AND (correction_reason IS NULL)) OR ((emergency_correction = true) AND (corrected_at IS NOT NULL) AND (corrected_by IS NOT NULL) AND (correction_reason IS NOT NULL))))
+check_title_ar_not_empty: CHECK ((char_length(TRIM(BOTH FROM title_ar)) > 0))
+check_title_en_not_empty: CHECK ((char_length(TRIM(BOTH FROM title_en)) > 0))
+positions_consistency_score_check: CHECK (((consistency_score >= 0) AND (consistency_score <= 100)))
+positions_current_stage_check: CHECK (((current_stage >= 0) AND (current_stage <= 10)))
+positions_status_check: CHECK ((status = ANY (ARRAY['draft'::text, 'under_review'::text, 'approved'::text, 'published'::text])))
+[P99-C7] verified positions CHECK constraints before INSERT:
+check_correction_fields: CHECK ((((emergency_correction = false) AND (corrected_at IS NULL) AND (corrected_by IS NULL) AND (correction_reason IS NULL)) OR ((emergency_correction = true) AND (corrected_at IS NOT NULL) AND (corrected_by IS NOT NULL) AND (correction_reason IS NOT NULL))))
+check_title_ar_not_empty: CHECK ((char_length(TRIM(BOTH FROM title_ar)) > 0))
+check_title_en_not_empty: CHECK ((char_length(TRIM(BOTH FROM title_en)) > 0))
+positions_consistency_score_check: CHECK (((consistency_score >= 0) AND (consistency_score <= 100)))
+positions_current_stage_check: CHECK (((current_stage >= 0) AND (current_stage <= 10)))
+positions_status_check: CHECK ((status = ANY (ARRAY['draft'::text, 'under_review'::text, 'approved'::text, 'published'::text])))
+[P99-C7] verified positions CHECK constraints before INSERT:
+check_correction_fields: CHECK ((((emergency_correction = false) AND (corrected_at IS NULL) AND (corrected_by IS NULL) AND (correction_reason IS NULL)) OR ((emergency_correction = true) AND (corrected_at IS NOT NULL) AND (corrected_by IS NOT NULL) AND (correction_reason IS NOT NULL))))
+check_title_ar_not_empty: CHECK ((char_length(TRIM(BOTH FROM title_ar)) > 0))
+check_title_en_not_empty: CHECK ((char_length(TRIM(BOTH FROM title_en)) > 0))
+positions_consistency_score_check: CHECK (((consistency_score >= 0) AND (consistency_score <= 100)))
+positions_current_stage_check: CHECK (((current_stage >= 0) AND (current_stage <= 10)))
+positions_status_check: CHECK ((status = ANY (ARRAY['draft'::text, 'under_review'::text, 'approved'::text, 'published'::text])))
+[P99-C7] seeded position ids: {"under_review":"43ce32b5-8568-4a29-8f7a-af30357dd954","approved":"c26f18af-c16c-4af4-95df-a13d3b15d250","published":"68dd933c-dfcf-40af-9b46-866946f18cb6"}
+[P99-C7] seeded position ids: {"under_review":"d2c0c0f0-08fb-4a98-8681-21790832fc82","approved":"a76ec85d-9fa2-4c75-9802-722e8b1fa1ef","published":"96ff41f5-b59f-4a00-8c56-2701879946d8"}
+[P99-C7] seeded position ids: {"under_review":"abc0f528-5119-467a-b5c2-6305bed29484","approved":"cfac3c7b-aa8f-4727-bea6-6c1987ff855c","published":"63e3b3aa-c69f-411c-82be-1fbffd9ad885"}
+[P99-C7] seeded position ids: {"under_review":"772e1cb6-5c2f-4006-99b0-7b6623d8a439","approved":"a5037ea2-229b-4736-baf9-4d5261f168fa","published":"9952e121-93ba-4adc-92bb-f273a7c2777b"}
+[P99-C7] seeded position ids: {"under_review":"de95529d-a0ce-40d5-bc94-ec9949e1d359","approved":"23b9b00f-1933-457b-8714-7b8c25886a4f","published":"36b56f45-9288-4e18-b73e-a92ab44ba557"}
+  ✓   5 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:195:5 › UI99-C6 ar intake queue (8.4s)
+  ✓   4 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:164:5 › UI99-C5 ar 404 (8.4s)
+  ✓   3 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:228:5 › UI99-C7 ar banner under_review (11.0s)
+  ✓   1 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:236:5 › UI99-C7 ar banner published (11.1s)
+  ✓   6 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:212:5 › UI99-C6 en control intake queue (6.5s)
+  ✓   7 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:181:5 › UI99-C5 en control 404 (6.5s)
+  ✓   9 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:240:5 › UI99-C8 ar search chips (6.5s)
+  ✓   8 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:232:5 › UI99-C7 ar banner approved (8.2s)
+  ✓   2 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:261:5 › UI99-C9 ar latin run scan (39.0s)
+  ✓  10 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:332:5 › UI99-C10 ar tajawal (7.2s)
+
+  10 passed (50.2s)
+=====PIPESTATUS0===== 0
 ```
 
-Verbatim output:
+## 8. Disclosed discarded diagnostic — not evidence for any criterion
+
+Between the gate and section 6 I ran both specs once with `PW_REUSE=1` against the server the
+plan gate had leaked, intending to reuse it. Tests reported failures. The cause was environmental,
+not a product result: that server's owning shell had exited and the server was reaped mid-run, so
+`PW_REUSE=1` pointed Playwright at a port with nothing behind it — a later check found TCP 5173
+free. That run is **discarded and no criterion rests on it**; sections 6 and 7 re-ran both specs
+with their own supervised servers. It is recorded here because it happened, not because it proves
+anything. This is the one run summarised rather than reproduced, and it is a discarded diagnostic
+rather than evidence — the distinction RULING-P99-538 draws.
+
+The lesson it carries forward, and the reason the register names the leak as an open engine
+residue: reusing a leaked server is only safe while its supervising process is alive, and a leaked
+server has by definition outlived its supervisor.
+
+## 9. Live completion contract, after this SUMMARY carried `status: complete`
 
 ```text
-START_LOCAL=2026-09-02T05:28:28+0300
-01 rc=0 SAME lines=   6  1. Nav-title control, then live 28-row population
-02 rc=0 SAME lines=   5  1. Nav-title control, then live 28-row population
-03 rc=0 SAME lines=  23  2. Glossary control, live verdict, then every-row census
-04 rc=0 SAME lines=   2  2. Glossary control, live verdict, then every-row census
-05 rc=0 SAME lines=  28  2. Glossary control, live verdict, then every-row census
-06 rc=0 SAME lines=  67  3. Strict audit self-check, then live bilingual population
-07 rc=0 SAME lines=  58  3. Strict audit self-check, then live bilingual population
-08 rc=0 SAME lines=   5  4. Dynamic-prefix mask control, then live zero
-09 rc=0 SAME lines=   2  4. Dynamic-prefix mask control, then live zero
-10 rc=0 SAME lines=   7  5. Resolution negative/positive control first, then live routings
-11 rc=0 SAME lines=  33  5. Resolution negative/positive control first, then live routings
-12 rc=0 SAME lines=   2  6. Date-format exemption control, then live scan
-13 rc=0 SAME lines=   2  6. Date-format exemption control, then live scan
-14 rc=0 SAME lines=   4  7. Completion-contract negative control
-15 rc=3 SAME lines=   1  8. Plan-owned typed rendered gate
-16 rc=0 SAME lines= 102  9. Exact plan-owned static gate
-17 rc=0 SAME lines=   3  10. Live completion-contract result after the blocked SUMMARY existed
-18 rc=0 SAME lines=   1  11. Final non-mutating port recheck
-19 rc=0 DIFF lines=   3  12. Provenance
-20 rc=1 DIFF lines=  27  14. Holder provenance census (attempt 3)
-21 rc=0 DIFF lines=  47  15. Harness journal projection for this run
-22 rc=0 SAME lines=   5  16. Rendered population re-derivation (attempt 3)
-23 rc=1 DIFF lines=   2  Scope and whitespace gate
-pairs= 23
-RERUN_EXIT=0
-END_LOCAL=2026-09-02T05:28:34+0300
+=====CMD===== bash <oracle 3, extracted byte-exact from 99-39-PLAN.md must_haves>
+completion-contract: 60/60 SUMMARY files carry the marker
+=====EXIT===== 0
 ```
 
-Rows 1 to 18 and 22 are every instrument, control, gate, port recheck, and population
-re-derivation in this record; each re-ran in attempt 4 and matched its recorded output byte for
-byte with the recorded exit status (row 15 is the rendered gate at exit 3; row 16 the static gate
-at exit 0; row 17 the live completion contract at 59/60). The four DIFF rows are expected: row 19
-(clock and HEAD moved), row 20 (the census prints this worker's session id and attempt number),
-row 21 (the journal grew by attempt 3's gate results and attempt 4's dispatch), and row 23 (no
-file had changed yet when the comparator ran).
+## 10. Provenance
 
-Holder provenance census re-run in attempt 4. Command (byte-identical to section 14):
-
-```sh
-( echo "# ps"; ps -o pid,ppid,tty,lstart,command -p 95315,95414 | sed -E 's#/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend/node_modules/[^ ]*vite/bin/vite.js#<main>/frontend/node_modules/.../vite/bin/vite.js#'; echo "# lsof cwd"; for p in 95315 95414; do printf '%s cwd=' "$p"; lsof -a -p "$p" -d cwd -Fn 2>/dev/null | grep '^n' | cut -c2-; done; echo "# env subset of 95315 (tokens and bridge ids deliberately omitted)"; ps -E -o command -p 95315 | tr ' ' '\n' | grep -E '^(CLAUDECODE|CLAUDE_CODE_SESSION_ID|CLAUDE_CODE_CHILD_SESSION|CLAUDE_CODE_ENTRYPOINT|INIT_CWD|NODE_ENV|npm_lifecycle_event|npm_command|TERM_PROGRAM|SHLVL)=' | sort; echo "# tickmarkr daemon 7125 env subset"; ps -E -o command -p 7125 | tr ' ' '\n' | grep -E '^(CLAUDE_CODE_SESSION_ID|TERM_PROGRAM|PWD)=' | sort; echo "# this worker"; env | grep -E '^(CLAUDE_CODE_SESSION_ID|TICKMARKR_PANE_IDENTITY)=' | sort; echo "# established connections to 95414"; lsof -a -p 95414 -iTCP -sTCP:ESTABLISHED 2>/dev/null | grep -c . )
-```
-
-Verbatim output:
+Timestamps were read from the machine clock rather than converted by hand; the previous revision
+of this record mis-converted an Asia/Riyadh time to UTC by a full day.
 
 ```text
-# ps
-  PID  PPID TTY      STARTED                      COMMAND
-95315     1 ??       Wed Sep  2 04:37:35 2026     node /opt/homebrew/bin/pnpm run dev
-95414 95315 ??       Wed Sep  2 04:37:35 2026     node <main>/frontend/node_modules/.../vite/bin/vite.js
-# lsof cwd
-95315 cwd=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend
-95414 cwd=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend
-# env subset of 95315 (tokens and bridge ids deliberately omitted)
-CLAUDECODE=1
-CLAUDE_CODE_CHILD_SESSION=1
-CLAUDE_CODE_ENTRYPOINT=cli
-CLAUDE_CODE_SESSION_ID=7612e2e5-873e-4698-be3e-e02b08bac89a
-INIT_CWD=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0
-NODE_ENV=development
-SHLVL=6
-TERM_PROGRAM=WarpTerminal
-npm_command=run-script
-npm_lifecycle_event=dev
-# tickmarkr daemon 7125 env subset
-CLAUDE_CODE_SESSION_ID=7612e2e5-873e-4698-be3e-e02b08bac89a
-PWD=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0
-TERM_PROGRAM=WarpTerminal
-# this worker
-CLAUDE_CODE_SESSION_ID=56bdcf46-06b6-4b18-9ada-d86751ad89dd
-TICKMARKR_PANE_IDENTITY=worker · P99-39 · attempt 4 · run-20260902-012826-0000000000000070
-# established connections to 95414
-0
+$ git rev-parse HEAD; date +%Y-%m-%dT%H:%M:%S%z; date -u +%Y-%m-%dT%H:%M:%SZ; node -v; pnpm -v; pnpm exec playwright --version
+HEAD=7bbfd55bddd56ae78b92420386f97c1dddb94b67
+LOCAL=2026-09-02T05:45:42+0300
+UTC=2026-09-02T02:45:42Z
+node=v26.7.0 pnpm=10.29.1 playwright=Version 1.60.0
+worktree=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260902-012826-0000000000000070--P99-39
 ```
 
-The only lines that differ from section 14 are the two under `# this worker`. The holder is the
-same pair of processes, born at the same second, rooted in the same main-checkout directory, with
-no client connected. Its owning session is the overseer's `claude --resume 7612e2e5-…` (PID 3145)
-under `herdr`, whose shell spawned the tickmarkr daemon; this worker's peer-session listing showed
-no name that maps to that PID with certainty, so no release request was sent to a guessed session.
+`head` in the front matter is the tree this evidence was taken against. This record's own commit is
+that commit's **child**, so `git show 7bbfd55bd:.planning/phases/99-arabic-coverage/99-39-SUMMARY.md`
+returns the previous, blocked revision rather than this one.
 
-Harness journal projection re-run in attempt 4 with the section-15 command. The first 34 lines
-were compared to the section-15 block with `diff` (exit 0, prefix identical); the lines appended
-since that projection are:
+## 11. D-19 table and the human gate
 
-```text
-2026-09-02T02:23:02.773Z worker-result P99-39 attempt= None  Rendered gate still exits 3 because port 5173 is held by PIDs 95315/95414, which this run's own baseline pass leaked from the main checkout; static ba
-2026-09-02T02:23:31.748Z gate-result P99-39 attempt= 3 build exit 0
-2026-09-02T02:23:42.749Z gate-result P99-39 attempt= 3 lint exit 0
-2026-09-02T02:23:42.781Z gate-result P99-39 attempt= 3 evidence 3 commit(s):
-.../phases/99-arabic-coverage/99-39-SUMMARY.md     | 982 +++++++++++++++++++++
- .../phases/99-arabic-coverage/99-VERIFICATION.md   | 167
-2026-09-02T02:23:42.802Z gate-result P99-39 attempt= 3 scope all 2 changed files in scope
-2026-09-02T02:24:16.860Z gate-result P99-39 attempt= 3 test exit 1 but only pre-existing failures (forgiven)
-2026-09-02T02:24:19.364Z gate-result P99-39 attempt= 3 acceptance oracle failed: $ PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; cd "$R" || exit 3; for spec in tests/e2e/99-ar02-dates.spec.ts tests/e2e/99-ar03-leak.spec.
-2026-09-02T02:25:02.671Z gate-result P99-39 attempt= 3 review reviewer codex:gpt-5.6-sol (openai): requested changes (2 material)
-- [material] Material acceptance failure: criteria 2 and 3 have no fresh executed
-2026-09-02T02:25:02.688Z escalation P99-39 attempt= 4  retry
-2026-09-02T02:25:02.701Z task-dispatch P99-39 attempt= 4
-```
+The D-19 reversal table, the three value-locked escalations, the swept-term census, and the D-38
+checkpoint package are carried in `99-VERIFICATION.md` rather than duplicated here, so there is one
+copy to reverse against.
 
-Attempt 3 passed build, lint, evidence, scope, and test, failed the rendered acceptance oracle at
-the same port guard, and was returned by review on the same two material findings this attempt
-was dispatched to fix. Neither finding is resolvable without the foreign holder's release.
+**The D-38 checkpoint answer is NOT ANSWERED.** This task owns the checkpoint and presents its
+package; the answer is the overseer's, in writing, and no worker, orchestrator or engine may supply
+it. The `status: complete` marker in this file's front matter is the engine's
+presence-implies-marker bookkeeping for this task's deliverable — the static battery, the rendered
+execution and the register — and is explicitly **not** the sign-off. The register states that
+scoping in full.
 
-## Read/navigation command ledger (RULING-P99-538)
+## 12. Left for named later tasks
 
-These commands only read or located context; their output is not criterion evidence and is not
-embedded:
+- **P99-40 and P99-41:** the remaining two parts of this lane. They share these two specs, so they
+  will meet a dev server on TCP 5173 — theirs to reuse if it is rooted in their own worktree, and
+  to refuse if it is not.
+- **P99-41:** presentation of the Arabic surfaces to the overseer alongside this package.
+- **Open engine residue, needs a ruling:** the rendered oracle invokes Playwright ad hoc, so the
+  config's `pw-run-reaped.mjs --lease-exec` wrapper runs unleased and leaks its dev server after a
+  green run. Reproduced twice in this task. The in-repo fix is plan text, outside this task's write
+  scope.
+- **Phase 102 / Phase 103 / operator naturalness review:** carried unchanged in the register's
+  residue section.
 
-- `sed -n '1,240p' .agents/skills/tickmarkr-loop/SKILL.md` — read the selected skill contract.
-- `git status --short --branch` plus `sed` over `99-39-PLAN.md`, `99-CONTEXT.md`, and
-  `99-RESEARCH.md` — establish branch cleanliness and read task law.
-- `sed` over the two target docs, both rendered specs, and both static instruments — confirm the
-  target docs were absent and read the named context files.
-- `tail` over `resolve-check.mjs`, `i18n-audit-strict.mjs`, `partA_maskfinder.py`,
-  `neg-taskcard.mjs`, and `check-date-formatting.mjs`; `find`/`rg` over SUMMARY files — inspect
-  control order and locate lineage bounds.
-- `rg`/`sed` over the phase rulings, PLAN-INDEX, REVISION, RECUT, P99-22/23, and P99-30 handoff —
-  locate the waiver, tie-break, and control contracts.
-- `for f in .../99-*-SUMMARY.md; do sed -n '1,40p' "$f" >/dev/null; done` — read the opening and
-  bound statement of every existing SUMMARY; 59 files were present.
-- `sed -n '1,260p' scripts/completion-contract-check.mjs` — inspect the presence-implies-marker
-  implementation and exit semantics before drilling it.
-- `rg`/`tail` over context/research and P99-13/15/16/22/40/43 records — assemble deferred residue,
-  D-19, double-prefix, and named-handoff bounds without importing their greens.
-- `lsof -a -p 95414 -d cwd -Fn` — independently read the foreign holder cwd after the typed gate
-  had already refused it. In attempt 1 `ps` returned `operation not permitted`; in attempt 3 `ps`
-  worked and its evidence is in section 14. No process state changed in either attempt.
-- Attempt 3: `ps -o ppid= -p <pid>` walked from the daemon's shell (7119) up through
-  `claude --resume 7612e2e5-…` (3145), `-zsh`, and `herdr server` — establishes that the daemon and
-  the holder share the overseer session's environment.
-- Attempt 3: `grep -nE 'detached|setsid|unref\(|lease-exec|PW_LEASE' scripts/pw-run-reaped.mjs` —
-  locates the `detached: true` spawn (line 1925) and the "PW_LEASE_* env absent — running
-  UNLEASED (ad-hoc invocation)" branch (line 1711) that explain why the baseline's server
-  outlived Playwright.
-- Attempt 3: `grep -nE '"dev"' <main>/package.json` — confirms the root `dev` script starts the
-  frontend through turbo, which is why a root-invoked `pnpm run dev` holds `frontend` as its cwd.
-- Attempt 3: `python3` over the run's `baseline.json` and `journal.jsonl` — read event types and
-  the P99-08 and P99-39 baseline warnings; the projection that is evidence is section 15.
-- Attempt 3: `grep -c 'pnpm run dev'` over the overseer session transcript — zero hits, so the
-  spawn was not a typed command; it came from an oracle the harness ran.
-- Attempt 4: `git log --oneline -5`, `git status --short --branch`, `git rev-parse HEAD` — confirm
-  the three prior-attempt commits are present and the tree is clean.
-- Attempt 4: `ps -o pid,ppid,lstart,command` walks from 95414 up to `launchd` and from the daemon's
-  shell 7119 up through 3145 (`claude --resume 7612e2e5-…`), `-zsh`, `herdr server` — re-establishes
-  that the holder and the daemon share the overseer session; `env | grep HERDR_ENV` — unset.
-- Attempt 4: peer-session listing (`ListAgents`) — no listed name maps to PID 3145 with certainty.
-- Attempt 4: `sed -n '20,30p;84,86p;95,127p' 99-39-PLAN.md` — re-read the rendered oracle, the
-  "unrunnable leg leaves this task red and parks by name" clause, RULING-P99-538, and the
-  front-matter clause; `awk` extracted the section-13 comparator source into the scratchpad.
+## 13. Read and navigation command ledger (RULING-P99-538)
 
-## D-19 table presented for later human gate
+Recorded by name and purpose, without output, because none is evidence for a criterion:
 
-| Decision | Before | After |
-| --- | --- | --- |
-| Countries requirement arrow | nav `البلدان`; title `نظرة عامة على الدول` | nav `الدول`; title unchanged |
-| Engagements requirement arrow | nav `الارتباطات`; title `المشاركات` | nav/title `المشاركات` |
-| PERSONS | AR nav `الأشخاص`; AR title `جهات الاتصال الرئيسية`; EN `Key Contacts` | AR nav/title `الأشخاص`; EN `Persons` |
-| POSITIONS | nav `المواقف`; title `مكتبة المواقف` | **NO EDIT** |
-| DASHBOARD | nav `نظرة عامة على لوحة الدوسيهات`; title `لوحة الملفات` | nav/title `لوحة الدوسيهات` |
-| Intake collision | intake title `قائمة الانتظار` | intake nav/title `قائمة الاستقبال`; waiting queue retains `قائمة الانتظار` |
-| MoUs | H1 used generic `common:mous.title` | H1 uses `common:mous.pageTitle` / `مذكرات التفاهم` |
-
-The three value-locked escalations are admin, task queue, and new event. They remain visible for
-the overseer and are not counted among the 25 agreements.
-
-## Bounds and later ownership
-
-The two planning artifacts are this task's entire write population. Every source, locale, test,
-script, ROADMAP/REQUIREMENTS row flip, and overseer close-out act is outside it.
-
-- P99-40 remains the rendered-battery owner after P99-39 can land; P99-41 remains the D-38 human
-  sign-off owner. No checkpoint answer exists in this worker's record.
-- Phase 102 retains D-21's wholesale working dot-to-colon tail, COPY-09's three named literals,
-  EDGECOPY-01, and GUIDE-HOLLOW-01.
-- Phase 103 retains the 39 criterion-1 members triaged by reading.
-- Arabic naturalness beyond the ruled glossary remains the operator's review.
-- The nav-title checker retains the three overseer escalations.
-- `positions:draftBanner` and the other P99-13/P99-43 named `common` handoffs remain explicitly
-  outside this static close. The later source lanes closed the double-prefixed authoring queue;
-  this task's fresh strict, dynamic, and resolution zeros show no AR-04 residue from it.
-
-## Scope and whitespace gate
-
-Command:
-
-```sh
-git diff --check; ST=$?; PATHS=$(git status --short | sed 's/^...//' | sort); EXPECTED=$(printf '%s\n' '.planning/phases/99-arabic-coverage/99-39-SUMMARY.md' '.planning/phases/99-arabic-coverage/99-VERIFICATION.md' | sort); test "$PATHS" = "$EXPECTED"; SC=$?; printf 'DIFF_CHECK_EXIT=%s\nSCOPE_EXIT=%s\n%s\n' "$ST" "$SC" "$PATHS"; test "$ST" -eq 0 -a "$SC" -eq 0
-```
-
-Verbatim output:
-
-```text
-DIFF_CHECK_EXIT=0
-SCOPE_EXIT=0
-.planning/phases/99-arabic-coverage/99-39-SUMMARY.md
-.planning/phases/99-arabic-coverage/99-VERIFICATION.md
-```
-
-## Exact unblock condition
-
-Immediate release: the harness operator terminates PID 95315 (`pnpm run dev`, ppid 1) and its
-child PID 95414 (vite), both rooted in the main checkout's `frontend`, with zero established
-connections at the census. Then the unchanged typed gate must collect 8 and 10, execute all 18,
-match `(^|[^0-9])18 passed` (not anchored at line start and not matching 118), and observe
-Playwright exit 0. After that, rerun the static plan oracle and the completion-contract
-negative/live pair, change this front-matter to `status: complete`, and record the new outputs.
-
-Structural: the same leak recurs from the first green run of this oracle in any tree, because the
-oracle invokes Playwright ad hoc and the config's lease writer then runs unleased and detached.
-Once P99-39's own gate runs green in its worktree, the leaked server would be rooted in this
-worktree and therefore foreign to the P99-40 and P99-41 gates that run the same specs. The
-in-repo fix is to route the oracle through `scripts/pw-run-reaped.mjs --` (RUN mode, which mints
-a lease and reaps its own server) as P99-08's oracle already does, or to reap after the baseline
-pass. Either is a plan-text or engine change outside this task's write scope and needs a ruling.
+- `git log --oneline` / `git rev-parse HEAD` / `git status --short` — locate the base commit and confirm a clean tree.
+- `cat 99-39-PLAN.md` — read the plan.
+- `sed -n` over `99-CONTEXT.md`, `99-VERIFICATION.md`, `99-39-SUMMARY.md`, `playwright.config.ts` — read D-38's text, the previous register, and the `reuseExistingServer` seam.
+- `ls` / `grep -rln` over the phase directory and `rulings/` — enumerate summaries and search for a recorded D-38 answer; none exists.
+- `grep -n "census\|argv" scripts/glossary-census.mjs` — confirm the `--census` flag before using it.
+- `ls -ld node_modules frontend/node_modules` — confirm the harness's symlinks are intact.
+- `lsof -tnP -iTCP:5173 -sTCP:LISTEN` and `lsof -a -p <pid> -d cwd -Fn`, `ps -o pid,ppid,lstart` — establish port-holder provenance before any reuse or reap decision. Anchored to this worktree's path.
+- `grep -c '[ \t]$'` over every captured output file — confirm no trailing whitespace enters the fenced blocks, which `git diff --check` flagged on a previous attempt.
+- `wc -l`, `awk` slicing of the captured output files — assemble this record from the raw captures rather than retyping them, so the blocks above are verbatim by construction.
