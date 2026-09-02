@@ -15,9 +15,9 @@ The fresh static battery is green. The consolidated re-proof is **not complete**
 rendered gate collected the hardcoded 8- and 10-test populations, then correctly exited 3 before
 execution because TCP 5173 is held by PID 95414 rooted at
 `/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend`, outside this worktree.
-RULING-P99-537 forbids both reuse and termination of that foreign holder. Consequently criteria 2
-and 3 have no fresh executed result from this task, and no prior or alternate-port result is used
-as a substitute.
+RULING-P99-537 forbids reusing that foreign holder. Terminating a process rooted in the main
+checkout is outside this task's authority. Consequently criteria 2 and 3 have no fresh executed
+result from this task, and no prior or alternate-port result is used as a substitute.
 
 ## Criterion -> plan -> oracle -> observed result
 
