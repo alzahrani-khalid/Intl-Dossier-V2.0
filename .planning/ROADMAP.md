@@ -265,7 +265,7 @@ Full detail: [milestones/v9.0-ROADMAP.md](milestones/v9.0-ROADMAP.md)
 - [x] **Phase 96: Real Numbers** - Every count, chart and trend comes from real data and agrees with every other surface (completed 2026-08-17)
 - [x] **Phase 97: Reachability** - Nothing built is unreachable and nothing in the route tree is unowned
 - [x] **Phase 98: Copy Truth** - No database values, no i18n keys, no seed instructions, one date format, project voice rules obeyed
-- [ ] **Phase 99: Arabic Coverage** - An Arabic session reads as Arabic: one glossary, localized dates, no English leakage
+- [x] **Phase 99: Arabic Coverage** - An Arabic session reads as Arabic: one glossary, localized dates, no English leakage
 - [ ] **Phase 100: Security Posture — Database & Client** - RLS is a real boundary for the 207 frontend files that depend on it, and signing out leaves nothing behind on the machine
 - [ ] **Phase 101: CI Gates Green** - The suites tell the truth about `main`, and the ones that matter block merges
 - [ ] **Phase 102: Staging Data & Debt Tail** - Staging looks like a diplomatic system; the last v9.0 debts are closed
