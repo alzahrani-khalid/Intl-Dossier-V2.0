@@ -706,12 +706,32 @@ Plans:
 | 96. Real Numbers | v10.0 | 11/11 | Complete   | 2026-08-17 |
 | 97. Reachability | v10.0 | 0/TBD | Not started | — |
 | 98. Copy Truth | v10.0 | 9/9 | Complete | 2026-08-18 |
-| 99. Arabic Coverage | v10.0 | 0/TBD | Not started | — |
+| 99. Arabic Coverage | v10.0 | 62/62 | Complete | 2026-09-02 |
 | 100. Security Posture — Database & Client | v10.0 | 0/TBD | Not started | — |
 | 101. CI Gates Green | v10.0 | 0/TBD | Not started | — |
 | 102. Staging Data & Debt Tail | v10.0 | 0/TBD | Not started | — |
 | 103. Audit Re-Sweep | v10.0 | 0/TBD | Not started | — |
 | 104. v7.0 Live Verification (HARDWARE-GATED) | v10.0 | 0/TBD | Not started | — |
+
+> **⚠ THIS TABLE CONTRADICTS THE REPOSITORY — corrected only where verified (2026-09-02).**
+> Phase 99's row was updated by the overseer that landed it: 62/62, merged at `002bee1cf`, run
+> `run-20260902-182826-0000000000000073` green on all four clauses.
+>
+> **Phases 92, 93, 94, 95 and 97 still read `0/TBD / Not started` while carrying 9–15 phase summaries
+> each on disk.** Those rows were NOT changed here, because this seat verified only Phase 99 and
+> marking a phase Complete on inference is the defect class this milestone exists to remove. Derive
+> the truth rather than trusting either the row or this note:
+>
+> ```bash
+> for p in 92 93 94 95 97; do
+>   echo "P$p summaries=$(ls .planning/phases/$p-*/ | grep -c 'SUMMARY.md')"
+> done
+> ```
+>
+> Whoever next owns the roadmap should reconcile those five rows against their phase artifacts and
+> record the basis. The rows are wrong in the direction that under-reports progress, so nothing
+> downstream is at risk of over-claiming — but a progress table that reads `Not started` for finished
+> work is how a phase gets planned twice.
 
 <!-- gsd:progress:end -->
 
