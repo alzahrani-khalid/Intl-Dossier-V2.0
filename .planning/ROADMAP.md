@@ -698,13 +698,13 @@ Plans:
 | 75-80 | v8.0 | 32/32 | Shipped | 2026-07-04 |
 | 81-85 | v8.1 | 22/22 | Shipped | 2026-07-05 |
 | 86-91 | v9.0 | 54/57 | Partial (3/6 phases) | 2026-08-15 |
-| 92-104 | v10.0 | 0/TBD | In progress | - |
-| 92. Session Integrity & Edge-Function Auth | v10.0 | 0/TBD | Not started | — |
-| 93. Failure Visibility | v10.0 | 0/TBD | Not started | — |
-| 94. Write Paths | v10.0 | 0/TBD | Not started | — |
-| 95. Routes That Don't Render | v10.0 | 0/TBD | Not started | — |
+| 92-104 | v10.0 | 8/13 phases | In progress | 100-104 remain |
+| 92. Session Integrity & Edge-Function Auth | v10.0 | 10/10 | Complete | 2026-08-15 |
+| 93. Failure Visibility | v10.0 | 15/15 | Complete | 2026-08-16 |
+| 94. Write Paths | v10.0 | 11/11 | Complete | 2026-08-16 |
+| 95. Routes That Don't Render | v10.0 | 9/9 | Complete | 2026-08-17 |
 | 96. Real Numbers | v10.0 | 11/11 | Complete   | 2026-08-17 |
-| 97. Reachability | v10.0 | 0/TBD | Not started | — |
+| 97. Reachability | v10.0 | 12/12 | Complete | 2026-08-17 |
 | 98. Copy Truth | v10.0 | 9/9 | Complete | 2026-08-18 |
 | 99. Arabic Coverage | v10.0 | 62/62 | Complete | 2026-09-02 |
 | 100. Security Posture — Database & Client | v10.0 | 0/TBD | Not started | — |
@@ -713,7 +713,21 @@ Plans:
 | 103. Audit Re-Sweep | v10.0 | 0/TBD | Not started | — |
 | 104. v7.0 Live Verification (HARDWARE-GATED) | v10.0 | 0/TBD | Not started | — |
 
-> **⚠ THIS TABLE CONTRADICTS THE REPOSITORY — corrected only where verified (2026-09-02).**
+> **RECONCILED 2026-09-08 — the five contradicting rows are now corrected on evidence.**
+> Each of 92, 93, 94, 95, 97 carries a phase directory with 9–15 summaries and a VERIFICATION artifact
+> whose verdict is positive (`pass` / `Verdict: MET` / P94's *"delivered on the five criteria"*), and
+> the counts above are the summaries on disk. **Phase 94 was additionally verified LIVE**, because
+> Phase 100 depends on it: the `custom_reports` ↔ `report_shares` 42P17 recursion is broken on staging
+> — `report_shares`' SELECT policy now references neither table, so the back-edge that closed the cycle
+> is gone (`pg_policies`, project `zkrcjzdemdmwhearhfgg`, checked 2026-09-08).
+>
+> Re-derive rather than trusting this note:
+> ```bash
+> for p in 92 93 94 95 97 99; do echo "P$p $(ls .planning/phases/$p-*/*SUMMARY.md | wc -l)"; done
+> ```
+>
+> **Superseded note, kept because it records why the rows were left wrong for six days:**
+> **⚠ THIS TABLE CONTRADICTED THE REPOSITORY — corrected only where verified (2026-09-02).**
 > Phase 99's row was updated by the overseer that landed it: 62/62, merged at `002bee1cf`, run
 > `run-20260902-182826-0000000000000073` green on all four clauses.
 >
