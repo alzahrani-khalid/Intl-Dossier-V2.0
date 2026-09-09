@@ -340,13 +340,21 @@ never a repair failure; it was **unsatisfiable as sequenced**. (Its sibling, the
 was unsatisfiable *structurally* — a here-document command substitution has no reachable exit status.
 Three rounds against each bought nothing, because effort was never the missing ingredient.)
 
-**The four steps that close it, owned by P100-09's checkpoint and executed AT the toggle:**
+**The five steps that close it, owned by P100-09's checkpoint and executed AT the toggle:**
 
 1. Immediately after the operator flips the setting, run the probe **once**.
 2. Capture the **actual** reason string and message from the live 422 response, verbatim.
 3. Record them in `100-RESEARCH.md` **with the command that produced them** — live-derived, never
    quoted forward.
 4. Tighten the oracle to assert that exact discriminator, and re-run it.
+5. In the same credentialed session, call the Supabase security advisor and record the result
+   (D-38). **This step is MANDATORY TO ATTEMPT: run it and record the result** — not *"run it if
+   you can"*. It is **corroboration, never an acceptance gate**: the acceptance oracle stays the
+   catalog calibrated proxy, because no worker can reach that endpoint (D-08) and a gate there would
+   be capability-impossible. It may report any of D-38's three outcomes, and **recording "endpoint
+   unavailable — no verdict" is COMPLIANCE with this step, not failure of it.** What is not
+   compliance is the toggle finishing with no attempt in the record: the falsification is lost by
+   omission, not by an endpoint honestly out of reach.
 
 **NO fourth repair attempt is made before the toggle.** Anyone reading this row as OPEN and assuming it
 was missed should stop here: an attempt now could only invent a constant — recreating the original
