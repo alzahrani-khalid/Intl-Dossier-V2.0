@@ -257,6 +257,8 @@ behind it.) Run per identity:
 printf 'begin;\nset local role authenticated;\nset local request.jwt.claims = %s;\nselect count(*) from public.users;\ncommit;\n' \
   "'{\"sub\":\"<uuid>\",\"role\":\"authenticated\"}'" | psql "$SUPABASE_DB_URL" -Atq | tail -1
 ```
+
+> **Recorded measurement, not an instrument.** Do not copy this shape into an oracle: the producer's exit status is lost through the pipe, so a broken command and a genuine result are indistinguishable. The in-phase exemplars to copy instead are §4's `A1` (capture the producer, take its status immediately, extract the value only after) and `100-11`'s per-field check. (Overseer annotation 2026-09-09, `p100/ORDER-RESEARCH-EXECUTABLE-CENSUS.md`.)
 → `kazahrani@stats.gov.sa` **415**, `test.user@gmail.com` **415**. `public.users` carries RLS with 7
 policies and both identities still read every row, so re-pointing a view at it removes an `auth.users`
 exposure and narrows nothing about who can see a colleague's display name.
@@ -265,6 +267,8 @@ exposure and narrows nothing about who can see a colleague's display name.
 ```bash
 psql "$SUPABASE_DB_URL" -Atc "select column_name from information_schema.columns where table_schema='public' and table_name='users' order by ordinal_position" | head -8
 ```
+
+> **Recorded measurement, not an instrument.** Do not copy this shape into an oracle: the producer's exit status is lost through the pipe, so a broken command and a genuine result are indistinguishable. The in-phase exemplars to copy instead are §4's `A1` (capture the producer, take its status immediately, extract the value only after) and `100-11`'s per-field check. (Overseer annotation 2026-09-09, `p100/ORDER-RESEARCH-EXECUTABLE-CENSUS.md`.)
 
 ## §6 — Criteria 3–7 baselines
 
@@ -313,6 +317,8 @@ git grep -nI "localStorage.setItem(" -- 'frontend/src/**' | wc -l   # 48
 git ls-files | grep -E 'services/auth\.(ts|tsx|js)$'    # empty — deleted in e6ac817f3 (Phase 97)
 ```
 
+> **Recorded measurement, not an instrument.** Do not copy this shape into an oracle: the producer's exit status is lost through the pipe, so a broken command and a genuine result are indistinguishable. The in-phase exemplars to copy instead are §4's `A1` (capture the producer, take its status immediately, extract the value only after) and `100-11`'s per-field check. (Overseer annotation 2026-09-09, `p100/ORDER-RESEARCH-EXECUTABLE-CENSUS.md`.)
+
 **Criterion 7.**
 
 ```bash
@@ -320,6 +326,8 @@ git grep -nI "sourcemap" -- frontend/vite.config.ts     # :141  sourcemap: true
 find frontend/dist/assets -name '*.map' | wc -l         # 304
 python3 -c "import json;d=json.load(open('frontend/dist/assets/engagements-BseIUqIr.js.map'));print(len(d['sourcesContent']))"   # 1 (populated)
 ```
+
+> **Recorded measurement, not an instrument.** Do not copy this shape into an oracle: the producer's exit status is lost through the pipe, so a broken command and a genuine result are indistinguishable. The in-phase exemplars to copy instead are §4's `A1` (capture the producer, take its status immediately, extract the value only after) and `100-11`'s per-field check. (Overseer annotation 2026-09-09, `p100/ORDER-RESEARCH-EXECUTABLE-CENSUS.md`.)
 
 ## §7 — Roadmap numbers that did NOT reproduce
 
@@ -331,7 +339,7 @@ python3 -c "import json;d=json.load(open('frontend/dist/assets/engagements-BseIU
 | 2 `auth.users`-exposing views | 2 | §1 `F` | **reproduced** |
 | 6 persisted zustand stores | **5** | `git grep -nI "persist(" -- 'frontend/src/**'` | **NOT reproduced** — the sixth, `services/auth.ts`, was deleted in `e6ac817f3` (Phase 97). Criterion 6's named set is 5 stores + 2 raw writers = 7 keys. |
 | `unified_work_items` queried from **10** frontend files | **2** files / 16 call sites | `git grep -nI "from('unified_work_items')" -- 'frontend/src/**'` | **NOT reproduced.** No population yields 10: files calling `.from()` = 2; files mentioning `unified_work` = 8; files importing any of the three hooks that query it = 9. The criterion is unaffected — it is satisfied by a caller-scoped row census, not a file count — but DBSEC-01's "10 frontend files" should be corrected to "2 frontend files, 16 call sites". |
-| 305 `.map` files in `dist/assets` | **304** | `find frontend/dist/assets -name '*.map' \| wc -l` | **NOT reproduced at HEAD.** The roadmap dates its own measurement to `87b2d040e`; the on-disk tree is a stale build. Criterion 7 closes on a **fresh** build, so the count is evidence, not the claim. |
+| 305 `.map` files in `dist/assets` | **304** | `find frontend/dist/assets -name '*.map' \| wc -l` | **NOT reproduced at HEAD.** The roadmap dates its own measurement to `87b2d040e`; the on-disk tree is a stale build. Criterion 7 closes on a **fresh** build, so the count is evidence, not the claim. **Recorded measurement, not an instrument — do not copy `find … \| wc -l` into an oracle; the producer's status is lost through the pipe.** |
 | ~415 `*@example.com` / `*@gastat.test` fixture accounts (Phase 102 criterion 1, quoted forward by an earlier draft of this phase) | **402** (338 + 64) | §9.9 | **NOT reproduced.** 415 is every row in `auth.users`, fixture and real alike — a different population. Recorded here so Phase 102 inherits the derived figure. |
 | 207 frontend files rely on RLS as the only boundary (phase goal line) | **no derivation reproduces it** | `git grep -lI "from '@/lib/supabase'" -- 'frontend/src/**'` → 140; `git grep -lI "supabase.from(" -- 'frontend/src/**'` → 29; any `.from(` chain → 87 | **NOT reproduced.** The 2026-08-15 audit states 207 without a recorded query. It is a goal-line figure, not a criterion, so nothing in this phase depends on it — but it should not be quoted forward. |
 
@@ -619,6 +627,8 @@ Whole-tree freshness (every file, not one):
 ```bash
 find frontend/dist -type f ! -newer frontend/vite.config.ts | wc -l     # must be 0
 ```
+
+> **Recorded measurement, not an instrument.** Do not copy this shape into an oracle: the producer's exit status is lost through the pipe, so a broken command and a genuine result are indistinguishable. The in-phase exemplars to copy instead are §4's `A1` (capture the producer, take its status immediately, extract the value only after) and `100-11`'s per-field check. (Overseer annotation 2026-09-09, `p100/ORDER-RESEARCH-EXECUTABLE-CENSUS.md`.)
 → 0 after a build; **4584** with the config touched. The whole tree's mtimes span **2.1 s**, which is
 what makes "one build invocation" a checkable property.
 
