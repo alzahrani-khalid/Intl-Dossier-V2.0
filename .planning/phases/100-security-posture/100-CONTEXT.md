@@ -122,6 +122,18 @@ attestation for the dashboard toggle itself.
 "NAV-04 — delete the two DELETE-row parallel-truth modules"). The criterion's named set is therefore 5
 stores + 2 raw writers = **7 keys**, and a plan that hunts for a sixth store will not find one.
 
+**The two raw writers, by literal key** (added 2026-09-09 — this decision previously asserted the
+arithmetic "5 + 2 = 7" while naming only the five, so a worker ordered to assert the seven individually
+could enumerate just five from its inputs; the other two existed only in `ROADMAP.md`, which is not in
+`100-10`'s `files_modified`. Seeding five, sweeping, and passing exact-equality would have read as
+criterion 6 satisfied with two named stores never tested — **fail-open**):
+
+- `advanced-search-history`
+- `quickswitcher_recent_items`
+
+**The seven keys in full:** `auth-storage`, `dossier-store`, `entity-history-storage`,
+`pinned-entities-storage`, `ui-storage`, `advanced-search-history`, `quickswitcher_recent_items`.
+
 ### D-10 — The named seven are a SUBSET of the residue; the fix is a seam, not seven deletions
 
 `frontend/src/**` writes `localStorage` at 48 `setItem` sites spanning roughly two dozen distinct keys —
