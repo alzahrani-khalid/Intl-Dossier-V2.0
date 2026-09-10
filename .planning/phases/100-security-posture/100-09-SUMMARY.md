@@ -57,9 +57,11 @@ ATTESTATION-END
 
 ## Probe run 1 — recorded pre-toggle HEAD drill, verbatim
 
-The only pre-toggle run in the repository is `100-RESEARCH.md` §10.4. Its record is reproduced verbatim;
-the source itself abbreviated the generated emails and one UUID, so the missing characters cannot be
-reconstructed honestly:
+The acceptance criterion cites the pre-toggle run as recorded in `100-RESEARCH.md` §9.6. That section
+records the rejection contract and an earlier abbreviated three-arm drill; the full finalizer transcript
+quoted below is actually recorded in `100-RESEARCH.md` §10.4. This section-number discrepancy is stated
+rather than silently attaching the transcript to the wrong source. The §10.4 source itself abbreviated
+the generated emails and one UUID, so the missing characters cannot be reconstructed honestly:
 
 ```text
 P100-09-ARM1 discrimination_control len=5 http=422 error_code=weak_password reasons=[length] msg="Password should be at least 6 characters."
@@ -79,7 +81,9 @@ the setting is already behaviorally on, so this worker cannot recreate a genuine
 ## Probe run 2 — tightened post-attestation run, verbatim
 
 The tightened oracle tracked by commit `2dcd6a5a2` was executed under Bash after the attestation's
-latest effective-time bound. Exact command:
+latest effective-time bound. This is the post-toggle evidence from **run 0075 attempt 0**; the three
+earlier post-toggle captures and their checked recovery lifecycles are carried in full below. Exact
+command:
 
 ```bash
 date -u '+PROBE_STARTED_AT=%Y-%m-%dT%H:%M:%SZ'; git show milestone/v10.0-trust:.planning/phases/100-security-posture/100-09-PLAN.md | sed -n '21,120p' | sed 's/^        //' | /bin/bash; probe_rc=$?; date -u '+PROBE_FINISHED_AT=%Y-%m-%dT%H:%M:%SZ'; echo PROBE_COMMAND_EXIT=$probe_rc; exit $probe_rc
@@ -179,6 +183,11 @@ Across this worker's four live producer accounts, all four have a full resolved 
 curl status, HTTP 200 delete, successful refetch curl status, HTTP 404 refetch, successful catalog
 producer status, and an absent post-delete catalog value. Zero live residual accounts remain from these
 runs; each zero is paired above with the pre-delete UUID that proves the detector saw a true value.
+
+Post-toggle (run 0075 attempt 0, 3 captures): ARM 3 returned `reasons=[pwned]` in every capture with the
+exact leaked-password message now asserted. Drilled at HEAD (pre-toggle): ARM 1 green, ARM 2 green, ARM 3
+RED, and TWO full lifecycles were verified on the failing path with zero residual; as disclosed above,
+the historical source abbreviates one UUID rather than preserving all of its digits.
 
 ## Worker-side advisor reachability check and residual
 
