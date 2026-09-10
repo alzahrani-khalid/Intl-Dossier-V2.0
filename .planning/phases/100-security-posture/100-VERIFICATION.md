@@ -19,11 +19,17 @@ The attestation expressly says that the operator had not personally reviewed the
 personal review remains owed. No worker assertion is substituted for that attestation; the complete
 contents of `100-15-SIGNOFF.md` are quoted below.
 
+That sign-off was written about nine minutes before the first register and does not mention P100-12,
+P100-13 or P100-14. It therefore does not evidence that the operator saw the three wave-3 re-proofs.
+The operator's owed review must include those re-proofs, the carried findings, and the six-view
+empty-on-staging correction recorded below; until then, the written checkpoint answer is the delegated,
+revocable sign-off quoted here, not a personal operator review of this register.
+
 ## Criterion → plan → oracle → observed result
 
 | # | Roadmap criterion | Producing plans and final proof | Observed result | Verdict |
 | --- | --- | --- | --- | --- |
-| 1 | Client-reachable definer views converted, restricted, or justified; `unified_work_items` remains correct | P100-01–05; final P100-12 grants/invoker rows, P100-13 caller census, P100-14 criterion-2 state/read | 12/12 named views invoker-enabled; 20/20 unconsumed views restricted; `upcoming_milestones` restricted; owner/non-owner census 21/2 | COVERED, subject to the five-empty-view and tracked-consumer bounds |
+| 1 | Client-reachable definer views converted, restricted, or justified; `unified_work_items` remains correct | P100-01–05; final P100-12 grants/invoker rows, P100-13 caller census, P100-14 criterion-2 state/read | 12/12 named views invoker-enabled; 20/20 unconsumed views restricted; `upcoming_milestones` restricted; owner/non-owner census 21/2 | COVERED, subject to the six-empty-view and tracked-consumer bounds |
 | 2 | No client view exposes `auth.users` | P100-04; final P100-14 state rows and behavioural reads | `entity_comments_with_details`: invoker/readable, reads `public.users`, not `auth.users`; `upcoming_milestones`: not client-readable; dependency detector control=18 | COVERED |
 | 3 | No materialized view selectable by client roles | P100-06 plus later dispositions; final P100-12 every-grantee rows | 12/12 named materialized views render only `postgres` and `service_role`; client privileges false | COVERED |
 | 4 | The two no-policy tables match their intended service-role-only posture | P100-07; final P100-14 seven-field rows, complete ACLs and reads | exactly two policies; each is `p100_service_role_only|PERMISSIVE|*|service_role|true|true`; queue client read denied | COVERED |
@@ -50,7 +56,10 @@ contents of `100-15-SIGNOFF.md` are quoted below.
 | **P100-13** | **Fresh wave-3 function configuration with the 35-signature digest and final 21/2 caller census.** |
 | **P100-14** | **Fresh wave-3 two seven-field policy rows, two criterion-2 state rows and all three behavioural reads.** |
 
-## Wave-3 per-object evidence presented at the checkpoint
+## Wave-3 per-object evidence carried into the register
+
+These three re-proofs are present in the register for the operator's owed review. The earlier sign-off
+does not name them, so this register does not claim they were presented before that sign-off.
 
 ### P100-12 — grants and invoker flags
 
@@ -182,15 +191,16 @@ The required interim language is carried verbatim:
 > identically. The breach-specific discriminator is unobservable until leaked-password protection is
 > enabled; see the operator handoff.
 
-Its phase-register status is **OPEN - DEFERRED TO TOGGLE**, rather than silently closed by the worker.
-P100-09 owns the five post-toggle steps: run the probe once immediately after the toggle; capture the
+**OPEN - DEFERRED TO TOGGLE** was the interim status before the toggle; it remains explicit here as
+history rather than being silently erased by the worker. P100-09 owns the five post-toggle steps: run
+the probe once immediately after the toggle; capture the
 actual reason and message verbatim; record them with their producing command in `100-RESEARCH.md`;
 tighten the oracle to that exact discriminator and rerun it; and attempt the Supabase security-advisor
 call in the same credentialed session and record its result. P100-09 records those first four as done
-and the worker advisor attempt as HTTP 401. The quoted sign-off below names the operator/overseer change:
-with `reasons=["pwned"]` observable after the toggle, the attestor directs that D-31 be treated as
-CLOSED. Both the required carried interim status and the later human disposition are preserved; the
-worker does not erase either one.
+and the worker advisor attempt as HTTP 401. The current phase-register status is **CLOSED**, on the
+operator's personal `100-09-ATTESTATION.md` answer plus P100-09's post-toggle probe observing
+`reasons=["pwned"]`. The delegated sign-off quotes that human disposition. Thus the interim status it
+replaced and the current status are both preserved without manufacturing a worker attestation.
 
 ## Operator checkpoint — `100-15-SIGNOFF.md` quoted verbatim
 
@@ -230,6 +240,12 @@ under delegation, 2026-09-10T21:00:45Z.
 SIGNOFF-END
 ```
 
+The quote is intentionally uncorrected. Its “five” answer reflects D-29 and conflicts with the evidence
+already carried from P100-04 and P100-14: `entity_comments_with_details` is also a converted view whose
+authenticated read answered with 0 rows. This makes **six** empty-on-staging converted views. The
+disagreement with D-29 and the signed-off “five” is routed to the operator's owed review, together with
+the three wave-3 re-proofs that the pre-register sign-off does not say the operator saw.
+
 ## Residue carried onward
 
 - **Phase 101:** nothing schedules `get_advisors`; a later leaked-password toggle-off is DETECTABLE by
@@ -242,13 +258,17 @@ SIGNOFF-END
 
 The phase closes only with these bounds attached:
 
-1. Five of the twelve converted views are empty on staging. For `event_details`, criterion 1
-   **establishes an unbroken read path, NOT row scoping**. For `theme_details`, criterion 1
-   **establishes an unbroken read path, NOT row scoping**. For `relationship_health_summary`, criterion
-   1 **establishes an unbroken read path, NOT row scoping**. For
-   `v_country_relationship_flows`, criterion 1 **establishes an unbroken read path, NOT row scoping**.
-   For `engagement_recommendations_summary`, criterion 1 **establishes an unbroken read path, NOT row
-   scoping**. Criterion 1 COVERED does not mean row scoping was verified for all twelve.
+1. Six of the twelve converted views are empty on staging; this corrects D-29 and the quoted sign-off's
+   “five”, and the disagreement is owed operator review.
+
+   - For `event_details`, criterion 1 establishes an unbroken read path, NOT row scoping.
+   - For `theme_details`, criterion 1 establishes an unbroken read path, NOT row scoping.
+   - For `relationship_health_summary`, criterion 1 establishes an unbroken read path, NOT row scoping.
+   - For `v_country_relationship_flows`, criterion 1 establishes an unbroken read path, NOT row scoping.
+   - For `engagement_recommendations_summary`, criterion 1 establishes an unbroken read path, NOT row scoping.
+   - For `entity_comments_with_details`, criterion 1 establishes an unbroken read path, NOT row scoping.
+
+   Criterion 1 COVERED does not mean row scoping was verified for all twelve.
 2. The 21 revocations were validated against **TRACKED REPOSITORY SOURCES ONLY**. A consumer outside
    the tree — a BI tool, a Retool app, or a saved dashboard query — would not have appeared in the
    census. The break, if it occurs, is **LOUD (permission denied)** and **REVERSIBLE (re-GRANT)**.
@@ -256,7 +276,8 @@ The phase closes only with these bounds attached:
 4. The D-31 interim bound remains visible as **OPEN - DEFERRED TO TOGGLE**: the oracle establishes HTTP
    422 and `weak_password` for a non-length reason, not that rejection was BECAUSE the password was
    breached; another weak-password rule could pass identically until the breach-specific discriminator
-   is observable. The operator/overseer attestation subsequently names `pwned` and directs CLOSED, as
-   quoted verbatim above; this is a human disposition, not a worker-created green.
+   is observable. The current status is **CLOSED** on the operator personally answering
+   `100-09-ATTESTATION.md` plus P100-09's `reasons=[pwned]` probe; this is a human disposition backed by
+   the post-toggle instrument, not a worker-created green.
 5. The live `dossier_relationships` SELECT policy compares nonexistent `profiles.id`; it does not scope
    what it intends. Phase 102 owns that signed-off additional bound.

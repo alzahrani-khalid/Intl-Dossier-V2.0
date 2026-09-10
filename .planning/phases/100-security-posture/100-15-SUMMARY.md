@@ -8,8 +8,8 @@ requirements: [DBSEC-01, DBSEC-02, DBSEC-03, DBSEC-04, DBSEC-05, CLIENTSEC-01, C
 
 # P100-15 — evidence register and operator sign-off
 
-`100-VERIFICATION.md` now consumes P100-01 through P100-14, presents the fresh P100-12, P100-13 and
-P100-14 per-object evidence at the checkpoint, records the phase arithmetic, quotes
+`100-VERIFICATION.md` now consumes P100-01 through P100-14, carries the fresh P100-12, P100-13 and
+P100-14 per-object evidence for the operator's owed review, records the phase arithmetic, quotes
 `100-15-SIGNOFF.md` verbatim from commit `da1b5fbc5`, and hands all signed bounds and residue onward.
 
 ## P100-15 arithmetic runs
@@ -79,21 +79,33 @@ The register quotes the complete `100-15-SIGNOFF.md` from commit `da1b5fbc5`, in
 the standing delegation, the fact that personal operator review remains owed, all checkpoint answers,
 the additional `dossier_relationships` policy bound, signature, timestamp and `SIGNOFF-END`. The answer
 accepts the posture under delegation and directs that post-toggle D-31 is CLOSED because `pwned` became
-observable. The required interim D-31 language and **OPEN - DEFERRED TO TOGGLE** status are also
-preserved in the register; this exposes the requested human change rather than rewriting it as worker
-evidence.
+observable. **OPEN - DEFERRED TO TOGGLE** is preserved explicitly as the interim status that the current
+**CLOSED** status replaced; current closure rests on the operator's personal `100-09-ATTESTATION.md`
+answer plus P100-09's `reasons=[pwned]` probe.
+
+The sign-off was written about nine minutes before the first register and does not mention P100-12,
+P100-13 or P100-14. It therefore does not show that the operator saw those re-proofs. It also accepted
+D-29's “five” empty views, while P100-04 and P100-14 prove that `entity_comments_with_details` is a sixth.
+The register leaves the quote verbatim and routes both the wave-3 evidence and this disagreement to the
+operator's owed review.
 
 ## Closing language handed onward
 
-1. For each of `event_details`, `theme_details`, `relationship_health_summary`,
-   `v_country_relationship_flows`, and `engagement_recommendations_summary`, criterion 1
-   **establishes an unbroken read path, NOT row scoping**.
+1. Six converted views are empty on staging, correcting D-29 and the signed-off “five”:
+
+   - For `event_details`, criterion 1 establishes an unbroken read path, NOT row scoping.
+   - For `theme_details`, criterion 1 establishes an unbroken read path, NOT row scoping.
+   - For `relationship_health_summary`, criterion 1 establishes an unbroken read path, NOT row scoping.
+   - For `v_country_relationship_flows`, criterion 1 establishes an unbroken read path, NOT row scoping.
+   - For `engagement_recommendations_summary`, criterion 1 establishes an unbroken read path, NOT row scoping.
+   - For `entity_comments_with_details`, criterion 1 establishes an unbroken read path, NOT row scoping.
+
 2. The 21 revocations were validated against **TRACKED REPOSITORY SOURCES ONLY**. An unseen BI tool,
    Retool app or saved dashboard query could break; that break is **LOUD (permission denied)** and
    **REVERSIBLE (re-GRANT)**.
 3. Criterion 5 is COVERED CONTINGENT ON TWO HUMAN GATES - the P100-09 leaked-password toggle and the P100-15 operator sign-off - and its "advisors report clean" clause closes by CALIBRATED PROXY (catalog = advisor at HEAD, to the unit), NOT by direct observation of the advisor after the change.
-4. D-31 remains carried verbatim in the register with **OPEN - DEFERRED TO TOGGLE**, together with the
-   human attestor's later instruction to close it on the observed `pwned` discriminator.
+4. D-31 remains carried verbatim with **OPEN - DEFERRED TO TOGGLE** identified as interim history; its
+   current status is **CLOSED** on the operator's personal attestation plus the observed `pwned` discriminator.
 5. The sign-off's additional defective `dossier_relationships` policy finding is carried to Phase 102.
 
 ## Named residue
