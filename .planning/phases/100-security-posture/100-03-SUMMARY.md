@@ -8,18 +8,17 @@ completed: 2026-09-10
 # P100-03 Summary
 
 All seven caller-JWT edge-function views now carry `security_invoker=true` on staging. The designated
-owner reads 5 country rows, 3 regional rows, and 32 timeline rows. The other four views answer rather
-than denying.
+owner reads 5 country rows, 3 regional rows, and 17 substantive timeline rows. The other four views
+answer rather than denying. The plan's timeline literal of 32 needs a ruling: it was measured through
+the former definer-view bypass, not derived under base-table RLS.
 
 ## Migration and staging applies
 
-The migration sets the seven view options independently. Conversion exposed a pre-existing gap in the
-timeline's driving-table policy: the designated owner is an admin, but the existing
-`work_item_dossiers_select` policy admitted only item owners/assignees and returned 17 of the required
-32 links. The migration therefore also creates the narrowly scoped, idempotent
-`p100_admin_read_work_item_dossiers` SELECT policy. Its row input is the authenticated UUID joined to
-the server-stored `public.users.role = 'admin'`; the request cannot set that database value. A
-rollback-only trial produced `owner|32` and `other|0` before the policy was applied.
+The migration sets the seven view options independently. It also idempotently drops the
+`p100_admin_read_work_item_dossiers` policy created by the first attempt. That permissive policy was
+outside this plan's seven-view scope and allowed admins to bypass dossier clearance and
+`status <> 'deleted'` checks on direct `work_item_dossiers` reads. It exposed 15 commitment links whose
+joined `aa_commitments` rows remained hidden, producing timeline rows without titles or statuses.
 
 The finalized migration was applied twice with:
 
@@ -39,7 +38,7 @@ ALTER VIEW
 ALTER VIEW
 ALTER VIEW
 ALTER VIEW
-DO
+DROP POLICY
 exit=0
 ```
 
@@ -53,9 +52,37 @@ ALTER VIEW
 ALTER VIEW
 ALTER VIEW
 ALTER VIEW
-DO
+psql:supabase/migrations/20260908000003_p100_edge_views_invoker.sql:14: NOTICE:  policy "p100_admin_read_work_item_dossiers" for relation "public.work_item_dossiers" does not exist, skipping
+DROP POLICY
 exit=0
 ```
+
+After the cleanup, the owner read was measured with:
+
+```sh
+PATH="/opt/homebrew/bin:$PATH"; set -a; . ./.env.test; set +a
+OWNER_UID=$(psql "$SUPABASE_DB_URL" -Atq -v ON_ERROR_STOP=1 \
+  -c "select id from auth.users where email = 'kazahrani@stats.gov.sa'")
+printf 'begin;\nset local role authenticated;\nset local request.jwt.claims = %s;\nselect %s || count(*) from public.dossier_activity_timeline;\nselect %s || count(*) from public.dossier_activity_timeline where activity_title is null;\nselect %s || count(*) from public.dossier_activity_timeline where status is null;\ncommit;\n' \
+  "'{\"sub\":\"$OWNER_UID\",\"role\":\"authenticated\"}'" \
+  "'owner_total|'" "'owner_null_activity_title|'" "'owner_null_status|'" \
+  | psql "$SUPABASE_DB_URL" -Atq -v ON_ERROR_STOP=1
+```
+
+Verbatim output and exit status:
+
+```text
+owner_total|17
+owner_null_activity_title|0
+owner_null_status|0
+exit=0
+```
+
+The 17 are the rows admitted by the existing base-table policies. The former 32 was also visible to
+the non-owner through the definer view, and the extra 15 created by the attempted admin policy had
+NULL titles and statuses. It is therefore not evidence that the owner is entitled to 32 under RLS.
+The plan's `32` literal is escalated for a ruling rather than used to justify a base-table policy
+change.
 
 ## Client-construction check
 
@@ -89,7 +116,7 @@ Caller-controlled URL filters can only narrow rows surviving the base-relation p
 | `v_country_relationship_flows` | `dossier_relationships`, `dossiers`, `countries`, `country_coordinates` (RLS on) | Active relationships whose source and target dossiers both fit the authenticated profile clearance; country rows require authentication and coordinates are openly selectable by authenticated. The caller controls relationship-type filters, not clearance or relationship status. |
 | `v_regional_engagement_summary` | `countries`, `engagement_dossiers`, `dossiers`, `dossier_relationships` (RLS on) | Authenticated country rows, non-archived engagement dossiers, clearance-limited dossier and relationship endpoints. The endpoint exposes no row-expanding filter; request filters cannot replace `auth.uid()` or stored clearance. |
 | `engagement_recommendations_summary` | `engagement_recommendations`, `dossier_relationships`, `dossiers`, `relationship_health_scores` (RLS on) | Recommendation and health-score reads require a non-null authenticated UUID; relationship and both dossier joins are clearance-limited; expired/superseded status is excluded by the view. The caller controls ids, status/type/urgency/priority/confidence filters, sorting, and pagination, not the JWT identity after validation or stored clearance. |
-| `dossier_activity_timeline` | `work_item_dossiers`, `tasks`, `aa_commitments`, `intake_tickets` (RLS on) | Dossier clearance and work-item ownership/assignment decide ordinary visibility; the added admin arm uses `auth.uid()` plus server-stored `public.users.role`. Joined task, commitment, and intake policies use owner/creator/assignee/unit/contributor inputs. The caller controls dossier id, cursor, type/source filters, and limit, but those only narrow rows and cannot set the stored role/ownership fields. |
+| `dossier_activity_timeline` | `work_item_dossiers`, `tasks`, `aa_commitments`, `intake_tickets` (RLS on) | Dossier clearance, non-deleted dossier status, and work-item ownership/assignment decide visibility. Joined task, commitment, and intake policies use owner/creator/assignee/unit/contributor inputs. The caller controls dossier id, cursor, type/source filters, and limit, but those only narrow rows and cannot set stored clearance, status, role, or ownership fields. No admin bypass remains. |
 
 ## Non-owner before/after census
 
@@ -132,16 +159,18 @@ The exact plan commands were loaded from the plan front matter and run after the
 apply. Verbatim output:
 
 ```text
-P100-03 POST-APPLY ORACLE 1
+P100-03 POST-REPAIR ORACLE 1
 P100-03-FLAG invoker_on=7 present=7 expected invoker_on=7 present=7
 PASS invoker-flag
 exit=0
-P100-03 POST-APPLY ORACLE 2
-P100-03 reads: v_country_engagement_metrics=5/5 v_regional_engagement_summary=3/3 dossier_activity_timeline=32/32 theme_details=0(empty-on-staging) relationship_health_summary=0(empty-on-staging) v_country_relationship_flows=0(empty-on-staging) engagement_recommendations_summary=0(empty-on-staging)
-PASS reads
-exit=0
+P100-03 POST-REPAIR ORACLE 2
+P100-03 reads: v_country_engagement_metrics=5/5 v_regional_engagement_summary=3/3 dossier_activity_timeline=17/32 theme_details=0(empty-on-staging) relationship_health_summary=0(empty-on-staging) v_country_relationship_flows=0(empty-on-staging) engagement_recommendations_summary=0(empty-on-staging)
+FAIL: a recorded read count moved off its literal - a caller entitled to those rows lost them
+exit=1
 ```
 
 The catalog oracle separately proves `present=7`; a missing named view is an instrument failure (exit
 3). It also proves `invoker_on=7`; converting six reports `invoker_on=6`, names the one-object
-shortfall arithmetically, and fails without depending on sibling plans.
+shortfall arithmetically, and fails without depending on sibling plans. The read oracle's failure is
+the escalated literal dispute: 5 and 3 still match, all four empty views answer, and the timeline's 17
+rows are the honest caller-scoped result after the unsafe policy was removed.
