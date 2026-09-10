@@ -583,8 +583,7 @@ serve(async (req) => {
 
           // Get updated score
           const { data: healthData, error: fetchError } = await supabase
-            .from('relationship_health_summary')
-            .select('*')
+            .rpc('get_relationship_health_summary')
             .eq('relationship_id', relationshipId)
             .single();
 
