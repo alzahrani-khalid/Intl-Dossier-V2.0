@@ -1,6 +1,7 @@
 # P100-13 verification state — 2026-09-10
 
-This file contains only output produced by P100-13's fresh final-tree run.
+This file contains only output produced by P100-13's fresh final-tree repair run. The two plan commands
+were loaded from `100-13-PLAN.md` and executed unchanged with `bash -c` in one foreground process.
 
 ## Function configuration oracle
 

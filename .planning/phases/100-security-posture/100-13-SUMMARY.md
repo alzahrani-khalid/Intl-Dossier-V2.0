@@ -28,10 +28,10 @@ control showing that the non-owner result is narrowed access rather than a dead 
 
 ## Fresh oracle session
 
-Command: the two one-line fail-closed oracle commands from `100-13-PLAN.md`, executed unchanged in
-separate subshells of one Bash session so the caller census still ran after the search-path oracle's
-population guard exited 3. The session printed both captured statuses and failed overall unless both
-were zero.
+Command: a Ruby YAML reader loaded the two `oracle: command` scalars from `100-13-PLAN.md` and executed
+each unchanged with `bash -c` in one foreground process, continuing to the caller census after the
+search-path oracle's population guard exited 3. It printed both captured statuses and failed overall
+unless both were zero. This command and all output below were produced afresh in this repair attempt.
 
 Verbatim output:
 
@@ -49,31 +49,6 @@ Session exit status: **1**.
 The `unpinned=0` result stands beside its controls in the same produced line: a populated census of
 592 functions, 557 at the schema-approved value, 35 at other explicit values, and the expected digest
 for those 35 identities. The zero therefore cannot come from an empty or malformed census.
-
-## Direct catalog-output diagnostic
-
-After an initial invocation under the worktree's interactive zsh did not split the five unquoted fields
-as the POSIX-shell oracle assumes, the oracle's read-only SQL was run directly to distinguish shell
-parsing from catalog state.
-
-Command:
-
-```bash
-PATH="/opt/homebrew/bin:$PATH"; set -a; . ./.env.test 2>/dev/null; set +a; psql "$SUPABASE_DB_URL" -Atq -v ON_ERROR_STOP=1 -c "<the search-path census SQL from 100-13-PLAN.md>"
-```
-
-Verbatim output (exit status 0):
-
-```text
-557 35 0 592 a10d3e1256979bf019d8a9b68c959cb8
-```
-
-This diagnostic and the Bash oracle agree exactly. The initial zsh invocation produced the following
-verbatim fail-closed output (exit status 3); it is not treated as configuration evidence:
-
-```text
-INSTRUMENT-CANNOT-RUN: the identity-digest field of the search_path configuration census returned [], not an md5
-```
 
 ## Remaining ownership
 
