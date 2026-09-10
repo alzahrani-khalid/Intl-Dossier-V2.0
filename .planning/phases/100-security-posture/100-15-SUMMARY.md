@@ -9,8 +9,8 @@ requirements: [DBSEC-01, DBSEC-02, DBSEC-03, DBSEC-04, DBSEC-05, CLIENTSEC-01, C
 # P100-15 — evidence register and operator sign-off
 
 `100-VERIFICATION.md` now consumes P100-01 through P100-14, carries the fresh P100-12, P100-13 and
-P100-14 per-object evidence for the operator's owed review, records the phase arithmetic, quotes
-`100-15-SIGNOFF.md` verbatim from commit `da1b5fbc5`, and hands all signed bounds and residue onward.
+P100-14 per-object evidence attested at the delegated checkpoint, records the phase arithmetic, quotes
+`100-15-SIGNOFF.md` verbatim from commit `8cf1a7098`, and hands all signed bounds and residue onward.
 
 ## P100-15 arithmetic runs
 
@@ -75,23 +75,21 @@ The 33/12/12 values are the only graded arithmetic. The printed zero is controll
 
 ## Checkpoint answer
 
-The register quotes the complete `100-15-SIGNOFF.md` from commit `da1b5fbc5`, including who decided,
-the standing delegation, the fact that personal operator review remains owed, all checkpoint answers,
-the additional `dossier_relationships` policy bound, signature, timestamp and `SIGNOFF-END`. The answer
-accepts the posture under delegation and directs that post-toggle D-31 is CLOSED because `pwned` became
-observable. **OPEN - DEFERRED TO TOGGLE** is preserved explicitly as the interim status that the current
-**CLOSED** status replaced; current closure rests on the operator's personal `100-09-ATTESTATION.md`
-answer plus P100-09's `reasons=[pwned]` probe.
+The register quotes the complete re-issued `100-15-SIGNOFF.md` from commit `8cf1a7098`, including who
+decided, the standing delegation, the attested fourteen-summary and P100-12/P100-13/P100-14 evidence
+set, all six empty views, all checkpoint bounds, the additional `dossier_relationships` policy finding,
+signature, timestamp and `SIGNOFF-END`. The overseer accepted the posture in writing under delegation;
+the sign-off remains revocable and says personal operator review is owed.
 
-The sign-off was written about nine minutes before the first register and does not mention P100-12,
-P100-13 or P100-14. It therefore does not show that the operator saw those re-proofs. It also accepted
-D-29's “five” empty views, while P100-04 and P100-14 prove that `entity_comments_with_details` is a sixth.
-The register leaves the quote verbatim and routes both the wave-3 evidence and this disagreement to the
-operator's owed review.
+The sign-off directs that post-toggle D-31 is `CLOSED` because `pwned` became observable. That statement
+is quoted verbatim and attributed to the attestor, but this register records the acceptance-contract
+status **OPEN - DEFERRED TO TOGGLE**, not closed. The operator's personal `100-09-ATTESTATION.md` answer
+and P100-09's `reasons=[pwned]` probe remain evidence under that open bound rather than a worker-created
+closure.
 
 ## Closing language handed onward
 
-1. Six converted views are empty on staging, correcting D-29 and the signed-off “five”:
+1. Six converted views are empty on staging, as accepted by the re-issued sign-off's correction to D-29:
 
    - For `event_details`, criterion 1 establishes an unbroken read path, NOT row scoping.
    - For `theme_details`, criterion 1 establishes an unbroken read path, NOT row scoping.
@@ -104,8 +102,9 @@ operator's owed review.
    Retool app or saved dashboard query could break; that break is **LOUD (permission denied)** and
    **REVERSIBLE (re-GRANT)**.
 3. Criterion 5 is COVERED CONTINGENT ON TWO HUMAN GATES - the P100-09 leaked-password toggle and the P100-15 operator sign-off - and its "advisors report clean" clause closes by CALIBRATED PROXY (catalog = advisor at HEAD, to the unit), NOT by direct observation of the advisor after the change.
-4. D-31 remains carried verbatim with **OPEN - DEFERRED TO TOGGLE** identified as interim history; its
-   current status is **CLOSED** on the operator's personal attestation plus the observed `pwned` discriminator.
+4. D-31 is recorded **OPEN - DEFERRED TO TOGGLE**, not closed. The quoted sign-off's conflicting
+   `CLOSED` disposition and the operator's personal attestation plus observed `pwned` discriminator are
+   retained as attributed evidence under the open bound.
 5. The sign-off's additional defective `dossier_relationships` policy finding is carried to Phase 102.
 
 ## Named residue

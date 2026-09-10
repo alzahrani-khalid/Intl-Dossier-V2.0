@@ -15,15 +15,12 @@ remaining 21 are restricted. `client_but_not_invoker=0` is printed as a diagnost
 the exit code. The per-object proof is not this arithmetic: it is P100-12, P100-13 **and** P100-14.
 
 The checkpoint was answered in writing by `overseer-p100-r2` under the operator's standing delegation.
-The attestation expressly says that the operator had not personally reviewed the register and that
-personal review remains owed. No worker assertion is substituted for that attestation; the complete
-contents of `100-15-SIGNOFF.md` are quoted below.
-
-That sign-off was written about nine minutes before the first register and does not mention P100-12,
-P100-13 or P100-14. It therefore does not evidence that the operator saw the three wave-3 re-proofs.
-The operator's owed review must include those re-proofs, the carried findings, and the six-view
-empty-on-staging correction recorded below; until then, the written checkpoint answer is the delegated,
-revocable sign-off quoted here, not a personal operator review of this register.
+The re-issued attestation names the fourteen predecessor summaries and all three P100-12/P100-13/P100-14
+wave-3 re-proofs at tip `370f4a1e1`, accepts the register's three stated bounds (including all six empty
+views), and carries the additional policy finding. It expressly says the operator has not personally
+reviewed the evidence set or register and that personal review remains owed; the delegated sign-off is
+revocable. No worker assertion is substituted for that checkpoint answer. The complete contents of the
+re-issued `100-15-SIGNOFF.md` are quoted below.
 
 ## Criterion → plan → oracle → observed result
 
@@ -58,8 +55,8 @@ revocable sign-off quoted here, not a personal operator review of this register.
 
 ## Wave-3 per-object evidence carried into the register
 
-These three re-proofs are present in the register for the operator's owed review. The earlier sign-off
-does not name them, so this register does not claim they were presented before that sign-off.
+These three re-proofs are present in the register. The re-issued sign-off identifies all three as part of
+the Phase 100 evidence set at tip `370f4a1e1` and attests that evidence set under standing delegation.
 
 ### P100-12 — grants and invoker flags
 
@@ -191,60 +188,61 @@ The required interim language is carried verbatim:
 > identically. The breach-specific discriminator is unobservable until leaked-password protection is
 > enabled; see the operator handoff.
 
-**OPEN - DEFERRED TO TOGGLE** was the interim status before the toggle; it remains explicit here as
-history rather than being silently erased by the worker. P100-09 owns the five post-toggle steps: run
-the probe once immediately after the toggle; capture the
+The phase-register status is **OPEN - DEFERRED TO TOGGLE**, as required by this checkpoint's acceptance
+contract; it is not recorded closed here. P100-09 owns the five post-toggle steps: run the probe once
+immediately after the toggle; capture the
 actual reason and message verbatim; record them with their producing command in `100-RESEARCH.md`;
 tighten the oracle to that exact discriminator and rerun it; and attempt the Supabase security-advisor
 call in the same credentialed session and record its result. P100-09 records those first four as done
-and the worker advisor attempt as HTTP 401. The current phase-register status is **CLOSED**, on the
-operator's personal `100-09-ATTESTATION.md` answer plus P100-09's post-toggle probe observing
-`reasons=["pwned"]`. The delegated sign-off quotes that human disposition. Thus the interim status it
-replaced and the current status are both preserved without manufacturing a worker attestation.
+and the worker advisor attempt as HTTP 401. The operator's personal `100-09-ATTESTATION.md` answer plus
+P100-09's post-toggle probe observing `reasons=["pwned"]` support the separate `CLOSED` disposition
+stated in the delegated sign-off. That statement is preserved verbatim below as operator evidence, but
+does not overwrite this register's required **OPEN - DEFERRED TO TOGGLE** status.
 
 ## Operator checkpoint — `100-15-SIGNOFF.md` quoted verbatim
 
 The following is the complete, verbatim content of
-`.planning/phases/100-security-posture/100-15-SIGNOFF.md` from commit `da1b5fbc5`:
+`.planning/phases/100-security-posture/100-15-SIGNOFF.md` from commit `8cf1a7098`:
 
 ```text
-# PHASE 100 SIGN-OFF — given by the OVERSEER under the operator's standing delegation (2026-09-10T21:00:45Z)
+# PHASE 100 SIGN-OFF — given by the OVERSEER under the operator's standing delegation (re-issued 2026-09-10T21:22:07Z)
 
-**Who decided:** the overseer seat (overseer-p100-r2, pane w0:pGJ), acting under the operator's written
-delegation of 2026-09-10 ("you are in charge .. keep going till you finish the milestone",
-`.tickmarkr/overseer/p100/OVERSEER-DELEGATION-260910.md`). **The operator has NOT personally reviewed this
-register.** Their review is OWED and recorded as the first item of the morning handoff; this sign-off is
-revocable by them and says so.
+**What this signs off:** the Phase 100 EVIDENCE SET — the fourteen predecessor summaries and the three wave-3
+re-proof outputs as merged on the run branch at tip 370f4a1e1 (run-20260910-112306-0000000000000075, tip-verify
+PASSED 21:00Z) — together with the bounds as worded in 100-CONTEXT.md §4, D-29 and D-31 at the commit that
+carries this file. It does NOT attest the register's prose (the register is assembled after this file and
+quotes it); it attests what the register must faithfully carry.
 
-**Answers to the checkpoint, in the register's words — all four bounds ACCEPTED as stated:**
-1. Five of the twelve converted views hold zero rows on staging; for those five criterion 1 establishes an
-   unbroken read path and NOT row scoping. Accepted; criterion 1 is COVERED with that bound.
+**Who decided:** the overseer seat (overseer-p100-r2, pane w0:pGJ), under the operator's written delegation of
+2026-09-10 (`.tickmarkr/overseer/p100/OVERSEER-DELEGATION-260910.md`). **The operator has not personally
+reviewed the evidence set or the register.** Their review is owed and is the first item of the morning
+handoff; this sign-off is revocable by them and says so.
+
+**The bounds, accepted as stated:**
+1. SIX of the twelve converted views hold zero rows on staging (D-29 as amended: event_details, theme_details,
+   relationship_health_summary, v_country_relationship_flows, engagement_recommendations_summary,
+   entity_comments_with_details); for those six criterion 1 establishes an unbroken read path and NOT row scoping.
 2. The revocations were validated against tracked repository sources only; an untracked consumer would break
-   LOUD (permission denied) and REVERSIBLE (re-GRANT). Accepted. Tonight this bound was exercised THREE times
-   on tracked-but-uncensused consumers (edge functions via anon key, invoker functions/views/triggers) and each
-   was rolled back within minutes; the census method was corrected (catalog probe, P100-06/16/17).
-3. Criterion 5 is COVERED CONTINGENT ON TWO HUMAN GATES; the P100-09 toggle gate was decided by the OPERATOR
-   personally (100-09-ATTESTATION.md); this checkpoint gate is decided by the overseer under delegation.
-4. D-31: status is **CLOSED**, not "OPEN - DEFERRED TO TOGGLE": with protection on, the rejection carries
-   reasons=["pwned"], the breach-specific discriminator; the operator answered this on 2026-09-10
-   (100-09-ATTESTATION.md). The register records CLOSED and cites the attestation.
-
-**Additional bound the overseer adds to the register (not in the plan text):** the live
-`dossier_relationships` SELECT policy compares `profiles.id`, a column that does not exist; it scopes nothing
-it intends to. Found by review during P100-17, NOT fixed in Phase 100 (out of every task's scope), carried to
-the Phase 102 debt tail (`.tickmarkr/overseer/p100/FINDING-P100-LIVE-POLICY-PROFILES-ID.md`). The P100-17
-definer RPC substitutes the user_id comparison in its own copy and is correct.
+   LOUD (permission denied) and REVERSIBLE (re-GRANT). This bound was exercised three times tonight on
+   tracked-but-uncensused consumers and each break was rolled back within minutes; the census method was
+   corrected (catalog probe, P100-06/16/17).
+3. Criterion 5 is COVERED CONTINGENT ON TWO HUMAN GATES: the P100-09 toggle gate was decided by the OPERATOR
+   (100-09-ATTESTATION.md); this checkpoint gate is decided by the overseer under delegation.
+4. D-31 is **CLOSED** (status line amended in 100-CONTEXT.md): with protection on, the rejection carries
+   reasons=["pwned"], the breach-specific discriminator; the register records CLOSED and cites the attestation.
+5. Added by the overseer: the live `dossier_relationships` SELECT policy compares `profiles.id`, a column
+   that does not exist; it scopes nothing it intends to. Found in review during P100-17, NOT fixed in Phase
+   100, carried to the Phase 102 debt tail (`.tickmarkr/overseer/p100/FINDING-P100-LIVE-POLICY-PROFILES-ID.md`).
 
 **Sign-off:** Phase 100's security posture is ACCEPTED with the five bounds above. Signed: overseer-p100-r2,
-under delegation, 2026-09-10T21:00:45Z.
+under delegation, 2026-09-10T21:22:07Z.
 SIGNOFF-END
 ```
 
-The quote is intentionally uncorrected. Its “five” answer reflects D-29 and conflicts with the evidence
-already carried from P100-04 and P100-14: `entity_comments_with_details` is also a converted view whose
-authenticated read answered with 0 rows. This makes **six** empty-on-staging converted views. The
-disagreement with D-29 and the signed-off “five” is routed to the operator's owed review, together with
-the three wave-3 re-proofs that the pre-register sign-off does not say the operator saw.
+This re-issued quote resolves the superseded sign-off's undercount: it accepts all **six**
+empty-on-staging converted views and explicitly attests the P100-12/P100-13/P100-14 evidence set. Its
+D-31 `CLOSED` disposition is retained as attributed operator evidence; the register nevertheless keeps
+the acceptance-contract status **OPEN - DEFERRED TO TOGGLE** rather than closing it on a worker assertion.
 
 ## Residue carried onward
 
@@ -258,8 +256,8 @@ the three wave-3 re-proofs that the pre-register sign-off does not say the opera
 
 The phase closes only with these bounds attached:
 
-1. Six of the twelve converted views are empty on staging; this corrects D-29 and the quoted sign-off's
-   “five”, and the disagreement is owed operator review.
+1. Six of the twelve converted views are empty on staging; the re-issued sign-off accepts this correction
+   to D-29.
 
    - For `event_details`, criterion 1 establishes an unbroken read path, NOT row scoping.
    - For `theme_details`, criterion 1 establishes an unbroken read path, NOT row scoping.
@@ -273,11 +271,11 @@ The phase closes only with these bounds attached:
    the tree — a BI tool, a Retool app, or a saved dashboard query — would not have appeared in the
    census. The break, if it occurs, is **LOUD (permission denied)** and **REVERSIBLE (re-GRANT)**.
 3. Criterion 5 is COVERED CONTINGENT ON TWO HUMAN GATES - the P100-09 leaked-password toggle and the P100-15 operator sign-off - and its "advisors report clean" clause closes by CALIBRATED PROXY (catalog = advisor at HEAD, to the unit), NOT by direct observation of the advisor after the change.
-4. The D-31 interim bound remains visible as **OPEN - DEFERRED TO TOGGLE**: the oracle establishes HTTP
-   422 and `weak_password` for a non-length reason, not that rejection was BECAUSE the password was
-   breached; another weak-password rule could pass identically until the breach-specific discriminator
-   is observable. The current status is **CLOSED** on the operator personally answering
-   `100-09-ATTESTATION.md` plus P100-09's `reasons=[pwned]` probe; this is a human disposition backed by
-   the post-toggle instrument, not a worker-created green.
+4. D-31 is **OPEN - DEFERRED TO TOGGLE**: the oracle establishes rejection with HTTP 422 and error code
+   `weak_password` for a non-`length` reason and does **NOT** establish that rejection was BECAUSE the
+   password was breached, since another `weak_password` rule would pass identically; the discriminator
+   is unobservable until the setting is enabled. The quoted sign-off's conflicting `CLOSED` disposition
+   is operator evidence backed by `100-09-ATTESTATION.md` and P100-09's `reasons=[pwned]` probe, but the
+   phase register records the acceptance-contract status **OPEN - DEFERRED TO TOGGLE** rather than closed.
 5. The live `dossier_relationships` SELECT policy compares nonexistent `profiles.id`; it does not scope
    what it intends. Phase 102 owns that signed-off additional bound.
