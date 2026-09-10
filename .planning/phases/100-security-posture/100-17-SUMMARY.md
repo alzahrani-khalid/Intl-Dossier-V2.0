@@ -238,8 +238,8 @@ $function$
 === BEFORE-END rolled back
 ```
 
-AFTER bodies: live catalog, dumped after the final applies (APPLY13/APPLY14 below). Command:
-`psql "$SUPABASE_DB_URL" -Atq -v ON_ERROR_STOP=1 -c "select pg_get_functiondef(p.oid) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname in (...seven names...) order by p.proname"` → exit 0, verbatim output:
+AFTER bodies: live catalog, dumped after the final applies (APPLY15-17 below — the qualification-strip
+revision). Command:
 
 ```text
 CREATE OR REPLACE FUNCTION public.get_citation_network_graph(p_start_entity_type citation_source_type, p_start_entity_id uuid, p_depth integer DEFAULT 2, p_max_nodes integer DEFAULT 50)
@@ -254,10 +254,10 @@ BEGIN
         SELECT p_start_entity_type AS entity_type, p_start_entity_id AS entity_id, 0 AS depth, ARRAY[p_start_entity_id] AS path
         WHERE EXISTS (
             SELECT 1
-            FROM public.entity_citations ec
+            FROM entity_citations ec
             WHERE ec.organization_id IN (
                 SELECT om.organization_id
-                FROM public.organization_members om
+                FROM organization_members om
                 WHERE om.user_id = auth.uid()
                   AND om.left_at IS NULL
             )
@@ -273,25 +273,25 @@ BEGIN
           ct.depth + 1,
           ct.path || CASE WHEN cn.source_type = ct.entity_type AND cn.source_id = ct.entity_id THEN cn.target_id ELSE cn.source_id END
         FROM citation_tree ct
-        JOIN public.citation_network cn
+        JOIN citation_network cn
           ON (cn.source_type = ct.entity_type AND cn.source_id = ct.entity_id AND cn.target_id IS NOT NULL)
           OR (cn.target_type = ct.entity_type AND cn.target_id = ct.entity_id)
         WHERE ct.depth < p_depth
           AND NOT (CASE WHEN cn.source_type = ct.entity_type AND cn.source_id = ct.entity_id THEN cn.target_id ELSE cn.source_id END) = ANY(ct.path)
           AND EXISTS (
-            SELECT 1 FROM public.organization_members om
+            SELECT 1 FROM organization_members om
             WHERE om.user_id = auth.uid() AND om.left_at IS NULL AND om.organization_id = cn.organization_id
           )
     ),
     nodes AS (SELECT DISTINCT ON (entity_id) entity_type, entity_id, MIN(depth) AS depth FROM citation_tree GROUP BY entity_type, entity_id ORDER BY entity_id, depth LIMIT p_max_nodes),
-    edges AS (SELECT DISTINCT cn.citation_id AS id, cn.source_type, cn.source_id, cn.target_type, cn.target_id, cn.status, cn.relevance_score FROM public.citation_network cn WHERE (cn.source_type, cn.source_id) IN (SELECT entity_type, entity_id FROM nodes) AND (cn.target_type, cn.target_id) IN (SELECT entity_type, entity_id FROM nodes)
+    edges AS (SELECT DISTINCT cn.citation_id AS id, cn.source_type, cn.source_id, cn.target_type, cn.target_id, cn.status, cn.relevance_score FROM citation_network cn WHERE (cn.source_type, cn.source_id) IN (SELECT entity_type, entity_id FROM nodes) AND (cn.target_type, cn.target_id) IN (SELECT entity_type, entity_id FROM nodes)
         AND EXISTS (
-            SELECT 1 FROM public.organization_members om
+            SELECT 1 FROM organization_members om
             WHERE om.user_id = auth.uid() AND om.left_at IS NULL AND om.organization_id = cn.organization_id
         ))
     SELECT json_build_object(
         'nodes', (SELECT json_agg(json_build_object('id', n.entity_id, 'type', n.entity_type, 'depth', n.depth, 'name', COALESCE(d.name_en, b.title, ab.title, doc.title, p.title_en, m.title, e.location_en, n.entity_id::text), 'name_ar', COALESCE(d.name_ar, b.title, ab.title, doc.title, p.title_ar, m.title_ar, e.location_ar, n.entity_id::text)))
-            FROM nodes n LEFT JOIN public.dossiers d ON n.entity_type = 'dossier' AND n.entity_id = d.id LEFT JOIN public.briefs b ON n.entity_type = 'brief' AND n.entity_id = b.id LEFT JOIN public.ai_briefs ab ON n.entity_type = 'ai_brief' AND n.entity_id = ab.id LEFT JOIN public.documents doc ON n.entity_type = 'document' AND n.entity_id = doc.id LEFT JOIN public.positions p ON n.entity_type = 'position' AND n.entity_id = p.id LEFT JOIN public.mous m ON n.entity_type = 'mou' AND n.entity_id = m.id LEFT JOIN public.engagements e ON n.entity_type = 'engagement' AND n.entity_id = e.id),
+            FROM nodes n LEFT JOIN dossiers d ON n.entity_type = 'dossier' AND n.entity_id = d.id LEFT JOIN briefs b ON n.entity_type = 'brief' AND n.entity_id = b.id LEFT JOIN ai_briefs ab ON n.entity_type = 'ai_brief' AND n.entity_id = ab.id LEFT JOIN documents doc ON n.entity_type = 'document' AND n.entity_id = doc.id LEFT JOIN positions p ON n.entity_type = 'position' AND n.entity_id = p.id LEFT JOIN mous m ON n.entity_type = 'mou' AND n.entity_id = m.id LEFT JOIN engagements e ON n.entity_type = 'engagement' AND n.entity_id = e.id),
         'edges', (SELECT json_agg(json_build_object('id', ed.id, 'source', ed.source_id, 'target', ed.target_id, 'source_type', ed.source_type, 'target_type', ed.target_type, 'relevance_score', ed.relevance_score)) FROM edges ed),
         'start_node', p_start_entity_id, 'depth', p_depth, 'total_nodes', (SELECT COUNT(*) FROM nodes)
     ) INTO result;
@@ -309,28 +309,15 @@ BEGIN
     RETURN QUERY
     WITH outgoing AS (
         SELECT cn.citation_id, 'outgoing'::TEXT, cn.target_type, cn.target_id, cn.target_name, cn.external_url, ec.external_title, ec.status, cn.relevance_score, cn.detection_method, ec.citation_context, cn.created_at
-        FROM public.citation_network cn JOIN public.entity_citations ec ON ec.id = cn.citation_id
-        WHERE cn.source_type = p_entity_type
-          AND cn.source_id = p_entity_id
-          AND (p_include_external OR cn.target_id IS NOT NULL)
-          AND ec.organization_id IN (
-            SELECT om.organization_id
-            FROM public.organization_members om
-            WHERE om.user_id = auth.uid()
-              AND om.left_at IS NULL
-          )
+        FROM citation_network cn JOIN entity_citations ec ON ec.id = cn.citation_id
+        WHERE cn.source_type = p_entity_type AND cn.source_id = p_entity_id AND (p_include_external OR cn.target_id IS NOT NULL)
+          AND ec.organization_id IN (SELECT om.organization_id FROM organization_members om WHERE om.user_id = auth.uid() AND om.left_at IS NULL)
     ),
     incoming AS (
         SELECT cn.citation_id, 'incoming'::TEXT, cn.source_type, cn.source_id, cn.source_name, NULL::TEXT, ec.external_title, ec.status, cn.relevance_score, cn.detection_method, ec.citation_context, cn.created_at
-        FROM public.citation_network cn JOIN public.entity_citations ec ON ec.id = cn.citation_id
-        WHERE cn.target_type = p_entity_type
-          AND cn.target_id = p_entity_id
-          AND ec.organization_id IN (
-            SELECT om.organization_id
-            FROM public.organization_members om
-            WHERE om.user_id = auth.uid()
-              AND om.left_at IS NULL
-          )
+        FROM citation_network cn JOIN entity_citations ec ON ec.id = cn.citation_id
+        WHERE cn.target_type = p_entity_type AND cn.target_id = p_entity_id
+          AND ec.organization_id IN (SELECT om.organization_id FROM organization_members om WHERE om.user_id = auth.uid() AND om.left_at IS NULL)
     )
     SELECT o.* FROM outgoing o WHERE p_direction IN ('outgoing', 'both')
     UNION ALL SELECT i.* FROM incoming i WHERE p_direction IN ('incoming', 'both')
@@ -380,7 +367,7 @@ BEGIN
     pm.task_completed_30d,
     pm.intake_completed_30d,
     pm.last_refreshed_at
-  FROM public.user_productivity_metrics pm
+  FROM user_productivity_metrics pm
   WHERE pm.user_id = p_user_id
     AND pm.user_id = auth.uid();
 END;
@@ -417,6 +404,21 @@ END;
 $function$
 ```
 
+### Final revision (attempt 9): schema-qualification strip
+
+Review found the conversion bodies had gained `public.` qualifications on table references beyond the
+permitted delta ("added schema qualification ... fails this criterion"). The final revision strips every
+`public.` table qualification from the three converted read bodies (`get_user_productivity_metrics`,
+`get_entity_citations`, `get_citation_network_graph`), restoring the base-commit body text verbatim
+(121c86622: `20260610000001` lines 334-355, `20260112800001` lines 140-179). Resolution is unchanged —
+the functions pin `search_path = public`, so unqualified references resolve to the same objects — and the
+body diff is now purely: definer/pin clauses, the re-scoping predicates, the disclosed
+`ec.external_title` column fix, and (graph only) the permitted recursion repair. The citation arms'
+original single-line WHERE clauses are kept verbatim with the policy predicate appended as one line,
+byte-matching the `entity_citations` SELECT policy subquery (`20260112800001:238`). The NEW RPC
+`get_relationship_health_summary` keeps its `public.` references: it has no BEFORE body to diff against
+and the plan's own template writes `public.relationship_health_summary` into it.
+
 ## Edge function change
 
 `supabase/functions/relationship-health/index.ts`: JWT verification unchanged; ONLY the two GET reads of
@@ -434,9 +436,10 @@ is already red upstream today, so it is recorded for a ruling rather than edited
 
 ## Deploy and migration applies
 
-The deploy ran BEFORE the two applies of the final migration file (convert → deploy → verify → revoke
+The deploy ran BEFORE the applies of every migration revision (convert → deploy → verify → revoke
 ordering; the deployed bundle already matched the repo — "No change found" — because index.ts was last
-deployed at 18:02:47Z with the same two-read RPC shape):
+deployed at 18:02:47Z with the same two-read RPC shape and is untouched by the final revision, which
+changes only SQL):
 
 ```text
 DEPLOY11_START_UTC=2026-09-10T19:23:16Z
@@ -450,8 +453,23 @@ DEPLOY11_EXIT=0
 DEPLOY11_END_UTC=2026-09-10T19:23:21Z
 ```
 
-Final file applied twice (idempotency; the run between them that first proved the two-arm HEAD body
-cannot execute is recorded under "Pre-existing body defects fixed"):
+DEPLOY12 (final revision — re-run before its applies; edge function unchanged, so again "No change
+found"):
+
+```text
+DEPLOY12_START_UTC=2026-09-10T19:50:34Z
+WARN: config section [inbucket] is deprecated. Please use [local_smtp] instead.
+Bundling Function: relationship-health
+No change found in Function: relationship-health
+{"project_ref":"zkrcjzdemdmwhearhfgg","functions":["relationship-health"],"dashboard_url":"https://supabase.com/dashboard/project/zkrcjzdemdmwhearhfgg/functions","message":"Deployed Functions."}
+A new version of Supabase CLI is available: v2.117.0 (currently installed v2.115.0)
+We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-cli
+DEPLOY12_EXIT=0
+DEPLOY12_END_UTC=2026-09-10T19:50:39Z
+```
+
+Penultimate revision applied twice (idempotency; the run between them that first proved the two-arm HEAD
+body cannot execute is recorded under "Pre-existing body defects fixed"):
 
 ```text
 APPLY13_START_UTC=2026-09-10T19:28:46Z
@@ -502,11 +520,46 @@ APPLY14_EXIT=0
 APPLY14_END_UTC=2026-09-10T19:28:51Z
 ```
 
+FINAL revision (the qualification strip below) applied three times — APPLY15/16 with `psql -q` (silent;
+exit 0 both), APPLY17 with command tags echoed to record the statement list. All after DEPLOY12:
+
+```text
+APPLY15_START_UTC=2026-09-10T19:50:44Z
+APPLY15_EXIT=0
+APPLY15_END_UTC=2026-09-10T19:50:47Z
+APPLY16_START_UTC=2026-09-10T19:50:47Z
+APPLY16_EXIT=0
+APPLY16_END_UTC=2026-09-10T19:50:50Z
+APPLY17_START_UTC=2026-09-10T19:51:01Z
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+ALTER FUNCTION
+ALTER FUNCTION
+ALTER FUNCTION
+CREATE FUNCTION
+REVOKE
+REVOKE
+REVOKE
+REVOKE
+REVOKE
+REVOKE
+REVOKE
+GRANT
+REVOKE
+REVOKE
+REVOKE
+REVOKE
+REVOKE
+APPLY17_EXIT=0
+APPLY17_END_UTC=2026-09-10T19:51:03Z
+```
+
 Earlier attempt applies of predecessor revisions (all exit 0, twice each): APPLY7/8 at 17:45:20-26Z,
 APPLY9/10 at 18:47:38-52Z, and APPLY11/12 at 19:23:26-31Z for the first revision of this attempt
 (two-arm restore). No ledger row is written (D-13: idempotent migration applied with psql).
 
-## Command oracles (verbatim, final state after APPLY13/APPLY14)
+## Command oracles (verbatim, final state after APPLY17 — re-run after the qualification strip)
 
 ### Grants
 
@@ -669,6 +722,10 @@ TWO_ID|non_owner|RLS_entity_citations|scoped=1
 TWO_ID|non_owner|RLS_dossier_relationships_bilateral_active|scoped=1
 === CENSUS-END rolled back
 ```
+
+Re-run: the same script was executed again after APPLY17 (the qualification-strip re-apply, finished
+19:51:03Z; census re-run 19:51:18Z) and produced a byte-identical output (`diff` clean against the block
+above), so the counts are the final-revision result as well.
 
 Reading (owner = kazahrani@stats.gov.sa, clearance 3, orgs A+B; non-owner = test.user@gmail.com,
 clearance lowered to 1 inside the tx, org B only):

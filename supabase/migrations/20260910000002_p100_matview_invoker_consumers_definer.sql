@@ -30,7 +30,7 @@ BEGIN
     pm.task_completed_30d,
     pm.intake_completed_30d,
     pm.last_refreshed_at
-  FROM public.user_productivity_metrics pm
+  FROM user_productivity_metrics pm
   WHERE pm.user_id = p_user_id
     AND pm.user_id = auth.uid();
 END;
@@ -66,28 +66,15 @@ BEGIN
     RETURN QUERY
     WITH outgoing AS (
         SELECT cn.citation_id, 'outgoing'::TEXT, cn.target_type, cn.target_id, cn.target_name, cn.external_url, ec.external_title, ec.status, cn.relevance_score, cn.detection_method, ec.citation_context, cn.created_at
-        FROM public.citation_network cn JOIN public.entity_citations ec ON ec.id = cn.citation_id
-        WHERE cn.source_type = p_entity_type
-          AND cn.source_id = p_entity_id
-          AND (p_include_external OR cn.target_id IS NOT NULL)
-          AND ec.organization_id IN (
-            SELECT om.organization_id
-            FROM public.organization_members om
-            WHERE om.user_id = auth.uid()
-              AND om.left_at IS NULL
-          )
+        FROM citation_network cn JOIN entity_citations ec ON ec.id = cn.citation_id
+        WHERE cn.source_type = p_entity_type AND cn.source_id = p_entity_id AND (p_include_external OR cn.target_id IS NOT NULL)
+          AND ec.organization_id IN (SELECT om.organization_id FROM organization_members om WHERE om.user_id = auth.uid() AND om.left_at IS NULL)
     ),
     incoming AS (
         SELECT cn.citation_id, 'incoming'::TEXT, cn.source_type, cn.source_id, cn.source_name, NULL::TEXT, ec.external_title, ec.status, cn.relevance_score, cn.detection_method, ec.citation_context, cn.created_at
-        FROM public.citation_network cn JOIN public.entity_citations ec ON ec.id = cn.citation_id
-        WHERE cn.target_type = p_entity_type
-          AND cn.target_id = p_entity_id
-          AND ec.organization_id IN (
-            SELECT om.organization_id
-            FROM public.organization_members om
-            WHERE om.user_id = auth.uid()
-              AND om.left_at IS NULL
-          )
+        FROM citation_network cn JOIN entity_citations ec ON ec.id = cn.citation_id
+        WHERE cn.target_type = p_entity_type AND cn.target_id = p_entity_id
+          AND ec.organization_id IN (SELECT om.organization_id FROM organization_members om WHERE om.user_id = auth.uid() AND om.left_at IS NULL)
     )
     SELECT o.* FROM outgoing o WHERE p_direction IN ('outgoing', 'both')
     UNION ALL SELECT i.* FROM incoming i WHERE p_direction IN ('incoming', 'both')
@@ -113,10 +100,10 @@ BEGIN
         SELECT p_start_entity_type AS entity_type, p_start_entity_id AS entity_id, 0 AS depth, ARRAY[p_start_entity_id] AS path
         WHERE EXISTS (
             SELECT 1
-            FROM public.entity_citations ec
+            FROM entity_citations ec
             WHERE ec.organization_id IN (
                 SELECT om.organization_id
-                FROM public.organization_members om
+                FROM organization_members om
                 WHERE om.user_id = auth.uid()
                   AND om.left_at IS NULL
             )
@@ -132,25 +119,25 @@ BEGIN
           ct.depth + 1,
           ct.path || CASE WHEN cn.source_type = ct.entity_type AND cn.source_id = ct.entity_id THEN cn.target_id ELSE cn.source_id END
         FROM citation_tree ct
-        JOIN public.citation_network cn
+        JOIN citation_network cn
           ON (cn.source_type = ct.entity_type AND cn.source_id = ct.entity_id AND cn.target_id IS NOT NULL)
           OR (cn.target_type = ct.entity_type AND cn.target_id = ct.entity_id)
         WHERE ct.depth < p_depth
           AND NOT (CASE WHEN cn.source_type = ct.entity_type AND cn.source_id = ct.entity_id THEN cn.target_id ELSE cn.source_id END) = ANY(ct.path)
           AND EXISTS (
-            SELECT 1 FROM public.organization_members om
+            SELECT 1 FROM organization_members om
             WHERE om.user_id = auth.uid() AND om.left_at IS NULL AND om.organization_id = cn.organization_id
           )
     ),
     nodes AS (SELECT DISTINCT ON (entity_id) entity_type, entity_id, MIN(depth) AS depth FROM citation_tree GROUP BY entity_type, entity_id ORDER BY entity_id, depth LIMIT p_max_nodes),
-    edges AS (SELECT DISTINCT cn.citation_id AS id, cn.source_type, cn.source_id, cn.target_type, cn.target_id, cn.status, cn.relevance_score FROM public.citation_network cn WHERE (cn.source_type, cn.source_id) IN (SELECT entity_type, entity_id FROM nodes) AND (cn.target_type, cn.target_id) IN (SELECT entity_type, entity_id FROM nodes)
+    edges AS (SELECT DISTINCT cn.citation_id AS id, cn.source_type, cn.source_id, cn.target_type, cn.target_id, cn.status, cn.relevance_score FROM citation_network cn WHERE (cn.source_type, cn.source_id) IN (SELECT entity_type, entity_id FROM nodes) AND (cn.target_type, cn.target_id) IN (SELECT entity_type, entity_id FROM nodes)
         AND EXISTS (
-            SELECT 1 FROM public.organization_members om
+            SELECT 1 FROM organization_members om
             WHERE om.user_id = auth.uid() AND om.left_at IS NULL AND om.organization_id = cn.organization_id
         ))
     SELECT json_build_object(
         'nodes', (SELECT json_agg(json_build_object('id', n.entity_id, 'type', n.entity_type, 'depth', n.depth, 'name', COALESCE(d.name_en, b.title, ab.title, doc.title, p.title_en, m.title, e.location_en, n.entity_id::text), 'name_ar', COALESCE(d.name_ar, b.title, ab.title, doc.title, p.title_ar, m.title_ar, e.location_ar, n.entity_id::text)))
-            FROM nodes n LEFT JOIN public.dossiers d ON n.entity_type = 'dossier' AND n.entity_id = d.id LEFT JOIN public.briefs b ON n.entity_type = 'brief' AND n.entity_id = b.id LEFT JOIN public.ai_briefs ab ON n.entity_type = 'ai_brief' AND n.entity_id = ab.id LEFT JOIN public.documents doc ON n.entity_type = 'document' AND n.entity_id = doc.id LEFT JOIN public.positions p ON n.entity_type = 'position' AND n.entity_id = p.id LEFT JOIN public.mous m ON n.entity_type = 'mou' AND n.entity_id = m.id LEFT JOIN public.engagements e ON n.entity_type = 'engagement' AND n.entity_id = e.id),
+            FROM nodes n LEFT JOIN dossiers d ON n.entity_type = 'dossier' AND n.entity_id = d.id LEFT JOIN briefs b ON n.entity_type = 'brief' AND n.entity_id = b.id LEFT JOIN ai_briefs ab ON n.entity_type = 'ai_brief' AND n.entity_id = ab.id LEFT JOIN documents doc ON n.entity_type = 'document' AND n.entity_id = doc.id LEFT JOIN positions p ON n.entity_type = 'position' AND n.entity_id = p.id LEFT JOIN mous m ON n.entity_type = 'mou' AND n.entity_id = m.id LEFT JOIN engagements e ON n.entity_type = 'engagement' AND n.entity_id = e.id),
         'edges', (SELECT json_agg(json_build_object('id', ed.id, 'source', ed.source_id, 'target', ed.target_id, 'source_type', ed.source_type, 'target_type', ed.target_type, 'relevance_score', ed.relevance_score)) FROM edges ed),
         'start_node', p_start_entity_id, 'depth', p_depth, 'total_nodes', (SELECT COUNT(*) FROM nodes)
     ) INTO result;
