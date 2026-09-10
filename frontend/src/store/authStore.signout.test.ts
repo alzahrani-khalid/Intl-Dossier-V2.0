@@ -6,11 +6,9 @@
  * a soft navigation leaves the previous user's rows resident for gcTime (10 min) and
  * served without refetch for staleTime (5 min).
  *
- * BOUNDED CLAIM (D-30): `queryClient.clear()` empties the IN-MEMORY query cache only.
- * Persisted localStorage residue (auth-storage, entity-history-storage, ui-storage,
- * pinned-entities-storage, dossier-store, advanced-search-history,
- * quickswitcher_recent_items) is a pre-existing leak filed as CLIENTSEC-01 and owned by
- * Phase 100. A green here must NOT be read as "client-side residue cleared".
+ * The production SIGNED_OUT branch clears the in-memory query cache and all localStorage
+ * residue except the explicit, identity-neutral machine-preference allowlist. Unrelated
+ * auth events leave both cache and browser storage untouched.
  */
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -22,10 +20,48 @@ vi.mock('@/router', () => ({ router: { navigate: navigateSpy } }))
 import { queryClient } from '@/lib/query-client'
 import { useAuthStore } from './authStore'
 
+const ALLOWLISTED_STORAGE = {
+  'id.locale': 'ar',
+  'id.theme': 'dark',
+  'id.density': 'compact',
+  'id.dir': 'rtl',
+  i18nextLng: 'ar',
+}
+
+const SEEDED_STORAGE = {
+  ...ALLOWLISTED_STORAGE,
+  'auth-storage': 'previous-auth',
+  'dossier-store': 'previous-dossier',
+  'entity-history-storage': 'previous-history',
+  'pinned-entities-storage': 'previous-pins',
+  'ui-storage': 'previous-ui-state',
+  'advanced-search-history': 'previous-searches',
+  quickswitcher_recent_items: 'previous-recents',
+  'recent-navigation': 'previous-navigation',
+  'dossier-picker-recents': 'previous-picker-recents',
+  'view-preferences:country:42': 'previous-view-preferences',
+}
+
+function seedStorage(): void {
+  for (const [key, value] of Object.entries(SEEDED_STORAGE)) {
+    localStorage.setItem(key, value)
+  }
+}
+
+function enumerateStorage(): Record<string, string> {
+  return Object.fromEntries(
+    Array.from({ length: localStorage.length }, (_, index) => localStorage.key(index))
+      .filter((key): key is string => key !== null)
+      .sort()
+      .map((key) => [key, localStorage.getItem(key) as string]),
+  )
+}
+
 describe('authStore SIGNED_OUT teardown', () => {
   beforeEach(() => {
     navigateSpy.mockClear()
     queryClient.clear()
+    localStorage.clear()
   })
 
   it('empties the in-memory query cache and navigates to /login', async () => {
@@ -48,5 +84,21 @@ describe('authStore SIGNED_OUT teardown', () => {
 
     expect(queryClient.getQueryCache().getAll()).toHaveLength(1)
     expect(navigateSpy).not.toHaveBeenCalled()
+  })
+
+  it('enumerated browser storage after the SIGNED_OUT handler equals the allowlisted key/value map exactly', async () => {
+    seedStorage()
+
+    await useAuthStore.getState().handleAuthStateChange('SIGNED_OUT', null)
+
+    expect(enumerateStorage()).toEqual(ALLOWLISTED_STORAGE)
+  })
+
+  it('an auth event other than SIGNED_OUT leaves every seeded key at its seeded value', async () => {
+    seedStorage()
+
+    await useAuthStore.getState().handleAuthStateChange('PASSWORD_RECOVERY', null)
+
+    expect(enumerateStorage()).toEqual(SEEDED_STORAGE)
   })
 })
