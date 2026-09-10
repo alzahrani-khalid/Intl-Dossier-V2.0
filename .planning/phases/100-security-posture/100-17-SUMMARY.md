@@ -13,7 +13,9 @@ requirements: [DBSEC-03]
 The five materialized views are no longer directly accessible to `anon` or `authenticated`. Their six
 named invoker consumers and the new relationship-health RPC execute as `SECURITY DEFINER` with
 `search_path` pinned to exactly `public`. The edge function was deployed successfully before either
-migration apply, both applies exited 0, and all three real-user controls passed after the revoke.
+migration apply, both applies exited 0, and all three required real-user controls passed after the
+revoke. The review follow-up also moved the calculate-by-id route's post-calculation summary read
+through the same RPC, closing the last caller-scoped read of the revoked relationship matviews.
 
 ## Planning-bound census
 
@@ -105,11 +107,11 @@ generated types, while the 12-hit control demonstrates that the sweep would find
   execute privilege, and grant execute only to `authenticated` and `service_role`.
 - Migration lines 37-41 are the final statements and contain exactly five `REVOKE ALL ... FROM anon,
   authenticated` statements, one for each owned materialized view and no other relation.
-- `supabase/functions/relationship-health/index.ts:428-431` and `:499` are the only read changes: the
-  single and list GET paths now call `.rpc('get_relationship_health_summary')`. Their `.eq`, `.single`,
-  optional score/trend filters, ordering and range remain unchanged. The caller-JWT client construction
-  at lines 331-339 is unchanged, the calculate-path read at line 586 stays caller-scoped as required,
-  and every other read is untouched.
+- `supabase/functions/relationship-health/index.ts:428-431`, `:499`, and `:585-588` are the only read
+  changes: the single GET, list GET, and calculate-by-id post-calculation paths now call
+  `.rpc('get_relationship_health_summary')`. Their `.eq`, `.single`, optional score/trend filters,
+  ordering and range remain unchanged. The caller-JWT client construction at lines 331-339 is
+  unchanged, and every other read remains on its original caller-scoped or service-role client.
 
 ## Deployment, then two migration applies
 
@@ -208,6 +210,19 @@ APPLY_2_END_UTC=2026-09-10T16:26:08Z
 APPLY_2_EXIT=0
 ```
 
+After the review identified the remaining calculate-by-id read, I deployed the corrected source again.
+The CLI compared the bundle with the deployed function, found the corrected bundle already present,
+and exited 0:
+
+```text
+WARN: config section [inbucket] is deprecated. Please use [local_smtp] instead.
+No change found in Function: relationship-health
+A new version of Supabase CLI is available: v2.117.0 (currently installed v2.115.0)
+We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+REPAIR_DEPLOY_END_UTC=2026-09-10T17:00:16Z
+REPAIR_DEPLOY_EXIT=0
+```
+
 ## Command oracle 1: complete grants
 
 Verbatim output from the plan command:
@@ -278,6 +293,35 @@ PASS consumer controls
 Thus the productivity RPC returned 200, the deployed relationship-health list path returned 200, and
 the statement-level citation refresh trigger completed as the definer before rollback. There was no RLS
 refusal and no `permission denied for materialized view` error.
+
+### Review follow-up: calculate-by-id control
+
+I also invoked `POST /relationship-health/calculate/:relationshipId` with the same test user's real JWT
+after adding a transient bilateral relationship fixture. The request did not reach the summary read:
+the pre-existing `calculate_relationship_health_scores(uuid[])` function failed first because its
+unqualified `relationship_id` conflicts with the PL/pgSQL output variable. Verbatim output:
+
+```text
+P100-17 calculate control: relationship-health-calculate=500 expected 200
+{"error":{"code":"CALCULATION_ERROR","message_en":"column reference \"relationship_id\" is ambiguous","message_ar":"خطأ في الحساب","details":{"code":"42702","details":"It could refer to either a PL/pgSQL variable or a table column.","hint":null,"message":"column reference \"relationship_id\" is ambiguous"}}}
+```
+
+This is not the revoked-materialized-view failure the review found: it occurs in the service-role
+calculation before the repaired caller-JWT `.rpc('get_relationship_health_summary')` line executes.
+Fixing that PL/pgSQL body is outside this task's exact-function/body constraint. To exercise the repaired
+read itself, I refreshed the same isolated fixture into the matviews and issued the exact RPC, equality
+filter, and object-cardinality request with the test user's JWT:
+
+```text
+P100-17 calculate-read control: rpc_get_relationship_health_summary=200 expected 200
+PASS calculate-read control
+```
+
+I then deleted both isolated fixtures (their dependent rows cascade) and refreshed both relationship
+statistics materialized views; the cleanup census returned `0` remaining `P100-17 transient%` rows.
+The deployed list path also demonstrates that the caller can execute the definer RPC, and the changed
+hunk preserves the calculate path's original relationship-id filter and `.single()` cardinality check
+on that same RPC.
 
 ## Security boundary and follow-up
 
