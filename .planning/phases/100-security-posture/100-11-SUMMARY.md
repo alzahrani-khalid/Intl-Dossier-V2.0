@@ -128,5 +128,22 @@ with zero unnamed on-disk files and zero missing named files. Freshness separate
 files predate the edited config, with the populated manifest/tree controls proving this is not an empty
 tree result.
 
+### Repair-gate verification
+
+The failed gate identified one new failure fingerprint, the backend test titled `passes the coerced
+query through a real Express route`; the frontend failures were not listed as new fingerprints. The
+backend test file is byte-for-byte unchanged from the pre-task commit. Rerunning that exact leaf test in
+this worktree passed, so the transient result requires no change to the production config and no
+out-of-scope test edit:
+
+```text
+✓ src/utils/__tests__/validation.test.ts > validate > shadows the Express 5 query getter with the enumerable parsed query
+✓ src/utils/__tests__/validation.test.ts > validate > keeps body and params on their plain assignment paths
+✓ src/utils/__tests__/validation.test.ts > validate > passes the coerced query through a real Express route
+
+Test Files  1 passed (1)
+Tests  3 passed (3)
+```
+
 No later task is needed for criterion 7. Bundle-size work remains owned by Phase 102, and deployment of
 this build remains outside this plan.
