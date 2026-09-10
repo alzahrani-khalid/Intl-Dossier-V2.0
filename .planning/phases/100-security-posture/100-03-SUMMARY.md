@@ -19,7 +19,8 @@ base-table access solely to reproduce the former definer-view count. The migrati
 not grant either unscoped materialized statistics view to `authenticated`; P100-06 owns and revokes
 that direct-access population.
 
-The finalized migration was applied twice with:
+After the earlier gate could not run because `.env.test` had not been materialised, the finalized
+migration was applied twice again with the now-present staging environment:
 
 ```sh
 PATH="/opt/homebrew/bin:$PATH"; set -a; . ./.env.test; set +a
@@ -27,7 +28,7 @@ psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 \
   -f supabase/migrations/20260908000003_p100_edge_views_invoker.sql
 ```
 
-First apply, verbatim output and exit status:
+Retry first apply, verbatim output and exit status:
 
 ```text
 ALTER VIEW
@@ -46,7 +47,7 @@ DROP FUNCTION
 APPLY1_EXIT=0
 ```
 
-Second apply, verbatim output and exit status:
+Retry second apply, verbatim output and exit status:
 
 ```text
 ALTER VIEW
@@ -56,12 +57,12 @@ ALTER VIEW
 ALTER VIEW
 ALTER VIEW
 ALTER VIEW
-DROP POLICY
 psql:supabase/migrations/20260908000003_p100_edge_views_invoker.sql:15: NOTICE:  policy "p100_admin_read_work_item_dossiers" for relation "public.work_item_dossiers" does not exist, skipping
+DROP POLICY
 psql:supabase/migrations/20260908000003_p100_edge_views_invoker.sql:17: NOTICE:  function public.p100_admin_can_read_work_item_dossier(uuid) does not exist, skipping
 DROP FUNCTION
-DROP FUNCTION
 psql:supabase/migrations/20260908000003_p100_edge_views_invoker.sql:18: NOTICE:  function public.p100_admin_can_read_work_item_dossier(uuid,uuid) does not exist, skipping
+DROP FUNCTION
 APPLY2_EXIT=0
 ```
 
@@ -153,6 +154,7 @@ v_country_relationship_flows|answered|rc=0|count=0
 v_regional_engagement_summary|answered|rc=0|count=3
 engagement_recommendations_summary|answered|rc=0|count=0
 dossier_activity_timeline|answered|rc=0|count=0
+CENSUS_EXIT=0
 ```
 
 `theme_details`, `relationship_health_summary`, `v_country_relationship_flows`, and
@@ -162,18 +164,16 @@ fewer rows, those greens establish **NOT row scoping**.
 
 ## Post-apply oracles
 
-The catalog command and the post-ruling 5/3/17 read command were run after the finalized applies.
-Verbatim output:
+The catalog command and the post-ruling 5/3/17 classified-read command were run after the retry
+applies. Verbatim output and exit statuses:
 
 ```text
-P100-03 ORACLE 1
 P100-03-FLAG invoker_on=7 present=7 expected invoker_on=7 present=7
 PASS invoker-flag
-exit=0
-P100-03 ORACLE 2
+ORACLE1_EXIT=0
 P100-03 reads: v_country_engagement_metrics=5/5 v_regional_engagement_summary=3/3 dossier_activity_timeline=17/17 theme_details=0(empty-on-staging) relationship_health_summary=0(empty-on-staging) v_country_relationship_flows=0(empty-on-staging) engagement_recommendations_summary=0(empty-on-staging)
 PASS reads
-exit=0
+ORACLE2_EXIT=0
 ```
 
 The catalog oracle separately proves `present=7`; a missing named view is an instrument failure (exit
