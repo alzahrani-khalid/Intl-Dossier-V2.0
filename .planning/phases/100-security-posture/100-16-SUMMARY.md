@@ -1,55 +1,42 @@
 ---
-status: blocked
+status: complete
 task: P100-16
-blocked_on: staging function deploy could not write Supabase CLI telemetry in the managed worker filesystem
-repair_commit: 1dfbacd7e
+repair_commit: d7a519edc
+migration_commit: e1792a23b
 ---
 
-# P100-16 — Consumed materialized-view repair stopped before revoke
+# P100-16 — Consumed materialized-view closure
 
 ## Outcome
 
-The three edge-function repairs are committed at `1dfbacd7e`, but this task did not deploy or revoke.
-The first required staging deploy exited 1 before deployment because the Supabase CLI tried to write
-`/Users/khalidalzahrani/.supabase/telemetry.json.tmp...`, outside this worker's writable roots. The plan's
-safety stop-rule therefore fired: neither of the other functions was deployed, the migration file was not
-kept, and neither migration apply was run. Staging ACLs were not changed by this task.
+The repair was deployed before either migration apply. Both client roles are now revoked from all four
+consumed materialized views, `service_role` remains an explicit grantee on each, and all three deployed
+functions still answer the `.env.test` user's real JWT with HTTP 200 after the revoke.
 
-`INSTRUMENT-CANNOT-RUN: deploy` — the orchestrator must deploy the committed repair from a checkout where
-the Supabase CLI can write its telemetry/config state, then resume the prescribed deploy → pre-revoke
-control → two applies → post-revoke oracle order.
+## Repair and changed-hunk evidence
 
-## Repair and changed hunks
+The reachable repair commit is `d7a519edc` (`fix(security): isolate consumed matview reads`). Its diff
+against parent `34defa80f` is the authority for these citations:
 
-The existing caller JWT check remains before every data read, unchanged:
+- `supabase/functions/dossier-stats/index.ts`: the unchanged anon-key caller client is at lines 37–45 and
+  its unchanged `supabaseClient.auth.getUser(token)` JWT gate is at line 51, before the new service client
+  at lines 71–74. Only `dossier_engagement_stats` and `dossier_commitment_stats` moved: the single path at
+  lines 123–135 and bulk path at lines 409–420. `document_relations`, `health_scores`, and every other read
+  still use `supabaseClient`.
+- `supabase/functions/tag-hierarchy/index.ts`: the unchanged anon-key client is at lines 84–88 and its
+  unchanged `supabase.auth.getUser()` gate is at line 94. Only the `analytics` case creates a service-role
+  client, at lines 241–245, for `mv_tag_usage_analytics` at lines 246–249. Every other `handleGet` case and
+  every write handler still receive the caller-scoped `supabase` client.
+- `supabase/functions/stakeholder-influence/index.ts`: the unchanged anon-key client is at lines 215–223
+  and the unchanged `getAuthUser(req, supabase)` JWT gate is at line 226. Only the default list path creates
+  the local service-role client at lines 641–645 and uses it for `stakeholder_network_summary`. Every other
+  GET read stays on `supabase`; the pre-existing POST calculation service client is unchanged.
+- `supabase/migrations/20260910000001_p100_matview_revoke_consumed.sql`: lines 1–4 are exactly one
+  `REVOKE ALL ... FROM anon, authenticated` for each named view and nothing else.
 
-- `supabase/functions/dossier-stats/index.ts`: the anon-key `supabaseClient` remains at lines 37–45 and
-  `supabaseClient.auth.getUser(token)` remains at line 51. Only the four reads of
-  `dossier_engagement_stats` and `dossier_commitment_stats` moved to the new `serviceClient`: the single
-  path at lines 123–135 and bulk path at lines 409–420. `document_relations`, `health_scores`, dashboard
-  aggregation, and every other read remain caller-scoped.
-- `supabase/functions/tag-hierarchy/index.ts`: the anon-key `supabase` remains at lines 84–88 and
-  `supabase.auth.getUser()` remains at line 94. Only the `analytics` case constructs a service-role client
-  and uses it for `mv_tag_usage_analytics` at lines 241–248. Every other `handleGet` branch and all write
-  handlers retain the caller-scoped parameter.
-- `supabase/functions/stakeholder-influence/index.ts`: the anon-key `supabase` construction remains at
-  lines 215–223 and the existing `getAuthUser(req, supabase)` call remains at line 226. Only the default
-  list path constructs a local service-role client and reads `stakeholder_network_summary` at lines
-  641–645. All other GET reads retain `supabase`; the pre-existing POST calculation service client remains
-  independently scoped.
-
-In all three files, the service-role client is constructed only after the existing JWT verification has
-succeeded. Commit command and output:
-
-```text
-git add supabase/functions/dossier-stats/index.ts supabase/functions/tag-hierarchy/index.ts supabase/functions/stakeholder-influence/index.ts && git commit -m "fix(security): isolate consumed matview reads"
-[tickmarkr/run-20260910-112306-0000000000000075--P100-16 1dfbacd7e] fix(security): isolate consumed matview reads
- 3 files changed, 19 insertions(+), 6 deletions(-)
-COMMIT_EXIT=0
-```
-
-The commit hook also ran the repository build successfully; its output was very large and included only
-pre-existing warnings.
+Thus the caller JWT is still verified with the existing anon-key `getUser` pattern before any data read;
+only the four named materialized-view reads moved to clients built from
+`SUPABASE_SERVICE_ROLE_KEY`.
 
 ## Re-derived source census — planning bound
 
@@ -75,69 +62,124 @@ control from('dossiers') supabase/functions files=53
 CENSUS_EXIT=0
 ```
 
-The non-zero controls prove the search traversed both source areas. The backend hits are generated type
-declarations rather than queries. Besides the three repaired functions, the function hits are
-`calculate-health-score` for both dossier stats views and `refresh-commitment-stats` for the commitment
-view. Both clients already use `SUPABASE_SERVICE_ROLE_KEY`, so the census found no additional
-caller-scoped consumer. The refresh RPC reference in `stakeholder-influence` likewise uses its existing
-service-role client.
+The non-zero controls prove both source areas were traversed. The backend hits are generated types. Beyond
+the three repaired functions, the function hits are `calculate-health-score` and
+`refresh-commitment-stats`, whose relevant clients already use `SUPABASE_SERVICE_ROLE_KEY`; no fourth
+caller-scoped consumer was found.
 
-## Required deploy sequence — stopped on the first deploy
+## Deploys — completed before migration
 
-Command:
+Each used `DO_NOT_TRACK=1 SUPABASE_TELEMETRY_DISABLED=true PATH="/opt/homebrew/bin:$PATH" supabase
+functions deploy <name> --project-ref zkrcjzdemdmwhearhfgg`.
 
-```bash
-PATH="/opt/homebrew/bin:$PATH" supabase functions deploy dossier-stats --project-ref zkrcjzdemdmwhearhfgg
-```
-
-Verbatim output (the CLI repeated the platform error twice):
+### dossier-stats
 
 ```text
-error: Unknown: FileSystem.writeFile (/Users/khalidalzahrani/.supabase/telemetry.json.tmp.ecdcee45-12be-484a-b385-95aac5db7f85)
-       _tag: "PlatformError",
- ~effect/platform/PlatformError: "~effect/platform/PlatformError",
-
-error: Unknown: FileSystem.writeFile (/Users/khalidalzahrani/.supabase/telemetry.json.tmp.ecdcee45-12be-484a-b385-95aac5db7f85)
-       _tag: "Unknown",
-     module: "FileSystem",
-     method: "writeFile",
- pathOrDescriptor: "/Users/khalidalzahrani/.supabase/telemetry.json.tmp.ecdcee45-12be-484a-b385-95aac5db7f85",
-    syscall: "open",
-
-EPERM: operation not permitted, open '/Users/khalidalzahrani/.supabase/telemetry.json.tmp.ecdcee45-12be-484a-b385-95aac5db7f85'
-    path: "/Users/khalidalzahrani/.supabase/telemetry.json.tmp.ecdcee45-12be-484a-b385-95aac5db7f85",
- syscall: "open",
-   errno: -1,
-    code: "EPERM"
-
-EPERM: operation not permitted, open '/Users/khalidalzahrani/.supabase/telemetry.json.tmp.ecdcee45-12be-484a-b385-95aac5db7f85'
-    path: "/Users/khalidalzahrani/.supabase/telemetry.json.tmp.ecdcee45-12be-484a-b385-95aac5db7f85",
- syscall: "open",
-   errno: -1,
-    code: "EPERM"
-
-Bun v1.3.13 (macOS arm64)
-DEPLOY_DOSSIER_STATS_EXIT=1
+WARN: config section [inbucket] is deprecated. Please use [local_smtp] instead.
+Bundling Function: dossier-stats
+No change found in Function: dossier-stats
+{"project_ref":"zkrcjzdemdmwhearhfgg","functions":["dossier-stats"],"dashboard_url":"https://supabase.com/dashboard/project/zkrcjzdemdmwhearhfgg/functions","message":"Deployed Functions."}
+A new version of Supabase CLI is available: v2.117.0 (currently installed v2.115.0)
+We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+DEPLOY_DOSSIER_STATS_EXIT=0
 ```
 
-The raw CLI output also printed minified internal stack-source excerpts around those errors; the
-actionable diagnostic and every filesystem/error field are preserved above.
+### tag-hierarchy
 
-No output exists for `tag-hierarchy` or `stakeholder-influence`: the plan says to stop after any non-zero
-deploy rather than continuing. Consequently there is no pre-revoke HTTP control, no migration apply or
-replay, and no post-revoke grants or deployed-read oracle output to claim.
+```text
+WARN: config section [inbucket] is deprecated. Please use [local_smtp] instead.
+Bundling Function: tag-hierarchy
+No change found in Function: tag-hierarchy
+{"project_ref":"zkrcjzdemdmwhearhfgg","functions":["tag-hierarchy"],"dashboard_url":"https://supabase.com/dashboard/project/zkrcjzdemdmwhearhfgg/functions","message":"Deployed Functions."}
+A new version of Supabase CLI is available: v2.117.0 (currently installed v2.115.0)
+We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+DEPLOY_TAG_HIERARCHY_EXIT=0
+```
 
-## Security boundary retained by the repair
+### stakeholder-influence
 
-A PostgreSQL materialized view has no RLS. At HEAD, an authenticated client that could select any of
-these four views already received the whole materialized result. Moving only these reads to
-`service_role` therefore de-scopes nothing: it preserves the same full-view visibility behind the
-already-required, already-verified caller JWT. Designing row-scoped replacements for the materialized
-views is a separate phase question.
+```text
+WARN: config section [inbucket] is deprecated. Please use [local_smtp] instead.
+Bundling Function: stakeholder-influence
+No change found in Function: stakeholder-influence
+{"project_ref":"zkrcjzdemdmwhearhfgg","functions":["stakeholder-influence"],"dashboard_url":"https://supabase.com/dashboard/project/zkrcjzdemdmwhearhfgg/functions","message":"Deployed Functions."}
+A new version of Supabase CLI is available: v2.117.0 (currently installed v2.115.0)
+We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+DEPLOY_STAKEHOLDER_INFLUENCE_EXIT=0
+```
 
-## Resume point
+## Pre-revoke positive control
 
-The orchestrator should begin with all three deploys from commit `1dfbacd7e`, recording exit 0 for each.
-Only after all deployments and the pre-revoke JWT control are green should it restore the exact
-four-statement migration, apply it twice, and run both plan command oracles. This summary must change to
-`status: complete` only after that sequence succeeds.
+The plan's deployed-function command oracle was run with the `.env.test` password grant and an active
+dossier resolved from staging. Verbatim output:
+
+```text
+P100-16 deployed-function reads: dossier-stats=200 tag-hierarchy=200 stakeholder-influence=200 expected 200 200 200
+PASS deployed reads
+```
+
+## Migration apply and idempotent replay
+
+Command for each apply:
+
+```bash
+PATH="/opt/homebrew/bin:$PATH"; set -a; . ./.env.test; set +a; psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f supabase/migrations/20260910000001_p100_matview_revoke_consumed.sql
+```
+
+First apply, verbatim:
+
+```text
+REVOKE
+REVOKE
+REVOKE
+REVOKE
+MIGRATION_APPLY_1_EXIT=0
+```
+
+Second apply, verbatim:
+
+```text
+REVOKE
+REVOKE
+REVOKE
+REVOKE
+MIGRATION_APPLY_2_EXIT=0
+```
+
+## Post-revoke command oracles
+
+### Complete grants oracle
+
+The plan's P100-16-GRANTS command oracle was run verbatim. Its verbatim output is:
+
+```text
+P100-16-GRANTS named=4 rendered=4 at_expected_full_state=4 expected rendered=4 at_expected_full_state=4
+  GRANTS dossier_commitment_stats | anon_can_select=false authenticated_can_select=false service_role_can_select=true | postgres=DELETE,postgres=INSERT,postgres=MAINTAIN,postgres=REFERENCES,postgres=SELECT,postgres=TRIGGER,postgres=TRUNCATE,postgres=UPDATE,service_role=DELETE,service_role=INSERT,service_role=MAINTAIN,service_role=REFERENCES,service_role=SELECT,service_role=TRIGGER,service_role=TRUNCATE,service_role=UPDATE
+  GRANTS dossier_engagement_stats | anon_can_select=false authenticated_can_select=false service_role_can_select=true | postgres=DELETE,postgres=INSERT,postgres=MAINTAIN,postgres=REFERENCES,postgres=SELECT,postgres=TRIGGER,postgres=TRUNCATE,postgres=UPDATE,service_role=DELETE,service_role=INSERT,service_role=MAINTAIN,service_role=REFERENCES,service_role=SELECT,service_role=TRIGGER,service_role=TRUNCATE,service_role=UPDATE
+  GRANTS mv_tag_usage_analytics | anon_can_select=false authenticated_can_select=false service_role_can_select=true | postgres=DELETE,postgres=INSERT,postgres=MAINTAIN,postgres=REFERENCES,postgres=SELECT,postgres=TRIGGER,postgres=TRUNCATE,postgres=UPDATE,service_role=DELETE,service_role=INSERT,service_role=MAINTAIN,service_role=REFERENCES,service_role=SELECT,service_role=TRIGGER,service_role=TRUNCATE,service_role=UPDATE
+  GRANTS stakeholder_network_summary | anon_can_select=false authenticated_can_select=false service_role_can_select=true | postgres=DELETE,postgres=INSERT,postgres=MAINTAIN,postgres=REFERENCES,postgres=SELECT,postgres=TRIGGER,postgres=TRUNCATE,postgres=UPDATE,service_role=DELETE,service_role=INSERT,service_role=MAINTAIN,service_role=REFERENCES,service_role=SELECT,service_role=TRIGGER,service_role=TRUNCATE,service_role=UPDATE
+PASS grants
+```
+
+Every grantee is rendered: only `postgres` and `service_role` appear, both with the expected complete ACL;
+`has_table_privilege` is false for `anon` and `authenticated` and true for `service_role` on every view.
+
+### Deployed-read positive control after revoke
+
+The plan's deployed-function command oracle was run again with a fresh real JWT after both applies.
+Verbatim output:
+
+```text
+P100-16 deployed-function reads: dossier-stats=200 tag-hierarchy=200 stakeholder-influence=200 expected 200 200 200
+PASS deployed reads
+```
+
+The grants oracle is the discriminating arm and this is its availability control: together they establish
+“revoked and still served,” rather than merely “revoked” or “still served.”
+
+## Security boundary
+
+A PostgreSQL materialized view has no RLS, so the authenticated reads at HEAD already returned the whole
+materialized result. Moving only those reads to `service_role` de-scopes NOTHING: the existing caller JWT
+check remains mandatory and the function returns the same full-view data it could return before. Designing
+row-scoped replacements for these materialized views is a separate phase question.
