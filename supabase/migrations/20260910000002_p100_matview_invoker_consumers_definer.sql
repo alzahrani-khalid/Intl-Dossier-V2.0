@@ -125,12 +125,18 @@ BEGIN
                 OR (ec.cited_entity_type = p_start_entity_type AND ec.cited_entity_id = p_start_entity_id)
             )
         )
-        UNION SELECT cn.target_type, cn.target_id, ct.depth + 1, ct.path || cn.target_id FROM citation_tree ct JOIN public.citation_network cn ON cn.source_type = ct.entity_type AND cn.source_id = ct.entity_id WHERE ct.depth < p_depth AND cn.target_id IS NOT NULL AND NOT cn.target_id = ANY(ct.path)
-          AND EXISTS (
-            SELECT 1 FROM public.organization_members om
-            WHERE om.user_id = auth.uid() AND om.left_at IS NULL AND om.organization_id = cn.organization_id
-          )
-        UNION SELECT cn.source_type, cn.source_id, ct.depth + 1, ct.path || cn.source_id FROM citation_tree ct JOIN public.citation_network cn ON cn.target_type = ct.entity_type AND cn.target_id = ct.entity_id WHERE ct.depth < p_depth AND NOT cn.source_id = ANY(ct.path)
+        UNION
+        SELECT
+          CASE WHEN cn.source_type = ct.entity_type AND cn.source_id = ct.entity_id THEN cn.target_type ELSE cn.source_type END,
+          CASE WHEN cn.source_type = ct.entity_type AND cn.source_id = ct.entity_id THEN cn.target_id ELSE cn.source_id END,
+          ct.depth + 1,
+          ct.path || CASE WHEN cn.source_type = ct.entity_type AND cn.source_id = ct.entity_id THEN cn.target_id ELSE cn.source_id END
+        FROM citation_tree ct
+        JOIN public.citation_network cn
+          ON (cn.source_type = ct.entity_type AND cn.source_id = ct.entity_id AND cn.target_id IS NOT NULL)
+          OR (cn.target_type = ct.entity_type AND cn.target_id = ct.entity_id)
+        WHERE ct.depth < p_depth
+          AND NOT (CASE WHEN cn.source_type = ct.entity_type AND cn.source_id = ct.entity_id THEN cn.target_id ELSE cn.source_id END) = ANY(ct.path)
           AND EXISTS (
             SELECT 1 FROM public.organization_members om
             WHERE om.user_id = auth.uid() AND om.left_at IS NULL AND om.organization_id = cn.organization_id
