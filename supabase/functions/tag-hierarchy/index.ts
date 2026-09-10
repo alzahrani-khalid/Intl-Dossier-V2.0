@@ -238,7 +238,11 @@ async function handleGet(
 
     case 'analytics': {
       // Get tag usage analytics
-      const { data, error } = await supabase
+      const serviceClient = createClient(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+      )
+      const { data, error } = await serviceClient
         .from('mv_tag_usage_analytics')
         .select('*')
         .order('total_assignments', { ascending: false })

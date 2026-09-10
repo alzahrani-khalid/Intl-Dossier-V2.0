@@ -68,6 +68,11 @@ serve(async (req) => {
       );
     }
 
+    const serviceClient = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
+    );
+
     // Handle GET request for single dossier stats
     if (req.method === "GET") {
       const url = new URL(req.url);
@@ -115,7 +120,7 @@ serve(async (req) => {
       // Fetch stats from materialized views and tables in parallel
       const [engagementStatsResult, commitmentStatsResult, documentsResult, healthScoreResult] = await Promise.all([
         include.includes("engagements")
-          ? supabaseClient
+          ? serviceClient
               .from("dossier_engagement_stats")
               .select("*")
               .eq("dossier_id", dossierId)
@@ -123,7 +128,7 @@ serve(async (req) => {
           : Promise.resolve({ data: null, error: null }),
 
         include.includes("commitments")
-          ? supabaseClient
+          ? serviceClient
               .from("dossier_commitment_stats")
               .select("*")
               .eq("dossier_id", dossierId)
@@ -401,14 +406,14 @@ serve(async (req) => {
       // Fetch bulk stats using WHERE IN queries
       const [engagementStatsResult, commitmentStatsResult, documentsResult, healthScoresResult] = await Promise.all([
         includeCategories.includes("engagements")
-          ? supabaseClient
+          ? serviceClient
               .from("dossier_engagement_stats")
               .select("*")
               .in("dossier_id", dossierIds)
           : Promise.resolve({ data: [], error: null }),
 
         includeCategories.includes("commitments")
-          ? supabaseClient
+          ? serviceClient
               .from("dossier_commitment_stats")
               .select("*")
               .in("dossier_id", dossierIds)
