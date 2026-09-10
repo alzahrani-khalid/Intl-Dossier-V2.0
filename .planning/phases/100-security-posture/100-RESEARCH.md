@@ -464,6 +464,29 @@ FAIL: the breached password Pa55w0rd! was ACCEPTED (http=200) - leaked-password 
 exit=1 · residual p100 accounts: 0
 ```
 
+
+#### §9.6 addendum — post-toggle capture (folded by the overseer 2026-09-11 from 100-09-SUMMARY.md on run branch tickmarkr/run-20260910-112306-0000000000000075, per OVERSEER-RULING-P100-09 addendum)
+
+## Post-toggle raw capture
+
+Command that produced the capture (the rejected signup created no account, verified by the final catalog
+read):
+
+```bash
+set -a; . ./.env.test 2>/dev/null; set +a; capture_ts=$(date -u '+%Y-%m-%dT%H:%M:%SZ'); capture_email="p100-pwned-capture-$(date +%s)@example.com"; echo "CAPTURE_TIMESTAMP=$capture_ts"; echo "CAPTURE_EMAIL=$capture_email"; capture_out=$(curl -sS -m 30 -w '\nCAPTURE_HTTP=%{http_code}' -X POST "$SUPABASE_URL/auth/v1/signup" -H "apikey: $SUPABASE_ANON_KEY" -H 'Content-Type: application/json' -d "{\"email\":\"$capture_email\",\"password\":\"Pa55w0rd!\"}" 2>&1); capture_rc=$?; printf '%s\n' "$capture_out"; echo "CAPTURE_CURL_EXIT=$capture_rc"; capture_catalog=$(psql "$SUPABASE_DB_URL" -Atq -v ON_ERROR_STOP=1 -c "select id from auth.users where email = '$capture_email'" 2>&1); catalog_rc=$?; echo "CAPTURE_CATALOG_RC=$catalog_rc CAPTURE_CATALOG_AFTER=${capture_catalog:-<absent>}"; test "$capture_rc" = 0 -a "$catalog_rc" = 0 -a -z "$capture_catalog"
+```
+
+Verbatim output:
+
+```text
+CAPTURE_TIMESTAMP=2026-09-10T15:25:36Z
+CAPTURE_EMAIL=p100-pwned-capture-1789053936@example.com
+{"code":422,"error_code":"weak_password","msg":"Password is known to be weak and easy to guess, please choose a different one.","weak_password":{"reasons":["pwned"]}}
+CAPTURE_HTTP=422
+CAPTURE_CURL_EXIT=0
+CAPTURE_CATALOG_RC=0 CAPTURE_CATALOG_AFTER=<absent>
+```
+
 ### §9.7 — PARTLY SUPERSEDED BY §11.1 and §12.1 — the executed Vite config and the detector self-test
 
 > **⚠ The config probe below is CURRENT** (D-26; it is what the shipped oracle runs). **The

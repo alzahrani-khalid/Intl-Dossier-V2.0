@@ -266,7 +266,7 @@ Full detail: [milestones/v9.0-ROADMAP.md](milestones/v9.0-ROADMAP.md)
 - [x] **Phase 97: Reachability** - Nothing built is unreachable and nothing in the route tree is unowned
 - [x] **Phase 98: Copy Truth** - No database values, no i18n keys, no seed instructions, one date format, project voice rules obeyed
 - [x] **Phase 99: Arabic Coverage** - An Arabic session reads as Arabic: one glossary, localized dates, no English leakage
-- [ ] **Phase 100: Security Posture — Database & Client** - RLS is a real boundary for the 207 frontend files that depend on it, and signing out leaves nothing behind on the machine
+- [x] **Phase 100: Security Posture — Database & Client** (GREEN 2026-09-10, run 0075, tip 45c3c8167 on the run branch; sign-off under delegation, operator review owed; see 100-CONTEXT §5) - RLS is a real boundary for the 207 frontend files that depend on it, and signing out leaves nothing behind on the machine
 - [ ] **Phase 101: CI Gates Green** - The suites tell the truth about `main`, and the ones that matter block merges
 - [ ] **Phase 102: Staging Data & Debt Tail** - Staging looks like a diplomatic system; the last v9.0 debts are closed
 - [ ] **Phase 103: Audit Re-Sweep** - The 2026-08-15 findings are proven closed by re-running the audit that found them
