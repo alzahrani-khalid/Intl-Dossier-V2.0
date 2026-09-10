@@ -1,23 +1,20 @@
 ---
 phase: 100-security-posture
 plan: 9
-status: work-complete-human-checkpoint-blocked
+status: complete
 requirement: DBSEC-05
-checkpoint_status: pending-operator-attestation
-outcome: bounded
+checkpoint_status: released
+outcome: auth-half-closed-contingent-on-p100-15
 ---
 
 # P100-09 — Leaked-password protection evidence and bound
 
-The live behavioural half is now observable: ARM 1 rejects the five-character discrimination control
-with `422 / weak_password / length`, ARM 2 accepts the nine-character strong control with HTTP 200, and
-ARM 3 rejects the same-length breached subject with `422 / weak_password / pwned`. The successful live
-run completed a checked delete-refetch-catalog lifecycle for its one created account.
-
-This does **not** release the human checkpoint. No written operator confirmation, operator identity,
-toggle time, or operator answer to D-31 exists in the dispatch or repository. The allowlist permits this
-SUMMARY only, so the required additions to `100-RESEARCH.md` and tightening of `100-09-PLAN.md` could not
-be made. The observed live effect is not substituted for that missing provenance.
+The Auth half is closed on the operator attestation quoted verbatim below and a tightened live probe run
+after the attested timestamp. ARM 1 rejected the five-character discrimination control with exactly
+`422 / weak_password / reasons=[length]` and the derived length message. ARM 2 accepted the nine-character
+strong control with HTTP 200. ARM 3 rejected the same-length breached subject with exactly
+`422 / weak_password / reasons=[pwned]` and the exact leaked-password message. The finalizer resolved the
+created account before deletion, observed DELETE 200 and refetch 404, and re-read the catalog as absent.
 
 ## Required criterion-5 contingency bound (verbatim)
 
@@ -27,27 +24,36 @@ Criterion 5 is COVERED CONTINGENT ON TWO HUMAN GATES - the P100-09 leaked-passwo
 
 The leaked-password oracle establishes that a known breached password is rejected with HTTP 422 and error code weak_password for a non-length reason. It does NOT establish that it was rejected BECAUSE it is breached - another weak_password rule rejecting the same password would pass identically. The breach-specific discriminator is unobservable until leaked-password protection is enabled; see the operator handoff.
 
-The live reason `pwned` and its message are evidence of a distinct non-length password-policy verdict.
-They are **not presented as proof that the rejection happened because the password is breached**. That
-attribution requires the missing written toggle provenance and completion of the five-step handoff.
+The interim text above is retained verbatim as the required historical bound. The attestation records
+the operator's disposition after the breach-specific discriminator became observable.
 
-## Operator handoff status
+## Operator attestation (quoted)
 
-- Human who enabled the setting: **not supplied**.
-- Time enabled: **not supplied**.
-- Written confirmation: **not supplied**.
-- Operator answer on D-31: **not supplied; the interim bound above remains in force**.
-- Step 1, immediate post-toggle probe: **not attestable**. A live passing probe was run on 2026-09-10,
-  but there is no operator timestamp against which to establish that it was immediate or afterwards.
-- Step 2, live discriminator capture: **complete in this SUMMARY** — reason `pwned`; message `Password
-  is known to be weak and easy to guess, please choose a different one.`
-- Step 3, command and discriminator in `100-RESEARCH.md`: **open due to the fixed file allowlist**.
-- Step 4, persisted oracle tightened to the exact discriminator and re-run: **open due to the fixed file
-  allowlist**. The unchanged plan oracle was re-run successfully; it still accepts any single non-length
-  reason. No out-of-scope plan edit was made.
-- Step 5, credentialed advisor call attempted by the overseer: **open**. This worker made the exact
-  Management API request without an access token and received the expected HTTP 401, recorded below;
-  that worker-side reachability check is not the checkpoint's required credentialed attempt.
+The following is a verbatim quote of `.planning/phases/100-security-posture/100-09-ATTESTATION.md` as
+tracked by commit `2dcd6a5a2`:
+
+```text
+# ATTESTATION — P100-09 leaked-password protection (staging zkrcjzdemdmwhearhfgg)
+
+**Who enabled the setting:** Khalid Alzahrani (operator), in the Supabase dashboard
+(Authentication → Sign In / Providers → Email → "Prevent use of leaked passwords"), saved on the second
+attempt after the first save did not take effect.
+
+**When it became effective:** between 2026-09-10T13:57:5xZ (last overseer probe that was accepted, http 200)
+and **2026-09-10T13:58:52Z** (first overseer probe rejected: http 422 `weak_password` reasons=["pwned"]).
+Overseer probes used `p100-09-overseer-probe-<ts>@example.invalid`; the two accepted probe accounts were
+deleted from auth.users immediately; the rejected probe created none. Recorded in
+`OVERSEER-RULING-P100-09-HUMAN-GATE.md`; dispatch approval `task-approved` 13:58:58Z.
+
+**Operator's answer on the D-31 bound (asked and answered 2026-09-10 ~18:0x local):**
+**D-31 is CLOSED.** The breach-specific discriminator is now observable: `reasons=["pwned"]` is the
+leaked-password rule's own reason string, distinct from `length` and from any other `weak_password`
+rule. Criterion 5's Auth half is recorded as closed on the observed `pwned` reason plus this attestation.
+No residual bound is carried into the phase completion text for the Auth half.
+
+**The worker's duty:** quote this file verbatim in `100-09-SUMMARY.md`; do not restate it.
+ATTESTATION-END
+```
 
 ## Probe run 1 — recorded pre-toggle HEAD drill, verbatim
 
@@ -70,35 +76,57 @@ Thus the pre-toggle record says both created accounts completed delete 200, refe
 post-delete catalog read, but it does not preserve every full UUID. That evidence defect remains bound;
 the setting is already behaviorally on, so this worker cannot recreate a genuine pre-toggle run.
 
-## Probe run 2 — live passing run on 2026-09-10, verbatim
+## Probe run 2 — tightened post-attestation run, verbatim
 
-The exact command body at `100-09-PLAN.md:21-116` was executed unchanged under Bash:
+The tightened oracle tracked by commit `2dcd6a5a2` was executed under Bash after the attestation's
+latest effective-time bound. Exact command:
 
 ```bash
-sed -n '21,116p' .planning/phases/100-security-posture/100-09-PLAN.md \
-  | sed 's/^        //' \
-  | /bin/bash
+date -u '+PROBE_STARTED_AT=%Y-%m-%dT%H:%M:%SZ'; git show milestone/v10.0-trust:.planning/phases/100-security-posture/100-09-PLAN.md | sed -n '21,120p' | sed 's/^        //' | /bin/bash; probe_rc=$?; date -u '+PROBE_FINISHED_AT=%Y-%m-%dT%H:%M:%SZ'; echo PROBE_COMMAND_EXIT=$probe_rc; exit $probe_rc
 ```
 
 Verbatim output:
 
 ```text
+PROBE_STARTED_AT=2026-09-10T15:23:21Z
 P100-09-ARM1 discrimination_control len=5 http=422 error_code=weak_password reasons=[length] msg="Password should be at least 6 characters."
-P100-09-ARM2 availability_control len=9 http=200 created_uuid=4621f738-46bf-427e-9eab-abf847521904
+P100-09-ARM2 availability_control len=9 http=200 created_uuid=567b1eea-e58a-42f0-bba3-1db08c0ae598
 P100-09-ARM3 subject len=9 http=422 error_code=weak_password reasons=[pwned] msg="Password is known to be weak and easy to guess, please choose a different one."
-P100-09-BOUND reasons=[pwned] is non-length and single-valued. This does NOT establish that the password was rejected BECAUSE it is breached - another weak_password rule rejecting the same string would pass identically. The breach-specific discriminator is unobservable until the toggle is on; see 100-CONTEXT.md D-31 and the post-toggle capture steps in this plan's checkpoint. NO further repair attempt is made before the toggle (OVERSEER-RULING-C2-04, DEFER-AND-TIGHTEN).
-P100-09-FINALIZE created=[ p100-ctl-11675-1789049055@example.com]
-  LIFECYCLE p100-ctl-11675-1789049055@example.com uuid=4621f738-46bf-427e-9eab-abf847521904 seen_before_delete=yes delete_http=200 refetch_http=404 catalog_after='<absent>'
+P100-09-DISCRIMINATOR reasons=[pwned] msg matches - the rejection IS the leaked-password rule; D-31 bound closed at the toggle
+P100-09-FINALIZE created=[ p100-ctl-45185-1789053801@example.com]
+  LIFECYCLE p100-ctl-45185-1789053801@example.com uuid=567b1eea-e58a-42f0-bba3-1db08c0ae598 seen_before_delete=yes delete_http=200 refetch_http=404 catalog_after='<absent>'
 P100-09-VERDICT requested=0 finalizer=0 combined=0 (3 dominates 1 dominates 0)
+PROBE_FINISHED_AT=2026-09-10T15:23:25Z
 PROBE_COMMAND_EXIT=0
 ```
 
 ARM 1 is the discrimination control: five characters produced exactly HTTP 422, `weak_password`, reason
 `length`, and the derived length message. ARM 2 is the availability control at the same nine characters
-as ARM 3; it returned HTTP 200 and resolved UUID `4621f738-46bf-427e-9eab-abf847521904`. ARM 3 returned
-HTTP 422, `weak_password`, exactly one non-length reason, and a message distinct from ARM 1. The sole
+as ARM 3; it returned HTTP 200 and resolved UUID `567b1eea-e58a-42f0-bba3-1db08c0ae598`. ARM 3 returned
+HTTP 422, `weak_password`, reasons exactly `[pwned]`, and the exact leaked-password message. The sole
 created account was present before deletion, DELETE returned 200, refetch returned 404, and the final
-catalog read was absent.
+catalog read was absent. The run began more than 84 minutes after the attestation's latest effective-time
+bound.
+
+## Post-toggle raw capture
+
+Command that produced the capture (the rejected signup created no account, verified by the final catalog
+read):
+
+```bash
+set -a; . ./.env.test 2>/dev/null; set +a; capture_ts=$(date -u '+%Y-%m-%dT%H:%M:%SZ'); capture_email="p100-pwned-capture-$(date +%s)@example.com"; echo "CAPTURE_TIMESTAMP=$capture_ts"; echo "CAPTURE_EMAIL=$capture_email"; capture_out=$(curl -sS -m 30 -w '\nCAPTURE_HTTP=%{http_code}' -X POST "$SUPABASE_URL/auth/v1/signup" -H "apikey: $SUPABASE_ANON_KEY" -H 'Content-Type: application/json' -d "{\"email\":\"$capture_email\",\"password\":\"Pa55w0rd!\"}" 2>&1); capture_rc=$?; printf '%s\n' "$capture_out"; echo "CAPTURE_CURL_EXIT=$capture_rc"; capture_catalog=$(psql "$SUPABASE_DB_URL" -Atq -v ON_ERROR_STOP=1 -c "select id from auth.users where email = '$capture_email'" 2>&1); catalog_rc=$?; echo "CAPTURE_CATALOG_RC=$catalog_rc CAPTURE_CATALOG_AFTER=${capture_catalog:-<absent>}"; test "$capture_rc" = 0 -a "$catalog_rc" = 0 -a -z "$capture_catalog"
+```
+
+Verbatim output:
+
+```text
+CAPTURE_TIMESTAMP=2026-09-10T15:25:36Z
+CAPTURE_EMAIL=p100-pwned-capture-1789053936@example.com
+{"code":422,"error_code":"weak_password","msg":"Password is known to be weak and easy to guess, please choose a different one.","weak_password":{"reasons":["pwned"]}}
+CAPTURE_HTTP=422
+CAPTURE_CURL_EXIT=0
+CAPTURE_CATALOG_RC=0 CAPTURE_CATALOG_AFTER=<absent>
+```
 
 ## Other live producer accounts and checked recovery lifecycles
 
@@ -169,11 +197,11 @@ SUPABASE_ACCESS_TOKEN=<unset>
 ADVISOR_ATTEMPT curl_exit=0 http=401 body={"message":"Unauthorized"}
 ```
 
-This request had no `Authorization` header because `SUPABASE_ACCESS_TOKEN` was unset. Its HTTP 401 was
-therefore expected and establishes only that this worker cannot make a credentialed reading. It is not
-the plan's step-5 advisor attempt: the overseer still owes the credentialed call in the same session as
-the operator checkpoint release. There is no post-change advisor verdict, so the calibrated proxy
-remains the only closure mechanism for the advisor clause.
+This was the worker-side attempt only. It had no `Authorization` header because
+`SUPABASE_ACCESS_TOKEN` was unset, so HTTP 401 was expected and records the endpoint as unavailable from
+this worker environment. The unavailable-endpoint branch therefore has a recorded attempt and result,
+but the overseer's credentialed corroboration call remains owed. There is no post-change advisor verdict,
+so the calibrated proxy remains the only closure mechanism for the advisor clause.
 
 The corrected residual is: advisors DO report auth_leaked_password_protection, so a later toggle-off is DETECTABLE, and the gap is that nothing runs get_advisors on a schedule, so it is detectable but NOT DETECTED, carried to Phase 101.
 
@@ -182,9 +210,9 @@ outside this task and remains assigned to Phase 101.
 
 ## Final disposition
 
-The behavioural effect and cleanup lifecycle are green, but this plan is parked at its unreleased human
-checkpoint and is not complete. Closure requires an identified human's written confirmation and time,
-their explicit answer on the D-31 bound, the `100-RESEARCH.md` command-and-discriminator entry, the
-persisted exact-discriminator oracle and its re-run, and the overseer's credentialed advisor attempt.
-The latter repository edits are outside this dispatch's fixed allowlist. P100-15's operator sign-off
-remains the second human gate.
+The P100-09 Auth half is complete: the checkpoint is released by the quoted attestation, the tightened
+post-attestation oracle passed, the raw capture matches `reasons=[pwned]` and the exact message, and every
+account created by this worker has a checked cleanup lifecycle. Criterion 5 remains contingent on
+P100-15's operator sign-off. Direct post-change advisor observation is not claimed; the advisor clause
+uses the calibrated proxy stated in the required bound, and the unscheduled detectable-but-not-detected
+residual is carried to Phase 101.
