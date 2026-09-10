@@ -32,19 +32,7 @@ BEGIN
     pm.last_refreshed_at
   FROM public.user_productivity_metrics pm
   WHERE pm.user_id = p_user_id
-    AND (
-      pm.user_id = auth.uid()
-      OR EXISTS (
-        SELECT 1
-        FROM public.organization_members caller_org
-        JOIN public.organization_members metric_org
-          ON metric_org.organization_id = caller_org.organization_id
-        WHERE caller_org.user_id = auth.uid()
-          AND caller_org.left_at IS NULL
-          AND metric_org.user_id = pm.user_id
-          AND metric_org.left_at IS NULL
-      )
-    );
+    AND pm.user_id = auth.uid();
 END;
 $$;
 
