@@ -307,9 +307,11 @@ rather than reconciled.
 
 ### D-29 — The five-empty-view bound must be VISIBLE after the phase closes
 
-Five of the twelve converted views hold zero rows on staging: `event_details`, `theme_details`,
-`relationship_health_summary`, `v_country_relationship_flows`, `engagement_recommendations_summary`.
-For those five, criterion 1 establishes an unbroken read path and **NOT row scoping**. That sentence
+Six of the twelve converted views hold zero rows on staging: `event_details`, `theme_details`,
+`relationship_health_summary`, `v_country_relationship_flows`, `engagement_recommendations_summary`,
+`entity_comments_with_details` (the sixth was recorded empty by P100-04/P100-14 and added here by the
+overseer on 2026-09-11 after the P100-15 attempt-0 review; the D-29 heading keeps its original name).
+For those six, criterion 1 establishes an unbroken read path and **NOT row scoping**. That sentence
 must appear in `100-VERIFICATION.md` **and in the completion text this phase hands the ROADMAP**, not
 only inside a plan's prose. Phase 92's failure was not the gap — it was the gap being invisible
 afterwards, and nobody may read "criterion 1 COVERED" as "row scoping verified".
@@ -332,7 +334,7 @@ completion text, and it is not a footnote:**
 > identically. The breach-specific discriminator is unobservable until leaked-password protection is
 > enabled; see the operator handoff.
 
-**Status: OPEN — DEFERRED TO TOGGLE.** Not accepted, not cut. `OVERSEER-RULING-C2-04` (2026-09-09)
+**Status: CLOSED 2026-09-10** — the operator enabled leaked-password protection; the live rejection carries `reasons=["pwned"]`, the breach-specific discriminator (`100-09-ATTESTATION.md`, operator's D-31 answer). Historical status while the setting was off: OPEN — DEFERRED TO TOGGLE. Not accepted, not cut. `OVERSEER-RULING-C2-04` (2026-09-09)
 ruled **DEFER-AND-TIGHTEN**, and the reasoning changes what the failure was: `weak_password` is a family
 — length, character class, breach — and the breach-specific reason string appears only **once
 leaked-password protection is enabled**, which is the very thing this oracle verifies. The clause was
