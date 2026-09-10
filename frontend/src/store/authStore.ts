@@ -8,6 +8,7 @@ import { COLUMNS } from '../lib/query-columns'
 // @tanstack/react-query, sonner and ./query-tiers. It is NOT part of the router
 // cycle described at the SIGNED_OUT branch below.
 import { queryClient } from '../lib/query-client'
+import { clearClientResidue } from './clientResidue'
 
 // Re-export supabase for backward compatibility
 export { supabase }
@@ -215,12 +216,10 @@ export const useAuthStore = create<AuthState>()(
           })
 
           // This branch is the SINGLE OWNER of post-sign-out teardown and navigation
-          // (D-29). Every sign-out surface soft-navigates, so without the clear() the
-          // previous user's rows stay resident for gcTime (10 min) and are served
-          // without refetch for staleTime (5 min) — on a clearance-gated product on a
-          // shared workstation. Bounded to the IN-MEMORY cache (D-30): persisted
-          // localStorage residue is a pre-existing leak filed as CLIENTSEC-01.
+          // (D-29). It now clears both the in-memory query cache and every localStorage
+          // entry except the explicit identity-neutral machine-preference allowlist.
           queryClient.clear()
+          clearClientResidue()
 
           // The LAZY import is REQUIRED — do NOT simplify it to a module-level
           // `import { router } from '@/router'`. That would newly introduce the cycle
