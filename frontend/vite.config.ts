@@ -138,7 +138,8 @@ export default defineConfig({
   build: {
     target: 'ES2022',
     outDir: 'dist',
-    sourcemap: true,
+    sourcemap: sentryOrg && sentryProject && sentryAuthToken ? 'hidden' : false,
+    manifest: true,
     // Increase chunk size limit since we're using a simpler chunking strategy
     chunkSizeWarningLimit: 500,
     rollupOptions: {
