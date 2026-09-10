@@ -1,9 +1,9 @@
 ---
 phase: 100-security-posture
 plan: 9
-status: complete
+status: work-complete-human-checkpoint-blocked
 requirement: DBSEC-05
-completed: 2026-09-10
+checkpoint_status: pending-operator-attestation
 outcome: bounded
 ---
 
@@ -45,8 +45,9 @@ attribution requires the missing written toggle provenance and completion of the
 - Step 4, persisted oracle tightened to the exact discriminator and re-run: **open due to the fixed file
   allowlist**. The unchanged plan oracle was re-run successfully; it still accepts any single non-length
   reason. No out-of-scope plan edit was made.
-- Step 5, advisor call attempted: **complete as an unavailable credentialed endpoint**. The exact
-  Management API request was attempted without an access token and returned HTTP 401, recorded below.
+- Step 5, credentialed advisor call attempted by the overseer: **open**. This worker made the exact
+  Management API request without an access token and received the expected HTTP 401, recorded below;
+  that worker-side reachability check is not the checkpoint's required credentialed attempt.
 
 ## Probe run 1 — recorded pre-toggle HEAD drill, verbatim
 
@@ -151,7 +152,7 @@ curl status, HTTP 200 delete, successful refetch curl status, HTTP 404 refetch, 
 producer status, and an absent post-delete catalog value. Zero live residual accounts remain from these
 runs; each zero is paired above with the pre-delete UUID that proves the detector saw a true value.
 
-## Advisor attempt and residual
+## Worker-side advisor reachability check and residual
 
 Command attempted on 2026-09-10:
 
@@ -168,9 +169,11 @@ SUPABASE_ACCESS_TOKEN=<unset>
 ADVISOR_ATTEMPT curl_exit=0 http=401 body={"message":"Unauthorized"}
 ```
 
-The endpoint was attempted and was unavailable to this worker for a credentialed reading. It gives no
-post-change advisor verdict, so the calibrated proxy remains the only closure mechanism for the advisor
-clause.
+This request had no `Authorization` header because `SUPABASE_ACCESS_TOKEN` was unset. Its HTTP 401 was
+therefore expected and establishes only that this worker cannot make a credentialed reading. It is not
+the plan's step-5 advisor attempt: the overseer still owes the credentialed call in the same session as
+the operator checkpoint release. There is no post-change advisor verdict, so the calibrated proxy
+remains the only closure mechanism for the advisor clause.
 
 The corrected residual is: advisors DO report auth_leaked_password_protection, so a later toggle-off is DETECTABLE, and the gap is that nothing runs get_advisors on a schedule, so it is detectable but NOT DETECTED, carried to Phase 101.
 
@@ -179,7 +182,9 @@ outside this task and remains assigned to Phase 101.
 
 ## Final disposition
 
-The behavioural effect and cleanup lifecycle are green. Full checkpoint closure remains contingent on
-an identified human's written confirmation and time, their explicit acceptance of the D-31 bound, the
-out-of-scope research entry, and the out-of-scope persisted exact-discriminator oracle. P100-15's
-operator sign-off remains the second human gate.
+The behavioural effect and cleanup lifecycle are green, but this plan is parked at its unreleased human
+checkpoint and is not complete. Closure requires an identified human's written confirmation and time,
+their explicit answer on the D-31 bound, the `100-RESEARCH.md` command-and-discriminator entry, the
+persisted exact-discriminator oracle and its re-run, and the overseer's credentialed advisor attempt.
+The latter repository edits are outside this dispatch's fixed allowlist. P100-15's operator sign-off
+remains the second human gate.
