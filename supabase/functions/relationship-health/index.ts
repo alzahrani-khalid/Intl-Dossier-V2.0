@@ -426,8 +426,7 @@ serve(async (req) => {
           const relationshipId = secondPart;
 
           const { data, error } = await supabase
-            .from('relationship_health_summary')
-            .select('*')
+            .rpc('get_relationship_health_summary')
             .eq('relationship_id', relationshipId)
             .single();
 
@@ -497,7 +496,7 @@ serve(async (req) => {
         const sortBy = url.searchParams.get('sort_by') || 'overall_score';
         const sortOrder = url.searchParams.get('sort_order') || 'desc';
 
-        let query = supabase.from('relationship_health_summary').select('*');
+        let query = supabase.rpc('get_relationship_health_summary');
 
         if (trendFilter) {
           query = query.eq('trend', trendFilter);
