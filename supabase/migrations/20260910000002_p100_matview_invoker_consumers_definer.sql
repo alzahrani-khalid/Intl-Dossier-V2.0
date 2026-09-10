@@ -65,30 +65,28 @@ AS $$
 BEGIN
     RETURN QUERY
     WITH outgoing AS (
-        SELECT cn.citation_id, 'outgoing'::TEXT, cn.target_type, cn.target_id, cn.target_name, cn.external_url, NULL::TEXT, ec.status, cn.relevance_score, cn.detection_method, ec.citation_context, cn.created_at
+        SELECT cn.citation_id, 'outgoing'::TEXT, cn.target_type, cn.target_id, cn.target_name, cn.external_url, ec.external_title, ec.status, cn.relevance_score, cn.detection_method, ec.citation_context, cn.created_at
         FROM public.citation_network cn JOIN public.entity_citations ec ON ec.id = cn.citation_id
         WHERE cn.source_type = p_entity_type
           AND cn.source_id = p_entity_id
           AND (p_include_external OR cn.target_id IS NOT NULL)
-          AND EXISTS (
-            SELECT 1
+          AND ec.organization_id IN (
+            SELECT om.organization_id
             FROM public.organization_members om
             WHERE om.user_id = auth.uid()
               AND om.left_at IS NULL
-              AND om.organization_id = ec.organization_id
           )
     ),
     incoming AS (
-        SELECT cn.citation_id, 'incoming'::TEXT, cn.source_type, cn.source_id, cn.source_name, NULL::TEXT, NULL::TEXT, ec.status, cn.relevance_score, cn.detection_method, ec.citation_context, cn.created_at
+        SELECT cn.citation_id, 'incoming'::TEXT, cn.source_type, cn.source_id, cn.source_name, NULL::TEXT, ec.external_title, ec.status, cn.relevance_score, cn.detection_method, ec.citation_context, cn.created_at
         FROM public.citation_network cn JOIN public.entity_citations ec ON ec.id = cn.citation_id
         WHERE cn.target_type = p_entity_type
           AND cn.target_id = p_entity_id
-          AND EXISTS (
-            SELECT 1
+          AND ec.organization_id IN (
+            SELECT om.organization_id
             FROM public.organization_members om
             WHERE om.user_id = auth.uid()
               AND om.left_at IS NULL
-              AND om.organization_id = ec.organization_id
           )
     )
     SELECT o.* FROM outgoing o WHERE p_direction IN ('outgoing', 'both')
@@ -113,40 +111,37 @@ DECLARE result JSON;
 BEGIN
     WITH RECURSIVE citation_tree AS (
         SELECT p_start_entity_type AS entity_type, p_start_entity_id AS entity_id, 0 AS depth, ARRAY[p_start_entity_id] AS path
-        UNION
-        SELECT
-          CASE WHEN cn.source_type = ct.entity_type AND cn.source_id = ct.entity_id THEN cn.target_type ELSE cn.source_type END,
-          CASE WHEN cn.source_type = ct.entity_type AND cn.source_id = ct.entity_id THEN cn.target_id ELSE cn.source_id END,
-          ct.depth + 1,
-          ct.path || CASE WHEN cn.source_type = ct.entity_type AND cn.source_id = ct.entity_id THEN cn.target_id ELSE cn.source_id END
-        FROM citation_tree ct
-        JOIN public.citation_network cn
-          ON (cn.source_type = ct.entity_type AND cn.source_id = ct.entity_id AND cn.target_id IS NOT NULL)
-          OR (cn.target_type = ct.entity_type AND cn.target_id = ct.entity_id)
-        WHERE ct.depth < p_depth
-          AND NOT (CASE WHEN cn.source_type = ct.entity_type AND cn.source_id = ct.entity_id THEN cn.target_id ELSE cn.source_id END) = ANY(ct.path)
-          AND EXISTS (
+        WHERE EXISTS (
             SELECT 1
-            FROM public.organization_members om
-            WHERE om.user_id = auth.uid()
-              AND om.left_at IS NULL
-              AND om.organization_id = cn.organization_id
+            FROM public.entity_citations ec
+            WHERE ec.organization_id IN (
+                SELECT om.organization_id
+                FROM public.organization_members om
+                WHERE om.user_id = auth.uid()
+                  AND om.left_at IS NULL
+            )
+            AND (
+                (ec.citing_entity_type = p_start_entity_type AND ec.citing_entity_id = p_start_entity_id)
+                OR (ec.cited_entity_type = p_start_entity_type AND ec.cited_entity_id = p_start_entity_id)
+            )
+        )
+        UNION SELECT cn.target_type, cn.target_id, ct.depth + 1, ct.path || cn.target_id FROM citation_tree ct JOIN public.citation_network cn ON cn.source_type = ct.entity_type AND cn.source_id = ct.entity_id WHERE ct.depth < p_depth AND cn.target_id IS NOT NULL AND NOT cn.target_id = ANY(ct.path)
+          AND EXISTS (
+            SELECT 1 FROM public.organization_members om
+            WHERE om.user_id = auth.uid() AND om.left_at IS NULL AND om.organization_id = cn.organization_id
+          )
+        UNION SELECT cn.source_type, cn.source_id, ct.depth + 1, ct.path || cn.source_id FROM citation_tree ct JOIN public.citation_network cn ON cn.target_type = ct.entity_type AND cn.target_id = ct.entity_id WHERE ct.depth < p_depth AND NOT cn.source_id = ANY(ct.path)
+          AND EXISTS (
+            SELECT 1 FROM public.organization_members om
+            WHERE om.user_id = auth.uid() AND om.left_at IS NULL AND om.organization_id = cn.organization_id
           )
     ),
     nodes AS (SELECT DISTINCT ON (entity_id) entity_type, entity_id, MIN(depth) AS depth FROM citation_tree GROUP BY entity_type, entity_id ORDER BY entity_id, depth LIMIT p_max_nodes),
-    edges AS (
-      SELECT DISTINCT cn.citation_id AS id, cn.source_type, cn.source_id, cn.target_type, cn.target_id, cn.status, cn.relevance_score
-      FROM public.citation_network cn
-      WHERE (cn.source_type, cn.source_id) IN (SELECT entity_type, entity_id FROM nodes)
-        AND (cn.target_type, cn.target_id) IN (SELECT entity_type, entity_id FROM nodes)
+    edges AS (SELECT DISTINCT cn.citation_id AS id, cn.source_type, cn.source_id, cn.target_type, cn.target_id, cn.status, cn.relevance_score FROM public.citation_network cn WHERE (cn.source_type, cn.source_id) IN (SELECT entity_type, entity_id FROM nodes) AND (cn.target_type, cn.target_id) IN (SELECT entity_type, entity_id FROM nodes)
         AND EXISTS (
-          SELECT 1
-          FROM public.organization_members om
-          WHERE om.user_id = auth.uid()
-            AND om.left_at IS NULL
-            AND om.organization_id = cn.organization_id
-        )
-    )
+            SELECT 1 FROM public.organization_members om
+            WHERE om.user_id = auth.uid() AND om.left_at IS NULL AND om.organization_id = cn.organization_id
+        ))
     SELECT json_build_object(
         'nodes', (SELECT json_agg(json_build_object('id', n.entity_id, 'type', n.entity_type, 'depth', n.depth, 'name', COALESCE(d.name_en, b.title, ab.title, doc.title, p.title_en, m.title, e.location_en, n.entity_id::text), 'name_ar', COALESCE(d.name_ar, b.title, ab.title, doc.title, p.title_ar, m.title_ar, e.location_ar, n.entity_id::text)))
             FROM nodes n LEFT JOIN public.dossiers d ON n.entity_type = 'dossier' AND n.entity_id = d.id LEFT JOIN public.briefs b ON n.entity_type = 'brief' AND n.entity_id = b.id LEFT JOIN public.ai_briefs ab ON n.entity_type = 'ai_brief' AND n.entity_id = ab.id LEFT JOIN public.documents doc ON n.entity_type = 'document' AND n.entity_id = doc.id LEFT JOIN public.positions p ON n.entity_type = 'position' AND n.entity_id = p.id LEFT JOIN public.mous m ON n.entity_type = 'mou' AND n.entity_id = m.id LEFT JOIN public.engagements e ON n.entity_type = 'engagement' AND n.entity_id = e.id),
@@ -179,26 +174,15 @@ AS $$
   FROM public.relationship_health_summary rhs
   WHERE EXISTS (
     SELECT 1
-    FROM public.dossier_relationships dr
-    WHERE dr.id = rhs.relationship_id
-      AND EXISTS (
-        SELECT 1
-        FROM public.dossiers source_dossier
-        WHERE source_dossier.id = dr.source_dossier_id
-          AND source_dossier.sensitivity_level <= COALESCE(
-            (SELECT p.clearance_level FROM public.profiles p WHERE p.user_id = auth.uid()),
-            1
-          )
-      )
-      AND EXISTS (
-        SELECT 1
-        FROM public.dossiers target_dossier
-        WHERE target_dossier.id = dr.target_dossier_id
-          AND target_dossier.sensitivity_level <= COALESCE(
-            (SELECT p.clearance_level FROM public.profiles p WHERE p.user_id = auth.uid()),
-            1
-          )
-      )
+    FROM public.dossiers source_dossier
+    WHERE source_dossier.id = rhs.source_dossier_id
+      AND source_dossier.sensitivity_level <= (SELECT COALESCE(p.clearance_level, 1) FROM public.profiles p WHERE p.user_id = auth.uid())
+  )
+  AND EXISTS (
+    SELECT 1
+    FROM public.dossiers target_dossier
+    WHERE target_dossier.id = rhs.target_dossier_id
+      AND target_dossier.sensitivity_level <= (SELECT COALESCE(p.clearance_level, 1) FROM public.profiles p WHERE p.user_id = auth.uid())
   )
 $$;
 
