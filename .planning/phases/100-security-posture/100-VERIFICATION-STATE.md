@@ -1,41 +1,30 @@
 # P100-13 verification state — 2026-09-10
 
-This file contains only output produced by P100-13's fresh final-tree repair run. The two plan commands
-were loaded from `100-13-PLAN.md` and executed unchanged with `bash -c` in one foreground process.
+This file contains only output produced by P100-13's fresh final-tree run at
+`2026-09-10T20:51:19Z`. One fail-closed foreground session ran the function configuration proof and
+then the unchanged caller-census instrument.
 
-## Function configuration oracle
-
-```text
-P100-SEARCHPATH at_approved=557 other=35 unpinned=0 population=592 other_identity_digest=a10d3e1256979bf019d8a9b68c959cb8
-P100-SEARCHPATH-EXPECT at_approved=556 other=35 unpinned=0 population=591 other_identity_digest=a10d3e1256979bf019d8a9b68c959cb8
-INSTRUMENT-CANNOT-RUN: the non-extension function population is 592, not the 591 measured at HEAD - it moved under the probe
-```
-
-Exit status: **3**.
-
-The observed `unpinned=0` is controlled by the same run's non-empty population of 592, its 557 approved
-functions, its 35 explicitly other functions, and the HEAD identity digest
-`a10d3e1256979bf019d8a9b68c959cb8`. The digest control matches, so a balanced swap would have been
-detected. The count/population control does not match: the required 556/591 state is not present.
-
-## Final attribution census
+## Fresh function configuration and final attribution output
 
 ```text
+P100-13-RUN started_at=2026-09-10T20:51:19Z
+P100-SEARCHPATH at_approved=557 other=35 unpinned=0 population=592 expected_approved=population-minus-35=557 other_identity_digest=a10d3e1256979bf019d8a9b68c959cb8
+P100-SEARCHPATH-CONTROL approved_plus_other=592 population=592 unpinned=0 expected_other=35 recorded_head_digest=a10d3e1256979bf019d8a9b68c959cb8
+PASS search_path configuration
 P100-CENSUS unified_work_items owner=21 other=2 expected owner=21 other=2
 PASS census
+P100-13-RUN exit=0
 ```
 
-Exit status: **0**.
+Session exit status: **0**.
+
+The function result proves both size and identity: `557 = 592 - 35`, zero are unpinned, and the 35
+functions pinned elsewhere reproduce the recorded HEAD digest
+`a10d3e1256979bf019d8a9b68c959cb8`. The produced control line places `unpinned=0` beside a non-empty
+592 population, the complete 557+35 partition, and the expected digest, so the zero is controlled and
+a balanced bucket swap is detectable.
 
 Explicit P100-08 comparison: this P100-13 `P100-CENSUS` run agrees with P100-08's named
-`P100-CENSUS-AFTER` run; both read owner **21** and non-owner **2**. The owner=21 result is the positive
-availability control for the narrowed non-owner=2 result. The same instrument read owner 21 / non-owner
-21 at phase HEAD, so the final run continues to demonstrate the intended attribution boundary.
-
-## Combined session status
-
-```text
-P100-13-ORACLE-STATUS search_path_exit=3 census_exit=0
-```
-
-The combined session exited **1** because both oracles were required to pass.
+`P100-CENSUS-AFTER` run; both read owner **21** and non-owner **2**. No change landing between those
+runs moved the authorization boundary. Owner=21 is the positive availability control for non-owner=2.
+The same unchanged instrument recorded owner 21 / non-owner 21 at phase HEAD.

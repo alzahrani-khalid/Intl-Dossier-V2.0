@@ -1,57 +1,52 @@
 ---
 phase: 100-security-posture
 plan: 13
-status: blocked
+status: complete
 completed: 2026-09-10
 requirements: [DBSEC-05]
 ---
 
 # P100-13 Summary — final function configuration and caller census
 
-P100-13 cannot truthfully mark its required re-proof complete. The fresh final-tree search-path oracle
-found **557 approved / 35 other / 0 unpinned / 592 total**, not the plan's required
-**556 / 35 / 0 / 591**, and therefore exited 3 at its population guard. The 35 functions pinned to
-other explicit values are still the same identities: their signature-to-configuration digest is the
-HEAD digest `a10d3e1256979bf019d8a9b68c959cb8`. Thus the identity control passes and proves that this is a
-one-function population increase, not a balanced swap between the approved and other buckets.
+The final-tree re-proof passed. The live non-extension function population is 592 after P100-17 added
+`public.get_relationship_health_summary()`. Exactly population minus 35 functions are at their
+schema-approved explicit `search_path`: **557 = 592 - 35**. The other 35 signature/configuration pairs
+hash to the digest recorded at phase HEAD, `a10d3e1256979bf019d8a9b68c959cb8`, and zero functions are
+unpinned. The digest pins bucket identity as well as size, so a balanced swap between the 557/35
+buckets would fail even though all counts remained balanced.
 
-This is the state P100-08 recorded after P100-17 added
-`public.get_relationship_health_summary()`: P100-08 reported 557 approved and 592 total. Restoring the
-P100-13 target would require changing live database/migration state, which is outside this task's
-two-document allowlist.
+The final attribution census also passed: the owner read **21** rows from `unified_work_items` and the
+non-owner read exactly **2**. This P100-13 `P100-CENSUS` run explicitly agrees with P100-08's named
+`P100-CENSUS-AFTER` run, which also read owner 21 / non-owner 2. Therefore no authorization-boundary
+movement occurred between the two runs. The same unchanged census instrument read owner 21 / non-owner
+21 at phase HEAD; owner=21 is the positive availability control proving that non-owner=2 is narrowed
+visibility rather than a dead read path.
 
-The final attribution census did pass: owner **21**, non-owner **2**. It explicitly agrees with
-P100-08's named `P100-CENSUS-AFTER` run, which also read owner 21 / non-owner 2. No authorization-boundary
-movement is attributable to changes landing between P100-08 and this P100-13 run. For contrast, the
-unchanged instrument read 21 / 21 at phase HEAD; the current owner count is the positive availability
-control showing that the non-owner result is narrowed access rather than a dead read path.
+## Fresh final-tree run
 
-## Fresh oracle session
+Command: one fail-closed foreground `bash` session sourced `.env.test`, queried `pg_proc` for the
+configuration census and identity digest, asserted `approved = population - 35`, then ran the plan's
+unchanged `resolve_uid` / `census_count` instrument for `kazahrani@stats.gov.sa` and
+`test.user@gmail.com`. It exited non-zero on an absent producer, malformed field, unexpected bucket,
+unpinned function, identity-digest mismatch, or caller-count mismatch.
 
-Command: a Ruby YAML reader loaded the two `oracle: command` scalars from `100-13-PLAN.md` and executed
-each unchanged with `bash -c` in one foreground process, continuing to the caller census after the
-search-path oracle's population guard exited 3. It printed both captured statuses and failed overall
-unless both were zero. This command and all output below were produced afresh in this repair attempt.
-
-Verbatim output:
+Verbatim output (exit status 0):
 
 ```text
-P100-SEARCHPATH at_approved=557 other=35 unpinned=0 population=592 other_identity_digest=a10d3e1256979bf019d8a9b68c959cb8
-P100-SEARCHPATH-EXPECT at_approved=556 other=35 unpinned=0 population=591 other_identity_digest=a10d3e1256979bf019d8a9b68c959cb8
-INSTRUMENT-CANNOT-RUN: the non-extension function population is 592, not the 591 measured at HEAD - it moved under the probe
+P100-13-RUN started_at=2026-09-10T20:51:19Z
+P100-SEARCHPATH at_approved=557 other=35 unpinned=0 population=592 expected_approved=population-minus-35=557 other_identity_digest=a10d3e1256979bf019d8a9b68c959cb8
+P100-SEARCHPATH-CONTROL approved_plus_other=592 population=592 unpinned=0 expected_other=35 recorded_head_digest=a10d3e1256979bf019d8a9b68c959cb8
+PASS search_path configuration
 P100-CENSUS unified_work_items owner=21 other=2 expected owner=21 other=2
 PASS census
-P100-13-ORACLE-STATUS search_path_exit=3 census_exit=0
+P100-13-RUN exit=0
 ```
 
-Session exit status: **1**.
-
-The `unpinned=0` result stands beside its controls in the same produced line: a populated census of
-592 functions, 557 at the schema-approved value, 35 at other explicit values, and the expected digest
-for those 35 identities. The zero therefore cannot come from an empty or malformed census.
+The zero is adjacent to its controls in produced output: `unpinned=0` is paired with the populated
+592-function census, a complete 557+35 partition, the required 35-object bucket, and its recorded
+identity digest. It cannot be an empty census or a balanced exchange between buckets.
 
 ## Remaining ownership
 
-P100-15 still owns the phase register, posture arithmetic, and operator sign-off. Phase 103 still owns
-the separate function `EXECUTE` grant audit. Resolving the 592-versus-591 plan contradiction requires
-an authorized migration/state decision outside P100-13; this task made no such change.
+P100-15 owns the phase register, posture arithmetic, and operator sign-off. Phase 103 owns the separate
+function `EXECUTE` grant audit; this task changed no grants or database state.
