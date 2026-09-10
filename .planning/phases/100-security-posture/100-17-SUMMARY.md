@@ -64,9 +64,10 @@ CENSUS_EXIT=0
 - The migration revokes execute from `PUBLIC, anon` on all seven functions, grants the new RPC to
   `authenticated, service_role`, and revokes all privileges from `anon, authenticated` on the five
   materialized views.
-- `supabase/functions/relationship-health/index.ts` already had all three summary reads on
-  `.rpc('get_relationship_health_summary')` with filters preserved; this repair did not move any other
-  read or change JWT validation.
+- `supabase/functions/relationship-health/index.ts` keeps only the two GET reads of
+  `relationship_health_summary` on `.rpc('get_relationship_health_summary')` with filters preserved.
+  The post-calculate fetch is back on the caller-scoped `.from('relationship_health_summary').select('*')`
+  path, and JWT validation is unchanged.
 
 This change intentionally widens privilege only at the function owner boundary needed to read the five
 revoked materialized views. The widened read is re-scoped in each caller-readable function as above; the
@@ -82,6 +83,20 @@ Deploying Function: relationship-health (script size: 738 kB)
 {"project_ref":"zkrcjzdemdmwhearhfgg","functions":["relationship-health"],"dashboard_url":"https://supabase.com/dashboard/project/zkrcjzdemdmwhearhfgg/functions","message":"Deployed Functions."}
 DEPLOY_RETRY_END_UTC=2026-09-10T16:25:51Z
 DEPLOY_RETRY_EXIT=0
+```
+
+After restoring the post-calculate read to the caller-scoped view, I redeployed the edge function:
+
+```text
+DEPLOY_CALCULATE_SCOPE_START_UTC=2026-09-10T18:02:36Z
+WARN: config section [inbucket] is deprecated. Please use [local_smtp] instead.
+Bundling Function: relationship-health
+Deploying Function: relationship-health (script size: 738 kB)
+{"project_ref":"zkrcjzdemdmwhearhfgg","functions":["relationship-health"],"dashboard_url":"https://supabase.com/dashboard/project/zkrcjzdemdmwhearhfgg/functions","message":"Deployed Functions."}
+A new version of Supabase CLI is available: v2.117.0 (currently installed v2.115.0)
+We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+DEPLOY_CALCULATE_SCOPE_END_UTC=2026-09-10T18:02:47Z
+DEPLOY_CALCULATE_SCOPE_EXIT=0
 ```
 
 Final idempotent apply after this repair:
