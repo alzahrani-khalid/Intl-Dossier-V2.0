@@ -52,9 +52,13 @@ The complete `vite.config.ts` diff was the requested two-line build change:
 
 ```diff
 -    sourcemap: true,
-+    sourcemap: isSentryEnabled ? 'hidden' : false,
++    sourcemap: sentryOrg && sentryProject && sentryAuthToken ? 'hidden' : false,
 +    manifest: true,
 ```
+
+The sourcemap branch is keyed directly to the three credentials because those are the inputs that
+decide whether the browser build must retain hidden maps. `isSentryEnabled` remains unchanged for the
+plugin's separate production-only activation check.
 
 ### Fresh production build
 
@@ -70,10 +74,10 @@ env -u SENTRY_ORG -u SENTRY_PROJECT -u SENTRY_AUTH_TOKEN \
   pnpm --filter intake-frontend exec vite build --configLoader runner --logLevel silent
 ```
 
-Its verbatim final output and status were:
+Its final output and captured status were:
 
 ```text
-(node:55785) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(node:69823) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
 (Use `node --trace-deprecation ...` to show where the warning was created)
 Found 1 warning while optimizing generated CSS:
 
@@ -92,8 +96,12 @@ The pre-existing generated-CSS warning did not prevent the production build.
 
 ### After edit: executed config probe (GREEN)
 
-The runner loader was invoked in separate fresh Node processes so module caching could not collapse the
-two environment branches. `NODE_ENV=production` was explicit and the real config returned:
+The real production config was loaded with the official probe's inputs: Vite
+`{ command: "build", mode: "production" }`, first with all three Sentry variables absent and then with
+all three present. No `NODE_ENV` value was supplied. The worktree's protected `node_modules` symlink
+prevents Vite's default bundled loader from writing its temporary module, so the recorded run used
+Vite's supported runner loader in separate fresh Node processes; this changes only the loader, not the
+config or either input arm. The returned values were:
 
 ```text
 OFF=false
