@@ -788,20 +788,24 @@ are discovery, not execution. No `Agent` tool was used.
 
 | plan | oracle | what it asserts | exit at HEAD | last output line | round |
 | ---- | ------ | --------------- | ------------ | ---------------- | ----- |
-| 101-01 | `o01-drill` | planted-session drill, both configs | **3** | `INSTRUMENT-CANNOT-RUN: frontend/playwright.config.ts is not yet routed through the lease writer - the drill has no subject (P101-01 task 1 not landed)` | **round 1** (re-drilled after the fix) |
+| 101-01 | `o01-drill` | planted-session drill, both configs | **3** | `INSTRUMENT-CANNOT-RUN: frontend/playwright.config.ts is not yet routed through the lease writer - the drill has no subject (P101-01 task 1 not landed)` | round 1 |
 | 101-02 | `o02-a11y-run` | dossiers-a11y 16/16 via wrapper | **3** | `INSTRUMENT-CANNOT-RUN: frontend/playwright.config.ts is not routed through the lease writer (P101-01) - an unwrapped run would leak the session CARRY-10 is about (D-13)` | round 0 |
 | 101-02 | `o02-focus-del` | focus-indicators deleted, a11y list 182/13 | **1** | `FAIL: focus-indicators.spec.ts still tracked/present (D-11: deleted, secret-shaped literals gone from the tree)` | round 0 |
 | 101-03 | `o03-include` | integration include = the 31 + D-3 line | **1** | `FAIL: the integration job would still collect 236 files (205 outside the CI-green 31, 0 of the 31 missing) - D-04 narrows include to exactly the files run 31848669701 passed` | round 0 |
 | 101-04 | `o04-ci-yaml` | ci.yml structural read (js-yaml) | **1** | `  FAIL: D-14: ci.yml declares 18 job keys, want 17 (18 at planning minus test-e2e; build is a 2-way matrix so the API reports 18 runtime jobs)` | round 0 |
-| 101-05 | `o05-bound` | 29 files present, markers = register rows (section-fenced), cells column | **1** | `FAIL: 0 markers carry a run id 3184866*, 0 carry P101-QUAR at all - every reason names the run id (D-09)` | **round 1** (re-drilled after the fix) |
-| 101-05 | `o05-fe-run` | smokes 9 / rtl-mobile 98 / a11y 182 via wrapper, skipped >= cells >= rows | **3** | `INSTRUMENT-CANNOT-RUN: frontend/playwright.config.ts is not routed through the lease writer (P101-01) - D-13 forbids an unwrapped run` | **round 1** (re-drilled after the fix) |
-| 101-06 | `o06-secrets` | 7 secrets dated after 2026-09-10T18:00:00Z | **1** | `FAIL: CARRY-01 rotation and the E2E_SUPABASE_SERVICE_ROLE_KEY write are not all recorded after the planning date` | **round 1** (re-drilled after the fix) |
-| 101-07 | `o07-c1` | C1 E2E shards success on a run after 18:00Z | **1** | `FAIL: the latest main E2E run predates this phase (created 2026-08-14T22:58:38Z) - no phase PR has been merged` | **round 1** (re-drilled after the fix) |
-| 101-07 | `o07-c2` | C2 integration success + D-3 line, run after 18:00Z | **1** | `FAIL: the latest main CI run predates this phase (created 2026-08-14T22:58:38Z)` | **round 1** (re-drilled after the fix) |
-| 101-07 | `o07-c5` | C5 6 jobs 6 success, total 18, no E2E Tests, run after 18:00Z | **1** | `FAIL: the latest main CI run predates this phase (created 2026-08-14T22:58:38Z)` | **round 1** (re-drilled after the fix) |
-| 101-07 | `o07-c4` | C4 context by name, 9 contexts, smoke PR BLOCKED + check FAILURE via --json | **1** | `FAIL: context 'RTL Portal + Component Smokes' absent from required_status_checks` | **round 1** (re-drilled after the fix) |
+| 101-05 | `o05-unit` | 6 shard-1 specs (group A): markers/FIXED, section-fenced register, cells, root list 220/65 | **1** | `FAIL: no marker and no FIXED row for the 9 (shard 1: 01-login 2, 03 1, 04 2, 05 1, 06 1, 07 2) red tests in these files - nothing was fixed or quarantined` | **round 2** (new unit) |
+| 101-08 | `o08-unit` | 5 shard-1 specs (group B): same shape | **1** | `FAIL: no marker and no FIXED row for the 12 (shard 1: 08 1, 10 4, elected-official 3, engagement 3, forum 1) red tests in these files - nothing was fixed or quarantined` | **round 2** (new unit) |
+| 101-09 | `o09-unit` | 5 shard-1/2 specs (group C): same shape | **1** | `FAIL: no marker and no FIXED row for the 10 (shard 1: fouc 1, person-identity 2, phase-36 3; shard 2: typography 3, working-group 1) red tests in these files - nothing was fixed or quarantined` | **round 2** (new unit) |
+| 101-10 | `o10-unit` | 5 shard-2 specs (ar-smoke, tailwind grid, token engine): same shape | **1** | `FAIL: no marker and no FIXED row for the 32 (shard 2: ar-smoke 3, tailwind grid 24, token-engine 5) red tests in these files - nothing was fixed or quarantined` | **round 2** (new unit) |
+| 101-12 | `o12-unit` | 5 a11y specs: bound + a11y 182 via wrapper, skipped >= cells >= rows | **1** | `FAIL: no marker and no FIXED row for the 18 (a11y job 94920552794) red tests in these files - nothing was fixed or quarantined` | **round 2** (new unit; the run half exits 3 at the routing precheck once the bound half passes) |
+| 101-13 | `o13-unit` | 3 rtl/smokes specs: bound + smokes 9 / rtl-mobile 98 via wrapper | **1** | `FAIL: no marker and no FIXED row for the 24 (smokes 3 + RTL + Responsive 21) red tests in these files - nothing was fixed or quarantined` | **round 2** (new unit; run half as above) |
+| 101-06 | `o06-secrets` | 7 secrets dated after 2026-09-10T18:00:00Z | **1** | `FAIL: CARRY-01 rotation and the E2E_SUPABASE_SERVICE_ROLE_KEY write are not all recorded after the planning date` | round 1 |
+| 101-07 | `o07-c1` | C1 E2E shards success on a run after 18:00Z | **1** | `FAIL: the latest main E2E run predates this phase (created 2026-08-14T22:58:38Z) - no phase PR has been merged` | round 1 |
+| 101-07 | `o07-c2` | C2 integration success + D-3 line, run after 18:00Z | **1** | `FAIL: the latest main CI run predates this phase (created 2026-08-14T22:58:38Z)` | round 1 |
+| 101-07 | `o07-c5` | C5 6 jobs 6 success, total 18, no E2E Tests, run after 18:00Z | **1** | `FAIL: the latest main CI run predates this phase (created 2026-08-14T22:58:38Z)` | round 1 |
+| 101-11 | `o11-c4` | C4 context by name, 9 contexts, smoke PR BLOCKED + check FAILURE via --json; SMOKE_PR= read from 101-11-ATTESTATION.md | **1** | `FAIL: context 'RTL Portal + Component Smokes' absent from required_status_checks` | **round 3** (path fix; checker BLOCKER 9) |
 
-Reading the table. Nine oracles exit **1** (RED at HEAD, each with its control read alive: the a11y list
+Reading the table (round 0 wording; rounds 1 and 2 below add rows). Nine oracles exit **1** (RED at HEAD, each with its control read alive: the a11y list
 control 182/13, the base vitest config discovering 26 files, Lint / merge-reports reading `success`,
 E2E_BASE_URL visible in the secret store, the fixme grep control 13, the root list 220/65). Three exit
 **3** at the same precondition — `frontend/playwright.config.ts` does not yet contain
@@ -945,5 +949,57 @@ and last lines are unchanged at HEAD for every re-drilled oracle except the prin
   `2026-09-10T18:00:00Z` (`o06-secrets`, `o07-c1/c2/c5`); a `//` comment inside a `node -e` one-liner
   swallowed the following statement on the first re-drill (`bad is not defined`) — replaced with `/* */`.
 - **Issue 8 (§3 line numbers):** `e2e.yml:24,64,99` corrected to `28,70,105` in §3 above.
+### §10.7 Round 2 (overseer order: the task-unit contract refused the dry compile)
+
+`tickmarkr compile .planning/phases/101-ci-gates-green --dry-run` refused with three errors: P101-05
+declared 30 `files_modified` (max 8), its acceptance × files surface was 150 (5 × 30, max 24), and
+P101-07 declared 8 acceptance items (max 6). The contract counts `must_haves.truths` entries plus one per
+`<task>`; the top-level `truths:` line is not counted.
+
+**New plan map (CONTEXT §3 is NOT edited; this section is the map of record for the split):**
+
+| plan | wave | depends_on | autonomous | files (incl. SUMMARY) | items | surface | owns |
+| ---- | ---- | ---------- | ---------- | --------------------- | ----- | ------- | ---- |
+| 101-05 | 3 | 01, 02 | yes | 7 | 3 | 21 | shard-1 EN group A: 01-login, 03-dossier-navigation, 04-command-palette, 05-notifications, 06-work-item-crud, 07-calendar-events (9 red) |
+| 101-08 | 3 | 01, 02 | yes | 6 | 3 | 18 | shard-1 EN group B: 08-export-import, 10-operations-hub, elected-official-create, engagement-create, forum-create (12 red) |
+| 101-09 | 3 | 01, 02 | yes | 6 | 3 | 18 | group C: fouc-bootstrap, person-identity-fields, phase-36-shell (shard 1), typography, working-group-create (shard 2) (10 red) |
+| 101-10 | 3 | 01, 02 | yes | 6 | 3 | 18 | shard 2: the three ar-smoke specs, tailwind-remap-visual (24-cell grid), token-engine-sc (32 red) |
+| 101-12 | 3 | 01, 02 | yes | 6 | 3 | 18 | the five red a11y specs (18 red) + the wrapped a11y run (182) |
+| 101-13 | 3 | 01, 02 | yes | 4 | 3 | 12 | calendar-rtl, rtl-component-smokes, dossier-rtl-mobile (24 red) + wrapped smokes (9) and rtl-mobile (98) runs |
+| 101-07 | 4 | 01-06, 08-10, 12, 13 | **no** | 2 | 6 | 12 | merge phase PR → main runs observed, C1 / C2 / C5, attestation |
+| 101-11 | 5 | 07 | **no** | 2 | 4 | 8 | POST context by name after 101-07 shows the smoke row green (D-03 by dependency), smoke PR BLOCKED, C4, attestation `101-11-ATTESTATION.md` |
+
+101-01, 02, 03, 04 and 06 are byte-identical to round 1 (md5 compared before and after). 9 + 12 + 10 +
+32 + 18 + 24 = 105 red tests, the same population as §10.2. Each unit's SUMMARY carries its own
+`## Quarantine register` and `## Fixed tests`; the unit oracle reads only its own SUMMARY and its own
+files. The former 101-05 string truth (the 29-file derivation and the root-shards bound) moved into each
+unit's judge text; the former 101-07 string truth moved into 101-07's and 101-11's judge texts.
+
+Each unit oracle was drilled with `bash -c` from the root (rows above, round 2): all six exit **1** on
+"no marker and no FIXED row" with the fixme control reading 13 and, for the four root units, the list
+reading `Total: 220 tests in 65 files`. The two frontend units run their suites AFTER the bound checks,
+so at HEAD they stop at the bound (exit 1); once markers exist they reach the routing precheck (exit 3
+until 101-01 lands) and then the wrapped run. `o07-c1/c2/c5` and `o07-c4` were re-run in round 2,
+unchanged. The dry compile now prints:
+
+```
+harness: /opt/homebrew/lib/node_modules/tickmarkr/dist/cli/index.js (installed package)
+validated .planning/phases/101-ci-gates-green (13 tasks, source gsd, hash 3637a1d2b69e) — dry run; no graph written
+```
+### §10.8 Round 3 (checker round-2 BLOCKER 9)
+
+The round-2 split moved the smoke PR to 101-11 but its C4 oracle still read `SMOKE_PR=` from
+`101-07-ATTESTATION.md`, which never carries that line - criterion 4 was unsatisfiable as written.
+Fixed ONLY in `101-11-PLAN.md`: the oracle (`o11-c4`, a copy of `o07-c4` with the path changed) reads
+`101-11-ATTESTATION.md`; the two prose references to `101-07-ATTESTATION.md` at checkpoint step 1 and in
+the attestation template are correct as written (the operator re-reads the smoke-row conclusion from
+101-07's file before the POST). Re-drilled with `bash -c` from the root: exit 1, last line as in the
+table (the context-absent arm fires first at HEAD; the missing-attestation branch now names
+`101-11-ATTESTATION.md`). Every other plan is byte-identical to round 2 (md5 compared). Dry compile:
+
+```
+harness: /opt/homebrew/lib/node_modules/tickmarkr/dist/cli/index.js (installed package)
+validated .planning/phases/101-ci-gates-green (13 tasks, source gsd, hash 9c431718c289) — dry run; no graph written
+```
 
 RESEARCH-101-END

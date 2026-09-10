@@ -324,3 +324,99 @@ The phase directory is untracked (commit before compile, D-16). A tickmarkr run 
 the port.
 
 ROUND-1-RECHECK-END
+
+---
+
+## Round 2 re-check (2026-09-10, HEAD `568894e32`; 101-05/07/RESEARCH modified, 101-08..13 untracked — working-tree files)
+
+**Verdict: FAIL-with-issues** — 1 BLOCKER (new, introduced by the split), 0 warnings. Everything else in the
+round-2 brief verifies green. Read-only; no Agent tool; no suite ran.
+
+### BLOCKER 9 — 101-11-PLAN.md line 25: the C4 oracle reads `SMOKE_PR=` from the WRONG attestation file
+```
+A=.planning/phases/101-ci-gates-green/101-07-ATTESTATION.md; PR=$(grep -oE '^SMOKE_PR=[0-9]+' "$ROOT/$A" ...)
+```
+The split moved the smoke PR to 101-11. Its checkpoint (lines 82-94) writes `SMOKE_PR=<n>` into
+`101-11-ATTESTATION.md`, and `files_modified` (line 8) names that file. 101-07's attestation template
+(lines 95-102) no longer carries the line at all — `grep -c SMOKE_PR 101-07-PLAN.md` → **0**. So after a
+perfect operator act, line 31 `[ -n "$PR" ] || FAIL: no SMOKE_PR=<n> line in $A` fires and criterion 4 is
+unsatisfiable. Same class as round-0 issue 1 (a guard that can never fire), one line carried unchanged
+through the split. Fix: `A=.planning/phases/101-ci-gates-green/101-11-ATTESTATION.md` on line 25 (the
+status line on line 27 and the `text:` on line 33 then follow). Invisible in the HEAD drill because the
+context-absent check exits first — again.
+
+### Everything else (PASS)
+
+**Shape.** All 13 plans parse with js-yaml; the twelve fields present; all six body tags present; truth
+shapes valid. The six units and 101-07/11 dropped the plain-string truth (items = truths + tasks):
+101-05 items 3 / surface 21; 101-08/09/10/12 items 3 / surface 18; 101-13 items 3 / surface 12;
+101-07 items 6 / surface 12; 101-11 items 4 / surface 8 — all within the contract (files ≤8, items×files ≤24,
+items ≤6). Dry compile from `/opt/homebrew/lib/node_modules/tickmarkr/dist/cli/index.js` printed
+`validated .planning/phases/101-ci-gates-green (13 tasks, source gsd, hash 3637a1d2b69e) — dry run; no graph written`.
+
+**Files.** `git diff --stat 568894e32 -- .planning/phases/101-ci-gates-green` → 101-05, 101-07, RESEARCH
+only; `git status` adds the six untracked 101-08..13 files. 101-01/02/03/04/06 byte-identical to HEAD
+(`git diff --quiet`). files_modified disjoint across 01-05/08-10/12-13 (no overlap); `.github/workflows/*`
+only in 101-04. **Union of the six units' spec files = the 29** (count 29, distinct 29, dropped none,
+duplicated none, extra none). Each unit oracle's inline `FILES=` list equals its files_modified exactly
+(6/5/5/5/5/3). Red-test population 9+12+10+32+18+24 = 105, unchanged.
+
+**Waves / deps.** 05,08,09,10,12,13 wave 3 → 01(w1),02(w2); 07 wave 4 → all six units + 01..04, 06;
+11 wave 5 → 07 (D-03 enforced by the graph). No violation, no dangling. **Human gates** only in 06/07/11
+(`autonomous: false`, `checkpoint:human-action`); no push/PR/protection/deploy verb in any unit's action.
+
+**Decisions.** Top-level truths cite: 05/08/09/10/12/13 D-02 D-09 D-13 D-15; 07 D-01 D-03 D-07 D-12 D-14
+D-16; 11 D-02 D-03 D-12. All 16 CONTEXT decisions cited by ≥1 plan; none dangling.
+
+**Oracles re-run** (`bash -c "$(cat <block>)"` from the repo root; routing guard `grep -c lease-exec` → 0;
+leases 0 / 5173 listeners 0 after):
+
+| oracle | exit | last line |
+| --- | --- | --- |
+| o05-unit | 1 | `FAIL: no marker and no FIXED row for the 9 (shard 1: 01-login 2, 03 1, 04 2, 05 1, 06 1, 07 2) red tests in these files - nothing was fixed or quarantined` |
+| o08-unit | 1 | `FAIL: no marker and no FIXED row for the 12 (shard 1: 08 1, 10 4, elected-official 3, engagement 3, forum 1) …` |
+| o09-unit | 1 | `FAIL: no marker and no FIXED row for the 10 (shard 1: fouc 1, person-identity 2, phase-36 3; shard 2: typography 3, working-group 1) …` |
+| o10-unit | 1 | `FAIL: no marker and no FIXED row for the 32 (shard 2: ar-smoke 3, tailwind grid 24, token-engine 5) …` |
+| o12-unit | 1 | `FAIL: no marker and no FIXED row for the 18 (a11y job 94920552794) …` (bound exits at line 12, before the routing precheck at 17 and the wrapped run — no suite started) |
+| o13-unit | 1 | `FAIL: no marker and no FIXED row for the 24 (smokes 3 + RTL + Responsive 21) …` (same ordering) |
+| o07-c1 | 1 | `FAIL: the latest main E2E run predates this phase (created 2026-08-14T22:58:38Z) - no phase PR has been merged` |
+| o07-c2 | 1 | `FAIL: the latest main CI run predates this phase (created 2026-08-14T22:58:38Z)` |
+| o07-c5 | 1 | `FAIL: the latest main CI run predates this phase (created 2026-08-14T22:58:38Z)` |
+| o11 (C4) | 1 | `FAIL: context 'RTL Portal + Component Smokes' absent from required_status_checks` |
+
+All match RESEARCH §10.1 round-2 rows and the writer's table. Controls alive (fixme 13, root list 220/65,
+merge-reports / Lint success). **No oracle exits 0 at HEAD.** Unchanged oracles (o01, o02×2, o03, o04, o06)
+were re-run in round 1 and their plans are byte-identical.
+
+Fix BLOCKER 9 (one path) and re-drill o11 once; nothing else needs to change.
+
+ROUND-2-RECHECK-END
+
+---
+
+## Round 3 re-check (2026-09-10, HEAD `568894e32`; 101-11-PLAN.md only — untracked, working-tree file)
+
+**Verdict: PASS.** BLOCKER 9 is fixed; nothing else changed.
+
+- **SMOKE_PR source.** Line 25 now reads `A=.planning/phases/101-ci-gates-green/101-11-ATTESTATION.md`; the only
+  `SMOKE_PR` grep (line 25) and the FAIL message (line 31) use `$A`. Line 33 `text:` says the line is read from
+  101-11-ATTESTATION.md and names the round-3 fix; its one `101-07` mention is the history note. Line 89 (the
+  operator template) writes `SMOKE_PR=<n>` into 101-11-ATTESTATION.md, matching `files_modified` line 8.
+- **Remaining 101-07-ATTESTATION.md mentions** (lines 35, 64, 86) are the D-03 smoke-row re-read only
+  ("the smoke job line must say RTL Portal + Component Smokes = success"), never the SMOKE_PR source. Correct.
+- **o11-c4 re-run** (`bash -c "$(cat <block>)"` from repo root, block re-extracted with js-yaml; 1 command
+  oracle): **exit 1**, status line `smoke_pr=<none> mergeStateStatus=<no SMOKE_PR= line in
+  .planning/phases/101-ci-gates-green/101-11-ATTESTATION.md>`, last line
+  `FAIL: context 'RTL Portal + Component Smokes' absent from required_status_checks` — the context-absent arm,
+  as expected at HEAD. Not 0.
+- **Shape**: twelve fields, six tags, wave 5, depends_on [101-07], autonomous false, files = 101-11 ATTESTATION
+  + SUMMARY.
+- **Diff**: `git diff --stat 568894e32 -- .planning/phases/101-ci-gates-green` → 101-05, 101-07, 101-PLAN-CHECK,
+  RESEARCH; `git status` adds the six untracked plans 101-08..13 (101-11 among them). Nothing else.
+- **Dry compile**: `validated .planning/phases/101-ci-gates-green (13 tasks, source gsd, hash 9c431718c289) — dry run;
+  no graph written` (hash moved from 3637a1d2b69e because 101-11 changed — expected).
+
+Residual, unchanged from round 1 (doc-only, non-blocking): CONTEXT D-15 still says `skipped` equals the
+register row count while the plans carry `skipped >= sum(cells) >= rows`.
+
+ROUND-3-RECHECK-END
