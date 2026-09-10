@@ -188,16 +188,14 @@ The required interim language is carried verbatim:
 > identically. The breach-specific discriminator is unobservable until leaked-password protection is
 > enabled; see the operator handoff.
 
-The phase-register status is **OPEN - DEFERRED TO TOGGLE**, as required by this checkpoint's acceptance
-contract; it is not recorded closed here. P100-09 owns the five post-toggle steps: run the probe once
-immediately after the toggle; capture the
-actual reason and message verbatim; record them with their producing command in `100-RESEARCH.md`;
-tighten the oracle to that exact discriminator and rerun it; and attempt the Supabase security-advisor
-call in the same credentialed session and record its result. P100-09 records those first four as done
-and the worker advisor attempt as HTTP 401. The operator's personal `100-09-ATTESTATION.md` answer plus
-P100-09's post-toggle probe observing `reasons=["pwned"]` support the separate `CLOSED` disposition
-stated in the delegated sign-off. That statement is preserved verbatim below as operator evidence, but
-does not overwrite this register's required **OPEN - DEFERRED TO TOGGLE** status.
+The current phase-register status is **CLOSED**: operator toggle 2026-09-10,
+`reasons=["pwned"]`, `100-09-ATTESTATION.md`; D-31 status line amended. This is the operator's personal
+attestation plus P100-09's post-toggle probe, not a worker assertion. **OPEN - DEFERRED TO TOGGLE** is
+retained only as the interim status it replaced. P100-09 owned the five post-toggle steps: run the probe
+once immediately after the toggle; capture the actual reason and message verbatim; record them with
+their producing command in `100-RESEARCH.md`; tighten the oracle to that exact discriminator and rerun
+it; and attempt the Supabase security-advisor call in the same credentialed session and record its
+result. P100-09 records the first four as done and the worker advisor attempt as HTTP 401.
 
 ## Operator checkpoint — `100-15-SIGNOFF.md` quoted verbatim
 
@@ -241,8 +239,9 @@ SIGNOFF-END
 
 This re-issued quote resolves the superseded sign-off's undercount: it accepts all **six**
 empty-on-staging converted views and explicitly attests the P100-12/P100-13/P100-14 evidence set. Its
-D-31 `CLOSED` disposition is retained as attributed operator evidence; the register nevertheless keeps
-the acceptance-contract status **OPEN - DEFERRED TO TOGGLE** rather than closing it on a worker assertion.
+D-31 **CLOSED** disposition is the register's current status, supported by the operator's personal
+`100-09-ATTESTATION.md` and P100-09's observed `reasons=["pwned"]`; **OPEN - DEFERRED TO TOGGLE** is
+historical. The closure is therefore operator evidence, not a worker assertion.
 
 ## Residue carried onward
 
@@ -271,11 +270,17 @@ The phase closes only with these bounds attached:
    the tree — a BI tool, a Retool app, or a saved dashboard query — would not have appeared in the
    census. The break, if it occurs, is **LOUD (permission denied)** and **REVERSIBLE (re-GRANT)**.
 3. Criterion 5 is COVERED CONTINGENT ON TWO HUMAN GATES - the P100-09 leaked-password toggle and the P100-15 operator sign-off - and its "advisors report clean" clause closes by CALIBRATED PROXY (catalog = advisor at HEAD, to the unit), NOT by direct observation of the advisor after the change.
-4. D-31 is **OPEN - DEFERRED TO TOGGLE**: the oracle establishes rejection with HTTP 422 and error code
-   `weak_password` for a non-`length` reason and does **NOT** establish that rejection was BECAUSE the
-   password was breached, since another `weak_password` rule would pass identically; the discriminator
-   is unobservable until the setting is enabled. The quoted sign-off's conflicting `CLOSED` disposition
-   is operator evidence backed by `100-09-ATTESTATION.md` and P100-09's `reasons=[pwned]` probe, but the
-   phase register records the acceptance-contract status **OPEN - DEFERRED TO TOGGLE** rather than closed.
+4. D-31, verbatim:
+
+   > The leaked-password oracle establishes that a known breached password is rejected with HTTP 422 and
+   > error code `weak_password` for a non-`length` reason. It does **NOT** establish that it was rejected
+   > BECAUSE it is breached — another `weak_password` rule rejecting the same password would pass
+   > identically. The breach-specific discriminator is unobservable until leaked-password protection is
+   > enabled; see the operator handoff.
+
+   D-31 is recorded as CLOSED (operator toggle 2026-09-10, reasons=[pwned],
+   100-09-ATTESTATION.md; D-31 status line amended). The closing-language `reasons=[pwned]` is shorthand
+   for the probe's JSON `reasons=["pwned"]`. **OPEN - DEFERRED TO TOGGLE** was the interim status it
+   replaced.
 5. The live `dossier_relationships` SELECT policy compares nonexistent `profiles.id`; it does not scope
    what it intends. Phase 102 owns that signed-off additional bound.

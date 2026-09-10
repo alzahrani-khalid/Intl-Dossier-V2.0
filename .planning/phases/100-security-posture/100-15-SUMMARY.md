@@ -81,11 +81,10 @@ set, all six empty views, all checkpoint bounds, the additional `dossier_relatio
 signature, timestamp and `SIGNOFF-END`. The overseer accepted the posture in writing under delegation;
 the sign-off remains revocable and says personal operator review is owed.
 
-The sign-off directs that post-toggle D-31 is `CLOSED` because `pwned` became observable. That statement
-is quoted verbatim and attributed to the attestor, but this register records the acceptance-contract
-status **OPEN - DEFERRED TO TOGGLE**, not closed. The operator's personal `100-09-ATTESTATION.md` answer
-and P100-09's `reasons=[pwned]` probe remain evidence under that open bound rather than a worker-created
-closure.
+The register records D-31 as **CLOSED** (operator toggle 2026-09-10, `reasons=["pwned"]`,
+`100-09-ATTESTATION.md`; D-31 status line amended), matching the re-issued sign-off. The operator's
+personal attestation and P100-09's live probe support that closure; it is not a worker assertion.
+**OPEN - DEFERRED TO TOGGLE** is retained explicitly as the interim status it replaced.
 
 ## Closing language handed onward
 
@@ -102,9 +101,12 @@ closure.
    Retool app or saved dashboard query could break; that break is **LOUD (permission denied)** and
    **REVERSIBLE (re-GRANT)**.
 3. Criterion 5 is COVERED CONTINGENT ON TWO HUMAN GATES - the P100-09 leaked-password toggle and the P100-15 operator sign-off - and its "advisors report clean" clause closes by CALIBRATED PROXY (catalog = advisor at HEAD, to the unit), NOT by direct observation of the advisor after the change.
-4. D-31 is recorded **OPEN - DEFERRED TO TOGGLE**, not closed. The quoted sign-off's conflicting
-   `CLOSED` disposition and the operator's personal attestation plus observed `pwned` discriminator are
-   retained as attributed evidence under the open bound.
+4. D-31 is carried verbatim in the register: the oracle establishes rejection with HTTP 422 and
+   `weak_password` for a non-`length` reason and does **NOT** establish rejection BECAUSE the password
+   is breached, because another `weak_password` rule would pass identically; the discriminator was
+   unobservable until the setting was enabled. It is recorded as CLOSED (operator toggle 2026-09-10,
+   reasons=[pwned], 100-09-ATTESTATION.md; D-31 status line amended); the shorthand reflects the probe's
+   JSON `reasons=["pwned"]`. **OPEN - DEFERRED TO TOGGLE** is retained as the interim status it replaced.
 5. The sign-off's additional defective `dossier_relationships` policy finding is carried to Phase 102.
 
 ## Named residue
