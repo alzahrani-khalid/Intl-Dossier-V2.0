@@ -3,13 +3,14 @@ status: complete
 phase: 102-staging-data-debt-tail
 plan: 5
 requirements: [P52FIXTURE-01, ENGREAD-01]
-attempt: 2
+attempt: 3
 commits:
-  - 4b9690d07 feat(seed): add P102 engagement extension rows and P52 rename (attempt 1 a152946e3, replayed patch-identical)
-  - 3b409d91a test(e2e): add /engagements render probe for ENGREAD-01 (attempt 1 c072e84c6, replayed patch-identical)
+  - 4e6aa66bb feat(seed): add P102 engagement extension rows and P52 rename (attempt 1 a152946e3; replayed patch-identical as 4b9690d07 and 8ee59d476)
+  - 395ed3127 test(e2e): add /engagements render probe for ENGREAD-01 (attempt 1 c072e84c6; replayed patch-identical as 3b409d91a and 90fd78c3e)
+  - c9274e546 test(e2e): make the /engagements render probe settle strictly on visible nodes (attempt 3, the review repair, §13)
 engread_01_verdict: NOT-REPRODUCED-AT-RENDER
-oracle_p52: PASS (exit 0)
-oracle_render: PASS (exit 0) on attempt 2, against the plan as repaired by 57b9b920d. Attempt 1 exited 1 on the same passing report because of the unanchored stats parse (§9). See §12.
+oracle_p52: PASS (exit 0) on attempt 3 (§13.3). The attempt-2 gate's exit 3 was INSTRUMENT-CANNOT-RUN (.env.test not in the worktree at gate time), not a catalog result.
+oracle_render: PASS (exit 0) on attempt 3 against the strict-settle spec c9274e546 (§13.5). Attempt 2 also exited 0 (§12.5). Attempt 1 exited 1 on a passing report because of the unanchored stats parse (§9).
 ---
 
 # 102-05 SUMMARY: engagement extension rows, the P52 rename, and the /engagements render probe
@@ -22,9 +23,10 @@ oracle_render: PASS (exit 0) on attempt 2, against the plan as repaired by 57b9b
 | Both named ids carry `bilateral_meeting`/`diplomatic` inside 2026, end > start | **DONE** | same oracle `seeded_pair=2` |
 | P52 `name_en`/`name_ar` equal the plan's copy verbatim | **DONE** | same oracle `renamed=1` |
 | Seed applied twice, idempotent | **DONE** | apply 1 `INSERT 0 2 / UPDATE 1`, apply 2 `INSERT 0 0 / UPDATE 0` (§3) |
-| API positive control run BEFORE the spec | **DONE** | both paths `HTTP=200`, 5 rows, `total=5`, on both attempts (§4, §12.3) |
-| Render spec authored, run through `scripts/pw-run-reaped.mjs` | **DONE** | report `expected=2 unexpected=0 skipped=0 flaky=0`, both titles `passed`, on 3 runs (§5, §8.2, §12.5) |
-| Render **command oracle** exits 0 | **YES, exit 0 on attempt 2** (§12.5), against the plan as repaired by `57b9b920d` | `passed=2 failed=0 skipped=0`, `PASS render`. Attempt 1 exited 1 on a passing report: `passed=2⏎0`, because the unanchored `expected=` grep also matched inside `unexpected=0` (§9) |
+| API positive control run BEFORE the spec | **DONE** | both paths `HTTP=200`, 5 rows, `total=5`, on all three attempts (§4, §12.3, §13.3) |
+| Render spec authored, run through `scripts/pw-run-reaped.mjs` | **DONE** | report `expected=2 unexpected=0 skipped=0 flaky=0`, both titles `passed` (§5, §8.2, §12.5, §13.5) |
+| Spec settles strictly on VISIBLE nodes (attempt-2 review finding) | **DONE** in `c9274e546` | on one identical hidden-row stimulus, the attempt-2 bytes pass (`dom_rows=5 visible_rows=0`) and the new bytes red `UNSETTLED`. Error chrome still leads the failure (§13.4) |
+| Render **command oracle** exits 0 | **YES, exit 0 on attempt 3** (§13.5) and on attempt 2 (§12.5) | `passed=2 failed=0 skipped=0`, `PASS render`. Attempt 1 exited 1 on a passing report: `passed=2⏎0`, because the unanchored `expected=` grep also matched inside `unexpected=0` (§9) |
 | ENGREAD-01 verdict | **NOT-REPRODUCED-AT-RENDER** (never "fixed") | §10 |
 
 ## 1. Populations re-derived
@@ -469,8 +471,192 @@ No listener is left on :5173. The one hit is a `codex` process that matched on i
 
 The verdict is unchanged: **NOT-REPRODUCED-AT-RENDER**. A third settled render agrees with the first two and with the API: 5 rows in `en` and in `ar`, the locale asserted, no error chrome. It is still not "fixed". The §10 bounds all still apply.
 
+## 13. Attempt 3: the review repair (2026-09-11, run 0083)
+
+Two gates failed attempt 2:
+
+- **Acceptance, the P52 oracle, exited 3:** `INSTRUMENT-CANNOT-RUN: SUPABASE_DB_URL unset - .env.test not materialised in this worktree`. An instrument that cannot run gives no catalog result. At this attempt's start, `.env.test` was present in the worktree (mtime 22:37 local, 19:37Z). It is gitignored, and this worker did not create it. The same oracle now exits 0 (§13.3). The failure needed no product change and got none.
+- **Review raised one material finding, which was correct:**
+  - The probe swallowed its `main`-visible wait and its rows-or-error wait.
+  - It then counted rows with `locator.count()`, which also counts hidden DOM nodes.
+  - So five hidden or stale row nodes could pass it with no settled visible surface. §13.4 reproduces this on the attempt-2 bytes.
+
+### 13.1 Replays, and the repair
+
+The prior attempts' commits sit in this worktree as patch-identical replays:
+
+```
+$ git range-diff 8ee59d476~1..0323986903 981f3a1a2..HEAD
+1:  8ee59d476 = 1:  4e6aa66bb feat(seed): add P102 engagement extension rows and P52 rename
+2:  90fd78c3e = 2:  395ed3127 test(e2e): add /engagements render probe for ENGREAD-01
+3:  21c4645b9 = 3:  ef41d8065 docs(phase-102): record 102-05 seed, render probe and ENGREAD-01 verdict
+4:  032398690 = 4:  dcb8e5b05 docs(phase-102): record 102-05 attempt 2 against the repaired render oracle
+```
+
+The repair is `c9274e546`, the only product change in attempt 3. It touches only the spec:
+
+- **Strict settle.** `settle` asserts `main` visible with `await expect(page.getByRole('main')).toBeVisible({ timeout: SETTLE_TIMEOUT })`, the same line as 98-copy04 `:249`. It asserts the rows-or-error gate the same way, with a message. Both throw. Only `networkidle` stays best-effort, as it is in 98-copy04 `:250`.
+- **Visible nodes only.** Rows and error chrome are read through `filter({ visible: true })` (Playwright `1.60.0`). A hidden node can neither satisfy the settle nor count toward the 5.
+- **Re-thrown, not swallowed.** A settle failure is caught only to add context, then thrown again as `UNSETTLED <lng>`. The new error carries the visible error-chrome text, the first 300 characters of the visible body, and the settle's own error. So a surface that never settles still fails with its cause named.
+- **Unchanged:** both titles, the `loginForListPages` sign-in, the `?lng=` navigation, the `html[lang]` assertion, the soft error-chrome assertion (still first), and the 5-row assertion.
+- **Checks:** eslint `--max-warnings 0` gave `eslint_exit=0`. prettier `--check` gave `All matched files use Prettier code style!`. The commit hook (lint-staged and build) passed.
+
+The row render path has one variant: `EngagementsList.tsx:157-182`, one `button[role=listitem][data-testid=engagement-row]` per row, with no hidden duplicate for mobile. So on the real surface the visible filter changes no count, and §13.5 still reads 5.
+
+### 13.2 Oracle provenance
+
+Both oracle commands were extracted from the plan's front-matter with `js-yaml` into the worker scratchpad. Each was run with `bash -lc`, the engine's shell:
+
+```
+commands 2
+HEAD=c9274e546 plan_blob=6eb4f7bbb plan_last_commit=57b9b920d
+syntax_ok
+```
+
+This is the same plan blob as attempt 2 (§12.1), so both attempts ran the same oracle bytes.
+
+### 13.3 Census, P52 oracle and API positive control, all before any Playwright run in this attempt
+
+**Census:**
+
+```
+== :5173 listeners ==
+== playwright/vite procs (this worktree) ==
+55310 Fri Sep 11 22:43:43 2026     /bin/zsh -c source /Users/khalidalzahrani/.claude/shell-snapshots/snapshot-zsh-1789155447823-3vmts9.sh 2>/dev/null || true && setopt NO_EXTENDED_GLOB NO_BARE_GLOB_QU
+55358 Fri Sep 11 22:43:43 2026     /bin/zsh -c source /Users/khalidalzahrani/.claude/shell-snapshots/snapshot-zsh-1789155447823-3vmts9.sh 2>/dev/null || true && setopt NO_EXTENDED_GLOB NO_BARE_GLOB_QU
+55359 Fri Sep 11 22:43:43 2026     /bin/zsh -c source /Users/khalidalzahrani/.claude/shell-snapshots/snapshot-zsh-1789155447823-3vmts9.sh 2>/dev/null || true && setopt NO_EXTENDED_GLOB NO_BARE_GLOB_QU
+== playwright test runner procs (any) ==
+19227 claude --model opus --strict-mcp-config --mcp-config {"mcpServers":{}} --settings {"promptSuggestionEnabled":false} --prompt-suggestions false --permissio
+PW_REUSE=unset E2E_BASE_URL=unset
+(end census)
+```
+
+Nothing is listening on `:5173`, and no Playwright runner is live.
+
+- The three "this worktree" hits are the census's own tool shell. Its command line carries both the worktree path and the census's `playwright|vite` pattern text.
+- The one "any" hit is a `claude` process that matched on its prompt text.
+
+**P52 catalog oracle** (the acceptance item that exited 3 at the attempt-2 gate):
+
+```
+== P52 oracle (bash -lc) at 2026-09-11T19:43:50Z ==
+P102-05-P52 engagement_dossiers_typed=5 extension_rows=5 seeded_pair=2 renamed=1 expected 5 5 2 1
+PASS p52
+exit=0
+```
+
+The seed was not applied a third time. §3's two applies stand: `INSERT 0 2 / UPDATE 1`, then `INSERT 0 0 / UPDATE 0`. This oracle shows the end state still holds on staging.
+
+**API positive control, run BEFORE the spec.** The token was minted by GoTrue password grant with the `TEST_USER` pair, and only its length is printed. The response bodies went to the scratchpad.
+
+```
+start=2026-09-11T19:44:03Z HEAD=c9274e546
+TOKEN_LEN=922 (value withheld)
+HTTP=200
+ENG_BODY_ROWS=5 {"page":1,"limit":20,"total":5,"totalPages":1,"has_more":false}
+   b0000002-0000-0000-0000-000000000003 | Delegation visit — Indonesia BPS
+   b0000002-0000-0000-0000-000000000002 | Prep session — G20 Data Gaps Initiative
+   b0000002-0000-0000-0000-000000000001 | Bilateral consultation — ESCWA
+   7c0d830b-5dc7-4419-a0ad-ce550031712d | Bilateral engagement with ONS — census methodology exchange
+   00000000-0000-0052-0000-000000000001 | Bilateral consultation — statistical cooperation framework
+HTTP=200
+RPC_BODY_ROWS=5
+   b0000002-0000-0000-0000-000000000003 | official_visit | Delegation visit — Indonesia BPS
+   b0000002-0000-0000-0000-000000000002 | working_group | Prep session — G20 Data Gaps Initiative
+   b0000002-0000-0000-0000-000000000001 | consultation | Bilateral consultation — ESCWA
+   7c0d830b-5dc7-4419-a0ad-ce550031712d | bilateral_meeting | Bilateral engagement with ONS — census methodology exchange
+   00000000-0000-0052-0000-000000000001 | bilateral_meeting | Bilateral consultation — statistical cooperation framework
+HTTP/2 200
+content-range: 0-4/5
+exit=0 end=2026-09-11T19:44:05Z
+```
+
+The result matches attempts 1 and 2 (§4, §12.3):
+- `engagement-dossiers?page=1&limit=20` returned 200 with `total=5`.
+- `search_engagements_advanced` returned 200 with 5 rows, and its exact head-count was `0-4/5`.
+
+### 13.4 Negative-polarity drill: the review's scenario on both byte sets
+
+The finding is only repaired if the new bytes red where the old bytes greened, under one identical stimulus. One script built two temporary specs in `frontend/tests/e2e/`, ran them in one wrapped run, and deleted them:
+- `zz-p102-05-drill-new.spec.ts`: this attempt's spec bytes with two drill tests appended.
+- `zz-p102-05-drill-old.spec.ts`: the attempt-2 spec bytes (`dcb8e5b05`) with the hidden-row drill test appended.
+
+The two stimuli:
+
+- **Hidden rows.** `**/functions/v1/engagement-dossiers**` is fulfilled with an EMPTY 200 (`{ data: [], pagination: { total: 0 } }`). That gives no rows and no error chrome. Once `/engagements` mounts `main`, 5 `display:none` `[data-testid="engagement-row"]` nodes are planted in it. The test logs `planted_hidden` / `dom_rows` / `visible_rows` in a `finally`.
+- **Error chrome.** The list request is aborted. A visible `[data-testid="query-error-state"]` "Unable to load data" node is planted 1.5 s after `main` mounts. That is post-navigation, so a pre-settle capture could not see it.
+
+```
+new_prefix_identical=yes (HEAD c9274e546 spec bytes)
+old_prefix_identical=yes (dcb8e5b05 spec bytes)
+start=2026-09-11T19:44:53Z
+drill_wrapper_rc=1
+end=2026-09-11T19:45:38Z
+drill_files_present=0
+report=test-results/pw-reaped-adf4165b6326964f6d5e5043c6a121ee.json
+stats {"startTime": "2026-09-11T19:44:54.202Z", "duration": 43594.977, "expected": 5, "skipped": 0, "unexpected": 2, "flaky": 0}
+ TEST e2e/zz-p102-05-drill-new.spec.ts | renders 5 engagement rows on a settled en surface | passed | 11904ms
+ TEST e2e/zz-p102-05-drill-new.spec.ts | renders 5 engagement rows on a settled ar surface | passed | 13807ms
+ TEST e2e/zz-p102-05-drill-new.spec.ts | DRILL hidden rows behind an empty 200 en | failed | 30159ms
+   ERR Error: UNSETTLED en: error chrome ""; body reads: IntelDossier GASTAT · International Partnerships KA Khalid Alzahrani Head of International Partnerships OPERATIONS Situation Engagements After-Actions My Desk Calendar Briefs Activity DOSSIERS Countries Organizations People Elected Officials Forums Topics Working Groups ADMINISTRATION AI Settings Sy Error: /e
+   STDERR [P102-05] /engagements en UNSETTLED chrome="" body: IntelDossier GASTAT · International Partnerships KA Khalid Alzahrani Head of International Partnerships OPERATIONS Situation Engagements After-Actions My Desk Calendar Briefs Activity DOSSIERS Countries Organizations People Elected Officials Forums
+   STDERR [DRILL] planted_hidden=5 dom_rows=5 visible_rows=0
+ TEST e2e/zz-p102-05-drill-new.spec.ts | DRILL aborted list and visible error chrome en | failed | 12678ms
+   ERR Error: ERROR-CHROME en: Unable to load data  [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m  Expected: [32m""[39m Received: [31m"Unable to load data"[39m    82 |   const errorText = await errorChromeText(page, lng)   83 |   if (errorText !== '') console.error(`[P102-05] /engagements ${lng} er
+   ERR Error: ROWS en: 0 visible of 5; body reads: IntelDossier GASTAT · International Partnerships KA Khalid Alzahrani Head of International Partnerships OPERATIONS Situation Engagements After-Actions My Desk Calendar Briefs Activity DOSSIERS Countries Organizations People Elected Officials Forums Topics Working Groups ADMINISTRATION AI Settings Sy  [2mexpect([2
+   STDERR [P102-05] /engagements en error chrome: Unable to load data
+ TEST e2e/zz-p102-05-drill-old.spec.ts | renders 5 engagement rows on a settled en surface | passed | 11508ms
+ TEST e2e/zz-p102-05-drill-old.spec.ts | renders 5 engagement rows on a settled ar surface | passed | 13289ms
+ TEST e2e/zz-p102-05-drill-old.spec.ts | DRILL hidden rows behind an empty 200 en | passed | 33113ms
+   STDERR [DRILL] planted_hidden=5 dom_rows=5 visible_rows=0
+```
+
+Wrapper tail: `playwright exited code=1 ... verdict clean; report published`. `drill_wrapper_rc=1` is the expected outcome, carried by the two new-bytes drill failures.
+
+What the drill shows:
+
+- **The finding is real.** The attempt-2 bytes PASSED the hidden-row stimulus while the surface held `dom_rows=5 visible_rows=0`. That is the reviewer's false green, reproduced.
+- **The repair catches it.** The new bytes FAILED the same stimulus with `UNSETTLED en: error chrome ""; body reads: ...`. The failure names what the surface showed, not only a locator.
+- **The stimulus was the same in both runs.** `planted_hidden=5 dom_rows=5 visible_rows=0` appears for both byte sets, so the pass/fail split comes from the spec bytes.
+- **The cause-naming branch survives.** Under the error-chrome stimulus, the new bytes' failure LEADS with `ERROR-CHROME en: Unable to load data`, then `ROWS en: 0 visible of 5`. The oracle's `[:200]` slice of `error.message` reaches that cause text.
+- **Incidental extra renders.** `--grep DRILL` also ran the four real tests in the drill files, because Playwright compiles a plain-string grep case-insensitively, so it matched the lowercase `drill` in the filenames. All four passed with 5 rows, on both byte sets.
+
+The drill files were deleted by the same script (`drill_files_present=0`), and the report was moved to the scratchpad. The wrapper also publishes its own copy of the report to the main checkout's `.pw-reports/`, by its design, outside this worktree.
+
+### 13.5 Render oracle, after the work (the only suite running)
+
+```
+== pre-run :5173 ==
+HEAD=c9274e546 start=2026-09-11T19:46:06Z
+P102-05-RENDER wrapper_rc=0 passed=2 failed=0 skipped=0 expected passed=2 failed=0 skipped=0 (the en and ar renders of /engagements each show exactly 5 engagement rows on a settled surface with the locale asserted)
+PASS render
+exit=0
+end=2026-09-11T19:46:26Z
+report=frontend/test-results/pw-reaped-0e60cb2cf77784fcb23d634b4f472111.json
+stats {"startTime": "2026-09-11T19:46:06.934Z", "duration": 19345.926, "expected": 2, "skipped": 0, "unexpected": 0, "flaky": 0}
+ TEST e2e/102-engagements-render.spec.ts | renders 5 engagement rows on a settled en surface | project chromium | passed | 8753ms
+ TEST e2e/102-engagements-render.spec.ts | renders 5 engagement rows on a settled ar surface | project chromium | passed | 9206ms
+== post-run :5173 ==
+(end)
+```
+
+`git status --short` was empty right after this run, and nothing was left listening on `:5173`.
+
+### 13.6 ENGREAD-01 on attempt 3
+
+The verdict is unchanged: **NOT-REPRODUCED-AT-RENDER**.
+
+The strict-settle spec now provably reds on hidden rows and on error chrome (§13.4). On the settled surface it shows:
+- 5 visible rows in `en` and in `ar`;
+- the locale asserted;
+- no error chrome.
+
+That held on the oracle run (§13.5) and on the four incidental renders in the drill run. It agrees with the API positive control. It is still not "fixed", and every §10 bound still applies.
+
 ## Deviations
 
 Attempt 1: none. Only the three `files_modified` paths changed. The drill file was created and deleted inside `frontend/tests/e2e/` in one command and never staged; `git status --short` after it showed only this plan's spec.
 
 Attempt 2: none. This SUMMARY is the only file it changes. The oracle scripts, the API-control script and its response bodies stayed in the worker scratchpad.
+
+Attempt 3: none. Two files changed: the spec (`c9274e546`) and this SUMMARY. The drill files were created and deleted inside `frontend/tests/e2e/` by one script and never staged. The oracle scripts, the API-control and drill scripts, and the drill report stayed in the worker scratchpad. The project's `graphify update .` step was not run, because it writes outside `files_modified`.
