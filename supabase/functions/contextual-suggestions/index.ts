@@ -602,8 +602,8 @@ async function getOverdueCommitments(
           context: ['dashboard', 'commitment', 'task'],
           title_en: `Overdue: ${commitment.title || 'Commitment'}`,
           title_ar: `متأخر: ${commitment.title_ar || 'التزام'}`,
-          description_en: `This commitment was due ${daysOverdue} day${daysOverdue !== 1 ? 's' : ''} ago. Take immediate action to address this.`,
-          description_ar: `هذا الالتزام متأخر منذ ${daysOverdue} يوم${daysOverdue !== 1 ? '' : ''}. اتخذ إجراء فوري لمعالجة هذا.`,
+          description_en: `Deadline passed T+${daysOverdue} days ago.`,
+          description_ar: `تجاوز الموعد النهائي بـ T+${daysOverdue} يوم.`,
           action_label_en: 'Update Status',
           action_label_ar: 'تحديث الحالة',
           action_route: `/my-work`,
@@ -614,8 +614,8 @@ async function getOverdueCommitments(
           related_entity_name_en: commitment.title,
           related_entity_name_ar: commitment.title_ar,
           icon: 'alert-circle',
-          badge_text_en: `${daysOverdue}d overdue`,
-          badge_text_ar: `متأخر ${daysOverdue} يوم`,
+          badge_text_en: `T+${daysOverdue}`,
+          badge_text_ar: `T+${daysOverdue}`,
           badge_variant: 'danger',
         })
       }
@@ -661,7 +661,7 @@ async function getPendingTasks(
             ? `Due ${new Date(task.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
             : 'Review and complete this task.',
           description_ar: task.due_date
-            ? `تاريخ الاستحقاق ${new Date(task.due_date).toLocaleDateString('ar-SA', { month: 'short', day: 'numeric' })}`
+            ? `الموعد النهائي ${new Date(task.due_date).toLocaleDateString('ar-SA', { month: 'short', day: 'numeric' })}`
             : 'راجع وأكمل هذه المهمة.',
           action_label_en: 'View Task',
           action_label_ar: 'عرض المهمة',

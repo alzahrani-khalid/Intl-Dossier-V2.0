@@ -70,7 +70,7 @@ const translations = {
     labels: {
       priority: 'Priority',
       status: 'Status',
-      dueDate: 'Due Date',
+      dueDate: 'Deadline',
       viewMore: 'View More',
     },
   },
@@ -98,7 +98,7 @@ const translations = {
     labels: {
       priority: 'الأولوية',
       status: 'الحالة',
-      dueDate: 'تاريخ الاستحقاق',
+      dueDate: 'الموعد النهائي',
       viewMore: 'عرض المزيد',
     },
   },

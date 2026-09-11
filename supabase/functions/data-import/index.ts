@@ -562,8 +562,8 @@ const ENTITY_TEMPLATES: Record<string, EntityTemplate> = {
       },
       {
         field: 'due_date',
-        header: 'Due Date',
-        headerAr: 'تاريخ الاستحقاق',
+        header: 'Deadline',
+        headerAr: 'الموعد النهائي',
         type: 'date',
         required: false,
         importable: true,
