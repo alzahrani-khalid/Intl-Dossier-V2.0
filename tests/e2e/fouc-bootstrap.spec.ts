@@ -16,7 +16,8 @@
  * `testDir` is `./tests/e2e` (repo root) — so this file lives at the active
  * test location. Recorded as a deviation (Rule 3 — blocking fix).
  */
-import { test as base, expect } from '@playwright/test'
+// `test` alias: the P101-QUAR marker below is read by grep as `test.fixme(`.
+import { test as base, test, expect } from '@playwright/test'
 
 // Chancery-light palette (byte-matches directions.ts PALETTES.chancery.light)
 const CHANCERY_LIGHT_BG = '#f7f3ec'
@@ -28,6 +29,8 @@ base.describe('TOKEN-02 FOUC-safe bootstrap', () => {
   base('cold load (empty localStorage) applies Chancery-light palette at first paint', async ({
     page,
   }) => {
+    // prettier-ignore
+    test.fixme(true, 'P101-QUAR 31848669722: deploy drift - the deployed build painted --bg #f7f6f4, a retired-direction value deleted in 2a084acc8 (Phase 77-07); the spec asserts the retired Chancery palette and HEAD bootstrap.js cold-loads Linear dark; rewrite once the target serves HEAD; log line 1859 of job 94920109119; owner Phase 103')
     await page.addInitScript(() => {
       try {
         localStorage.clear()
