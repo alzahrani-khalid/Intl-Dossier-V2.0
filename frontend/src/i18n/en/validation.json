@@ -7,7 +7,7 @@
   "typeRequired": "Type is required",
   "detailsMin": "Details must be at least 10 characters",
   "detailsMax": "Details cannot exceed 5000 characters",
-  "dueDateRequired": "Due date is required",
+  "dueDateRequired": "Deadline is required",
   "isoCode2": "Enter a 2-letter ISO code",
   "isoCode3": "Enter a 3-letter ISO code",
   "required": "This field is required",
