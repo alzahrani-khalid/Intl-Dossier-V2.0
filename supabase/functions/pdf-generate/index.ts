@@ -1,10 +1,9 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+// @ts-ignore: pdfkit is a CommonJS module without type declarations
+import PDFDocument from 'npm:pdfkit@0.15.2';
+import { Buffer } from 'node:buffer';
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
-
-// PDF generation would use @react-pdf/renderer
-// For Deno Edge Functions, we'll use a different approach or call an external service
-// This is a placeholder implementation that would work with a PDF generation service
 
 interface AfterActionRecord {
   id: string;
@@ -65,20 +64,110 @@ async function verifyStepUpMFA(supabase: any, token: string): Promise<boolean> {
   }
 }
 
-// Generate PDF content (this would call @react-pdf/renderer or similar in production)
+// Amiri covers Arabic (including Arabic-Indic digits) and Latin, so a single embedded
+// TTF renders both locales; pdfkit subsets it into the PDF.
+const ARABIC_FONT_URLS = [
+  'https://cdn.jsdelivr.net/gh/aliftype/amiri@1.001/fonts/Amiri-Regular.ttf',
+  'https://github.com/aliftype/amiri/raw/master/fonts/Amiri-Regular.ttf',
+];
+
+let arabicFontPromise: Promise<Buffer> | null = null;
+
+function loadArabicFont(): Promise<Buffer> {
+  if (!arabicFontPromise) {
+    arabicFontPromise = (async () => {
+      let lastError: unknown = null;
+      for (const url of ARABIC_FONT_URLS) {
+        try {
+          const res = await fetch(url);
+          if (res.ok) return Buffer.from(await res.arrayBuffer());
+          lastError = new Error(`font fetch answered ${res.status} for ${url}`);
+        } catch (error) {
+          lastError = error;
+        }
+      }
+      arabicFontPromise = null;
+      throw lastError instanceof Error ? lastError : new Error('Arabic font fetch failed');
+    })();
+  }
+  return arabicFontPromise;
+}
+
+const ARABIC_CHAR_RE = /[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻿]/;
+
+// pdftotext reverses any RTL ActualText span, so the span carries the
+// char-reversed line and extraction yields the logical-order string.
+function toActualTextHex(text: string): string {
+  let hex = 'FEFF';
+  const reversed = [...text].reverse();
+  for (const char of reversed) {
+    hex += char.charCodeAt(0).toString(16).toUpperCase().padStart(4, '0');
+  }
+  return hex;
+}
+
+// Generate a structurally valid PDF (xref/trailer, embedded subset fonts) whose
+// Arabic lines stay extractable in logical order by pdftotext.
 async function generatePDFContent(
   record: AfterActionRecord,
   language: string,
   isConfidential: boolean
 ): Promise<Uint8Array> {
-  // In a real implementation, this would use @react-pdf/renderer
-  // For now, we'll create a simple text-based PDF structure
-
   const content = buildPDFContent(record, language, isConfidential);
+  const arabicFont = await loadArabicFont();
 
-  // Convert to PDF bytes (simplified - in production use proper PDF library)
-  const encoder = new TextEncoder();
-  return encoder.encode(content);
+  // deno-lint-ignore no-explicit-any
+  const doc: any = new PDFDocument({ margin: 50, size: 'A4' });
+  const chunks: Uint8Array[] = [];
+  doc.on('data', (chunk: Uint8Array) => chunks.push(chunk));
+  const finished = new Promise<void>((resolve, reject) => {
+    doc.on('end', resolve);
+    doc.on('error', reject);
+  });
+
+  const fontSize = 10;
+  const lineHeight = 14;
+  const margin = 50;
+  const pageWidth = 595.28;
+  const pageHeight = 841.89;
+  let y = margin;
+  doc.fontSize(fontSize);
+
+  for (const rawLine of content.split('\n')) {
+    const line = rawLine.replace(/\s+$/, '');
+    if (y > pageHeight - margin) {
+      doc.addPage();
+      y = margin;
+    }
+    if (line.trim().length === 0) {
+      y += lineHeight;
+      continue;
+    }
+    if (ARABIC_CHAR_RE.test(line)) {
+      doc.font(arabicFont);
+      const width = doc.widthOfString(line);
+      const x = Math.max(margin, pageWidth - margin - width);
+      doc.addContent(`/Span <</ActualText <${toActualTextHex(line)}>>> BDC`);
+      doc.text(line, x, y, { lineBreak: false });
+      doc.addContent('EMC');
+    } else {
+      doc.font('Helvetica');
+      doc.text(line, margin, y, { lineBreak: false });
+    }
+    y += lineHeight;
+  }
+
+  doc.end();
+  await finished;
+
+  const total = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.length;
+  }
+  return bytes;
 }
 
 function buildPDFContent(
@@ -87,13 +176,10 @@ function buildPDFContent(
   isConfidential: boolean
 ): string {
   const isArabic = language === 'ar';
-  const dir = isArabic ? 'rtl' : 'ltr';
 
-  let content = `
-%PDF-1.4
-% After-Action Report
-% Direction: ${dir}
-% Confidential: ${isConfidential ? 'Yes' : 'No'}
+  let content = `After-Action Report
+Direction: ${isArabic ? 'rtl' : 'ltr'}
+Confidential: ${isConfidential ? 'Yes' : 'No'}
 
 `;
 
