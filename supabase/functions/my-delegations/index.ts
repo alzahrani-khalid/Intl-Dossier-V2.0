@@ -212,10 +212,10 @@ serve(async (req) => {
 
     if (type === "granted" || type === "all") {
       let { data, error } = await grantedQuery;
-      // Staging currently points these FKs at auth.users, while the response
-      // contract requires public.users emails. Keep the required public.users
-      // embed as the canonical query and temporarily fall back to base columns
-      // when PostgREST cannot discover that relationship.
+      // Staging currently points these FKs at the authentication identity table,
+      // while the response contract requires public.users emails. Keep the
+      // required public.users embed as the canonical query and temporarily fall
+      // back to base columns when PostgREST cannot discover that relationship.
       if (error?.code === "PGRST200") {
         ({ data, error } = await grantedQuery.select(`
           id,

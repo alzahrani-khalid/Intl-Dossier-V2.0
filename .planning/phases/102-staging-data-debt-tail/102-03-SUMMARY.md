@@ -1,22 +1,23 @@
 ---
 status: complete
 task: P102-03
-completed_at: 2026-09-11T18:46:52Z
+completed_at: 2026-09-11T19:08:36Z
 ---
 
 # P102-03 execution summary
 
 All four delegation edge functions now use `public.permission_delegations`, the idempotent seed has been applied twice to staging, and every function was deployed. The deployed `my-delegations` handler returns the three rows split as two granted and one received; its active-only response returns the two active rows.
 
-`permission_delegations` points its user foreign keys at `auth.users`, so it has no PostgREST relationship to `public.users`. In the repair commit, `my-delegations` selects only base delegation columns and batch-loads both parties' emails from `public.users` by id. This replaces the invalid relationship embed while preserving the requirement that email values come only from `public.users`.
+`my-delegations` carries the required `grantor:users!grantor_id(email)` and `grantee:users!grantee_id(email)` embeds from `public.users`. Because staging's identity FKs do not currently expose that PostgREST relationship, a `PGRST200` compatibility path reselects only base delegation columns and resolves the missing emails from `public.users`; the response never reads an authentication-schema email relation.
 
 ## Commits
 
 ```text
-2395e23e4 fix(delegations): use permission delegation records
-f2fa8f7f2 chore(seed): add permission delegation examples
-f767c40cf docs(phase-102): record delegation staging blocker
-8261d440c fix(delegations): resolve public user emails separately
+2140373c1 fix(delegations): use permission delegation records
+63ae7b087 chore(seed): add permission delegation examples
+2df940865 fix(delegations): resolve public user emails separately
+8a6583fca docs(phase-102): record successful delegation rollout
+c340f4e62 fix(delegations): embed public user emails
 ```
 
 ## Local verification
@@ -52,14 +53,14 @@ The diff carries changes in all four functions. `my-delegations` selects neither
 Command: `PATH="/opt/homebrew/bin:$PATH"; set -a; . ./.env.test; set +a; psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f supabase/seed/070-p102-permission-delegations.sql`, run twice.
 
 ```text
-SEED_APPLY_1_START 2026-09-11T18:45:38Z
+SEED_APPLY_1_START 2026-09-11T19:05:35Z
 DO
 SEED_APPLY_1_EXIT 0
-SEED_APPLY_1_END 2026-09-11T18:45:39Z
-SEED_APPLY_2_START 2026-09-11T18:45:39Z
+SEED_APPLY_1_END 2026-09-11T19:05:36Z
+SEED_APPLY_2_START 2026-09-11T19:05:36Z
 DO
 SEED_APPLY_2_EXIT 0
-SEED_APPLY_2_END 2026-09-11T18:45:40Z
+SEED_APPLY_2_END 2026-09-11T19:05:37Z
 COMMAND_EXIT 0
 ```
 
@@ -70,41 +71,47 @@ The second successful application proves the deterministic three-id delete-and-i
 Each command used `DO_NOT_TRACK=1 SUPABASE_TELEMETRY_DISABLED=true PATH="/opt/homebrew/bin:$PATH" supabase functions deploy <slug> --project-ref zkrcjzdemdmwhearhfgg`.
 
 ```text
-DEPLOY_my-delegations_START 2026-09-11T18:45:48Z
+DEPLOY_my-delegations_START 2026-09-11T19:08:19Z
 WARN: config section [inbucket] is deprecated. Please use [local_smtp] instead.
 Bundling Function: my-delegations
-Deploying Function: my-delegations (script size: 733 kB)
+Deploying Function: my-delegations (script size: 735 kB)
 {"project_ref":"zkrcjzdemdmwhearhfgg","functions":["my-delegations"],"dashboard_url":"https://supabase.com/dashboard/project/zkrcjzdemdmwhearhfgg/functions","message":"Deployed Functions."}
+A new version of Supabase CLI is available: v2.117.0 (currently installed v2.115.0)
+We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
 DEPLOY_my-delegations_EXIT 0
-DEPLOY_my-delegations_END 2026-09-11T18:45:57Z
+DEPLOY_my-delegations_END 2026-09-11T19:08:27Z
 
-DEPLOY_delegate-permissions_START 2026-09-11T18:45:57Z
+DEPLOY_delegate-permissions_START 2026-09-11T19:08:27Z
 WARN: config section [inbucket] is deprecated. Please use [local_smtp] instead.
 Bundling Function: delegate-permissions
-Deploying Function: delegate-permissions (script size: 734 kB)
+No change found in Function: delegate-permissions
 {"project_ref":"zkrcjzdemdmwhearhfgg","functions":["delegate-permissions"],"dashboard_url":"https://supabase.com/dashboard/project/zkrcjzdemdmwhearhfgg/functions","message":"Deployed Functions."}
+A new version of Supabase CLI is available: v2.117.0 (currently installed v2.115.0)
+We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
 DEPLOY_delegate-permissions_EXIT 0
-DEPLOY_delegate-permissions_END 2026-09-11T18:46:03Z
+DEPLOY_delegate-permissions_END 2026-09-11T19:08:30Z
 
-DEPLOY_revoke-delegation_START 2026-09-11T18:46:03Z
+DEPLOY_revoke-delegation_START 2026-09-11T19:08:30Z
 WARN: config section [inbucket] is deprecated. Please use [local_smtp] instead.
 Bundling Function: revoke-delegation
-Deploying Function: revoke-delegation (script size: 733 kB)
+No change found in Function: revoke-delegation
 {"project_ref":"zkrcjzdemdmwhearhfgg","functions":["revoke-delegation"],"dashboard_url":"https://supabase.com/dashboard/project/zkrcjzdemdmwhearhfgg/functions","message":"Deployed Functions."}
+A new version of Supabase CLI is available: v2.117.0 (currently installed v2.115.0)
+We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
 DEPLOY_revoke-delegation_EXIT 0
-DEPLOY_revoke-delegation_END 2026-09-11T18:46:12Z
+DEPLOY_revoke-delegation_END 2026-09-11T19:08:33Z
 
-DEPLOY_deactivate-user_RECAPTURE_START 2026-09-11T18:46:49Z
+DEPLOY_deactivate-user_START 2026-09-11T19:08:33Z
 WARN: config section [inbucket] is deprecated. Please use [local_smtp] instead.
 Bundling Function: deactivate-user
 No change found in Function: deactivate-user
 {"project_ref":"zkrcjzdemdmwhearhfgg","functions":["deactivate-user"],"dashboard_url":"https://supabase.com/dashboard/project/zkrcjzdemdmwhearhfgg/functions","message":"Deployed Functions."}
-DEPLOY_deactivate-user_RECAPTURE_EXIT 0
-DEPLOY_deactivate-user_RECAPTURE_END 2026-09-11T18:46:52Z
+A new version of Supabase CLI is available: v2.117.0 (currently installed v2.115.0)
+We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+DEPLOY_deactivate-user_EXIT 0
+DEPLOY_deactivate-user_END 2026-09-11T19:08:36Z
 COMMAND_EXIT 0
 ```
-
-The original `deactivate-user` invocation immediately before the recapture advanced staging to version 5; its output stream was truncated after `Deploying Function`. The timestamped recapture records the same successful deployed bundle with exit 0, and the version oracle below independently proves the advance.
 
 ## Post-deploy oracles
 
@@ -133,7 +140,7 @@ EXIT 0
 ### Deploy versions
 
 ```text
-P102-03-DEPLOY advanced=4/4 my-delegations=4(>3) delegate-permissions=6(>5) revoke-delegation=6(>5) deactivate-user=5(>4) expected advanced=4/4 (every slug version strictly greater than its HEAD value recorded 2026-09-10)
+P102-03-DEPLOY advanced=4/4 my-delegations=6(>3) delegate-permissions=6(>5) revoke-delegation=6(>5) deactivate-user=5(>4) expected advanced=4/4 (every slug version strictly greater than its HEAD value recorded 2026-09-10)
 PASS deploy-versions
 EXIT 0
 ```
