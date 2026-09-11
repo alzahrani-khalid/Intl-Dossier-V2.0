@@ -7,7 +7,7 @@ capitalization to survive the sentence-case pass. Rows are keyed by the dotted J
 them.
 
 | namespace | key | reason |
-| --- | --- | --- |
+| :--- | :--- | :--- |
 | dossier | type.working_group | proper-noun: Working Group |
 | dossier | type.elected_official | proper-noun: Elected Official |
 | dossier | sensitivityLevel.4 | ribbon-uppercase |
