@@ -50,7 +50,7 @@ describe('EscalationDialog', () => {
     render(<EscalationDialog {...defaultProps} />)
 
     expect(screen.getByRole('dialog')).toBeInTheDocument()
-    expect(screen.getByText('Escalate Assignment')).toBeInTheDocument()
+    expect(screen.getByText('Escalate assignment')).toBeInTheDocument()
     expect(screen.getByText('test-work-item')).toBeInTheDocument()
     expect(screen.getByText(/Test Assignee/)).toBeInTheDocument()
     expect(screen.getByText('Team Lead')).toBeInTheDocument()

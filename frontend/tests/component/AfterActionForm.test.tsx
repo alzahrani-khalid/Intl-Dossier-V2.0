@@ -14,7 +14,7 @@ vi.mock('@/components/decision-list/DecisionList', () => ({
         type="button"
         onClick={() => onChange([...decisions, { description: 'New decision' }])}
       >
-        Add Decision
+        Add decision
       </button>
       <div>Decisions: {decisions.length}</div>
     </div>
@@ -28,7 +28,7 @@ vi.mock('@/components/commitment-editor/CommitmentEditor', () => ({
         type="button"
         onClick={() => onChange([...commitments, { description: 'New commitment' }])}
       >
-        Add Commitment
+        Add commitment
       </button>
       <div>Commitments: {commitments.length}</div>
     </div>
@@ -39,7 +39,7 @@ vi.mock('@/components/risk-list/RiskList', () => ({
   RiskList: ({ risks, onChange }: any) => (
     <div data-testid="risk-list">
       <button type="button" onClick={() => onChange([...risks, { description: 'New risk' }])}>
-        Add Risk
+        Add risk
       </button>
       <div>Risks: {risks.length}</div>
     </div>
@@ -53,7 +53,7 @@ vi.mock('@/components/follow-up-list/FollowUpList', () => ({
         type="button"
         onClick={() => onChange([...followUpActions, { description: 'New follow-up' }])}
       >
-        Add Follow-up
+        Add follow-up
       </button>
       <div>Follow-ups: {followUpActions.length}</div>
     </div>
@@ -118,8 +118,8 @@ describe('AfterActionForm', () => {
     it('renders form with all sections', () => {
       render(<AfterActionForm {...defaultProps} />)
 
-      expect(screen.getByText('After Action Details')).toBeInTheDocument()
-      expect(screen.getByText('Basic Information')).toBeInTheDocument()
+      expect(screen.getByText('After action details')).toBeInTheDocument()
+      expect(screen.getByText('Basic information')).toBeInTheDocument()
       expect(screen.getByTestId('decision-list')).toBeInTheDocument()
       expect(screen.getByTestId('commitment-list')).toBeInTheDocument()
       expect(screen.getByTestId('risk-list')).toBeInTheDocument()
@@ -142,7 +142,7 @@ describe('AfterActionForm', () => {
     it('shows save draft button when not read-only', () => {
       render(<AfterActionForm {...defaultProps} />)
 
-      expect(screen.getByText('Save Draft')).toBeInTheDocument()
+      expect(screen.getByText('Save draft')).toBeInTheDocument()
     })
 
     it('shows publish button when canPublish and onPublish provided', () => {
@@ -256,7 +256,7 @@ describe('AfterActionForm', () => {
       render(<AfterActionForm {...defaultProps} />)
 
       // Add a manual decision first
-      await user.click(screen.getByText('Add Decision'))
+      await user.click(screen.getByText('Add decision'))
       expect(screen.getByText('Decisions: 1')).toBeInTheDocument()
 
       // Trigger AI extraction
@@ -286,7 +286,7 @@ describe('AfterActionForm', () => {
       render(<AfterActionForm {...defaultProps} canPublish onPublish={mockOnPublish} />)
 
       // Add a decision but no attendees
-      await user.click(screen.getByText('Add Decision'))
+      await user.click(screen.getByText('Add decision'))
 
       const publishButton = screen.getByText('Publish')
       expect(publishButton).toBeDisabled()
@@ -313,7 +313,7 @@ describe('AfterActionForm', () => {
       await user.type(attendeesInput, 'John Doe')
 
       // Add at least one outcome
-      await user.click(screen.getByText('Add Decision'))
+      await user.click(screen.getByText('Add decision'))
 
       await waitFor(() => {
         const publishButton = screen.getByText('Publish')
@@ -345,7 +345,7 @@ describe('AfterActionForm', () => {
       await user.type(notesInput, 'Test notes')
 
       // Save draft
-      const saveButton = screen.getByText('Save Draft')
+      const saveButton = screen.getByText('Save draft')
       await user.click(saveButton)
 
       await waitFor(() => {
@@ -379,7 +379,7 @@ describe('AfterActionForm', () => {
         'John Doe',
       )
       await user.type(screen.getByPlaceholderText('Add any additional notes or context'), 'Draft notes')
-      const saveButton = screen.getByText('Save Draft')
+      const saveButton = screen.getByText('Save draft')
       await waitFor(() => {
         expect(saveButton).not.toBeDisabled()
       })
@@ -403,7 +403,7 @@ describe('AfterActionForm', () => {
         'John Doe',
       )
       await user.type(screen.getByPlaceholderText('Add any additional notes or context'), 'Draft notes')
-      const saveButton = screen.getByText('Save Draft')
+      const saveButton = screen.getByText('Save draft')
       await waitFor(() => {
         expect(saveButton).not.toBeDisabled()
       })
@@ -423,7 +423,7 @@ describe('AfterActionForm', () => {
       // Add valid data
       const attendeesInput = screen.getByPlaceholderText('Type a name and press Enter')
       await user.type(attendeesInput, 'John Doe')
-      await user.click(screen.getByText('Add Decision'))
+      await user.click(screen.getByText('Add decision'))
 
       // Publish
       await waitFor(async () => {
@@ -454,7 +454,7 @@ describe('AfterActionForm', () => {
       // Add valid data
       const attendeesInput = screen.getByPlaceholderText('Type a name and press Enter')
       await user.type(attendeesInput, 'John Doe')
-      await user.click(screen.getByText('Add Decision'))
+      await user.click(screen.getByText('Add decision'))
 
       await waitFor(async () => {
         const publishButton = screen.getByText('Publish')
@@ -485,7 +485,7 @@ describe('AfterActionForm', () => {
     it('hides action buttons in read-only mode', () => {
       render(<AfterActionForm {...defaultProps} readOnly />)
 
-      expect(screen.queryByText('Save Draft')).not.toBeInTheDocument()
+      expect(screen.queryByText('Save draft')).not.toBeInTheDocument()
       expect(screen.queryByText('Publish')).not.toBeInTheDocument()
     })
   })
@@ -551,7 +551,7 @@ describe('AfterActionForm', () => {
         screen.getByPlaceholderText('Type a name and press Enter'),
         'John Doe{Enter}',
       )
-      await user.click(screen.getByText('Add Decision'))
+      await user.click(screen.getByText('Add decision'))
 
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /^publish$/i })).not.toBeDisabled()

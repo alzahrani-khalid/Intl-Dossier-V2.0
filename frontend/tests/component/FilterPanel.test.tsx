@@ -28,7 +28,7 @@ describe('FilterPanel', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument()
     expect(screen.getByText('Priority')).toBeInTheDocument()
     expect(screen.getByText('Aging')).toBeInTheDocument()
-    expect(screen.getByText('Work Item Type')).toBeInTheDocument()
+    expect(screen.getByText('Work item type')).toBeInTheDocument()
     expect(screen.getByText('Assignee')).toBeInTheDocument()
   })
 

@@ -113,6 +113,15 @@ The final allowlist check output was:
 SCOPE_CHECK out_of_scope=0
 ```
 
+The seven scoped Vitest files containing copy superseded by this lane were then synchronized by changing
+only their affected string literals. No test title or assertion structure changed. Targeted validation
+(`pnpm --dir frontend exec vitest run` with the seven scoped paths) produced:
+
+```text
+Test Files  7 passed (7)
+Tests  132 passed | 1 skipped (133)
+```
+
 ## Later work
 
 None. Other COPY-09 namespace lanes remain owned by their named plans.

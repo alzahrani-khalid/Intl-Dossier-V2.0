@@ -97,7 +97,7 @@ describe('ReminderButton', () => {
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith(
         expect.objectContaining({
-          title: 'Reminder Sent',
+          title: 'Reminder sent',
           variant: 'default',
         }),
       )
