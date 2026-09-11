@@ -285,5 +285,9 @@
     "confirm": "Delete",
     "cancel": "Cancel",
     "deleting": "Deleting…"
+  },
+  "progress": {
+    "starting": "Starting briefing book generation...",
+    "generated": "Briefing book generated successfully"
   }
 }
