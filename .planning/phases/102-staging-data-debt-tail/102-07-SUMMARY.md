@@ -2,7 +2,7 @@
 phase: 102-staging-data-debt-tail
 plan: 7
 status: complete
-commits: [b88792350, 848d42f48, 0d6c8b1a7, f76992ed7]
+commits: [b88792350, 848d42f48, 0d6c8b1a7, f76992ed7, 4c5eacefd]
 requirements: [DATA-01]
 ---
 
@@ -24,7 +24,8 @@ fix, the lifecycle starts with Reactivate, and each role picker is scoped to its
   limiter to fail open. Created accounts start inactive, so the status sequence is Reactivate then
   Deactivate. The create picker is scoped to its form; detail role changes are scoped to the
   `Assign Role` control group, fixing the last harness failure where an unscoped
-  `getByRole('combobox')` matched four controls.
+  `getByRole('combobox')` matched four controls. Both status assertions use exact text and a 30 s
+  expect timeout because the whole-test timeout does not extend Playwright's 5 s assertion default.
 - `mou-create.spec.ts` records `RUN_EPOCH` and `UNIQUE_TITLE`. Its teardown deletes matching
   `mou_notification_queue` rows first, then the `mous` row, and logs both counts.
 - `_shared/rate-limiter.ts` removes only the comment and three `req.headers.set` calls that tried to
@@ -131,13 +132,15 @@ P102-07-FE wrapper_rc=1 passed=2 failed=1 accounts_left_from_this_run=0 mous_lef
 ```
 
 The account zero is controlled by the create-user 201 plus `accounts_deleted=1`; the MoU zero is
-controlled by the passing create test plus `queue_deleted=1 mous_deleted=1`. The earlier root oracle
-also supplied the independent EO control and passed fully:
+controlled by the passing create test plus `queue_deleted=1 mous_deleted=1`. A prior attempt recorded
+a green EO run, but that evidence is not treated as final: the latest harness run before this repair
+was 4/5 because the six-step create flow exhausted its 120 s test budget before the submit click.
+Commit `4c5eacefd` raises that staging flow's whole-test budget to 180 s while preserving each
+individual settle assertion.
 
 ```
-P102-07-EO wrapper_rc=0 passed=5 failed=0 rows_left_from_this_run=0 expected passed=5 failed=0 rows_left=0
-PASS eo-teardown
-[97-01 teardown] persons_deleted=1 dossiers_deleted=1
+PW timedOut | create hub + create submit — admin user (the only session these specs have), desktop 1400 | Test timeout of 120000ms exceeded.
+P102-07-EO wrapper_rc=1 passed=4 failed=1 rows_left_from_this_run=0 expected passed=5 failed=0 rows_left=0
 ```
 
 This repair then ran the frontend oracle command verbatim. This Codex sandbox cannot perform the
@@ -153,10 +156,37 @@ sandbox (`MachPortRendezvousServer: Permission denied (1100)`), also before test
 static server was terminated. The plan's routing pin documents this seat limitation; the external
 harness supplies the authoritative post-commit browser run.
 
+## Attempt 6 final timing repair and verification
+
+The anchored review identified that `test.setTimeout(120_000)` does not change the 5 s default
+expect timeout. The reactivate/deactivate edge calls each spend about 12–15 s in the unset-Upstash
+fail-open path before `onSuccess` changes the badge. The final spec therefore checks exact `Active`
+and `Inactive` text with `{ timeout: 30_000 }`. This also prevents `Active` from matching the
+pre-existing `Inactive` badge. The EO create flow now has 180 s for its six staging-backed wizard
+steps and final submit response.
+
+Both required wrappers were invoked from the repository at `4c5eacefd`. This Codex seat again could
+not start the leased web server: Playwright reported `Process from config.webServer was not able to
+start. Exit code: 1`, and the reaper withheld both reports because direct process-group identity was
+unverifiable. No test began and both timestamp-scoped censuses remained zero. These are environment
+failures, not green browser evidence:
+
+```
+run_start=2026-09-11T21:19:52Z
+expected=0 unexpected=0 skipped=0 flaky=0
+P102-07-EO wrapper_rc=90 rows_left_from_this_run=0
+pw-run-reaped: playwright exited code=1 signal=null; group 37451 -> {"termed":false,"killed":false,"alreadyGone":false,"unavailable":true,"identityMismatch":false,"finalZero":false}; session none; verdict unclean; causes ["unavailable: direct group 37451 liveness/identity unverifiable — a group we cannot prove is not a group we can call clean"]
+
+run_start=2026-09-11T21:20:13Z
+expected=0 unexpected=0 skipped=0 flaky=0
+P102-07-FE wrapper_rc=90 rows_left=0 0
+pw-run-reaped: playwright exited code=1 signal=null; group 42302 -> {"termed":false,"killed":false,"alreadyGone":false,"unavailable":true,"identityMismatch":false,"finalZero":false}; session none; verdict unclean; causes ["unavailable: direct group 42302 liveness/identity unverifiable — a group we cannot prove is not a group we can call clean"]
+```
+
 ## Static verification
 
-`git diff --check` and ESLint for `frontend/tests/e2e/user-management.spec.ts` exited 0. The commit
-hook completed the repository build. Every existing test/describe title is byte-identical to run
+`git diff --check` and ESLint for both repaired specs exited 0. The commit hook completed the
+repository build. Every existing test/describe title is byte-identical to run
 base `5a98e8b519a5`:
 
 ```
