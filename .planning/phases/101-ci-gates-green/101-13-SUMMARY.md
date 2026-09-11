@@ -27,11 +27,14 @@ tests across the 3 spec files of this unit: `calendar-rtl` 1 and `rtl-component-
   marker says so.
 - **Wrapped runs:** smokes `expected=7 skipped=2 unexpected=0 flaky=0`; dossier-rtl-mobile
   `expected=80 skipped=18 unexpected=0 flaky=0`. Skipped reconciles as `skipped >= sum(cells) >= rows` for both (below).
-- **The plan's oracle:** the bound half passes (3 markers, 3 register rows, 20 cells, 3 FIXED rows, control 13). The run half **cannot pass as written, whatever the specs contain.** Both wrapped suites ran clean and published their reports. But the oracle finds a report with `find test-results … -newer test-results/p101-13-<suite>.mark`, and each run empties `test-results/` when it starts, deleting the mark. So the lookup reads nothing and prints `FAIL: … published report=[]` (exit 1). The oracle's own reader, applied to the two reports that run published, passes both. The fix is an edit to the plan's oracle, outside this unit's file scope (see `## The plan's oracle`).
+- **The plan's oracle passes.** The acceptance gate executes the compiled oracle in `.tickmarkr/graph.json`, not the plan's text. OVERSEER ruling run 0082 moved the run half's `-newer` mark and its wrapper log into `mktemp`, outside `frontend/test-results/`, which Playwright empties when a run starts. Run verbatim at HEAD `65093b023` on attempt 1, that oracle read `PASS` and exited 0. The bound half read 3 markers, 3 register rows, 20 cells, 3 FIXED rows and control 13. The run half read smokes `expected=7 unexpected=0 skipped=2 flaky=0` and rtl-mobile `expected=80 unexpected=0 skipped=18 flaky=0`. Attempt 0 ran the plan's text before the ruling and exited 1 on the report lookup alone. Details are in `## The plan's oracle`.
 
 No test was deleted, no `expect` was removed, no project-level skip was added, no baseline was touched, and
-nothing under `frontend/src` or `backend/src` changed. Commits: `f9db4a106` (smokes markers), `8856be53d`
-(rtl-mobile fixes and the readability marker), and the commit carrying this SUMMARY.
+nothing under `frontend/src` or `backend/src` changed. Commits on this branch: `1e098f9e1` (smokes markers),
+`304ea7430` (rtl-mobile fixes and the readability marker), `65093b023` (this SUMMARY, attempt 0), and the
+attempt-1 commit(s) recording the passing oracle. The first three are attempt 0's `f9db4a106`, `8856be53d` and
+`4e03e7d3e`, carried over by the harness's worktree recreation. `git patch-id --stable` is equal for each pair
+(`## Commands run`).
 
 ## Derivation of the failing tests (from the run logs)
 
@@ -256,7 +259,91 @@ Reconciled: `expected + skipped = 7 + 2 = 9` = the listed population; `skipped 2
 
 Reconciled: `expected + skipped = 80 + 18 = 98` = the listed population; `skipped 18 >= sum(cells) 18 >= rows 1` (the one dossier-rtl-mobile register row); `unexpected 0`, `flaky 0`. The line numbers are those of the edited file. The 21 cells CI reported red are the 18 at `expected@270` (the `renders correctly` test CI reported at `:265`) and the 3 at `expected@468` (the cross test CI reported at `:461`), all passed. The 18 skipped are exactly the readability test (`skipped@416`), and nothing else skipped.
 
+**Attempt 1: the wrapped runs inside the compiled oracle** (the instrument the acceptance gate executes; see
+`## The plan's oracle`). The smokes report is read from the wrapper's archive, because the rtl-mobile run
+empties `test-results/` when it starts. The rtl-mobile report is still in `frontend/test-results/` under the
+same nonce as its archive copy, and the stats of the two copies are identical:
+
+```
+== archive 2026-09-11T06-49-05-206Z-pw-reaped-738baae39bb85016b73629f583a40290.json
+stats {"startTime":"2026-09-11T06:48:47.664Z","duration":17282.428,"expected":7,"skipped":2,"unexpected":0,"flaky":0}
+files e2e/calendar-rtl.spec.ts e2e/direction-portals.spec.ts e2e/rtl-component-smokes.spec.ts | by status {"expected":7,"skipped":2}
+== test-results/pw-reaped-e07fe22da512e997db73cec4fd0d1479.json
+stats {"startTime":"2026-09-11T06:49:06.356Z","duration":50539.274000000005,"expected":80,"skipped":18,"unexpected":0,"flaky":0}
+files e2e/dossier-rtl-mobile.spec.ts | by status {"expected":80,"skipped":18}
+== archive 2026-09-11T06-49-57-125Z-pw-reaped-e07fe22da512e997db73cec4fd0d1479.json
+stats {"startTime":"2026-09-11T06:49:06.356Z","duration":50539.274000000005,"expected":80,"skipped":18,"unexpected":0,"flaky":0}
+== wrapper log smokes ($TMPDIR/p101-13-smokes.wrapper.log, 2 lines)
+pw-run-reaped: report archived outside the worktree -> …/.pw-reports/2026-09-11T06-49-05-206Z-pw-reaped-738baae39bb85016b73629f583a40290.json
+pw-run-reaped: playwright exited code=0 signal=null; group 61102 -> {"termed":false,"killed":false,"alreadyGone":true,"unavailable":false,"identityMismatch":false,"finalZero":true}; session already-empty; verdict clean; report published; child output …
+== wrapper log rtl-mobile ($TMPDIR/p101-13-rtl-mobile.wrapper.log, 2 lines)
+pw-run-reaped: report archived outside the worktree -> …/.pw-reports/2026-09-11T06-49-57-125Z-pw-reaped-e07fe22da512e997db73cec4fd0d1479.json
+pw-run-reaped: playwright exited code=0 signal=null; group 80666 -> {"termed":false,"killed":false,"alreadyGone":true,"unavailable":false,"identityMismatch":false,"finalZero":true}; session already-empty; verdict clean; report published; child output …
+```
+
+Reconciled for attempt 1:
+
+- smokes: `7 + 2 = 9`, and `skipped 2 >= sum(cells) 2 >= rows 2`
+- dossier-rtl-mobile: `80 + 18 = 98`, and `skipped 18 >= sum(cells) 18 >= rows 1`
+- both suites: `unexpected 0` and `flaky 0`
+
+These are the same readings as attempt 0's dedicated runs.
+
 ## The plan's oracle
+
+**What the gate executes.** The acceptance gate does not run the text in `101-13-PLAN.md`. It runs the compiled
+oracle in the run's live graph: `.tickmarkr/graph.json`, task `P101-13`, `acceptance[1].command` (5791 bytes,
+31 lines, sha256 prefix `652ca3dc307ee573`). The run stopped between the two attempts
+(`exit-cause deliberate SIGTERM` at 06:43:52Z, during attempt 0's `gate:build`). It resumed at 06:44:42Z on a
+rehashed graph (`a7d322bf6f7d0ef6 -> e155269200978afc`) that carries OVERSEER ruling run 0082. Here is the
+diff, verbatim, from the plan's text (`101-13-PLAN.md` lines 23-51, indent stripped, as `o13-plan.sh`) to the
+compiled form (`o13-compiled.sh`):
+
+```
+0a1
+> R0="$PWD"; trap 'rm -rf "$R0/blob-report" "$R0/frontend/blob-report"' EXIT  # OVERSEER ruling run 0082: with CI set the root config adds the blob reporter, which writes blob-report/ (untracked, not ignored) after the cleanliness check and withdraws a 7/7-green merge
+24c25,26
+<   MK="test-results/p101-13-$NAME.mark"; touch "$MK"; node ../scripts/pw-run-reaped.mjs -- "$@" > "test-results/p101-13-$NAME.wrapper.log" 2>&1; WRC=$?
+---
+>   MK=$(mktemp "${TMPDIR:-/tmp}/p101-13-$NAME.mark.XXXXXX") || { echo "INSTRUMENT-CANNOT-RUN: mktemp failed"; exit 3; }; WL="${MK%.mark.*}.wrapper.log"  # OVERSEER ruling run 0082: the mark and the wrapper log must live OUTSIDE test-results, which Playwright empties at run start (the P101-01 run-0076 class); the -newer comparison works across directories
+>   node ../scripts/pw-run-reaped.mjs -- "$@" > "$WL" 2>&1; WRC=$?
+29c31
+< [ "$FAIL" = 0 ] || exit 1; echo PASS
+---
+> [ "$FAIL" = 0 ] || exit 1; echo PASS
+\ No newline at end of file
+```
+
+The ruling makes two changes. It moves the `-newer` mark and the wrapper log into `mktemp`, outside
+`test-results/`, which is exactly the defect attempt 0 reported. It also adds a trap that removes
+`blob-report/` on exit. Nothing else differs: the bound half, the `--list` populations, the `regcount` reader
+and the pass rule are the plan's.
+
+**Attempt 1: the compiled oracle, run verbatim.** It was run as `bash -c "$(cat o13-compiled.sh)"` from the
+worktree root, at HEAD `65093b023` with a clean tree. P101-12 attempt 2's wrapped a11y run held 5173
+(pid 47599) until 06:48:13Z, so the run started only after a watcher read 5173 and every wrapper as free. The
+first line of the output below is that watcher's line:
+
+```
+BRANCH=FREE 5173 listeners=0 wrappers=0 after 1 polls at 06:48:20
+HEAD=65093b023 status=[] start=06:48:46
+P101-13-BOUND files=3 markers with a run id=3 (any P101-QUAR=3, any fixme incl. pre-existing=3; control positions-keyboard-nav fixme=13) register rows=3 cells total=20 non-numeric=0 fixed rows=3 want the 24 (smokes 3 + RTL + Responsive 21) red tests each fixed or marked: markers+fixed>=1, markers==any-P101-QUAR, rows==markers, cells>=rows, non-numeric=0
+P101-13-RUN smokes expected=7 unexpected=0 skipped=2 flaky=0 sum=9 register_rows=2 register_cells=2 want unexpected=0 flaky=0 expected+skipped=9 skipped>=register_cells>=register_rows (pre-existing fixmes add to skipped, so >= not ==)
+P101-13-RUN rtl-mobile expected=80 unexpected=0 skipped=18 flaky=0 sum=98 register_rows=1 register_cells=18 want unexpected=0 flaky=0 expected+skipped=98 skipped>=register_cells>=register_rows (pre-existing fixmes add to skipped, so >= not ==)
+PASS
+oracle exit=0 end=06:49:57
+```
+
+After the run:
+
+- `git status --short` read 0 lines (`frontend/test-results/` is ignored, `.gitignore:105`).
+- The `mktemp` marks and wrapper logs are in `$TMPDIR`.
+- No process of this worktree remained, and 5173 read 0 listeners.
+
+The attempt-1 edits to this SUMMARY do not touch `## Quarantine register` or `## Fixed tests`, which are the
+only sections the oracle reads. The same oracle, re-run on the committed file, is under `## Commands run`.
+
+### Attempt 0, under the plan's text (before the ruling)
 
 The oracle was extracted byte-for-byte from this plan's front-matter with js-yaml
 (`must_haves.truths[oracle=command].command`, 5254 bytes, 29 lines, sha256 prefix `8a2bfd1787590af5`), and run
@@ -308,7 +395,7 @@ reader exit=0
 
 These are further wrapped runs of the same two suites, and they agree with the dedicated runs above (7/2/0/0 and 80/18/0/0).
 
-**Consequence.** As written, criterion 2's command exits 1 in this tree whatever the three specs contain. The fix is one line in the oracle: touch the mark outside `test-results/`, for example `MK=$(mktemp)`. Plan files are outside this unit's `files_modified`, and a graded unit must not edit its own grader, so this is reported, not fixed. `101-12-PLAN.md` lines 48-49 carry the same construction.
+**Consequence (attempt 0).** Under the plan's text, the command exited 1 in this tree whatever the three specs contained. Attempt 0 reported that and left the plan alone: plan files are outside this unit's `files_modified`, and a graded unit must not edit its own grader. OVERSEER ruling run 0082 then applied the same remedy in the compiled graph (above). Attempt 1 read `PASS` under it, and no spec changed between the two attempts.
 
 **The bound this criterion states (judge text, restated):** the SUMMARY derives the failing tests for exactly
 these 3 files from the run logs, with the command, the ANSI-strip step and the count beside the CI notice (24
@@ -342,7 +429,7 @@ quarantined behaviour is absent, only that its test is red.
 - **Phase 102 (contract):** decide the readability floor for `dossier-rtl-mobile`'s "content is readable"
   check against the shipped 9-11px shell type (`Sidebar.tsx:80,97,115`, `list-pages.css`, `index.css`). Either
   amend the spec's floor or change the type, then remove its marker.
-- **Planner / operator (instrument):** move the run half's `.mark` out of `test-results/` in `101-13-PLAN.md` (for example `MK=$(mktemp)`), and the same lines 48-49 in `101-12-PLAN.md`, then re-run this oracle. The reader already passes both reports this unit's runs publish, so the expected reading is PASS, but that has not been observed. Until then criterion 2 reads FAIL for a reason no spec change can reach.
+- **Planner (plan source vs compiled graph):** ruling run 0082 lives only in the compiled `.tickmarkr/graph.json`. The plan source still carries `MK="test-results/…"`, at `101-13-PLAN.md` lines 46-47 and in the same construction at `101-12-PLAN.md` lines 48-49. So does the run's frozen copy, `.tickmarkr/runs/run-20260911-033231-0000000000000082/graph.json`. A recompile from the plan source brings the defect back. Sync the plan text to the ruling's two lines. That was not done here, because plan files are outside this unit's scope.
 
 ## Commands run, with verbatim output
 
@@ -440,6 +527,37 @@ f9db4a106 test(e2e): P101-13 quarantine 2 admin-gated RTL smokes in-spec
  frontend/tests/e2e/rtl-component-smokes.spec.ts | 4 ++++
 8856be53d test(e2e): P101-13 fix dossier-rtl-mobile locale + route drift, quarantine readability
  frontend/tests/e2e/dossier-rtl-mobile.spec.ts | 47 +++++++++++++++------------
+
+# --- attempt 1 ---
+$ python3 <events for P101-13 / P101-12> .tickmarkr/runs/run-20260911-033231-0000000000000082/journal.jsonl   # trimmed
+2026-09-11T06:43:23.638Z worker-result P101-13 {"ok": false, …}
+2026-09-11T06:43:23.901Z phase-start P101-13 {"gate": "build", "index": 1, "total": 7, "phase": "gate:build"}
+2026-09-11T06:43:52.168Z exit-cause None {"cause": "deliberate", "signal": "SIGTERM"}
+2026-09-11T06:44:42.814Z graph-rehash None {"from": "a7d322bf6f7d0ef6", "to": "e155269200978afc"}
+2026-09-11T06:44:44.427Z task-dispatch P101-13 {… "attempt": 1, …}
+2026-09-11T06:44:49.500Z worktree-recreation P101-13 {"attempted": [f9db4a106…, 8856be53d…, 4e03e7d3e…], "carried": [the same three]}
+$ python3 <task P101-13 acceptance[1].command> .tickmarkr/graph.json > o13-compiled.sh
+status running gates ['build', 'test', 'lint', 'evidence', 'scope', 'acceptance', 'review']
+sha256 652ca3dc307ee573 lines 31
+$ python3 <the same> .tickmarkr/runs/run-20260911-033231-0000000000000082/graph.json    # the run's frozen copy
+status pending; MK ctx: MK="test-results/p101-13-$NAME.mark"; touch "$MK"; …   OVERSEER ctx: none
+$ sed -n '23,51p' 101-13-PLAN.md | sed 's/^        //' > o13-plan.sh; diff o13-plan.sh o13-compiled.sh
+diff exit=1   (the diff, verbatim, is in ## The plan's oracle)
+$ lsof -ti tcp:5173 -sTCP:LISTEN; ps -axo pid,ppid,lstart,command | grep -E 'pw-run-reaped|playwright test|vite'   # 06:47:53Z
+5173 listeners: 47599
+46338 … node ../scripts/pw-run-reaped.mjs -- --project=a11y
+47599 … node …/tickmarkr-run-20260911-033231-0000000000000082--P101-12/frontend/node_modules/.bin/../../../node_modules/.pnpm/vite@7.3.3…
+$ <watcher: every 5 s until 5173 listeners=0 AND pw-run-reaped processes=0; 300-poll cap; the TIMEOUT branch exits 1>
+BRANCH=FREE 5173 listeners=0 wrappers=0 after 1 polls at 06:48:20      # exit 0
+$ for pair in f9db4a106:1e098f9e1 8856be53d:304ea7430 4e03e7d3e:65093b023; do <git show $a / $b | git patch-id --stable>; done
+f9db4a106=24f5fc248c53 1e098f9e1=24f5fc248c53 SAME
+8856be53d=554e004637bb 304ea7430=554e004637bb SAME
+4e03e7d3e=c6f52a73bc74 65093b023=c6f52a73bc74 SAME
+$ grep -n "preserveOutputDir" node_modules/.pnpm/playwright@1.60.0/node_modules/playwright/lib/runner/index.js
+5923:      if (testRun.options.preserveOutputDir)      # createRemoveOutputDirsTask, title "clear output": removes every selected project's outputDir unless set
+$ git status --short; lsof -ti tcp:5173 -sTCP:LISTEN    # after attempt 1's oracle run
+status-lines=0
+5173=0
 ```
 
 A zsh slip I made, recorded so it is not mistaken for a finding: my first smokes `--list` passed the three
@@ -459,4 +577,5 @@ runs under `bash`, which splits.
 | 5173 listeners before each run: 0                                 | the same `lsof` read `1` right after attempt 1 (the sibling's server)                                                                             |
 | register rows at the control run: 0                               | the same run read 2 markers and exited 1                                                                                                          |
 | eslint problems on the 3 specs after the edits: 0                 | the same eslint invocation read 6 errors on the HEAD content of `dossier-rtl-mobile.spec.ts`                                                      |
-| reports the oracle's lookup found: 0, 0                           | the same oracle run published 2 reports (both archived, the rtl-mobile one still in `test-results/`), and the oracle's own reader passes both      |
+| reports the plan-text oracle's lookup found (attempt 0): 0, 0     | that same run published 2 reports; the compiled oracle (mark in `mktemp`) found 1 per suite on attempt 1 and read `PASS`                          |
+| 5173 listeners the watcher read before attempt 1's oracle run: 0  | 27 s earlier (06:47:53Z) the same `lsof` read 1 (pid 47599, P101-12's wrapped a11y server)                                                         |
