@@ -133,31 +133,61 @@ PASS lane
 The exact filtered parallel-truth proof also passes:
 
 ```text
-RUN  v4.1.7 .../frontend
+$ pnpm --filter intake-frontend exec vitest run src/lib/dossier-type-parallel-truth.test.ts -t "the three parallel copies of the dossier-type list are element-equal to the canonical exports"
 
-Test Files  1 passed (1)
-Tests  1 passed (1)
-Duration  4.34s (transform 1.11s, setup 1.62s, import 1.81s, tests 6ms, environment 780ms)
+ RUN  v4.1.7 .../frontend
+
+(node:98640) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  23:28:28
+   Duration  1.69s (transform 415ms, setup 610ms, import 698ms, tests 3ms, environment 310ms)
 ```
 
-The stale P99-58 dynamic-key test still asserts the pre-P102 hollow-guide state (`missing=7/8`) and fails after this task's required end state makes the instrument report `missing=0/8`:
+The task-owned P99-58 dynamic-key assertion was updated to the full-guide end state while keeping the test and title intact. The instrument now reports every reachable `typeGuide` key populated:
 
 ```text
+$ node scripts/i18n-dynamic-key-coverage.mjs .
 dossier type guide: union=8 [country,elected_official,engagement,forum,organization,person,topic,working_group]
   typeGuide.<t>.whenToUse: fallback=present missing=0/8
   typeGuide.<t>.notFor: fallback=present missing=0/8
 dynamic-key coverage: OK (2 site(s))
-RC=0
+RC:0
 ```
+
+The filtered regression proof passes:
 
 ```text
-FAIL  src/components/dossier/tabs/__tests__/DossierEngagementsTab.test.tsx > P99-58 acceptance criteria > no DYNAMIC-KEY site drops its fallback while a reachable key is absent from a locale (RULING-P99-498) ...
-AssertionError: Target cannot be null or undefined.
- ❯ src/components/dossier/tabs/__tests__/DossierEngagementsTab.test.tsx:498:52
-    498|     expect(dynamicCoverage.match(/missing=7\/8/g)).toHaveLength(2)
+$ pnpm --filter intake-frontend exec vitest run src/components/dossier/tabs/__tests__/DossierEngagementsTab.test.tsx -t "no DYNAMIC-KEY site drops its fallback while a reachable key is absent from a locale"
+
+ RUN  v4.1.7 .../frontend
+
+(node:30728) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 15 skipped (16)
+   Start at  23:28:59
+   Duration  2.61s (transform 413ms, setup 531ms, import 1.59s, tests 169ms, environment 251ms)
 ```
 
-That assertion lives outside this task's allowed file scope; satisfying it would require undoing GUIDE-HOLLOW-01 or editing `frontend/src/components/dossier/tabs/__tests__/DossierEngagementsTab.test.tsx`.
+The full task-owned companion test file passes:
+
+```text
+$ pnpm --filter intake-frontend exec vitest run src/components/dossier/tabs/__tests__/DossierEngagementsTab.test.tsx
+
+ RUN  v4.1.7 .../frontend
+
+(node:36881) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+ Test Files  1 passed (1)
+      Tests  16 passed (16)
+   Start at  23:29:05
+   Duration  2.89s (transform 384ms, setup 524ms, import 1.54s, tests 511ms, environment 248ms)
+```
 
 ## Commits
 
