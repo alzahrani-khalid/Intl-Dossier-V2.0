@@ -123,29 +123,22 @@ test.describe('User Management — D-10 loop', () => {
     await expect(page.getByText('Role assigned successfully')).toBeVisible()
     await expect(page.getByText('Viewer').first()).toBeVisible()
 
-    // Attempt an admin grant. The desired branch surfaces dual approval; staging can also surface
-    // the current approval-table schema mismatch as a save error. In both cases the admin role must
-    // NOT apply, which is the safety property this spec owns while 102-07 stays scoped to teardown.
-    const adminRoleResponse = page.waitForResponse(
-      (response) =>
-        response.url().includes('/functions/v1/assign-role') &&
-        response.request().method() === 'POST',
-    )
+    // Attempt an admin grant → dual-approval response must be surfaced, not applied.
+    // (102-07: the approval-table schema mismatch that made this step answer 500
+    // APPROVAL_CREATION_FAILED is repaired by migration
+    // 20260912000001_p102_pending_role_approvals_requester_id.sql — a 500 here is a red,
+    // never an accepted branch.)
     await rolePicker.click()
     await page.getByRole('option', { name: 'Admin' }).click()
     await page.getByRole('button', { name: 'Assign Role' }).click()
-    const adminRoleResult = await adminRoleResponse
-    await expect(
-      page.getByText(
-        adminRoleResult.ok()
-          ? 'Admin role assignment requires dual approval'
-          : 'Failed to save user data',
-      ),
-    ).toBeVisible()
+    await expect(page.getByText('Admin role assignment requires dual approval')).toBeVisible()
     // Role was NOT applied — the overview badge still reads Viewer.
     await expect(page.getByText('Viewer').first()).toBeVisible()
 
-    // New accounts start inactive, so first reactivate → status flips to Active.
+    // New accounts start inactive — observed on staging 2026-09-11 against the deployed
+    // create-user v8 (201 in ~15 s; public.users.is_active=false on the fresh row) — so the
+    // detail page offers "Reactivate User" first and the status loop runs reactivate →
+    // deactivate. First reactivate → status flips to Active.
     await page.getByRole('button', { name: 'Reactivate User' }).click()
     // The unset Upstash limiter takes roughly 15 s to fail open before onSuccess updates the badge.
     await expect(page.getByText('Active', { exact: true })).toBeVisible({ timeout: 30_000 })
