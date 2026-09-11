@@ -126,8 +126,8 @@ serve(async (req) => {
 
     // Get delegation details
     const { data: delegation, error: delegationError } = await supabaseAdmin
-      .from('delegations')
-      .select('id, grantor_id, grantee_id, is_active, revoked_at, valid_until')
+      .from('permission_delegations')
+      .select('id, grantor_id, grantee_id, revoked, revoked_at, valid_until')
       .eq('id', body.delegation_id)
       .single()
 
@@ -145,7 +145,7 @@ serve(async (req) => {
     }
 
     // Check if delegation is already revoked or expired
-    if (!delegation.is_active) {
+    if (delegation.revoked || new Date(delegation.valid_until) < new Date()) {
       return new Response(
         JSON.stringify({
           error: 'Delegation already revoked or expired',
@@ -184,9 +184,9 @@ serve(async (req) => {
     // Revoke delegation
     const revokedAt = new Date().toISOString()
     const { error: updateError } = await supabaseAdmin
-      .from('delegations')
+      .from('permission_delegations')
       .update({
-        is_active: false,
+        revoked: true,
         revoked_at: revokedAt,
         revoked_by: user.id,
       })
@@ -227,12 +227,12 @@ serve(async (req) => {
       entity_type: 'delegation',
       entity_id: delegation.id,
       old_values: {
-        is_active: true,
+        revoked: false,
         revoked_at: null,
         revoked_by: null,
       },
       new_values: {
-        is_active: false,
+        revoked: true,
         revoked_at: revokedAt,
         revoked_by: user.id,
       },

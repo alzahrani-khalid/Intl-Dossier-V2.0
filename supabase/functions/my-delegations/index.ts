@@ -26,6 +26,7 @@ interface Delegation {
   resource_type: string | null;
   resource_id: string | null;
   reason: string;
+  revoked: boolean;
   is_active: boolean;
   valid_from: string;
   valid_until: string;
@@ -39,6 +40,23 @@ interface MyDelegationsResponse {
   granted: Delegation[];
   received: Delegation[];
   total: number;
+}
+
+interface DelegationRow {
+  id: string;
+  grantor_id: string;
+  grantee_id: string;
+  resource_type: string | null;
+  resource_id: string | null;
+  reason: string;
+  valid_from: string;
+  valid_until: string;
+  revoked: boolean;
+  revoked_at: string | null;
+  revoked_by: string | null;
+  created_at: string;
+  grantor: { email: string } | null;
+  grantee: { email: string } | null;
 }
 
 serve(async (req) => {
@@ -127,51 +145,50 @@ serve(async (req) => {
 
     // Build base query
     let grantedQuery = supabaseAdmin
-      .from("delegations")
+      .from("permission_delegations")
       .select(`
         id,
         grantor_id,
         grantee_id,
-        source,
         resource_type,
         resource_id,
         reason,
-        is_active,
         valid_from,
         valid_until,
+        revoked,
         revoked_at,
         revoked_by,
         created_at,
-        grantor:auth.users!grantor_id(email),
-        grantee:auth.users!grantee_id(email)
+        grantor:users!grantor_id(email),
+        grantee:users!grantee_id(email)
       `)
       .eq("grantor_id", user.id);
 
     let receivedQuery = supabaseAdmin
-      .from("delegations")
+      .from("permission_delegations")
       .select(`
         id,
         grantor_id,
         grantee_id,
-        source,
         resource_type,
         resource_id,
         reason,
-        is_active,
         valid_from,
         valid_until,
+        revoked,
         revoked_at,
         revoked_by,
         created_at,
-        grantor:auth.users!grantor_id(email),
-        grantee:auth.users!grantee_id(email)
+        grantor:users!grantor_id(email),
+        grantee:users!grantee_id(email)
       `)
       .eq("grantee_id", user.id);
 
     // Apply active filter
     if (activeOnly) {
-      grantedQuery = grantedQuery.eq("is_active", true);
-      receivedQuery = receivedQuery.eq("is_active", true);
+      const now = new Date().toISOString();
+      grantedQuery = grantedQuery.eq("revoked", false).gte("valid_until", now);
+      receivedQuery = receivedQuery.eq("revoked", false).gte("valid_until", now);
     }
 
     // Apply expiring filter
@@ -214,11 +231,13 @@ serve(async (req) => {
         );
       }
       if (data) {
-        granted = data.map((d: any) => {
+        granted = data.map((d: DelegationRow) => {
           const validUntil = new Date(d.valid_until);
           const now = new Date();
           const expiresInMs = validUntil.getTime() - now.getTime();
           const expiresInDays = Math.ceil(expiresInMs / (1000 * 60 * 60 * 24));
+          const isActive =
+            !d.revoked && now >= new Date(d.valid_from) && now <= validUntil;
 
           return {
             id: d.id,
@@ -226,11 +245,12 @@ serve(async (req) => {
             grantor_email: d.grantor?.email || "",
             grantee_id: d.grantee_id,
             grantee_email: d.grantee?.email || "",
-            source: d.source,
+            source: "permission",
             resource_type: d.resource_type,
             resource_id: d.resource_id,
             reason: d.reason,
-            is_active: d.is_active,
+            revoked: d.revoked,
+            is_active: isActive,
             valid_from: d.valid_from,
             valid_until: d.valid_until,
             revoked_at: d.revoked_at,
@@ -263,11 +283,13 @@ serve(async (req) => {
         );
       }
       if (data) {
-        received = data.map((d: any) => {
+        received = data.map((d: DelegationRow) => {
           const validUntil = new Date(d.valid_until);
           const now = new Date();
           const expiresInMs = validUntil.getTime() - now.getTime();
           const expiresInDays = Math.ceil(expiresInMs / (1000 * 60 * 60 * 24));
+          const isActive =
+            !d.revoked && now >= new Date(d.valid_from) && now <= validUntil;
 
           return {
             id: d.id,
@@ -275,11 +297,12 @@ serve(async (req) => {
             grantor_email: d.grantor?.email || "",
             grantee_id: d.grantee_id,
             grantee_email: d.grantee?.email || "",
-            source: d.source,
+            source: "permission",
             resource_type: d.resource_type,
             resource_id: d.resource_id,
             reason: d.reason,
-            is_active: d.is_active,
+            revoked: d.revoked,
+            is_active: isActive,
             valid_from: d.valid_from,
             valid_until: d.valid_until,
             revoked_at: d.revoked_at,

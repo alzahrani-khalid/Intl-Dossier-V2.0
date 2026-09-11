@@ -157,14 +157,16 @@ serve(async (req) => {
       // Table might not exist yet
     }
 
-    // Count active delegations granted by the user. The delegations table is not
-    // present in every environment — skip gracefully when it is absent.
+    // Count active delegations granted by the user.
     {
+      const now = new Date().toISOString()
       const { count, error } = await supabaseAdmin
-        .from('delegations')
+        .from('permission_delegations')
         .select('*', { count: 'exact', head: true })
         .eq('grantor_id', userId)
-        .eq('status', 'active')
+        .eq('revoked', false)
+        .lte('valid_from', now)
+        .gte('valid_until', now)
       if (error && !isMissingTable(error)) {
         console.error('Delegation count error:', error)
       }
@@ -220,25 +222,30 @@ serve(async (req) => {
     // Revoke active delegations (granted and received), when the table exists.
     let delegationsRevoked = 0
     {
+      const now = new Date().toISOString()
       const { data: activeDelegations, error } = await supabaseAdmin
-        .from('delegations')
+        .from('permission_delegations')
         .select('id')
         .or(`grantor_id.eq.${userId},grantee_id.eq.${userId}`)
-        .eq('status', 'active')
+        .eq('revoked', false)
+        .lte('valid_from', now)
+        .gte('valid_until', now)
       if (error) {
         if (!isMissingTable(error)) {
           console.error('Delegation lookup error:', error)
         }
       } else if (activeDelegations && activeDelegations.length > 0) {
         const { error: revokeError } = await supabaseAdmin
-          .from('delegations')
+          .from('permission_delegations')
           .update({
-            status: 'revoked',
-            revoked_at: new Date().toISOString(),
-            revocation_reason: 'user_deactivated',
+            revoked: true,
+            revoked_at: now,
+            revoked_by: user.id,
           })
           .or(`grantor_id.eq.${userId},grantee_id.eq.${userId}`)
-          .eq('status', 'active')
+          .eq('revoked', false)
+          .lte('valid_from', now)
+          .gte('valid_until', now)
         if (revokeError && !isMissingTable(revokeError)) {
           console.error('Delegation revoke error:', revokeError)
         } else if (!revokeError) {
