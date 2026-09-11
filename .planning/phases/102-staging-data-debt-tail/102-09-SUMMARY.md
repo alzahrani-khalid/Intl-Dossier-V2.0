@@ -35,10 +35,10 @@ CONTROL 'Add Elected Official'=true expected true
 CONTROL 'Add elected official'=false expected false
 CONTROL 'SLA Breach'=false expected false
 CONTROL 'Sign in'=false expected false
-NS common strings=1497 candidates=8 ar_mirror=8 carved=8 ar_missing_keys=0 ar_extra_keys=12 carve_rows=8
+NS common strings=1498 candidates=8 ar_mirror=8 carved=8 ar_missing_keys=0 ar_extra_keys=12 carve_rows=8
 NS dossiers strings=475 candidates=3 ar_mirror=3 carved=3 ar_missing_keys=0 ar_extra_keys=0 carve_rows=3
 NS assignments strings=393 candidates=2 ar_mirror=2 carved=2 ar_missing_keys=0 ar_extra_keys=4 carve_rows=2
-EN_FILES=129 EN_STRINGS=2365 TITLECASE_CANDIDATES=13 PCT=0.5
+EN_FILES=129 EN_STRINGS=2366 TITLECASE_CANDIDATES=13 PCT=0.5
 ```
 
 The positive `Add Elected Official=true` control proves the census can detect a candidate. The three
@@ -50,13 +50,13 @@ remaining English candidate is one of the 13 carve-out rows, and every carve-out
 The current JSON leaves were compared to `git show HEAD:<path>`. Output:
 
 ```text
-AUDIT en/common before=1496 after=1497 changed=217 added=2 removed=1 changed_non_candidates=0
+AUDIT en/common before=1496 after=1498 changed=217 added=2 removed=0 changed_non_candidates=0
   added=help.title,help.subtitle
 AUDIT en/assignments before=393 after=393 changed=126 added=0 removed=0 changed_non_candidates=0
 AUDIT en/dossiers before=475 after=475 changed=124 added=0 removed=0 changed_non_candidates=0
 AUDIT en/briefing-books before=217 after=219 changed=0 added=2 removed=0 changed_non_candidates=0
   added=progress.starting,progress.generated
-AUDIT ar/common before=1508 after=1509 changed=0 added=2 removed=1 changed_non_candidates=0
+AUDIT ar/common before=1508 after=1510 changed=0 added=2 removed=0 changed_non_candidates=0
   added=help.title,help.subtitle
 AUDIT ar/assignments before=397 after=397 changed=0 added=0 removed=0 changed_non_candidates=0
 AUDIT ar/dossiers before=475 after=475 changed=0 added=0 removed=0 changed_non_candidates=0
@@ -64,17 +64,17 @@ AUDIT ar/briefing-books before=217 after=219 changed=0 added=2 removed=0 changed
   added=progress.starting,progress.generated
 ```
 
-The apparent root `help` removal is the required scalar-to-object expansion: its locale value is replaced
-by the mandated `help.title` and `help.subtitle` leaves. No other key was added, removed, renamed, or
-restructured. No Arabic plural-suffix key was deleted. `changed_non_candidates=0` proves all 467 existing
-English value edits came from the measured candidate population.
+The existing scalar `help` key is preserved for its existing consumers, while the mandated `help.title`
+and `help.subtitle` leaves are represented as dotted keys so all three values can coexist. No existing key
+was removed, renamed, or restructured. No Arabic plural-suffix key was deleted. `changed_non_candidates=0`
+proves all 467 existing English value edits came from the measured candidate population.
 
 ## Command oracle
 
 The plan's command oracle was run verbatim after the edits. Output:
 
 ```text
-  NS common strings=1497 candidates=8 ar_mirror=8 carved=8 ar_missing_keys=0 ar_extra_keys=12 carve_rows=8
+  NS common strings=1498 candidates=8 ar_mirror=8 carved=8 ar_missing_keys=0 ar_extra_keys=12 carve_rows=8
   NS dossiers strings=475 candidates=3 ar_mirror=3 carved=3 ar_missing_keys=0 ar_extra_keys=0 carve_rows=3
   NS assignments strings=393 candidates=2 ar_mirror=2 carved=2 ar_missing_keys=0 ar_extra_keys=4 carve_rows=2
 P102-LANE namespaces=3 at_end_state=3 expected 3 3 (candidates==carved, carved==carve_rows, ar_mirror==candidates, ar_missing_keys=0)

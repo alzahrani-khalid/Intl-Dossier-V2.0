@@ -89,10 +89,9 @@
   "logout": "Sign out",
   "profile": "Profile",
   "settings": "Settings",
-  "help": {
-    "title": "How can we help you?",
-    "subtitle": "Search articles or browse guides below"
-  },
+  "help": "Help",
+  "help.title": "How can we help you?",
+  "help.subtitle": "Search articles or browse guides below",
   "about": "About",
   "searchAll": "Search all columns...",
   "filter": "Filter",
