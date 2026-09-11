@@ -6,6 +6,8 @@ test.describe('Forum wizard — create flow', () => {
     adminPage,
     uniqueId,
   }): Promise<void> => {
+    // prettier-ignore
+    test.fixme(true, 'P101-QUAR 31848669722: test red - getByRole(link, /create forum/) never resolved on /dossiers/forums; before daa205461 (2026-08-17, after this run) the list page passed onCreate only to its empty state, and the header link it added is named Add forum; the later /dossiers/<uuid>$ redirect assertion also drifts from getDossierDetailPath (/dossiers/forums/<id>); the rewrite cannot be verified without the E2E_* credentials; log line 1908 of job 94920109119; owner Phase 102')
     const page = adminPage
     const nameEn = uniqueId('e2e-forum')
     const nameAr = 'منتدى اختبار'

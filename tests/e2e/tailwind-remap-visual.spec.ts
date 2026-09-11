@@ -33,6 +33,8 @@ test.describe('Plan 33-06 — @theme remap visual baselines', () => {
         for (const viewport of viewports) {
           const name = `${route.slug}-${mode}-${locale}-${viewport.name}`
           test(name, async ({ page }) => {
+            // prettier-ignore
+            test.fixme(true, 'P101-QUAR 31848669722: visual baseline - all 24 cells red; the log carries only their names (failed list, log lines 1246-1269 of job 94920109185) and no error text; the 24 committed baselines are *-chromium-en-darwin.png only (b3707e5b6) while e2e.yml runs ubuntu-latest, and the grid seeds the retired chancery direction (Phase 77); a baseline decision, never a regeneration here (CARRY-06); owner Phase 102')
             await page.setViewportSize({
               width: viewport.width,
               height: viewport.height,

@@ -12,7 +12,9 @@ base.describe('TEST-01 login (ar-smoke)', () => {
   )
 
   base('logs in with Arabic UI and asserts dir=rtl', async ({ page }) => {
-    await page.goto('/login?lang=ar')
+    // ?lng= is the i18next querystring key (frontend/src/i18n/index.ts detection order); the app
+    // never read ?lang=, so the page stayed dir=ltr (log line 1116 of job 94920109185).
+    await page.goto('/login?lng=ar')
     await expect(page.locator('html')).toHaveAttribute('dir', 'rtl')
 
     const login = new LoginPage(page)

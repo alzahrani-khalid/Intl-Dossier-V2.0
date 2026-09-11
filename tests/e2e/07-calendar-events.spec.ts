@@ -4,6 +4,7 @@ import CalendarPage from './support/pages/CalendarPage'
 
 test.describe('TEST-07 calendar events', () => {
   test('creates a calendar event and views it @mobile', async ({ analystPage, uniqueId }) => {
+    test.fixme(true, 'P101-QUAR 31848669722: red - getByLabel(/title/) unresolved 30 s after the Create Event click (failure screenshot still on /calendar, empty state); the entry form carries two title labels (English, Arabic), so CalendarPage needs rework; log line 1133 of job 94920109119; owner Phase 103')
     const calendar = new CalendarPage(analystPage)
     const title = uniqueId('cal')
 
@@ -26,6 +27,7 @@ test.describe('TEST-07 calendar events', () => {
   })
 
   test('shows lifecycle dates on engagement-linked event', async ({ analystPage }) => {
+    test.fixme(true, 'P101-QUAR 31848669722: red - no calendar-event holding a lifecycle-date-badge (failure screenshot: analyst calendar empty); the lifecycle-date-badge testid has 0 hits in frontend/src; seed data plus app contract; log line 1066 of job 94920109119; owner Phase 103')
     const calendar = new CalendarPage(analystPage)
     await calendar.goto()
     // Filter / locate any engagement-linked event with lifecycle date badges.

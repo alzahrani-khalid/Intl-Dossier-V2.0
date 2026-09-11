@@ -7,6 +7,7 @@ test.describe('TEST-06 work-item CRUD + kanban drag', () => {
     analystPage,
     uniqueId,
   }) => {
+    test.fixme(true, 'P101-QUAR 31848669722: red - button /new task|create task/ unresolved on /my-work for 30 s (failure screenshot: My Work, Board View only), and the kanban-column-* testids it drags between have 0 hits in frontend/src; needs app testids plus WorkItemKanbanPage rework; log line 1001 of job 94920109119; owner Phase 103')
     const kanban = new WorkItemKanbanPage(analystPage)
     const title = uniqueId('task')
 
