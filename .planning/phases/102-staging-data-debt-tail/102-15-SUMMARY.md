@@ -2,263 +2,246 @@
 phase: 102-staging-data-debt-tail
 plan: 15
 status: complete
-outcome: ok
-attempt: 1
+outcome: ok-false
+attempt: 2
 requirements: [CARRY-06]
 decisions: [D-20, D-03, D-02]
-rulings: [fa892d25f] # OVERSEER: same-date 12:00Z/18:00Z pair; .week-title assertions; week-ahead.png regenerated once
 commits:
-  - 553b45db5 feat(seed): re-anchor week-ahead dashboard rows to today (P102-15)   # att0, blob unchanged
-  - 22f6ca3ac test(e2e): server-clock re-anchor and same-date two-clock week-ahead check (P102-15)
-  - 8ecc6cd60 test(e2e): regenerate week-ahead baseline once for re-anchored rows (P102-15)
-files:
-  - supabase/seed/072-p102-today-relative-dashboard-fixtures.sql (blob c58ac0e426833d7ecea018f84ed81e18b096d05f)
-  - frontend/tests/e2e/dashboard-widgets-visual.spec.ts (blob 71405eeb83cf389ac4a7dac6bde7bad14f310462)
-  - frontend/tests/e2e/__snapshots__/dashboard-widgets/week-ahead.png (sha1 dd30a75747cbdf6a921da373b7a6821c519b6f80, 638x1034)
-baseline_regenerated: once (23:10:16Z–23:10:26Z, under ruling fa892d25f)
+  - 50ffdaf08 feat(seed): re-anchor week-ahead dashboard rows to today (P102-15)
+  - b76a38fdf test(e2e): server-clock re-anchor and same-date two-clock week-ahead check (P102-15)
+  - 5da9a0c21 test(e2e): restore the committed week-ahead baseline (P102-15) # reverts d84103da4
+baseline_regenerated: false # base..HEAD carries no change to week-ahead.png (content sha1 03afa0703270f14ea83c453583754414f625a959 at base and HEAD)
+pixel_diff:
+  - frontend/test-results/e2e-dashboard-widgets-visu-6a73a-shots-survive-a-date-change-chromium-dashboard-widgets/week-ahead-diff.png
+  - frontend/test-results/e2e-dashboard-widgets-visual-visual-week-ahead-chromium-dashboard-widgets/week-ahead-diff.png
 ---
 
-# 102-15 SUMMARY — CARRY-06: frozen clock vs server NOW() (attempt 1)
+# 102-15 SUMMARY — CARRY-06: frozen clock vs server NOW() (attempt 2)
 
-## Verdict: ok
+## Verdict: ok:false
 
 | Oracle | Result after the work |
 | --- | --- |
-| 1. window control (command) | **PASS**: `3 5 3 5`, exit 0 (RED at HEAD of the plan: `0 0 3 5`) |
-| 2. two-clock visual (command, reaped wrapper) | **PASS**: `passed=2 failed=0 skipped=0`, exit 0 |
-| 3. judge (diff) | each clause is located below |
+| 1. window control (command) | **PASS**: `3 5 3 5`, exit 0 |
+| 2. two-clock visual (command, reaped wrapper) | **FAIL**: `passed=0 failed=2 skipped=0`, exit 1 |
+| 3. judge (diff) | the baseline is not regenerated; the pixel-diff paths are recorded; the plan ends ok:false as the criterion pre-registers |
 
-**Ruling applied.** Ruling `fa892d25f` overrides the judge text's "NOT regenerated in this plan under any condition". It lists `week-ahead.png` in `files_modified`, and it replaces action step 2 with "Regenerate … EXACTLY ONCE … Never regenerate again after that". Oracle 2 now compares against "the week-ahead baseline regenerated once in this task". I regenerated it once, at step 7. No later command wrote it: its mtime is 23:10:26Z, and its SHA-1 is the same in HEAD and the working tree.
+**What changed in this attempt.** The attempt-1 judge failed c2 because the diff replaced `week-ahead.png`, and it ruled that ruling `fa892d25f` is not a waiver unless the judge text itself changes. Commit `5da9a0c21` restores the run-base blob. `git diff --name-only 755cd3795..HEAD` now lists no snapshot (step 11). The two captures were compared against that committed baseline. They do not match, so this SUMMARY records the pixel-diff artefacts and the plan ends ok:false.
 
-## Outstanding review findings from att0, and what changed
+**Why oracle 2 cannot pass under the current judge text** (measured):
 
-1. **Two-clock run not green.** It is now `expected=2 unexpected=0 skipped=0` (step 8).
-2. **`.first()` and `expect.soft`: removed.** Each capture is preceded by the three `widget.locator('.week-title', { hasText: … })` assertions the ruling specifies. The capture is a plain `await expect(widget).toHaveScreenshot('week-ahead.png', { mask })`. Spec `:208-218`.
-3. **Runner clock as the re-anchor base: replaced.** The beforeAll now reads the Supabase server clock from the `Date` header of a service-role `HEAD ${SUPABASE_URL}/rest/v1/` (spec `:66-73`). It throws if the header is missing. The date_trunc('hour') / date_trunc('day') / CURRENT_DATE arithmetic runs on that value in UTC, like the database session. A probe measured the server against the runner (step 2).
+- The committed baseline is 638×293 px. Commit `f2dc476a2` captured it on 2026-07-05.
+  - Its heading is `Week Ahead`, which is the casing before P102-11.
+  - It has one group, NEXT WEEK, with two rows: `Delegation visit — Indonesia BPS` (SUN 05) and `SRTL-02 regression seed A` (FRI 10).
+  - Its date column is unmasked.
+- Today's widget renders 638×1034 px. Its heading is `Week ahead`, and it shows eight rows: TODAY 1, TOMORROW 3, NEXT WEEK 4.
+- Playwright: `Expected an image 638px by 293px, received 638px by 1034px. 55807 pixels (ratio 0.09 of all image pixels) are different.`
+- Oracle 2's text and ruling `fa892d25f` require a match against "the baseline regenerated once in this task". The judge text forbids that regeneration "under any condition". The plan's step 2 already says the old baseline "cannot match by construction".
+- No state of `week-ahead.png` satisfies both. The operator has to reconcile them in `102-15-PLAN.md`, which is outside this task's file scope.
 
-## Judge item — where each clause lives (HEAD `8ecc6cd60`)
+**Measured fact for that decision.** Both captures in this run are byte-identical to the blob that attempt 1 regenerated and `5da9a0c21` removed: content sha1 `dd30a75747cbdf6a921da373b7a6821c519b6f80`, from commit `d84103da4` (step 10). So the render is deterministic across both tests and across 24 minutes of wall time. If the judge text is amended to admit the one regeneration, that existing blob can be put back without regenerating again.
 
-- **Seed:** `supabase/seed/072-p102-today-relative-dashboard-fixtures.sql`, blob `c58ac0e4`, unchanged since att0.
-  - `:18-30` update the three b0000002 engagements: `date_trunc('hour', NOW()) + 2h/4h`, `date_trunc('day', NOW()) + 1 day 10h/12h`, `+ 2 days 14h / 4 days 16h`.
-  - `:32-42` update the five b0000006 calendar entries: `CURRENT_DATE` `+0/+1/+2/+3/+5`.
-  - No INSERT: `grep -c INSERT` = 0. There are no other ids, and 0 class-regex matches (step 12).
-- **FROZEN_TIME:** `:12`, `new Date(new Date().setUTCHours(12, 0, 0, 0))`.
-- **beforeAll:** `:56-111`. It creates a service-role client, `createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)`, and throws loudly if either variable is absent from `.env.test` (`:60`). It applies the same eight updates, and each must return exactly one row or it throws (`:107`).
-- **FIXTURE_BLOCKED:** the week-ahead entry is removed. `:165` holds only `vip-visits`. `:160-164` explain the replacement mechanism, and the header comment `:6-11` says the same.
-- **New test** titled exactly `dashboard snapshots survive a date change`, at `:200`.
-  - `:202` loops over `FROZEN_TIME` (today 12:00Z) and `FROZEN_TIME + 6 h` (today 18:00Z), which fall on the same calendar date.
-  - `:204` installs the clock on a fresh page for each.
-  - `:208-216` hold the three `.week-title` assertions, before each capture.
-  - `:217` sets the mask to exactly `[widget.locator('.week-date')]`.
-  - `:218` captures with `toHaveScreenshot('week-ahead.png', { mask })`.
-- **Loop test:** `visual week-ahead` is no longer skipped. It masks only `.week-date` (`:185`) and produced the regenerated baseline.
+## Judge item — where each clause lives (HEAD after `5da9a0c21`; spec and seed unchanged in this attempt)
+
+- **Seed:** `supabase/seed/072-p102-today-relative-dashboard-fixtures.sql`, commit `50ffdaf08`. It holds the eight date-only UPDATEs with the 060 offsets and no INSERT. The attempt-1 judge found it present.
+- **Spec:** `frontend/tests/e2e/dashboard-widgets-visual.spec.ts`.
+  - `:12` sets `FROZEN_TIME = new Date(new Date().setUTCHours(12, 0, 0, 0))`.
+  - `:56-112` is the beforeAll. It creates a service-role `createClient`, throws at `:59-64` when `SUPABASE_URL` or `SUPABASE_SERVICE_ROLE_KEY` is absent, applies the eight updates, and throws at `:106-110` unless each update hits exactly one row.
+  - `:165-170`: `FIXTURE_BLOCKED` holds only `vip-visits`, and `:160-164` explain the new mechanism.
+  - `:200` is the test titled exactly `dashboard snapshots survive a date change`.
+    - `:202` takes two clocks, today 12:00Z and today 18:00Z, and `:204` installs one per page.
+    - `:208-216` are the three `.week-title` assertions, placed before the capture.
+    - `:217` sets the mask to exactly `[widget.locator('.week-date')]`.
+    - `:218` is `toHaveScreenshot('week-ahead.png', { mask })`.
+  - The loop test `visual week-ahead` (`:172-188`) no longer skips and masks only `.week-date` (`:185`).
+- **Baseline:** `frontend/tests/e2e/__snapshots__/dashboard-widgets/week-ahead.png` is not in the base..HEAD diff.
+- **Pixel-diff artefacts:** the two `pixel_diff` paths in the front-matter. `test-results/` is gitignored, so copies are kept at `<scratch>/artefacts/` (step 10).
+- **The 18:00Z leg did not execute.** The new test's `toHaveScreenshot` is a hard `expect` (review att0 removed `expect.soft`). The 12:00Z capture failed first, so the test stopped there. The three `.week-title` assertions passed before that capture, because the failure is at `toHaveScreenshot` (report line `:200`, step 9).
 
 ## Commands and verbatim output, in execution order
 
-ANSI codes are stripped. The worktree path is shortened to `<wt>`. No secret was printed; `.env.test` keys were listed with their values redacted.
+ANSI codes are stripped. `<wt>` is this worktree and `<scratch>` is the session scratchpad. No secret was printed.
 
-`oracle1.sh` and `oracle2.sh` are the plan's two `oracle: command` blocks, extracted byte-for-byte from the front-matter with node `yaml` and run with `bash`. They are in the session scratchpad.
-
-**1. Clock and inputs**
+**1. Clock and :5173 census**
 
 ```
 $ date -u; date
-Fri Sep 11 23:04:21 UTC 2026
-Sat Sep 12 02:04:21 +03 2026
-$ sed -E 's/=.*/=<redacted>/' .env.test | grep -E '^(SUPABASE|TEST_|E2E|VITE_SUPABASE)'
-SUPABASE_ANON_KEY=<redacted>
-SUPABASE_SERVICE_ROLE_KEY=<redacted>
-SUPABASE_URL=<redacted>
-TEST_USER_EMAIL=<redacted>
-TEST_USER_PASSWORD=<redacted>
-SUPABASE_DB_URL=<redacted>
-E2E_ADMIN_EMAIL=<redacted>
-E2E_ADMIN_PASSWORD=<redacted>
-$ sips -g pixelWidth -g pixelHeight frontend/tests/e2e/__snapshots__/dashboard-widgets/week-ahead.png   # before
+Fri Sep 11 23:32:57 UTC 2026
+Sat Sep 12 02:32:57 +03 2026
+lsof exit=1
+```
+
+The seven `node (vitest …)` processes running at that time had their cwd in `/Users/…/clones/tkr-spec-v253/.tickmarkr/worktrees.noindex/tickmarkr-run-20260911-150716-0000000000000002--T7`. That is another repository, and none of them held a port here.
+
+**2. Restore the baseline to the run base** (`git show 755cd3795:<png> > <png>`)
+
+```
+03afa0703270f14ea83c453583754414f625a959  frontend/tests/e2e/__snapshots__/dashboard-widgets/week-ahead.png
   pixelWidth: 638
   pixelHeight: 293
+diff-vs-base rc=0
+ M frontend/tests/e2e/__snapshots__/dashboard-widgets/week-ahead.png
 ```
 
-**2. Server-clock probe** (the mechanism behind finding 3), plus the :5173 census:
+**3. Oracle extraction.** node `yaml` read the plan front-matter, and the two `oracle: command` blocks were written byte-for-byte to `<scratch>/oracle1.sh` and `<scratch>/oracle2.sh`:
 
 ```
-HEAD 200 date= Fri, 11 Sep 2026 23:06:50 GMT local= Fri, 11 Sep 2026 23:06:50 GMT
-GET 200 date= Fri, 11 Sep 2026 23:06:51 GMT local= Fri, 11 Sep 2026 23:06:50 GMT
-lsof exit=1
+2 oracles written
+    1611 <scratch>/oracle1.sh
+    3669 <scratch>/oracle2.sh
 ```
 
-**3. Code reads** (no output reproduced):
-
-- `WeekAhead.tsx`: nothing time-of-day-dependent sits outside `.week-date`.
-- `groupEventsByDay` (`useUpcomingEvents.ts`) buckets with `isToday` / `isTomorrow` / `isThisWeek` / next-week `isWithinInterval` on the browser clock. It has no filter against "now", so 12:00Z and 18:00Z on one date bucket identically.
-- Playwright 1.60 `_resolveSnapshotPaths`: a repeated explicit name suffixes only the output (actual/diff) path. The expected path stays `week-ahead.png`, so both captures compare against the same baseline.
-
-**4. Spec rewritten** at 23:09:17Z (that is the spec's mtime).
-
-**5. Seed applied twice, then oracle 1:**
+**4. Oracle 2, run 1: void (instrument could not start)**
 
 ```
-apply 1 at 2026-09-11T23:09:23Z
-BEGIN
-UPDATE 1
-UPDATE 0
-COMMIT
-rc=0
-apply 2 at 2026-09-11T23:09:24Z
-BEGIN
-UPDATE 0
-UPDATE 0
-COMMIT
-rc=0
-oracle1 at 2026-09-11T23:09:25Z
-P102-15-WINDOW engagements_in_window=3 calendar_in_window=5 engagements_present=3 calendar_present=5 expected 3 5 3 5 (window = [CURRENT_DATE, CURRENT_DATE+14])
-PASS window
-exit=0
+baseline sha1 03afa0703270f14ea83c453583754414f625a959
+pre lsof exit=0
+oracle2 start 2026-09-11T23:33:38Z
+exit=1 end 2026-09-11T23:33:39Z
+P102-15-VISUAL wrapper_rc=1 passed=0 failed=0 skipped=0 expected passed=2 failed=0 skipped=0 (...)
+FAIL: the week-ahead visual is not invariant to the calendar date - ...
+post lsof exit=0
+frontend/test-results/pw-reaped-a042b6c5c83ec7246f1747879a01b675.json
 ```
 
-Apply 1 moved only the hour-anchored engagement 001. Att0 had anchored it in the 22:00Z hour, and this apply ran in the 23:00Z hour.
-
-**6. Lint** (`pnpm exec prettier --check` and `pnpm exec eslint` on the spec, from `frontend/`):
+The report says:
 
 ```
-Checking formatting...
-All matched files use Prettier code style!
-prettier rc=0
-eslint rc=0
+stats {'startTime': '2026-09-11T23:33:39.408Z', 'duration': 10.177000000000021, 'expected': 0, 'skipped': 0, 'unexpected': 0, 'flaky': 0}
+errors ['Error: http://localhost:5173 is already used, make sure that nothing is running on the port/url or set reuseExistingServer:true in config.webServer.']
 ```
 
-**7. The one regeneration.** Run from `frontend/`: `pnpm exec playwright test e2e/dashboard-widgets-visual.spec.ts --project=chromium-dashboard-widgets -g 'visual week-ahead' --update-snapshots --reporter=list`, with the clock at today 12:00Z = 2026-09-11T12:00Z.
+The port holder:
 
 ```
-before: 03afa0703270f14ea83c453583754414f625a959  tests/e2e/__snapshots__/dashboard-widgets/week-ahead.png
-regen start 2026-09-11T23:10:16Z
-regen rc=0 end 2026-09-11T23:10:26Z
-[WebServer] The request id "<repo>/node_modules/.pnpm/@fontsource-variable+inter@5.2.8/node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2" is outside of Vite serving allow list.
-  (6 more such lines: jetbrains-mono and tajawal woff/woff2)
-<wt>/frontend/tests/e2e/__snapshots__/dashboard-widgets/week-ahead.png is re-generated, writing actual.
-  ✓  1 [chromium-dashboard-widgets] › tests/e2e/dashboard-widgets-visual.spec.ts:173:3 › visual week-ahead (3.3s)
-  1 passed (10.5s)
-after: dd30a75747cbdf6a921da373b7a6821c519b6f80  tests/e2e/__snapshots__/dashboard-widgets/week-ahead.png
-  pixelWidth: 638
-  pixelHeight: 1034
-lsof exit=1
+node    91157 khalidalzahrani   18u  IPv6 0x1e26fcd93aa90bff      0t0  TCP *:5173 (LISTEN)
+91157 91128 Sat Sep 12 02:33:27 2026     node <...>/tickmarkr-run-20260911-181854-0000000000000083--P102-07/frontend/node_modules/.bin/../../../node_modules/.pnpm/vite@7.3.3_<...>/vite.js
+n<...>/tickmarkr-run-20260911-181854-0000000000000083--P102-07/frontend
 ```
 
-The new baseline has heading `Week ahead` and three groups:
+That process was sibling lane P102-07's Vite server, and it was not touched. Its start at 23:33:27Z fell between the census in step 1 and this run. No test ran, so no beforeAll ran and no staging row changed.
 
-- TODAY: Standup — Indonesia delegation.
-- TOMORROW: Bilateral consultation — ESCWA · Prep session — G20 Data Gaps Initiative · Brief minister — Vision 2030.
-- NEXT WEEK: Delegation visit — Indonesia BPS · Submit OECD data response · Training — new dossier workflow · GCC sync.
+**5. Port watcher.** It is a standalone background loop that exits 0 only on port-free and exits 2 on a 23:57Z deadline:
 
-Only the date column is magenta-masked. The eighth row (GCC sync) is clipped to its mask on white: the widget is 1034 px tall inside a 1000 px viewport. That clipping is deterministic, and both clocks reproduce it.
+```
+BRANCH=port-free at 2026-09-11T23:34:25Z
+[exited with code 0]
+```
 
-**8. Oracle 2 after the work**, through `scripts/pw-run-reaped.mjs`:
+**6. Commit of the restore.** The pre-commit hook printed `→ lint-staged could not find any staged files matching configured tasks.`, then ran `turbo run build`.
+
+```
+commit rc=0
+5da9a0c21 test(e2e): restore the committed week-ahead baseline (P102-15)
+```
+
+**7. Oracle 2, run 2: the verdict run, after the work**
 
 ```
 pre lsof exit=1
-oracle2 start 2026-09-11T23:11:02Z
-exit=0 end 2026-09-11T23:11:16Z
-P102-15-VISUAL wrapper_rc=0 passed=2 failed=0 skipped=0 expected passed=2 failed=0 skipped=0 (week-ahead matches its committed baseline under today 12:00Z AND today 18:00Z with date labels masked, both from a seed the spec re-anchors in beforeAll)
-PASS visual-invariant
-frontend/test-results/pw-reaped-8d69d77f133320228f1186effc3645eb.json
+oracle2 start 2026-09-11T23:34:44Z
+exit=1 end 2026-09-11T23:34:56Z
+  PW failed | visual week-ahead | Error: expect(locator).toHaveScreenshot(expected) failed  Locator: getByTestId('dashboard-widget-week-ahead')   Expected an image 638px by 293px
+  PW failed | dashboard snapshots survive a date change | Error: expect(locator).toHaveScreenshot(expected) failed  Locator: getByTestId('dashboard-widget-week-ahead')   Expected an image 638px by 293px
+P102-15-VISUAL wrapper_rc=1 passed=0 failed=2 skipped=0 expected passed=2 failed=0 skipped=0 (week-ahead matches its committed baseline under today 12:00Z AND today 18:00Z with date labels masked, both from a seed the spec re-anchors in beforeAll)
+FAIL: the week-ahead visual is not invariant to the calendar date - a skip means the FIXTURE_BLOCKED guard still fires, a failure means the two clocks disagree
 post lsof exit=1
+frontend/test-results/pw-reaped-50da226add63e84ae5c2f86d07ba0c45.json
 ```
 
-The report (a copy is in the scratchpad):
+**8. Clock regime of run 2** (derived). FROZEN_TIME was 2026-09-11 12:00Z and the second clock 18:00Z. Both sat behind the wall clock (23:34Z), so the stored token was not read as expired. That regime holds only until 00:00Z (see limit 1).
+
+**9. Report errors** (`pw-reaped-50da226add63e84ae5c2f86d07ba0c45.json`):
 
 ```
-stats {'startTime': '2026-09-11T23:11:02.811Z', 'duration': 13605.225, 'expected': 2, 'unexpected': 0, 'skipped': 0, 'flaky': 0}
-   passed | visual week-ahead | 2805 ms | attachments: []
-   passed | dashboard snapshots survive a date change | 6338 ms | attachments: []
+stats {'startTime': '2026-09-11T23:34:45.082Z', 'duration': 10883.507, 'expected': 0, 'skipped': 0, 'unexpected': 2, 'flaky': 0}
+--- failed | visual week-ahead | line 173 | 3151 ms
+Error: expect(locator).toHaveScreenshot(expected) failed
+
+Locator: getByTestId('dashboard-widget-week-ahead')
+  Expected an image 638px by 293px, received 638px by 1034px. 55807 pixels (ratio 0.09 of all image pixels) are different.
+
+  Snapshot: week-ahead.png
+--- failed | dashboard snapshots survive a date change | line 200 | 3396 ms
+Error: expect(locator).toHaveScreenshot(expected) failed
+
+Locator: getByTestId('dashboard-widget-week-ahead')
+  Expected an image 638px by 293px, received 638px by 1034px. 55807 pixels (ratio 0.09 of all image pixels) are different.
+
+  Snapshot: week-ahead.png
 ```
 
-**9. Commits** (the pre-commit hook ran lint-staged `eslint --fix` + `prettier --write` and the turbo build):
+Both call logs end `taking element screenshot … fonts loaded … waiting for element to be stable`, so the widget was on the page.
+
+**10. Artefacts** (each is sha1, path under `frontend/test-results/`, and size). Every file was copied to `<scratch>/artefacts/`, with the report.
 
 ```
-commit2 rc=0
-8ecc6cd60 test(e2e): regenerate week-ahead baseline once for re-anchored rows (P102-15)
-22f6ca3ac test(e2e): server-clock re-anchor and same-date two-clock week-ahead check (P102-15)
-791b45e8e docs(planning): record P102-15 CARRY-06 summary (ok:false)
-spec blob 71405eeb83cf389ac4a7dac6bde7bad14f310462 wt 71405eeb83cf389ac4a7dac6bde7bad14f310462
-seed blob c58ac0e426833d7ecea018f84ed81e18b096d05f wt c58ac0e426833d7ecea018f84ed81e18b096d05f
-baseline sha1 HEAD dd30a75747cbdf6a921da373b7a6821c519b6f80 wt dd30a75747cbdf6a921da373b7a6821c519b6f80
- .../__snapshots__/dashboard-widgets/week-ahead.png | Bin 21626 -> 52843 bytes
- .../tests/e2e/dashboard-widgets-visual.spec.ts     |  46 ++++++++++++++-------
- 2 files changed, 32 insertions(+), 14 deletions(-)
+dd30a75747cbdf6a921da373b7a6821c519b6f80 e2e-dashboard-widgets-visu-6a73a-shots-survive-a-date-change-chromium-dashboard-widgets/week-ahead-actual.png 638x1034
+0b2d8c5191118c35322386c8687a1568f9fc2743 e2e-dashboard-widgets-visu-6a73a-shots-survive-a-date-change-chromium-dashboard-widgets/week-ahead-diff.png 638x1034
+03afa0703270f14ea83c453583754414f625a959 e2e-dashboard-widgets-visu-6a73a-shots-survive-a-date-change-chromium-dashboard-widgets/week-ahead-expected.png 638x293
+dd30a75747cbdf6a921da373b7a6821c519b6f80 e2e-dashboard-widgets-visual-visual-week-ahead-chromium-dashboard-widgets/week-ahead-actual.png 638x1034
+0b2d8c5191118c35322386c8687a1568f9fc2743 e2e-dashboard-widgets-visual-visual-week-ahead-chromium-dashboard-widgets/week-ahead-diff.png 638x1034
+03afa0703270f14ea83c453583754414f625a959 e2e-dashboard-widgets-visual-visual-week-ahead-chromium-dashboard-widgets/week-ahead-expected.png 638x293
 ```
 
-**10. Is the committed spec the tested spec?**
+The actual capture has heading `Week ahead` and three groups, with the date column masked magenta:
+
+- TODAY: Standup — Indonesia delegation.
+- TOMORROW: Bilateral consultation — ESCWA · Prep session — G20 Data Gaps Initiative · Brief minister — Vision 2030.
+- NEXT WEEK: Delegation visit — Indonesia BPS · Submit OECD data response · Training — new dossier workflow, plus an eighth row clipped at the 1000 px viewport.
+
+The diff marks the whole 1034 px frame. The committed rows and headers overlay the new ones.
+
+**11. Baseline and diff scope**
 
 ```
-spec mtime 2026-09-11T23:09:17Z
-baseline mtime 2026-09-11T23:10:26Z
-22f6ca3ac 2026-09-12T02:11:57+03:00
-wt == HEAD for spec
+HEAD content sha1 03afa0703270f14ea83c453583754414f625a959  base content sha1 03afa0703270f14ea83c453583754414f625a959
+ .../102-staging-data-debt-tail/102-15-SUMMARY.md   | 264 +++++++++++++++++++++
+ .../tests/e2e/dashboard-widgets-visual.spec.ts     | 152 +++++++++---
+ .../072-p102-today-relative-dashboard-fixtures.sql |  44 ++++
+ 3 files changed, 433 insertions(+), 27 deletions(-)
+png-in-diff: 0
 ```
 
-The spec was last written at 23:09:17Z, before oracle 2 ran at 23:11:02Z. The commit came at 23:11:57Z, and lint-staged did not rewrite the file, so HEAD's blob is exactly the one oracle 2 exercised.
+These figures predate this SUMMARY's own rewrite. A tooling note: `git rev-parse HEAD:<png>` printed `403bce09d5383e27c91277dc35566433478fd30d`, which is git's blob id and not the file's content SHA-1. The content hash above comes from `git show … | shasum`.
 
-**11. Oracle 1, final run after every browser run** (each run's beforeAll re-anchored the rows again), plus the staging readback:
+**12. Oracle 1, after every browser run**
 
 ```
-oracle1 final at 2026-09-11T23:12:14Z
+oracle1 at 2026-09-11T23:35:26Z
 P102-15-WINDOW engagements_in_window=3 calendar_in_window=5 engagements_present=3 calendar_present=5 expected 3 5 3 5 (window = [CURRENT_DATE, CURRENT_DATE+14])
 PASS window
 exit=0
-b0000006-0000-0000-0000-000000000001|2026-09-11
-b0000006-0000-0000-0000-000000000002|2026-09-12
-b0000006-0000-0000-0000-000000000003|2026-09-13
-b0000006-0000-0000-0000-000000000004|2026-09-14
-b0000006-0000-0000-0000-000000000005|2026-09-16
-2026-09-11 23:12:40.550332+00 | b0000002-0000-0000-0000-000000000001|2026-09-12 01:00:00+00|2026-09-12 03:00:00+00 ; b0000002-0000-0000-0000-000000000002|2026-09-12 10:00:00+00|2026-09-12 12:00:00+00 ; b0000002-0000-0000-0000-000000000003|2026-09-13 14:00:00+00|2026-09-15 16:00:00+00
 ```
-
-The spec's server-anchored values equal the psql seed's values:
-
-- 001 = `date_trunc('hour', NOW())` of the 23:00Z hour + 2 h = 01:00Z.
-- 002 and 003 are day-anchored.
-
-**12. Seed text against 102-06's bounded class regex** (from its oracle text: `\yE2E\y|\yUAT\y|Phase [0-9]+|staging verification`, case-insensitive `\yfixture\y`, and `\ye2e-`, run as perl `\b`):
-
-```
--- seed class-regex matches (none = 0) --
--- positive control (must print 3 of 4) --
-1: a fixture row
-2: Phase 12 note
-3: E2E seed
--- INSERT lines in seed --
-0
-```
-
-**Tooling misfire** (no state changed): a multi-statement `psql -c` printed only its last result set, so the engagement rows were read again as one statement (step 11, last line).
 
 ## Populations re-derived
 
-- **Fixture family:** 3 `b0000002-%` engagements and 5 `b0000006-%` calendar entries. This is oracle 1's own `present` control, `3 5` on both runs.
-- **Week-ahead rows for the test user:** 8. That is exactly the family, all eight visible in the baseline (step 7). The SRTL-02 rows sit in July (att0 read), outside the window.
-- **Tests selected by oracle 2's `-g`:** 2, and both passed.
+- **Fixture family:** 3 `b0000002-%` engagements and 5 `b0000006-%` calendar entries. This is oracle 1's `present` control, `3 5`.
+- **Tests selected by oracle 2's `-g`:** 2. Both ran and both failed (report `unexpected: 2`).
+- **Captures taken in run 2:** 2, one per test, and both are the same bytes (`dd30a757…`). The new test's 18:00Z capture was not reached.
+- **Snapshot files in the base..HEAD diff:** 0.
 
 ## Zeros beside the control that proves the instrument could see a non-zero
 
-- **Re-apply `UPDATE 0` / `UPDATE 0`** ← apply 1 of the same file, one second earlier: `UPDATE 1`.
-- **`unexpected=0` / `skipped=0`** ← the same oracle on att0's spec: `unexpected=2`. Att0's run 4 on the pre-P102-15 spec: `skipped=2`. This run's `expected=2` shows the wrapper counts passes, a positive control att0 lacked.
-- **Seed class-regex matches = 0** ← the same perl expression printed 3 of 4 control lines.
-- **INSERT lines = 0** ← the same file's two `UPDATE` statements at `:18` and `:32`.
-- **:5173 listeners = 0** (`lsof exit=1`) before and after every browser run. No positive control was sampled.
+- **`png-in-diff: 0`** ← at the start of this attempt, the same `git diff --stat 755cd3795..HEAD` listed `week-ahead.png | Bin 21626 -> 52843 bytes`.
+- **`skipped=0`** ← the same report counted `unexpected=2`, so the wrapper reads its stats. This spec at the plan's HEAD skipped week-ahead on FIXTURE_BLOCKED.
+- **`pre lsof exit=1` before run 2** ← the same census returned `exit=0` at 23:33:38Z, when P102-07's Vite held the port (step 4).
+- **Run 1's `expected=0 unexpected=0`** is void. It is an instrument that could not start (`http://localhost:5173 is already used`), not a product zero.
 
-## Limits of this pass (measured where marked, otherwise derived) — left for later tasks
+## Limits of this pass — left for the operator and later tasks
 
-1. **The pass holds only on the UTC date it was captured: 2026-09-11, 17:02Z–23:59Z** (derived). FROZEN_TIME is today 12:00Z. The 18:00Z leg needs real time past about 17:01Z, or the 3600 s token reads as expired against the browser clock; att0 measured that storm with the clock 13.5 h ahead. From 00:00Z, both legs sit 12 h and 18 h ahead of real time and should storm, and the whole `chromium-dashboard-widgets` project with them, from 00:00Z to about 11:00Z every day. **The gate must run before 2026-09-12T00:00Z.** The fix is outside this criterion's wording: freeze at `min(today 12:00Z, now)`, or align the stored session's `expires_at` with the fake clock.
-2. **The rendering is not day-invariant** (derived from `groupEventsByDay` and the 060 offsets; contradicts ruling `fa892d25f`'s "re-proven on every real day").
-   - The groups depend on the weekday: `isThisWeek` uses a Sunday week start. Today, a Friday, gives TODAY 1 / TOMORROW 3 / NEXT WEEK 4, but a Wednesday would put +2/+3 under THIS WEEK.
-   - They also depend on the real hour: engagement 001 = hour + 2 h falls under TODAY before about 19:00Z and under TOMORROW after.
-   - So this baseline matches only runs whose weekday and hour regime reproduce Friday, after 19:00Z. CARRY-06 needs either a weekday- and hour-free clock/offset pair, or a mask that includes the group headers, under a new ruling.
-3. **Fonts** (Vite warnings measured, consequence inferred). In this tickmarkr worktree, `node_modules` resolves outside the worktree, and Vite refused the `@fontsource` files (step 7). The baseline therefore renders fallback fonts, and a run from the main checkout, where the fonts are served, may not match it. Att0's small diffs on the other widgets (kpi-strip 606 px, digest 3057 px) would fit that. Measure once from a checkout that serves the fonts.
-4. **VISUAL-DEBT-01:** the six other widget baselines were red in att0 and were not re-run here. vip-visits stays FIXTURE_BLOCKED.
-5. **WeekRow renders an engagement's name twice** (`.week-title` and `.week-meta`), so any assertion on those titles must target `.week-title`. This is a product quirk, not repaired here.
-6. **`graphify update .` was not run.** It writes `graphify-out/`, which is outside this plan's file scope.
+1. **Operator: reconcile `102-15-PLAN.md`** (outside file scope). Two options:
+   - Amend the judge text so the one regeneration from ruling `fa892d25f` is admitted. The existing blob `dd30a757…` in `d84103da4` then matches byte-for-byte (step 10), with no new regeneration.
+   - Drop the "match" requirement from oracle 2.
+
+   Until then, no state of `week-ahead.png` satisfies oracle 2 and the judge together.
+2. **Date roll** (derived; deferred finding from att1). FROZEN_TIME is today 12:00Z. From 00:00Z to about 11:00Z UTC, both clocks sit far ahead of real time. The 3600 s access token then reads as expired, and att0 measured supabase-js storming refresh grants to 429. After 2026-09-12T00:00Z, oracle 2 fails on login before any pixel comparison. This run stopped all browser work before the date rolled.
+3. **Weekday and hour dependence** (derived; deferred finding from att1). `groupEventsByDay` buckets by `isToday` / `isTomorrow` / `isThisWeek`, and engagement 001 is hour + 2 h. The group headers therefore move with the real weekday and hour, and they sit outside the `.week-date` mask.
+4. **Fonts** (not re-measured this attempt; deferred finding from att1). In a tickmarkr worktree, Vite refuses the `@fontsource` files (att1 measured this), so captures here use fallback fonts.
+5. **VISUAL-DEBT-01:** the other six widget baselines were not run. vip-visits stays FIXTURE_BLOCKED.
+6. **`graphify update .` was not run.** It writes `graphify-out/`, which is outside the file scope.
 
 ## Staging side effects
 
-- **Dates only:** the eight rows were re-dated by the seed (twice) and by the beforeAll of each browser run (twice). Engagement `updated_at` is bumped by each non-no-op update (trigger).
-- **Auth:** there was no refresh storm this attempt. Both clocks sat behind real time.
+- **Dates only.** Run 2's beforeAll re-dated the eight rows to the same today-relative values. Oracle 1 reads `3 5 3 5` afterwards. Run 1 ran no test.
+- **Auth:** there was no refresh storm, because both clocks sat behind real time.
