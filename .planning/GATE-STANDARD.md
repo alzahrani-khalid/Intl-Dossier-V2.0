@@ -46,6 +46,12 @@ A gate is sound only if the author has **observed** both:
 
 1. **RED on the undone tree**, and
 2. **GREEN on a constructed work-done state.**
+3. For presence-shaped criteria only (`X appears`, `exists`, `contains`, or `renders`), construct a
+   plausible **WRONG done-state** and observe the gate **RED**, or record
+   `WRONG-STATE NOT CONSTRUCTED: <what and why>`.
+
+The third direction applies only to presence-shaped criteria; it is not retroactive to exact-value
+or behavioural criteria. Exact-value and behavioural criteria stay at the two directions above.
 
 Constructing the done state is **mandatory, not best-effort**. It is the only clause that catches the
 dominant class. Where the done state cannot be fully constructed (a deploy, a staging call), build
@@ -224,7 +230,7 @@ for f in $(git diff --name-only phase-NN-base -- frontend/src supabase/functions
   # degenerates and matches nearly every file. Strip the marker, then escape what remains.
   # (18 such route files exist in this repo — see the amendment note.)
   id=${id#\$}
-  id=$(printf '%s' "$id" | sed -E 's/[][.*+?^${}()|\\]/\\\\&/g')
+  case "$id" in *[^A-Za-z0-9_-]*) echo "UNSAFE ID (triage by hand): $f -> '$id'"; continue;; *) echo "safe: '$id'";; esac
   case "$id" in auth|utils|types|config|helpers|constants|_shared)
     echo "AMBIGUOUS (triage by hand): $f"; continue;; esac
   hits=$(grep -rlE -- "\b${id}\b" $ROOTS || true)
