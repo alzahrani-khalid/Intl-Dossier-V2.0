@@ -18,14 +18,20 @@
  *   node scripts/gate-drill.mjs <phase_dir> [--json] [--timeout <seconds>]
  *
  * Exit: 0 if every gate PARSED (regardless of run result); 1 if any gate fails `bash -n`, or on
- * usage/IO error. Run results are DATA, not pass/fail — on a pre-execution tree every gate SHOULD
- * be red, so a non-zero run exit is the expected case and is not an error here.
+ * usage/IO error; 4 when nested under another drill; or 5 when a gate invokes this drill over its
+ * own phase directory. Run results are DATA, not pass/fail — on a pre-execution tree every gate
+ * SHOULD be red, so a non-zero run exit is the expected case and is not an error here.
  */
 
 import { readdirSync, readFileSync, writeFileSync, mkdtempSync, rmSync } from 'node:fs'
-import { join } from 'node:path'
+import { basename, join, resolve } from 'node:path'
 import { tmpdir } from 'node:os'
 import { spawnSync } from 'node:child_process'
+
+if (process.env.GATE_DRILL_ACTIVE === '1') {
+  console.error('refusing to run nested (GATE_DRILL_ACTIVE=1)')
+  process.exit(4)
+}
 
 const args = process.argv.slice(2)
 const asJson = args.includes('--json')
@@ -73,6 +79,31 @@ for (const file of planFiles) {
   }
 }
 
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+const absolutePhaseDir = resolve(phaseDir)
+const phaseNames = [...new Set([phaseDir, absolutePhaseDir, basename(absolutePhaseDir), '.'])]
+
+const selfReferentialGate = gates.find((gate) => {
+  for (const line of gate.body.split('\n')) {
+    const command = line.match(/gate-drill\.mjs\b/)
+    if (!command) continue
+    const argumentsText = line.slice(command.index + command[0].length)
+    if (
+      phaseNames.some((name) =>
+        new RegExp(`(?:^|[\\s"'=])${escapeRegExp(name)}(?=$|[\\s"';|&])`).test(argumentsText),
+      )
+    ) {
+      return true
+    }
+  }
+  return false
+})
+
+if (selfReferentialGate) {
+  console.error(`refusing self-referential gate ${selfReferentialGate.id}`)
+  process.exit(5)
+}
+
 const scratch = mkdtempSync(join(tmpdir(), 'gate-drill-'))
 const results = []
 
@@ -91,6 +122,7 @@ try {
         timeout: timeoutSec * 1000,
         cwd: process.cwd(),
         maxBuffer: 16 * 1024 * 1024,
+        env: { ...process.env, GATE_DRILL_ACTIVE: '1' },
       })
       run = {
         exit: r.status,
