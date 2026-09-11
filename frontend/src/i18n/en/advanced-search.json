@@ -1,16 +1,16 @@
 {
-  "title": "Advanced Search",
+  "title": "Advanced search",
   "description": "Search across dossiers, engagements, positions, and documents with advanced filters",
 
   "search": {
     "placeholder": "Enter search query...",
     "button": "Search",
-    "clear": "Clear Search",
+    "clear": "Clear search",
     "noQuery": "Enter a search term or add filters to begin"
   },
 
   "entityTypes": {
-    "label": "Search In",
+    "label": "Search in",
     "dossier": "Dossiers",
     "engagement": "Engagements",
     "position": "Positions",
@@ -20,24 +20,24 @@
     "forum": "Forums",
     "country": "Countries",
     "theme": "Themes",
-    "selectAll": "Select All",
-    "deselectAll": "Deselect All"
+    "selectAll": "Select all",
+    "deselectAll": "Deselect all"
   },
 
   "filters": {
     "title": "Filters",
-    "add": "Add Filter",
-    "remove": "Remove Filter",
-    "clear": "Clear All Filters",
+    "add": "Add filter",
+    "remove": "Remove filter",
+    "clear": "Clear all filters",
     "activeCount": "{{count}} active filter",
     "activeCount_plural": "{{count}} active filters",
     "noFilters": "No filters applied"
   },
 
   "conditions": {
-    "title": "Filter Conditions",
-    "add": "Add Condition",
-    "group": "Create Group",
+    "title": "Filter conditions",
+    "add": "Add condition",
+    "group": "Create group",
     "field": "Field",
     "operator": "Operator",
     "value": "Value",
@@ -47,22 +47,22 @@
 
   "operators": {
     "equals": "Equals",
-    "not_equals": "Not Equals",
+    "not_equals": "Not equals",
     "contains": "Contains",
-    "not_contains": "Does Not Contain",
-    "starts_with": "Starts With",
-    "ends_with": "Ends With",
-    "greater_than": "Greater Than",
-    "less_than": "Less Than",
+    "not_contains": "Does not contain",
+    "starts_with": "Starts with",
+    "ends_with": "Ends with",
+    "greater_than": "Greater than",
+    "less_than": "Less than",
     "greater_equal": "Greater or Equal",
     "less_equal": "Less or Equal",
     "between": "Between",
-    "not_between": "Not Between",
-    "in": "In List",
-    "not_in": "Not In List",
-    "is_null": "Is Empty",
-    "is_not_null": "Is Not Empty",
-    "matches_regex": "Matches Pattern"
+    "not_between": "Not between",
+    "in": "In list",
+    "not_in": "Not in list",
+    "is_null": "Is empty",
+    "is_not_null": "Is not empty",
+    "matches_regex": "Matches pattern"
   },
 
   "logic": {
@@ -76,22 +76,22 @@
   },
 
   "dateRange": {
-    "title": "Date Range",
+    "title": "Date range",
     "from": "From",
     "to": "To",
-    "preset": "Quick Select",
-    "custom": "Custom Range",
-    "clear": "Clear Date Range",
+    "preset": "Quick select",
+    "custom": "Custom range",
+    "clear": "Clear date range",
     "presets": {
       "today": "Today",
       "yesterday": "Yesterday",
-      "last_7_days": "Last 7 Days",
-      "last_30_days": "Last 30 Days",
-      "last_90_days": "Last 90 Days",
-      "this_month": "This Month",
-      "this_year": "This Year",
-      "next_7_days": "Next 7 Days",
-      "next_30_days": "Next 30 Days"
+      "last_7_days": "Last 7 days",
+      "last_30_days": "Last 30 days",
+      "last_90_days": "Last 90 days",
+      "this_month": "This month",
+      "this_year": "This year",
+      "next_7_days": "Next 7 days",
+      "next_30_days": "Next 30 days"
     }
   },
 
@@ -108,11 +108,11 @@
   "tags": {
     "title": "Tags",
     "placeholder": "Select or enter tags...",
-    "add": "Add Tag"
+    "add": "Add tag"
   },
 
   "sorting": {
-    "title": "Sort By",
+    "title": "Sort by",
     "relevance": "Relevance",
     "date": "Date",
     "title_sort": "Title",
@@ -122,24 +122,24 @@
 
   "options": {
     "title": "Options",
-    "includeArchived": "Include Archived",
-    "excludeArchived": "Exclude Archived"
+    "includeArchived": "Include archived",
+    "excludeArchived": "Exclude archived"
   },
 
   "templates": {
-    "title": "Search Templates",
-    "saved": "Saved Searches",
-    "quick": "Quick Searches",
+    "title": "Search templates",
+    "saved": "Saved searches",
+    "quick": "Quick searches",
     "popular": "Popular",
     "recent": "Recent",
-    "system": "System Templates",
-    "custom": "My Templates",
+    "system": "System templates",
+    "custom": "My templates",
     "create": "Save as Template",
-    "createTitle": "Create Search Template",
-    "update": "Update Template",
-    "delete": "Delete Template",
+    "createTitle": "Create search template",
+    "update": "Update template",
+    "delete": "Delete template",
     "deleteConfirm": "Are you sure you want to delete this template?",
-    "name": "Template Name",
+    "name": "Template name",
     "nameEn": "Name (English)",
     "nameAr": "Name (Arabic)",
     "description": "Description",
@@ -147,23 +147,23 @@
     "descriptionAr": "Description (Arabic)",
     "icon": "Icon",
     "color": "Color",
-    "makePublic": "Make Public",
+    "makePublic": "Make public",
     "publicDescription": "Public templates can be used by all users",
     "useCount": "Used {{count}} time",
     "useCount_plural": "Used {{count}} times",
     "noTemplates": "No templates found",
-    "loadTemplate": "Load Template",
+    "loadTemplate": "Load template",
     "applyTemplate": "Apply"
   },
 
   "results": {
-    "title": "Search Results",
+    "title": "Search results",
     "found": "{{count}} result found",
     "found_plural": "{{count}} results found",
     "noResults": "No results found",
     "noResultsHint": "Try adjusting your search criteria or removing some filters",
     "loading": "Searching...",
-    "loadMore": "Load More",
+    "loadMore": "Load more",
     "took": "Search completed in {{ms}}ms"
   },
 
@@ -172,30 +172,30 @@
     "status": "Status",
     "created": "Created",
     "updated": "Updated",
-    "viewDetails": "View Details",
-    "matchedConditions": "Matched Conditions"
+    "viewDetails": "View details",
+    "matchedConditions": "Matched conditions"
   },
 
   "relationships": {
-    "title": "Relationship Filters",
-    "add": "Add Relationship Filter",
-    "source": "Source Entity",
-    "target": "Related Entity",
-    "type": "Relationship Type",
-    "depth": "Search Depth",
+    "title": "Relationship filters",
+    "add": "Add relationship filter",
+    "source": "Source entity",
+    "target": "Related entity",
+    "type": "Relationship type",
+    "depth": "Search depth",
     "types": {
-      "parent_of": "Parent Of",
-      "child_of": "Child Of",
-      "linked_to": "Linked To",
-      "related_to": "Related To",
-      "member_of": "Member Of",
-      "has_member": "Has Member",
-      "assigned_to": "Assigned To",
-      "owned_by": "Owned By",
-      "created_by": "Created By",
-      "updated_by": "Updated By",
+      "parent_of": "Parent of",
+      "child_of": "Child of",
+      "linked_to": "Linked to",
+      "related_to": "Related to",
+      "member_of": "Member of",
+      "has_member": "Has member",
+      "assigned_to": "Assigned to",
+      "owned_by": "Owned by",
+      "created_by": "Created by",
+      "updated_by": "Updated by",
       "mentions": "Mentions",
-      "mentioned_by": "Mentioned By"
+      "mentioned_by": "Mentioned by"
     }
   },
 
@@ -204,15 +204,15 @@
     "title_ar": "Title (Arabic)",
     "status": "Status",
     "type": "Type",
-    "sensitivity_level": "Sensitivity Level",
+    "sensitivity_level": "Sensitivity level",
     "tags": "Tags",
-    "created_at": "Created Date",
-    "updated_at": "Updated Date",
-    "start_date": "Start Date",
-    "end_date": "End Date",
+    "created_at": "Created date",
+    "updated_at": "Updated date",
+    "start_date": "Start date",
+    "end_date": "End date",
     "location": "Location",
-    "file_type": "File Type",
-    "file_size": "File Size",
+    "file_type": "File type",
+    "file_size": "File size",
     "email": "Email",
     "department": "Department"
   },
@@ -223,8 +223,8 @@
     "save": "Save",
     "cancel": "Cancel",
     "apply": "Apply",
-    "export": "Export Results",
-    "share": "Share Search"
+    "export": "Export results",
+    "share": "Share search"
   },
 
   "errors": {
