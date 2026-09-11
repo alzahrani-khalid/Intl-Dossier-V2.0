@@ -246,6 +246,19 @@ PASS preview-dropped
 ORACLE_RC=0
 ```
 
+## Repair attempt (2026-09-12): blocked on the allowlist
+
+The review's one material finding is that the namespace is not gone end to end. At this HEAD the criterion grep over `frontend/src backend/src supabase/functions` returns 0 hits (rc 1), so the earlier `database.types.ts` findings are closed. Every remaining edit is outside this run's fixed allowlist, which matches `files_modified` above and has not changed since ruling 56e0d361c. This attempt made none of those edits and reports `ok:false`. The complete remedy:
+
+1. `git rm frontend/public/locales/{en,ar}/preview-layouts.json`. No loader reads `public/locales`: `loadPath|i18next-http-backend` has 0 hits in `frontend/src`, `frontend/vite.config.ts` and `frontend/package.json`.
+2. Remove `"frontend/src/i18n/ar/preview-layouts.json"` from `scripts/glossary-senses.d/dossier-b.json:36`. Nothing reads that overlay except a `--slice` argument.
+3. Remove the same entry from `scripts/glossary-senses.d/brief-stance.json:40`. **This edit needs a seventh path.** `scripts/glossary-census.mjs` pins that overlay's slice in two P99 assertions:
+   - `:860` expects `overlay.slice` to have length 43 (it has 43 today);
+   - `:895` expects `currentOverlay.slice` to equal the slice at commit `442369ff`.
+
+   Removing the entry turns both red unless the same change updates them. The overseer's recommended six-path allowlist does not include `glossary-census.mjs`. A ruling that adds only those six paths leaves the next attempt two choices: redden two P99 oracles, or leave brief-stance pointing at a deleted file. The pins are P99's oracles, not this task's, so whether to update them is the operator's decision.
+4. Verify: `node scripts/glossary-census.mjs --slice scripts/glossary-senses.d/brief-stance.json` and the same command with `dossier-b.json` both run without `unknown ar slice file`. The P99 assertions at `:860` and `:895` stay green.
+
 ## Left for a later task (outside `files_modified`, not touched)
 
 No task has been named for these yet. The operator needs to create one, because these paths are outside this plan's fixed allowlist:
