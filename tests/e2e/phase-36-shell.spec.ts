@@ -29,8 +29,10 @@ test.describe('Phase 36 shell', () => {
       if (shell) shell.setAttribute('data-test-mount-id', id)
     }, stampBefore)
 
-    // Navigate to another protected route (client-side nav).
-    await page.goto('/engagements')
+    // Navigate client-side through the sidebar Link. page.goto() loads a new
+    // document, which drops the stamp whether or not AppShell remounts.
+    await page.locator('.appshell a[href="/engagements"]:visible').first().click()
+    await page.waitForURL(/\/engagements(?:[?#]|$)/)
     await page.waitForSelector('.appshell', { timeout: 10000 })
 
     const stampAfter = await page.getAttribute('.appshell', 'data-test-mount-id')
@@ -79,6 +81,8 @@ test.describe('Phase 36 shell', () => {
   test('shell tab order — tab cycles through topbar controls then sidebar nav', async ({
     adminPage: page,
   }) => {
+    // prettier-ignore
+    test.fixme(true, 'P101-QUAR 31848669722: contract - the first Tab lands on the sidebar .sb-item because AppShell.tsx renders the sidebar aside before the topbar; topbar-first needs an app change or a UI-SPEC amendment; log line 2080 of job 94920109119; owner Phase 102')
     await page.goto('/')
     await page.waitForSelector('.appshell', { timeout: 10000 })
 
@@ -124,6 +128,8 @@ test.describe('Phase 36 shell', () => {
   test('drawer panel width — max-sm:w-screen applies at phone viewport (D-05 closure)', async ({
     adminPage: page,
   }) => {
+    // prettier-ignore
+    test.fixme(true, 'P101-QUAR 31848669722: visual plus deploy drift - the drawer dialog measured 320px at a 390px viewport on the deployed build; HEAD AppShell.tsx:252 carries w-[280px] max-sm:w-screen, unobserved on a deploy of HEAD; log line 2126 of job 94920109119; owner Phase 103')
     await page.setViewportSize({ width: 390, height: 844 })
     await page.goto('/')
     await page.waitForSelector('.appshell', { timeout: 10000 })

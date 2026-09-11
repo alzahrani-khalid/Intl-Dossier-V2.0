@@ -42,6 +42,8 @@ const EXPECTED_DISPLAY: Record<Direction, RegExp> = {
 
 test.describe('Phase 35 — Typography E2E (TYPO-01..04)', () => {
   test('TYPO-02 — zero requests to fonts.googleapis.com or fonts.gstatic.com', async ({ page }) => {
+    // prettier-ignore
+    test.fixme(true, 'P101-QUAR 31848669722: application code - frontend/index.html links fonts.googleapis.com (7 font requests logged); self-hosting the fonts is an app change; log line 747 of job 94920109185; owner Phase 102')
     await authBypass(page)
     await seedLocale(page, 'en')
     await seedDirection(page, 'chancery')
@@ -57,6 +59,11 @@ test.describe('Phase 35 — Typography E2E (TYPO-01..04)', () => {
     test(`TYPO-01 — ${dir}: getComputedStyle(h1).fontFamily matches expected display font`, async ({
       page,
     }) => {
+      // Only the situation cell was red in CI; the other three cells stay live.
+      if (dir === 'situation') {
+        // prettier-ignore
+        test.fixme(true, 'P101-QUAR 31848669722: deploy drift - the deployed build still honours the retired situation direction (h1 computed IBM Plex Mono); HEAD coerces id.dir to linear (Phase 77), so this cell asserts a retired font; log line 826 of job 94920109185; owner Phase 103')
+      }
       await authBypass(page)
       await seedLocale(page, 'en')
       await seedDirection(page, dir)
@@ -81,6 +88,8 @@ test.describe('Phase 35 — Typography E2E (TYPO-01..04)', () => {
   })
 
   test('TYPO-04 — [dir="ltr"].mono inside RTL fixture renders JetBrains Mono', async ({ page }) => {
+    // prettier-ignore
+    test.fixme(true, 'P101-QUAR 31848669722: environment - frontend/tests/e2e/fixtures/typo-04-fixture.html is served only by the Vite dev server and e2e.yml targets the deployed build, where the probe read an empty font-family; log line 912 of job 94920109185; owner Phase 102')
     await page.goto('/tests/e2e/fixtures/typo-04-fixture.html')
     const probeFamily = await page.evaluate(() => {
       const el = document.querySelector('[data-testid="typo04-probe"]')

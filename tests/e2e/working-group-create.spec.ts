@@ -6,6 +6,8 @@ test.describe('Working Group wizard — create flow', () => {
     adminPage,
     uniqueId,
   }): Promise<void> => {
+    // prettier-ignore
+    test.fixme(true, 'P101-QUAR 31848669722: spec drift plus deploy drift - no link matched /create working group/ within 30s on the deployed build; at HEAD the CTA reads Add working group (empty-states:list.working_group.cta) and the wizard steps after it are unobserved on a deploy of HEAD; log line 1189 of job 94920109185; owner Phase 103')
     const page = adminPage
     const nameEn = uniqueId('e2e-wg')
     const nameAr = 'فريق عمل اختبار'

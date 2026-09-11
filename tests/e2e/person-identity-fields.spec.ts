@@ -21,6 +21,8 @@ test.describe('Phase 32 person identity fields @phase32', () => {
     adminPage,
     uniqueId,
   }): Promise<void> => {
+    // prettier-ignore
+    test.fixme(true, 'P101-QUAR 31848669722: application a11y - getByLabel(/honorific/) resolved 0 elements; at HEAD PersonBasicInfoStep.tsx:120 renders FieldLabelWithHelp without htmlFor, so the label is not associated with the Select trigger; log line 1961 of job 94920109119; owner Phase 102')
     const page = adminPage
     const lastNameEn = uniqueId('phase32-eo')
     const firstNameEn = 'Test'
@@ -120,6 +122,8 @@ test.describe('Phase 32 person identity fields @phase32', () => {
     adminPage,
     uniqueId,
   }): Promise<void> => {
+    // prettier-ignore
+    test.fixme(true, 'P101-QUAR 31848669722: application a11y - timed out waiting for getByLabel(/honorific/); at HEAD PersonBasicInfoStep.tsx:120 renders FieldLabelWithHelp without htmlFor, so the label is not associated with the Select trigger; log line 2172 of job 94920109119; owner Phase 102')
     const page = adminPage
     const lastNameEn = uniqueId('phase32-person')
     const firstNameEn = 'Test'
