@@ -15,6 +15,8 @@ const ALL_ZONES: readonly OperationsZone[] = [
 
 test.describe('TEST-10 Operations Hub', () => {
   test('renders all 5 zones for leadership role', async ({ adminPage }) => {
+    // prettier-ignore
+    test.fixme(true, 'P101-QUAR 31848669722: test red - getByTestId(ops-zone-attention) never became visible; the ops-zone-* testids were emitted by the OperationsHub page removed in c42f722c8 (Phase 38-09) and git grep finds no emitter at HEAD; a rewrite against the Phase 38 Dashboard needs the OperationsHubPage POM, outside the P101-08 file scope; log line 1266 of job 94920109119; owner Phase 102')
     const hub = new OperationsHubPage(adminPage)
     await hub.goto()
 
@@ -24,6 +26,8 @@ test.describe('TEST-10 Operations Hub', () => {
   })
 
   test('leadership role sees zones in correct order', async ({ adminPage }) => {
+    // prettier-ignore
+    test.fixme(true, 'P101-QUAR 31848669722: test red - getByTestId(role-switcher) never resolved; its only render site is ActionBar, which git grep finds mounted nowhere at HEAD, and the ops-zone-* testids read next have no emitter since c42f722c8 (Phase 38-09); the rewrite needs the OperationsHubPage POM, outside the P101-08 file scope; log line 1331 of job 94920109119; owner Phase 102')
     const hub = new OperationsHubPage(adminPage)
     await hub.goto()
     await hub.switchRole('leadership')
@@ -35,6 +39,8 @@ test.describe('TEST-10 Operations Hub', () => {
   })
 
   test('analyst role sees all zones in analyst order', async ({ analystPage }) => {
+    // prettier-ignore
+    test.fixme(true, 'P101-QUAR 31848669722: test red - getByTestId(role-switcher) never resolved; its only render site is ActionBar, which git grep finds mounted nowhere at HEAD, and the ops-zone-* testids read next have no emitter since c42f722c8 (Phase 38-09); the rewrite needs the OperationsHubPage POM, outside the P101-08 file scope; log line 1396 of job 94920109119; owner Phase 102')
     const hub = new OperationsHubPage(analystPage)
     await hub.goto()
     await hub.switchRole('analyst')
@@ -52,6 +58,8 @@ test.describe('TEST-10 Operations Hub', () => {
   })
 
   test('clicking a zone item navigates to its detail view', async ({ adminPage }) => {
+    // prettier-ignore
+    test.fixme(true, 'P101-QUAR 31848669722: test red - getByTestId(ops-zone-engagements) never became visible; the ops-zone-* testids were emitted by the OperationsHub page removed in c42f722c8 (Phase 38-09) and git grep finds no emitter at HEAD; a rewrite against the Phase 38 Dashboard needs the OperationsHubPage POM, outside the P101-08 file scope; log line 1461 of job 94920109119; owner Phase 102')
     const hub = new OperationsHubPage(adminPage)
     await hub.goto()
     await hub.expectZoneVisible('engagements')
