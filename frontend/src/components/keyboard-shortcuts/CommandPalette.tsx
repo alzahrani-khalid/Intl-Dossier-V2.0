@@ -97,7 +97,8 @@ import {
   type QuickSwitcherWorkItem,
 } from '@/hooks/useQuickSwitcherSearch'
 import { getWorkItemUrl, type RecentItem } from '@/domains/dossiers/hooks/useQuickSwitcherSearch'
-import { DOSSIER_CARD_TYPES, type DossierType } from '@/lib/dossier-type-guards'
+import type { DossierType } from '@/lib/dossier-type-guards'
+import { DOSSIER_TYPE_ORDER } from './command-palette-order'
 import { resolveTimelineNavUrl } from '@/lib/timeline-navigation'
 import { useDirection } from '@/hooks/useDirection'
 import { useRecentNavigation } from '@/hooks/useRecentNavigation'
@@ -301,9 +302,6 @@ export const routeContexts: RouteContext[] = [
     suggestedActions: [],
   },
 ]
-
-// Ordered list of all 8 dossier types for entity sub-grouping
-export const DOSSIER_TYPE_ORDER: string[] = [...DOSSIER_CARD_TYPES]
 
 // i18n keys for dossier type group headings (maps to quickswitcher.groups.*)
 const dossierTypeGroupKeys: Record<string, string> = {

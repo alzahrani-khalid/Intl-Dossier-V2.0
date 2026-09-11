@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { GUIDE_GRID_TYPES } from '@/components/dossier/DossierTypeGuide'
 import { VALID_TYPES } from '@/components/dossier/wizard/hooks/useDraftMigration'
-import { DOSSIER_TYPE_ORDER } from '@/components/keyboard-shortcuts/CommandPalette'
+import { DOSSIER_TYPE_ORDER } from '@/components/keyboard-shortcuts/command-palette-order'
 import { DOSSIER_CARD_TYPES, DOSSIER_TYPES } from '@/lib/dossier-type-guards'
 
 describe('dossier type parallel truth', () => {

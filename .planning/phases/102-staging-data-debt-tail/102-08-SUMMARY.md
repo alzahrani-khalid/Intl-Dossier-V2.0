@@ -91,6 +91,24 @@ Tests  1 passed (1)
 Duration  7.65s (transform 2.22s, setup 1.49s, import 5.50s, tests 8ms, environment 510ms)
 ```
 
+On the repair pass, `DOSSIER_TYPE_ORDER` moved to the allowed lightweight sibling module so the runtime proof does not import the full command palette and its application dependency graph. The palette still consumes `DOSSIER_TYPE_ORDER.map` unchanged. The exact filtered proof passed again:
+
+```text
+Test Files  1 passed (1)
+Tests  1 passed (1)
+Duration  1.59s (transform 424ms, setup 625ms, import 587ms, tests 3ms, environment 293ms)
+```
+
+The post-repair population and census remained at their accepted end states:
+
+```text
+P102-08-GUIDE en=8/8 ar=8/8 expected en=8/8 ar=8/8 (whenToUse>=20 chars, examples>=2, commonLinks>=2, notFor>=20 chars)
+PASS guide
+  NS dossier strings=1066 candidates=4 ar_mirror=4 carved=4 ar_missing_keys=0 ar_extra_keys=0 carve_rows=4
+P102-LANE namespaces=1 at_end_state=1 expected 1 1 (candidates==carved, carved==carve_rows, ar_mirror==candidates, ar_missing_keys=0)
+PASS lane
+```
+
 Frontend TypeScript validation passed:
 
 ```text
