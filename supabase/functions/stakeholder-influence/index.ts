@@ -638,7 +638,11 @@ async function handleRequest(req: Request, corsHeaders: Record<string, string>) 
         const dossierType = url.searchParams.get('type');
         const minScore = url.searchParams.get('min_score');
 
-        let query = supabase.from('stakeholder_network_summary').select('*');
+        const serviceClient = createClient(
+          Deno.env.get('SUPABASE_URL') ?? '',
+          Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+        );
+        let query = serviceClient.from('stakeholder_network_summary').select('*');
 
         if (dossierType) {
           query = query.eq('dossier_type', dossierType);
