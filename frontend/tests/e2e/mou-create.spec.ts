@@ -101,7 +101,7 @@ test.describe('MoU create (FEAT-01)', () => {
     const createResponse = page.waitForResponse(
       (r) => r.url().includes('/functions/v1/mous') && r.request().method() === 'POST',
     )
-    await page.getByRole('button', { name: /create mou/i }).click()
+    await page.getByRole('button', { name: /create an mou/i }).click()
     const response = await createResponse
     if (response.status() >= 400) {
       const body = await response.text()

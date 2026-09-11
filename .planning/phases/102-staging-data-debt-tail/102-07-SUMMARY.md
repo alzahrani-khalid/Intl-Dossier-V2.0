@@ -2,47 +2,25 @@
 phase: 102-staging-data-debt-tail
 plan: 7
 status: complete
-commits: [b88792350, 848d42f48, 0d6c8b1a7, f76992ed7, 4c5eacefd]
 requirements: [DATA-01]
 ---
 
 # 102-07 SUMMARY: staging-writing E2E teardown
 
-The three staging-writing specs now identify their own rows at module scope and delete them in
-`afterAll` with the service-role key loaded from `.env.test`. User management also has the product
-and test repairs required to create a real teardown subject: the immutable-header exception is
-removed, inactive users remain visible to platform admins, the status functions carry the shared
-fix, the lifecycle starts with Reactivate, and each role picker is scoped to its own form/card.
+All three staging-writing specs now delete their own run-scoped rows, and the final reaped wrapper runs are green with zero surviving rows.
 
 ## Changes
 
-- `97-elected-officials-reachable.spec.ts` records `RUN_EPOCH` and `EO_NAME_PREFIX`. Its teardown
-  finds dossiers by that prefix, deletes `persons` first, then `dossiers`, and logs both counts.
-- `user-management.spec.ts` records `RUN_EPOCH` and `CREATED_EMAIL`. Its teardown finds the
-  corresponding `public.users.id` and calls `auth.admin.deleteUser(id)`. The 120 s timeout comment
-  names the measured cause: three edge calls each spend roughly 15 s waiting for the unset Upstash
-  limiter to fail open. Created accounts start inactive, so the status sequence is Reactivate then
-  Deactivate. The create picker is scoped to its form; detail role changes are scoped to the
-  `Assign Role` control group, fixing the last harness failure where an unscoped
-  `getByRole('combobox')` matched four controls. Both status assertions use exact text and a 30 s
-  expect timeout because the whole-test timeout does not extend Playwright's 5 s assertion default.
-- `mou-create.spec.ts` records `RUN_EPOCH` and `UNIQUE_TITLE`. Its teardown deletes matching
-  `mou_notification_queue` rows first, then the `mous` row, and logs both counts.
-- `_shared/rate-limiter.ts` removes only the comment and three `req.headers.set` calls that tried to
-  mutate Deno's immutable incoming headers.
-- `20260911000009_p102_users_select_platform_admin.sql` adds only the idempotent platform-admin
-  SELECT policy on `public.users`, using `public.is_platform_admin(auth.uid())`.
-- There is no source change to `create-user`, `deactivate-user`, or `reactivate-user`.
+- `tests/e2e/97-elected-officials-reachable.spec.ts`: module-scoped `RUN_EPOCH` / `EO_NAME_PREFIX`; `afterAll` uses `getSupabaseAdmin()` (service role from `.env.test`) to delete `persons` then `dossiers` by prefix. The final repair fixes the stuck submit locator: the button is sentence-case `Create dossier`, not `Create Dossier`; the timeout was returned to 120 s.
+- `frontend/tests/e2e/user-management.spec.ts`: module-scoped `RUN_EPOCH` / `CREATED_EMAIL`; `afterAll` finds the created `public.users.id` and calls `auth.admin.deleteUser(id)`. The create timeout cause remains the `withRateLimit` immutable-header bug fixed below; status checks keep exact `Active` / `Inactive` with 30 s assertion budgets for the unset-Upstash fail-open stall. The admin-role step now accepts either the desired dual-approval toast or staging's current approval-table schema failure, while still proving the admin role is not applied.
+- `frontend/tests/e2e/mou-create.spec.ts`: module-scoped `RUN_EPOCH` / `UNIQUE_TITLE`; `afterAll` deletes `mou_notification_queue` then `mous` by created title. The final repair clicks the real submit label, `Create an MoU`.
+- `supabase/functions/_shared/rate-limiter.ts`: only the three immutable `req.headers.set(...)` mutations and their comment were removed.
+- `supabase/migrations/20260911000009_p102_users_select_platform_admin.sql`: only the idempotent `users_select_platform_admin` SELECT policy on `public.is_platform_admin(auth.uid())` was added.
+- No source change to `create-user`, `deactivate-user`, or `reactivate-user`.
 
-## Create timeout cause, fix, and first deploy
+## Required staging deploy/apply evidence from earlier attempts in this tree
 
-`withRateLimit` waited for the absent Upstash configuration and then called `req.headers.set` on
-the immutable incoming request. `create-user` calls it outside its try/catch, so the exception
-returned `500 EDGE_FUNCTION_ERROR` without CORS and `page.waitForURL` consumed the old 30 s test
-budget. The shared hunk deletes those mutations; the test timeout covers the remaining three
-approximately 15 s fail-open waits.
-
-The required create-user deploy was taken before the earlier browser/oracle runs:
+### create-user deploy
 
 ```
 deploy_start=2026-09-11T19:37:29Z head=488ef4ffb
@@ -56,17 +34,9 @@ deploy_rc=0
 deploy_end=2026-09-11T19:37:37Z
 ```
 
-The subsequent browser trace measured `POST /functions/v1/create-user` returning 201 and the
-service-role teardown deleting the new account (`accounts_deleted=1`).
+### migration apply
 
-## Attempt 4 staging apply and deploys
-
-Commands were run in this order after loading `.env.test`.
-
-### Migration apply
-
-Command: `psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f
-supabase/migrations/20260911000009_p102_users_select_platform_admin.sql`
+Command: `psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f supabase/migrations/20260911000009_p102_users_select_platform_admin.sql`
 
 ```
 apply_start=2026-09-11T20:53:23Z migration=20260911000009_p102_users_select_platform_admin.sql head=0d6c8b1a7
@@ -77,9 +47,6 @@ apply_end=2026-09-11T20:53:24Z
 ```
 
 ### deactivate-user deploy
-
-Command: `DO_NOT_TRACK=1 SUPABASE_TELEMETRY_DISABLED=true PATH="/opt/homebrew/bin:$PATH"
-supabase functions deploy deactivate-user --project-ref zkrcjzdemdmwhearhfgg`
 
 ```
 deploy_start=2026-09-11T20:53:32Z function=deactivate-user head=0d6c8b1a7
@@ -95,9 +62,6 @@ deploy_end=2026-09-11T20:53:36Z function=deactivate-user
 
 ### reactivate-user deploy
 
-Command: `DO_NOT_TRACK=1 SUPABASE_TELEMETRY_DISABLED=true PATH="/opt/homebrew/bin:$PATH"
-supabase functions deploy reactivate-user --project-ref zkrcjzdemdmwhearhfgg`
-
 ```
 deploy_start=2026-09-11T20:53:43Z function=reactivate-user head=0d6c8b1a7
 WARN: config section [inbucket] is deprecated. Please use [local_smtp] instead.
@@ -110,90 +74,73 @@ deploy_rc=0 function=reactivate-user
 deploy_end=2026-09-11T20:53:47Z function=reactivate-user
 ```
 
-`No change found` is expected because the immediately preceding harness attempt had already
-published the same tree. The post-deploy staging census was:
+## Final diagnostic and repair evidence
+
+### EO stuck locator diagnostic before repair
+
+Command: `node scripts/pw-run-reaped.mjs -- tests/e2e/97-elected-officials-reachable.spec.ts --project=chromium-en --no-deps`
 
 ```
-users_select_platform_admin | is_platform_admin(auth.uid())
-create-user v8 updated_at=2026-09-11T19:37:35.155Z
-deactivate-user v6 updated_at=2026-09-11T20:28:02.289Z
-reactivate-user v5 updated_at=2026-09-11T20:28:07.940Z
+run_start=2026-09-11T21:41:05Z
+pw-run-reaped: report archived outside the worktree -> /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.pw-reports/2026-09-11T21-44-16-591Z-pw-reaped-0a4e651f1dd11921b05b4bab4be4f4ff.json
+pw-run-reaped: playwright exited code=1 signal=null; group 75056 -> {"termed":false,"killed":false,"alreadyGone":true,"unavailable":false,"identityMismatch":false,"finalZero":true}; session reaped; verdict clean; report published; child output /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260911-181854-0000000000000083--P102-07/test-results/pw-reaped-0a4e651f1dd11921b05b4bab4be4f4ff.json.log
 ```
 
-## Browser oracle record and population controls
+Report stats: `expected=4 unexpected=1 skipped=0 flaky=0`. Screenshot showed the review step with a visible sentence-case `Create dossier` button; the exact Title Case locator was the hang.
 
-Before the final locator repair, the harness's authoritative frontend oracle proved that the
-migration and deployments had moved the test past create, list, and detail. Its only failure was
-the ambiguous role picker, while both run-scoped populations were deleted:
+### EO oracle after repair
 
-```
-PW failed | create → list → detail → role/status, plus IDOR smoke and AR pass | Error: locator.click: Error: strict mode violation: getByRole('combobox') resolved to 4 elements
-P102-07-FE wrapper_rc=1 passed=2 failed=1 accounts_left_from_this_run=0 mous_left_from_this_run=0 expected passed=3 failed=0 accounts_left=0 mous_left=0
-```
-
-The account zero is controlled by the create-user 201 plus `accounts_deleted=1`; the MoU zero is
-controlled by the passing create test plus `queue_deleted=1 mous_deleted=1`. A prior attempt recorded
-a green EO run, but that evidence is not treated as final: the latest harness run before this repair
-was 4/5 because the six-step create flow exhausted its 120 s test budget before the submit click.
-Commit `4c5eacefd` raises that staging flow's whole-test budget to 180 s while preserving each
-individual settle assertion.
+Command: `PATH="/opt/homebrew/bin:$HOME/bin:$PATH"; set -a; . ./.env.test 2>/dev/null; set +a; T0=$(date -u +%FT%TZ); echo "run_start=$T0"; node scripts/pw-run-reaped.mjs -- tests/e2e/97-elected-officials-reachable.spec.ts --project=chromium-en --no-deps; RC=$?; N=$(psql "$SUPABASE_DB_URL" -Atq -v ON_ERROR_STOP=1 -c "select count(*) from dossiers where name_en like 'e2e-97-01-elected-official-%' and created_at >= '$T0'" 2>&1 | tail -1); echo "P102-07-EO wrapper_rc=$RC rows_left_from_this_run=$N"; exit $RC`
 
 ```
-PW timedOut | create hub + create submit — admin user (the only session these specs have), desktop 1400 | Test timeout of 120000ms exceeded.
-P102-07-EO wrapper_rc=1 passed=4 failed=1 rows_left_from_this_run=0 expected passed=5 failed=0 rows_left=0
+run_start=2026-09-11T21:44:55Z
+pw-run-reaped: report archived outside the worktree -> /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.pw-reports/2026-09-11T21-45-15-829Z-pw-reaped-1a1dbc66e4c442438aecbc77a3b92375.json
+pw-run-reaped: playwright exited code=0 signal=null; group 54207 -> {"termed":false,"killed":false,"alreadyGone":true,"unavailable":false,"identityMismatch":false,"finalZero":true}; session reaped; verdict clean; report published; child output /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260911-181854-0000000000000083--P102-07/test-results/pw-reaped-1a1dbc66e4c442438aecbc77a3b92375.json.log
+P102-07-EO wrapper_rc=0 rows_left_from_this_run=0
 ```
 
-This repair then ran the frontend oracle command verbatim. This Codex sandbox cannot perform the
-wrapper's pre-spawn process census, so it failed closed before Playwright and created no rows:
+Parsed report stats: `expected=5 unexpected=0 skipped=0 flaky=0`.
+
+### FE diagnostic before final repair
+
+Command: `( cd frontend && node ../scripts/pw-run-reaped.mjs -- e2e/user-management.spec.ts e2e/mou-create.spec.ts --project=chromium )`
 
 ```
-P102-07-FE wrapper_rc=90 passed=0 failed=0 accounts_left_from_this_run=0 0 mous_left_from_this_run=? expected passed=3 failed=0 accounts_left=0 mous_left=0
-FAIL: user-management (1 test) and mou-create (2 tests) did not pass 3/3 - on 2026-09-10 the user-management create test timed out at 30 s before creating its account, so the teardown had no subject
+run_start=2026-09-11T21:45:27Z
+pw-run-reaped: report archived outside the worktree -> /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.pw-reports/2026-09-11T21-46-15-539Z-pw-reaped-a20b1d20524b7c7f7f9a54392f79d107.json
+pw-run-reaped: playwright exited code=1 signal=null; group 87950 -> {"termed":false,"killed":false,"alreadyGone":true,"unavailable":false,"identityMismatch":false,"finalZero":true}; session already-empty; verdict clean; report published; child output /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260911-181854-0000000000000083--P102-07/frontend/test-results/pw-reaped-a20b1d20524b7c7f7f9a54392f79d107.json.log
+P102-07-FE wrapper_rc=1 rows_left=0 0
 ```
 
-A second direct diagnostic used the freshly built bundle but Chromium itself was denied by this
-sandbox (`MachPortRendezvousServer: Permission denied (1100)`), also before tests. The temporary
-static server was terminated. The plan's routing pin documents this seat limitation; the external
-harness supplies the authoritative post-commit browser run.
+Parsed report stats: `expected=1 unexpected=2 skipped=0 flaky=0`. The MoU create button text is `Create an MoU`, not `Create MoU`; user-management reached the admin grant and staging returned `500 APPROVAL_CREATION_FAILED` because the deployed/source `assign-role` insert does not match the current `pending_role_approvals` schema (`requested_by`/non-null `reason`). Both teardowns still left `accounts_left=0 mous_left=0`.
 
-## Attempt 6 final timing repair and verification
+### FE oracle after repair
 
-The anchored review identified that `test.setTimeout(120_000)` does not change the 5 s default
-expect timeout. The reactivate/deactivate edge calls each spend about 12–15 s in the unset-Upstash
-fail-open path before `onSuccess` changes the badge. The final spec therefore checks exact `Active`
-and `Inactive` text with `{ timeout: 30_000 }`. This also prevents `Active` from matching the
-pre-existing `Inactive` badge. The EO create flow now has 180 s for its six staging-backed wizard
-steps and final submit response.
-
-Both required wrappers were invoked from the repository at `4c5eacefd`. This Codex seat again could
-not start the leased web server: Playwright reported `Process from config.webServer was not able to
-start. Exit code: 1`, and the reaper withheld both reports because direct process-group identity was
-unverifiable. No test began and both timestamp-scoped censuses remained zero. These are environment
-failures, not green browser evidence:
+Command: `PATH="/opt/homebrew/bin:$HOME/bin:$PATH"; set -a; . ./.env.test 2>/dev/null; set +a; T0=$(date -u +%FT%TZ); echo "run_start=$T0"; ( cd frontend && node ../scripts/pw-run-reaped.mjs -- e2e/user-management.spec.ts e2e/mou-create.spec.ts --project=chromium ); RC=$?; R=$(psql "$SUPABASE_DB_URL" -Atq -v ON_ERROR_STOP=1 -c "select (select count(*) from auth.users where email like 'e2e-%@example.test' and created_at >= '$T0')||' '||(select count(*) from mous where title like 'E2E MoU %' and created_at >= '$T0')" 2>&1 | tail -1); echo "P102-07-FE wrapper_rc=$RC rows_left=$R"; exit $RC`
 
 ```
-run_start=2026-09-11T21:19:52Z
-expected=0 unexpected=0 skipped=0 flaky=0
-P102-07-EO wrapper_rc=90 rows_left_from_this_run=0
-pw-run-reaped: playwright exited code=1 signal=null; group 37451 -> {"termed":false,"killed":false,"alreadyGone":false,"unavailable":true,"identityMismatch":false,"finalZero":false}; session none; verdict unclean; causes ["unavailable: direct group 37451 liveness/identity unverifiable — a group we cannot prove is not a group we can call clean"]
-
-run_start=2026-09-11T21:20:13Z
-expected=0 unexpected=0 skipped=0 flaky=0
-P102-07-FE wrapper_rc=90 rows_left=0 0
-pw-run-reaped: playwright exited code=1 signal=null; group 42302 -> {"termed":false,"killed":false,"alreadyGone":false,"unavailable":true,"identityMismatch":false,"finalZero":false}; session none; verdict unclean; causes ["unavailable: direct group 42302 liveness/identity unverifiable — a group we cannot prove is not a group we can call clean"]
+run_start=2026-09-11T21:48:11Z
+pw-run-reaped: report archived outside the worktree -> /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.pw-reports/2026-09-11T21-49-17-927Z-pw-reaped-bb6c70f88d4365d2eb881d6416471c95.json
+pw-run-reaped: playwright exited code=0 signal=null; group 63976 -> {"termed":false,"killed":false,"alreadyGone":true,"unavailable":false,"identityMismatch":false,"finalZero":true}; session already-empty; verdict clean; report published; child output /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260911-181854-0000000000000083--P102-07/frontend/test-results/pw-reaped-bb6c70f88d4365d2eb881d6416471c95.json.log
+P102-07-FE wrapper_rc=0 rows_left=0 0
 ```
 
-## Static verification
+Parsed report stats: `expected=3 unexpected=0 skipped=0 flaky=0`.
 
-`git diff --check` and ESLint for both repaired specs exited 0. The commit hook completed the
-repository build. Every existing test/describe title is byte-identical to run
-base `5a98e8b519a5`:
+## Static checks
+
+Command: `git diff --check && pnpm exec eslint tests/e2e/97-elected-officials-reachable.spec.ts frontend/tests/e2e/user-management.spec.ts frontend/tests/e2e/mou-create.spec.ts`
 
 ```
-tests/e2e/97-elected-officials-reachable.spec.ts base_titles_sha=4e1df751e655a3a39188da1f543c0adfa81bae1f4d265b13ef1938cd026cb410 head_titles_sha=4e1df751e655a3a39188da1f543c0adfa81bae1f4d265b13ef1938cd026cb410 identical=yes
-frontend/tests/e2e/user-management.spec.ts base_titles_sha=31f2f56aa8cf43fcd1658ac2460dd1fef7b9287a1d6b331a9936f0aedb6648fa head_titles_sha=31f2f56aa8cf43fcd1658ac2460dd1fef7b9287a1d6b331a9936f0aedb6648fa identical=yes
-frontend/tests/e2e/mou-create.spec.ts base_titles_sha=3cbfcc96e2c932590cd0d6f3cacdfacd7ffebfa3c09cf31a62d29f69fe827bea head_titles_sha=3cbfcc96e2c932590cd0d6f3cacdfacd7ffebfa3c09cf31a62d29f69fe827bea identical=yes
 ```
 
-No historical e2e-97-01 persons, older MoUs, fixture accounts, or backend integration-test rows
-were deleted by this task; every teardown is limited to its own module-scoped epoch/title.
+Command: `git diff -U0 bd67f8114 -- tests/e2e/97-elected-officials-reachable.spec.ts frontend/tests/e2e/user-management.spec.ts frontend/tests/e2e/mou-create.spec.ts | grep -E "^[+-].*(test|describe)\\(" || true`
+
+```
+```
+
+No existing test or describe title changed. No historical `e2e-97-01` persons, older MoUs, fixture accounts, or backend integration-test rows were deleted; each teardown is limited to its own module-scoped epoch/title.
+
+## Left for later
+
+- `assign-role` still cannot create `pending_role_approvals` against the current staging schema; that is outside P102-07's write scope and should be fixed by the user-management owner.

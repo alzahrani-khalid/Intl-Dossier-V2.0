@@ -349,10 +349,9 @@ test.describe('NAV-01 Elected Officials is reachable on all four exposure surfac
     // react-hook-form `name` attribute because the required labels render as plain text rather than
     // a `<label for>`, so those inputs carry no accessible name to target.
     //
-    // Six sequential staging-backed wizard steps behind an inline sign-in can exhaust 120 s while
-    // their individual settle checks are still making progress; preserve those checks with a
-    // whole-flow budget that also leaves time for the final submit response.
-    test.setTimeout(180_000)
+    // The live create response is staging-backed, so keep a whole-flow budget while every step
+    // still has its own settle assertion. Do not mask a stuck wizard by raising this again.
+    test.setTimeout(120_000)
 
     const nameEn = EO_NAME_PREFIX
     const nameAr = 'مسؤول منتخب'
@@ -385,8 +384,9 @@ test.describe('NAV-01 Elected Officials is reachable on all four exposure surfac
     await page.locator('input[name="term_start"]').fill('2026-01-01')
     await nextButton.click()
 
-    // Step 4 — Review and submit.
-    await page.getByRole('button', { name: 'Create Dossier', exact: true }).click()
+    // Step 4 — Review and submit. The shared shell renders sentence-case "Create dossier";
+    // exact Title Case was the stuck locator, not a slow wizard.
+    await page.getByRole('button', { name: 'Create dossier', exact: true }).click()
 
     // The behavioural claim: the create path LANDS somewhere real. A create affordance that
     // submits into a 500 is a nav entry pointing at a known-broken surface.
