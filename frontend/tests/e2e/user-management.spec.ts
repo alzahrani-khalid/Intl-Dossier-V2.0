@@ -84,17 +84,21 @@ test.describe('User Management — D-10 loop', () => {
 
     // On success the page navigates back to the list.
     //
-    // KNOWN RED (102-07, measured 2026-09-11): this wait exceeds 30 s because the deployed
-    // `create-user` fn answers 500 EDGE_FUNCTION_ERROR after ~12 s with no CORS header, so the page
-    // toasts "Could not create the user" and never navigates. The thrower is `withRateLimit`'s
-    // `req.headers.set` on Deno's immutable incoming request headers
-    // (supabase/functions/_shared/rate-limiter.ts:186, shared by deactivate-/reactivate-user). The
-    // fix is server-side; a longer timeout here cannot help.
+    // 102-07: this wait used to exceed 30 s. `withRateLimit` called `req.headers.set` on Deno's
+    // immutable incoming request headers, so create-user threw, answered 500 with no CORS header,
+    // and the page never navigated. The fix deletes those three lines from
+    // supabase/functions/_shared/rate-limiter.ts, deployed as create-user v8 (2026-09-11). The
+    // create now answers 201 after ~16 s; the limiter still stalls because UPSTASH_* is unset.
     await page.waitForURL(/\/users\/?$/)
 
     // Created users are is_active:false; the DEFAULT filter is "all", so the row
     // is visible. Search by the unique email (row-1-by-created_at is unreliable —
     // assumption A5) to make the assertion deterministic.
+    //
+    // KNOWN RED (102-07, measured 2026-09-11): the search returns 0 rows. RLS policy
+    // users_select_active_authenticated lets an authenticated caller read only is_active = true
+    // rows, and create-user writes is_active:false, so the admin cannot see the new account. The
+    // fix is a policy change on public.users, outside this spec.
     await page.getByPlaceholder(/search users/i).fill(email)
     await expect(page.getByText(email).first()).toBeVisible()
 
