@@ -6,7 +6,7 @@
 //   - fenced code blocks and HTML comments are STRIPPED FIRST
 //   - frontmatter keys scanned: must_haves, truths, objective
 //   - body sections scanned: those under a heading matching /must_haves|truths|tasks|objective/i
-//   - match is mechanical \bD-NN\b
+//   - match is mechanical \bD-NN[a-z]?\b
 // Divergence from the real gate, declared: the real gate also accepts a 6-word soft-phrase match.
 // This implements the D-NN token match only, so it is STRICTER — it can report uncovered where the
 // real gate would pass, never the reverse.
@@ -40,7 +40,7 @@ const tracked = decisionsBlock[1].split(/^###\s+Claude's Discretion/m)[0]
 
 const decisions = []
 for (const line of tracked.split('\n')) {
-  const m = line.match(/\*\*(D-\d{2})[:*]/)
+  const m = line.match(/\*\*(D-\d{2}[a-z]?)[:*]/)
   if (!m) continue
   if (/\[informational\]/i.test(line)) continue
   decisions.push({ id: m[1], text: line.replace(/^\s*-\s*/, '').slice(0, 110) })
@@ -99,13 +99,15 @@ function scannable(raw) {
   return out
 }
 
-const surfaces = planFiles.map((f) => ({ file: f, text: scannable(readFileSync(join(phaseDir, f), 'utf8')) }))
+const surfaces = planFiles.map((f) => {
+  const text = scannable(readFileSync(join(phaseDir, f), 'utf8'))
+  return { file: f, ids: new Set(text.match(/\bD-\d{2}[a-z]?\b/g) ?? []) }
+})
 
 const uncovered = []
 const coverage = {}
 for (const d of decisions) {
-  const re = new RegExp(`\\b${d.id}\\b`)
-  const hits = surfaces.filter((s) => re.test(s.text)).map((s) => s.file)
+  const hits = surfaces.filter((s) => s.ids.has(d.id)).map((s) => s.file)
   coverage[d.id] = hits
   if (hits.length === 0) uncovered.push(d)
 }
