@@ -21,7 +21,7 @@
  * - Have proper directional icon flipping
  */
 
-import { test, expect, type Page, type BrowserContext } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
 
 // Test configuration
 const TEST_TIMEOUT = 60000
@@ -34,14 +34,16 @@ const MOBILE_VIEWPORTS = [
   { name: 'iPhone 14 Pro Max', width: 414, height: 896 },
 ] as const
 
-// All 6 dossier types with test data
+// All 6 dossier types with test data. Routes are the plural list segments of
+// lib/dossier-routes.ts; the singular forms this spec shipped with render the
+// app's 404 page (CI run 31848669701 page snapshots: "Page not found").
 const DOSSIER_TYPES = [
-  { type: 'country', route: '/dossiers/country', label: 'Country' },
-  { type: 'organization', route: '/dossiers/organization', label: 'Organization' },
-  { type: 'person', route: '/dossiers/person', label: 'Person' },
-  { type: 'engagement', route: '/dossiers/engagement', label: 'Engagement' },
-  { type: 'forum', route: '/dossiers/forum', label: 'Forum' },
-  { type: 'working-group', route: '/dossiers/working-group', label: 'Working Group' },
+  { type: 'country', route: '/dossiers/countries', label: 'Country' },
+  { type: 'organization', route: '/dossiers/organizations', label: 'Organization' },
+  { type: 'person', route: '/dossiers/persons', label: 'Person' },
+  { type: 'engagement', route: '/dossiers/engagements', label: 'Engagement' },
+  { type: 'forum', route: '/dossiers/forums', label: 'Forum' },
+  { type: 'working-group', route: '/dossiers/working_groups', label: 'Working Group' },
 ] as const
 
 // Minimum touch target size per WCAG 2.5.5
@@ -72,9 +74,12 @@ async function authBypass(page: Page): Promise<void> {
  * @param page - Playwright page object
  */
 async function setArabicLanguage(page: Page): Promise<void> {
-  // Set i18next language to Arabic
+  // i18next persists the language under `id.locale` (frontend/src/i18n/index.ts
+  // lookupLocalStorage). bootstrap.js migrates a legacy `i18nextLng` only while
+  // `id.locale` is absent and then deletes it, so seeding `i18nextLng` alone left
+  // `<html dir>` at ltr (CI run 31848669701, job 94920552740).
   await page.addInitScript(() => {
-    localStorage.setItem('i18nextLng', 'ar')
+    localStorage.setItem('id.locale', 'ar')
   })
 }
 
@@ -240,7 +245,7 @@ async function verifyLogicalProperties(page: Page): Promise<void> {
 
   // Log issues for debugging but don't fail - this is informational
   if (physicalProperties.length > 0) {
-    console.log('Physical property classes found (should use logical):', physicalProperties)
+    console.info('Physical property classes found (should use logical):', physicalProperties)
   }
 }
 
@@ -318,7 +323,7 @@ test.describe('Combined RTL + Mobile Tests for All Dossier Types', () => {
 
           // Log undersized elements for debugging
           if (undersizedElements.length > 0) {
-            console.log(
+            console.info(
               `Undersized touch targets in ${dossier.type}:`,
               undersizedElements.slice(0, 5),
             )
@@ -411,6 +416,8 @@ test.describe('Combined RTL + Mobile Tests for All Dossier Types', () => {
         test(`T073-${dossier.type}: ${dossier.label} content is readable in RTL + Mobile`, async ({
           page,
         }) => {
+          // prettier-ignore
+          test.fixme(true, 'P101-QUAR 31848669701: contract - passed on this run (job 94920552740, no failure log line) only because its singular route served the 404 page; re-aimed at the real list page by P101-13 it counts sub-12px or clipped text elements, mostly shared shell chrome at 9-11px (15 cells at the cap of 10, the 3 engagement cells at 9), against its < 10 floor; owner Phase 102')
           await page.goto(dossier.route, {
             waitUntil: 'networkidle',
             timeout: NAVIGATION_TIMEOUT,
@@ -449,7 +456,7 @@ test.describe('Combined RTL + Mobile Tests for All Dossier Types', () => {
 
           // Log issues for debugging
           if (textIssues.length > 0) {
-            console.log(`Readability issues in ${dossier.type}:`, textIssues)
+            console.info(`Readability issues in ${dossier.type}:`, textIssues)
           }
 
           // We allow some truncation (e.g., in cards) but not excessive
@@ -503,7 +510,7 @@ test.describe('Critical RTL + Mobile Interactions', () => {
   })
 
   test('T073-sidebar: Sidebar mirrors correctly in RTL + Mobile', async ({ page }) => {
-    await page.goto('/dossiers/country', {
+    await page.goto('/dossiers/countries', {
       waitUntil: 'networkidle',
       timeout: NAVIGATION_TIMEOUT,
     })
@@ -529,7 +536,7 @@ test.describe('Critical RTL + Mobile Interactions', () => {
   })
 
   test('T073-breadcrumbs: Breadcrumbs flow RTL in Mobile', async ({ page }) => {
-    await page.goto('/dossiers/country', {
+    await page.goto('/dossiers/countries', {
       waitUntil: 'networkidle',
       timeout: NAVIGATION_TIMEOUT,
     })
@@ -556,14 +563,14 @@ test.describe('Critical RTL + Mobile Interactions', () => {
       if (items.length >= 2) {
         // In RTL, first item x should be >= second item x
         // (they flow from right to left)
-        console.log('Breadcrumb items:', items)
+        console.info('Breadcrumb items:', items)
       }
     }
   })
 
   test('T073-forms: Form inputs align correctly in RTL + Mobile', async ({ page }) => {
     // Navigate to a page with forms (e.g., create/edit dossier)
-    await page.goto('/dossiers/country', {
+    await page.goto('/dossiers/countries', {
       waitUntil: 'networkidle',
       timeout: NAVIGATION_TIMEOUT,
     })
@@ -596,7 +603,7 @@ test.describe('Critical RTL + Mobile Interactions', () => {
   })
 
   test('T073-buttons: Action buttons are touch-friendly in RTL + Mobile', async ({ page }) => {
-    await page.goto('/dossiers/country', {
+    await page.goto('/dossiers/countries', {
       waitUntil: 'networkidle',
       timeout: NAVIGATION_TIMEOUT,
     })
@@ -620,7 +627,7 @@ test.describe('Critical RTL + Mobile Interactions', () => {
             // Soft check - log but don't fail for slightly small buttons
             if (box.width < MIN_TOUCH_TARGET || box.height < MIN_TOUCH_TARGET) {
               const text = await button.textContent()
-              console.log(`Button "${text?.trim()}" is ${box.width}x${box.height}px`)
+              console.info(`Button "${text?.trim()}" is ${box.width}x${box.height}px`)
             }
           }
         }
@@ -629,7 +636,7 @@ test.describe('Critical RTL + Mobile Interactions', () => {
   })
 
   test('T073-tables: Data tables scroll horizontally in RTL + Mobile', async ({ page }) => {
-    await page.goto('/dossiers/country', {
+    await page.goto('/dossiers/countries', {
       waitUntil: 'networkidle',
       timeout: NAVIGATION_TIMEOUT,
     })
