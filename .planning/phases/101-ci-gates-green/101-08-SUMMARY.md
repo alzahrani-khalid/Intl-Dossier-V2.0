@@ -253,6 +253,39 @@ Reading it: 11 markers + 1 FIXED = the 12 derived. `any fixme incl. pre-existing
 had no `test.fixme(` before this unit, so every fixme here is a P101-QUAR marker. The control reads 13, so
 the grep can see a non-zero.
 
+### Re-run at attempt 2, after the merge withdrawal
+
+Attempt 0 passed all 7 gates. The engine then withdrew the merge with `Uncommitted at round end: ?? blob-report/`.
+`blob-report/` is untracked and not gitignored, and the root config adds the blob reporter only when `CI`
+is set (`playwright.config.ts:15-16`). Neither `.gitignore` nor the oracle is in this unit's file scope,
+so attempt 2 changes no spec. The overseer's ruling (run 0082) prefixes the compiled oracle with
+`R0="$PWD"; trap 'rm -rf "$R0/blob-report" "$R0/frontend/blob-report"' EXIT`. Attempt 2 extracted that
+compiled oracle from `.tickmarkr/graph.json` (19 lines, md5 `5e23f2acddefba47b5bb8af6c36d39ed`) and ran
+it with `bash` from the worktree root, once with `CI` unset and once with `CI=1`. After each run it read
+`git status --porcelain=v1 -uall` and checked for `blob-report/`. Output verbatim:
+
+```
+===== run with CI unset
+P101-08-BOUND files=5 markers with a run id=11 (any P101-QUAR=11, any fixme incl. pre-existing=11; control positions-keyboard-nav fixme=13) register rows=11 cells total=11 non-numeric=0 fixed rows=1 root list=[Total: 220 tests in 65 files] want the 12 (shard 1: 08 1, 10 4, elected-official 3, engagement 3, forum 1) red tests each fixed or marked: markers+fixed>=1, markers==any-P101-QUAR, rows==markers, cells>=rows, non-numeric=0, list='Total: 220 tests in 65 files'
+PASS
+EXIT=0
+porcelain -uall after:
+(end)
+blob-report present: no
+===== run with CI CI=1
+P101-08-BOUND files=5 markers with a run id=11 (any P101-QUAR=11, any fixme incl. pre-existing=11; control positions-keyboard-nav fixme=13) register rows=11 cells total=11 non-numeric=0 fixed rows=1 root list=[] want the 12 (shard 1: 08 1, 10 4, elected-official 3, engagement 3, forum 1) red tests each fixed or marked: markers+fixed>=1, markers==any-P101-QUAR, rows==markers, cells>=rows, non-numeric=0, list='Total: 220 tests in 65 files'
+INSTRUMENT-CANNOT-RUN: playwright --list printed no Total line
+EXIT=3
+porcelain -uall after:
+(end)
+blob-report present: no
+```
+
+Both runs left the porcelain empty and no `blob-report/`. The `CI=1` exit 3 is the property of the shared
+instrument that the attempt-0 review already deferred: the `Total:` line comes only from the non-CI `list`
+reporter. It is recorded here and left unchanged. The only other file either run wrote is the gitignored
+`playwright-report/`, which was removed afterwards.
+
 ## Left for later
 
 - **Phase 102:** rewrite the 11 quarantined tests and lift their markers. `08` and the four `10` tests
