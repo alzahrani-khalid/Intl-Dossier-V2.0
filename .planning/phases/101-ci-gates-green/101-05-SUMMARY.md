@@ -294,20 +294,28 @@ The root shards cannot run locally, so nothing in this SUMMARY is a run result.
 - `chromium-en` and `chromium-ar-smoke` carry `dependencies: ['setup']`, and `auth.setup.ts` throws
   unless all six `E2E_{ADMIN,ANALYST,INTAKE}_{EMAIL,PASSWORD}` are set. The analyst-page tests (03, 06, 07)
   also read `storage/analyst.json`, which only that setup writes.
-- Locally, four of the six `E2E_*` keys are absent. The worktree env hook (`tests/e2e/support/load-env.mjs`,
-  which falls back to the primary checkout's `.env.test`) maps only the admin pair. Probed by name, values
-  never printed:
+- The six `E2E_*` keys are absent locally: the shell environment carries none of them, and the primary
+  checkout's `.env.test` carries no `E2E_*` name. The worktree hook maps only the admin pair: the harness
+  `setup:` step (`.tickmarkr/config.yaml`) runs `p99-worktree-test-env.sh "$PWD"`, which writes a
+  gitignored worktree-local `.env.test` whose only `E2E_*` keys are `E2E_ADMIN_EMAIL` and
+  `E2E_ADMIN_PASSWORD`. `tests/e2e/support/load-env.mjs` prefers that local file, so the analyst and
+  intake pairs stay unset. (Attempt 0 attributed the mapping to `load-env.mjs` falling back to the primary
+  checkout's file; that file carries no `E2E_*` name, so the hook is the only source.) Probed by key name
+  only, values never printed:
 
   ```text
-  ◇ injected env (9) from .env.test
-  E2E_ADMIN_EMAIL set
-  E2E_ADMIN_PASSWORD set
-  E2E_ANALYST_EMAIL unset
-  E2E_ANALYST_PASSWORD unset
-  E2E_INTAKE_EMAIL unset
-  E2E_INTAKE_PASSWORD unset
-  E2E_BASE_URL unset
+  $ env | grep -cE '^E2E_(ADMIN|ANALYST|INTAKE)_(EMAIL|PASSWORD)='
+  0
+  $ grep -oE '^(export )?E2E_[A-Z0-9_]+=' <primary checkout>/.env.test | sed -E 's/^export //; s/=$//' | sort
+  (no output)
+  $ git check-ignore -v .env.test
+  .gitignore:24:.env.*	.env.test
+  $ grep -oE '^(export )?[A-Z0-9_]+=' .env.test | sed -E 's/^export //; s/=$//' | sort | tr '\n' ' '
+  E2E_ADMIN_EMAIL E2E_ADMIN_PASSWORD PHASE_52_FIXTURE_ENGAGEMENT_ID SUPABASE_ANON_KEY SUPABASE_DB_URL SUPABASE_SERVICE_ROLE_KEY SUPABASE_URL TEST_USER_EMAIL TEST_USER_PASSWORD
   ```
+
+  The zeros sit beside a non-zero read of the same kind: the worktree file's key list names the admin
+  pair, so the name grep can see `E2E_*` keys when they are present.
 
 - The shards also target the deployed app at `E2E_BASE_URL`, which serves whatever the droplet runs, not
   necessarily this tree.
@@ -334,12 +342,80 @@ not demonstrate it against the deployed app in that run.
 - Not done here: `graphify update .` (CLAUDE.md). It writes `graphify-out/`, which is outside this unit's
   file scope.
 
+## Attempt 1 re-verification
+
+Attempt 0's two commits never received a gate verdict. The run journal shows the task entering
+`suite-wait` at 05:34:44Z, then `exit-cause deliberate SIGTERM` for the daemon at 05:45:21Z, then
+`run-resume` and a fresh attempt 1 that carries the same commits. They are tree-identical to this
+branch's `b9b1e36ce` and `9c352db7f`: `git diff --stat 0f97f8c b9b1e36 -- tests/e2e` and
+`git diff --stat c7e670f 9c352db -- <this SUMMARY>` both print nothing. So this attempt re-checked the
+claims instead of redoing the work. One correction came out of it, the root-shards bound mechanism
+(see that section).
+
+The failed-test log was downloaded again and every log line cited above was re-read:
+
+```bash
+gh run view -R alzahrani-khalid/Intl-Dossier-V2.0 --job 94920109119 --log-failed > "$S/job94920109119.log" 2>&1; echo "exit=$?"; wc -l < "$S/job94920109119.log"; sed -E 's/\^\[\[[0-9;]*m//g' "$S/job94920109119.log" > "$S/job.clean"; grep -c '\^\[\[' "$S/job94920109119.log"; grep -c '\^\[\[' "$S/job.clean"; for n in 599 663 733 798 863 936 1001 1066 1133 2228; do printf '%s: ' $n; sed -n "${n}p" "$S/job.clean" | sed -E 's/^.*Z //' | cut -c1-150; done
+```
+
+```text
+exit=0
+    2437
+17
+0
+599: ##[error]  1) [chromium-en] › tests/e2e/01-login.spec.ts:10:7 › TEST-01 authentication › signs in with email/password and reaches dashboard
+663: ##[error]  2) [chromium-en] › tests/e2e/03-dossier-navigation.spec.ts:10:7 › TEST-03 dossier navigation › navigates list -> detail -> tabs -> Relation
+733: ##[error]  3) [chromium-en] › tests/e2e/01-login.spec.ts:30:7 › TEST-01 session lifecycle › signs out and returns to login
+798: ##[error]  4) [chromium-en] › tests/e2e/04-command-palette.spec.ts:10:7 › TEST-04 command palette › opens Cmd+K, searches, navigates to result
+863: ##[error]  5) [chromium-en] › tests/e2e/05-notifications.spec.ts:68:7 › TEST-05 notifications › toggles notification preference and persists across re
+936: ##[error]  6) [chromium-en] › tests/e2e/04-command-palette.spec.ts:20:7 › TEST-04 command palette › Cmd+K shows recent items after navigation
+1001: ##[error]  7) [chromium-en] › tests/e2e/06-work-item-crud.spec.ts:6:7 › TEST-06 work-item CRUD + kanban drag › creates a task, drags it across columns
+1066: ##[error]  8) [chromium-en] › tests/e2e/07-calendar-events.spec.ts:28:7 › TEST-07 calendar events › shows lifecycle dates on engagement-linked event
+1133: ##[error]  9) [chromium-en] › tests/e2e/07-calendar-events.spec.ts:6:7 › TEST-07 calendar events › creates a calendar event and views it @mobile
+2228: ##[notice]  27 failed
+```
+
+These are the nine failure headers of this unit's files, numbered 1-9 in a row by the reporter. The notice
+still reads 27 at line 2228.
+
+The two testid counts behind the 06 and 07:28 markers were re-read, with a check for a testid built at
+runtime (`-column-` would match a template such as `` `kanban-column-${stage}` ``). Test files are excluded,
+and the controls come from the same instrument:
+
+```bash
+for p in 'kanban-column' 'lifecycle-date-badge' 'lifecycle-date' '-column-' 'calendar-event' 'notification-pref' 'user-menu'; do printf '%-22s %s\n' "$p" "$(git grep -h -- "$p" -- 'frontend/src' ':!frontend/src/**/*.test.*' ':!frontend/src/**/__tests__/**' | wc -l | tr -d ' ')"; done
+```
+
+```text
+kanban-column          0
+lifecycle-date-badge   0
+lifecycle-date         0
+-column-               0
+calendar-event         14
+notification-pref      5
+user-menu              1
+```
+
+These counts are about selector strings in the source. They explain why the tests' locators resolve to
+nothing. They are not a claim that the kanban board or engagement lifecycle dates are missing from the
+product (see "What the quarantines do not claim").
+
 ## Oracle
 
-This plan's `must_haves.truths[0].command`, extracted from the front-matter with js-yaml
-(`md5 bd8665f5bd08d2b62401306a298314ee`) and run with `bash` from the worktree root.
+This plan's `must_haves.truths[0].command`, extracted from the front-matter with js-yaml and run
+under a login shell (the gates' `bash -lc`) from the worktree root:
 
-Baseline at HEAD `24f5d7cd2`, before any edit (matches the plan's round-2 drill):
+```bash
+node -e "const y=require('js-yaml');const fs=require('fs');const t=fs.readFileSync('.planning/phases/101-ci-gates-green/101-05-PLAN.md','utf8');const fm=t.split(/^---$/m)[1];const d=y.load(fm);fs.writeFileSync(process.argv[1],d.must_haves.truths[0].command)" "$TMPDIR/p10105-oracle.sh"
+md5 -q "$TMPDIR/p10105-oracle.sh"
+bash -lc "cd '$PWD' && bash '$TMPDIR/p10105-oracle.sh'; echo exit=\$?"
+```
+
+The extracted bytes hash to `e43cf01129a3eb91e489391e43cbaa7b`. Attempt 0 recorded
+`bd8665f5bd08d2b62401306a298314ee`: the same bytes plus one trailing newline
+(`{ cat "$F"; printf '\n'; } | md5 -q` gives `bd8665f5…`), so both attempts ran the same oracle.
+
+Baseline recorded by attempt 0 at HEAD `24f5d7cd2`, before any edit (matches the plan's round-2 drill):
 
 ```text
 P101-05-BOUND files=6 markers with a run id=0 (any P101-QUAR=0, any fixme incl. pre-existing=0; control positions-keyboard-nav fixme=13) register rows=0 cells total=0 non-numeric=0 fixed rows=0 root list=[Total: 220 tests in 65 files] want the 9 (shard 1: 01-login 2, 03 1, 04 2, 05 1, 06 1, 07 2) red tests each fixed or marked: markers+fixed>=1, markers==any-P101-QUAR, rows==markers, cells>=rows, non-numeric=0, list='Total: 220 tests in 65 files'
@@ -347,10 +423,11 @@ FAIL: no marker and no FIXED row for the 9 (shard 1: 01-login 2, 03 1, 04 2, 05 
 exit=1
 ```
 
-After this unit's commits:
+After this unit's commits (attempt 1, re-run at HEAD `9c352db7f`; the register it reads is unchanged
+by this attempt's edits):
 
 ```text
-bd8665f5bd08d2b62401306a298314ee
+e43cf01129a3eb91e489391e43cbaa7b
 P101-05-BOUND files=6 markers with a run id=5 (any P101-QUAR=5, any fixme incl. pre-existing=5; control positions-keyboard-nav fixme=13) register rows=5 cells total=5 non-numeric=0 fixed rows=4 root list=[Total: 220 tests in 65 files] want the 9 (shard 1: 01-login 2, 03 1, 04 2, 05 1, 06 1, 07 2) red tests each fixed or marked: markers+fixed>=1, markers==any-P101-QUAR, rows==markers, cells>=rows, non-numeric=0, list='Total: 220 tests in 65 files'
 PASS
 exit=0
