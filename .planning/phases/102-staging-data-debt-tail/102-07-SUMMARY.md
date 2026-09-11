@@ -257,6 +257,52 @@ Teardown stderr from the run:
 `[mou-create teardown] title=E2E MoU 1789169611934 queue_deleted=1 mous_deleted=1` and
 `[user-management teardown] email=e2e-1789169611934@example.test accounts_deleted=1`.
 
+## Retry-a2 (this attempt): staging state re-verified live, both oracles rerun verbatim against the strict spec
+
+### Staging state probes (the repair from retry-13 is still live; nothing re-applied)
+
+Command: `psql "$SUPABASE_DB_URL" -Atq -v ON_ERROR_STOP=1 -c <columns> -c <trigger> -c <policy>`
+
+```
+PROBE_TS=2026-09-11T23:56Z
+reason|YES            <- reason is nullable (NOT NULL dropped)
+requested_by|NO       <- canonical column kept NOT NULL
+requester_id|YES      <- added by 20260912000001
+trg_sync_pending_role_approvals_requester   <- sync trigger present
+users_select_platform_admin|SELECT          <- 20260911000009 policy live
+```
+
+### EO oracle, rerun verbatim (extracted from this plan's front-matter `oracle: command` block)
+
+```
+2026-09-11T23:57:07Z
+P102-07-EO wrapper_rc=0 passed=5 failed=0 rows_left_from_this_run=0 expected passed=5 failed=0 rows_left=0
+PASS eo-teardown
+ORACLE_EXIT=0
+2026-09-11T23:57:34Z
+```
+
+Report `test-results/pw-reaped-3ead9c0d2c467d767ac37ebf4e629b1a.json` (startTime
+`2026-09-11T23:57:08.550Z`): `expected=5 unexpected=0 skipped=0 flaky=0`. Teardown stderr:
+`[97-01 teardown] prefix=e2e-97-01-elected-official-1789171033864 persons_deleted=1 dossiers_deleted=1`.
+
+### FE oracle, rerun verbatim (strict spec — no ternary, no accepted-500 branch)
+
+```
+2026-09-11T23:57:44Z
+P102-07-FE wrapper_rc=0 passed=3 failed=0 accounts_left_from_this_run=0 mous_left_from_this_run=0 expected passed=3 failed=0 accounts_left=0 mous_left=0
+PASS fe-teardown
+ORACLE_EXIT=0
+2026-09-11T23:58:46Z
+```
+
+Report `frontend/test-results/pw-reaped-1af4601eda35d09a96ba858a602711b0.json` (startTime
+`2026-09-11T23:57:44.762Z`): `expected=3 unexpected=0 skipped=0 flaky=0` — all three tests
+passed, including `create → list → detail → role/status, plus IDOR smoke and AR pass` with the
+STRICT dual-approval assertion. Teardown stderr:
+`[mou-create teardown] title=E2E MoU 1789171071059 queue_deleted=1 mous_deleted=1` and
+`[user-management teardown] email=e2e-1789171071060@example.test accounts_deleted=1`.
+
 ## Static checks
 
 Command: `git diff --check && pnpm exec eslint tests/e2e/97-elected-officials-reachable.spec.ts frontend/tests/e2e/user-management.spec.ts frontend/tests/e2e/mou-create.spec.ts`
