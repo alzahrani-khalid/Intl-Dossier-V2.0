@@ -1,14 +1,14 @@
 ---
-status: blocked
+status: complete
 phase: 102-staging-data-debt-tail
 plan: 14
 requirement: PREVIEW-HOLLOW-01
-completed: 2026-09-11
+completed: 2026-09-12
 ---
 
 # P102-14 Summary
 
-Deleted the unreachable preview-layouts route, hook, dedicated types, and English/Arabic i18n namespace. Regenerated `routeTree.gen.ts`, added the idempotent drop migration, exported the staging seed rows before the drop, applied the migration twice, and verified staging's bounded catalog end state.
+Deleted the unreachable preview-layouts route, hook, dedicated types, and English/Arabic i18n namespace. Regenerated `routeTree.gen.ts`, added the idempotent drop migration, exported the staging seed rows before the drop, applied the migration twice, and verified staging's bounded catalog end state. Under the overseer ruling (56e0d361c) that added `{frontend,backend}/src/types/database.types.ts` to `files_modified`, this attempt also hand-deleted the three dropped tables, three RPCs and three enums from both generated snapshots. The required `git grep` now returns 0 hits, and a positive control on the same tree returns non-zero.
 
 ## Population and pre-drop evidence
 
@@ -64,7 +64,12 @@ EXPORT_PATH=/private/tmp/p102-preview-layouts-20260911T221148Z.csv
       13 /private/tmp/p102-preview-layouts-20260911T221148Z.csv
 ```
 
-The header plus 12 data lines confirms all 12 seed rows were exported before any drop statement ran.
+The header plus 12 data lines confirms all 12 seed rows were exported before any drop statement ran. Presence re-checked on 2026-09-12 during this attempt:
+
+```text
+-rw-r--r--  1 khalidalzahrani  wheel  4824 Sep 12 01:11 /private/tmp/p102-preview-layouts-20260911T221148Z.csv
+      13 /private/tmp/p102-preview-layouts-20260911T221148Z.csv
+```
 
 ## Frontend deletion and route generation
 
@@ -150,79 +155,115 @@ NOTICE:  type "public.preview_entity_type" does not exist, skipping
 DROP TYPE
 ```
 
+## Generated type snapshots (this attempt, overseer ruling 56e0d361c)
+
+These commands ran in execution order on 2026-09-12.
+
+1. Reader census over the whole repository, excluding migrations, planning, and the two snapshots. It covers every table, function, enum and file name of the feature:
+
+```text
+git grep -n -E 'entity_preview_layouts|preview_layout_fields|user_preview_preferences|preview_context|preview_entity_type|preview_field_type|get_preview_layout|get_entity_layouts|set_default_layout|enforce_single_default_layout|update_preview_layout_timestamp|usePreviewLayouts|preview-layout' -- . ':!supabase/migrations' ':!.planning' ':!frontend/src/types/database.types.ts' ':!backend/src/types/database.types.ts'
+```
+
+```text
+reports/settings-admin-workflow-inspection-2026-06-09.md:89:| `field-permissions`, `preview-layouts`, `retention-policies` | Admin child pages                       | EN/AR files present                             | EN/AR files present                             | `index.ts:331,373,376,457,499,502` | Registered                                                                  |
+scripts/glossary-senses.d/brief-stance.json:40:    "frontend/src/i18n/ar/preview-layouts.json",
+scripts/glossary-senses.d/dossier-b.json:36:    "frontend/src/i18n/ar/preview-layouts.json"
+REPO_OTHER_READERS_RC=0
+```
+
+No TypeScript reader exists, so deleting the type blocks cannot break a consumer. The three hits are outside `files_modified`; see "Left for a later task" below.
+
+2. Pre-edit baseline with the quoted criterion pattern. This shows the instrument sees the target paths:
+
+```text
+$ git grep -c (pre-edit, quoted)
+backend/src/types/database.types.ts:3
+frontend/src/types/database.types.ts:3
+PRE_RC=0
+```
+
+3. Hand-deletion of the blocks by a structural script (session scratchpad `strip-preview.mjs`; not committed). It deletes each `      <name>: {` … `      }` block, each `      <enum>:` union with its `| "…"` lines, and each `      <enum>: [` … `      ],` Constants array. It asserts every table and function name matched exactly once and every enum exactly twice (`Enums` + `Constants`), and that no name survives, before writing. No `supabase gen types` rewrite, and none of the files' other differences were reconciled.
+
+```text
+frontend/src/types/database.types.ts: removed 248 lines {"entity_preview_layouts":1,"preview_layout_fields":1,"user_preview_preferences":1,"get_entity_layouts":1,"get_preview_layout":1,"set_default_layout":1,"preview_context":2,"preview_entity_type":2,"preview_field_type":2}
+backend/src/types/database.types.ts: removed 248 lines {"entity_preview_layouts":1,"preview_layout_fields":1,"user_preview_preferences":1,"get_entity_layouts":1,"get_preview_layout":1,"set_default_layout":1,"preview_context":2,"preview_entity_type":2,"preview_field_type":2}
+REMOVED_BLOCKS_IDENTICAL fe==be
+ backend/src/types/database.types.ts  | 248 -----------------------------------
+ frontend/src/types/database.types.ts | 248 -----------------------------------
+ 2 files changed, 496 deletions(-)
+```
+
+The removed-line logs for the two files are byte-identical (`cmp` exit 0), and the diff is deletions only. The removal covered the complete surface: three tables (Row/Insert/Update/Relationships, including both foreign keys into `entity_preview_layouts`), three RPCs, and three enums under both `Enums` and `Constants`. No foreign key is left pointing at a dropped relation.
+
+4. **The criterion grep, post-edit: 0 hits.** The pattern is quoted so git's basic regex receives the `\|` alternation:
+
+```text
+$ git grep -n 'preview-layouts\|usePreviewLayouts\|entity_preview_layouts' -- frontend/src backend/src supabase/functions
+REQUESTED_GREP_RC=1 hits=0
+```
+
+5. **Positive control beside the zero:** the same quoted pattern on the same post-edit tree, pointed at a path that must still contain the names:
+
+```text
+$ git grep -c 'preview-layouts\|usePreviewLayouts\|entity_preview_layouts' -- supabase/migrations
+supabase/migrations/20260115100001_entity_preview_layouts.sql:59
+supabase/migrations/20260627000001_sec_helper_is_platform_admin.sql:1
+supabase/migrations/20260627000002_sec_be_01_admin_rls_db_role.sql:9
+supabase/migrations/20260911000002_p102_drop_preview_layouts.sql:13
+CONTROL_RC=0
+```
+
+Taken with step 2 (3 + 3 hits in these exact target paths before the edit), this shows the instrument could report non-zero, so the zero in step 4 is real.
+
+6. Full-symbol census over the criterion's paths, post-edit. This covers the names that the three-term criterion pattern does not include:
+
+```text
+$ git grep -n -E 'preview_context|preview_entity_type|preview_field_type|get_preview_layout|get_entity_layouts|set_default_layout|preview_layout_fields|user_preview_preferences' -- frontend/src backend/src supabase/functions
+SYMBOL_CENSUS_RC=1
+```
+
+7. Standalone typecheck of each edited snapshot (strict), which would catch any dangling `Database["public"]["Enums"]["preview_*"]` reference:
+
+```text
+./node_modules/.bin/tsc --noEmit --strict --skipLibCheck --target es2022 --moduleResolution bundler --module esnext frontend/src/types/database.types.ts
+TSC_frontend_RC=0
+./node_modules/.bin/tsc --noEmit --strict --skipLibCheck --target es2022 --moduleResolution bundler --module esnext backend/src/types/database.types.ts
+TSC_backend_RC=0
+```
+
+The commit (`e2fc51c89`) also passed the repository pre-commit hook (lint-staged, build, knip). The last lines of its output were knip's pre-existing unused-export and configuration-hint listing, followed by `COMMIT_RC=0`.
+
+Note on the unquoted form of the criterion: in a shell, `git grep -n preview-layouts\|usePreviewLayouts\|entity_preview_layouts` strips the backslashes, and git grep then searches for the literal string `a|b|c`. That returns 0 on any tree, so it is not the evidence. The quoted form above is, and its zero is bounded by the controls in steps 2 and 5.
+
 ## Post-work catalog oracle
 
-The plan's command oracle was executed under `bash` because its unquoted `set -- $PSQL_OUT` relies on POSIX field splitting (zsh does not split scalar parameters by default).
-
-Verbatim output:
+The plan's command oracle was executed under `bash` because its unquoted `set -- $PSQL_OUT` relies on POSIX field splitting (zsh does not split scalar parameters by default). Rerun verbatim on 2026-09-12, after this attempt's work:
 
 ```text
 P102-14-CATALOG tables_remaining=0 functions_remaining=0 types_remaining=0 control_dossiers=1 expected 0 0 0 1
 PASS preview-dropped
+ORACLE_RC=0
 ```
 
-## Source grep: criterion NOT met
+## Left for a later task (outside `files_modified`, not touched)
 
-The criterion command, quoted so git's basic regex receives the `\|` alternation. Rerun 2026-09-12 on this attempt's tree:
+No task has been named for these yet. The operator needs to create one, because these paths are outside this plan's fixed allowlist:
 
-```text
-git grep -n 'preview-layouts\|usePreviewLayouts\|entity_preview_layouts' -- frontend/src backend/src supabase/functions
-```
-
-Verbatim output:
-
-```text
-backend/src/types/database.types.ts:12414:      entity_preview_layouts: {
-backend/src/types/database.types.ts:22704:            referencedRelation: "entity_preview_layouts"
-backend/src/types/database.types.ts:28334:            referencedRelation: "entity_preview_layouts"
-frontend/src/types/database.types.ts:12414:      entity_preview_layouts: {
-frontend/src/types/database.types.ts:22704:            referencedRelation: "entity_preview_layouts"
-frontend/src/types/database.types.ts:28334:            referencedRelation: "entity_preview_layouts"
-REQUESTED_GREP_HITS=6
-```
-
-The criterion requires 0. It is **not met**. The previous attempt's excluded-pathspec grep (`FEATURE_SOURCE_GREP_HITS=0`) was a different command, and the judge correctly rejected it as a substitute. It is withdrawn; no zero is claimed.
-
-Do not use the unquoted form as a pass either. The shell strips the backslashes, so git grep searches for the literal string `a|b|c`, which returns 0 on any tree. Verbatim output, beside a single-term control on the same tree:
-
-```text
-$ git grep -n preview-layouts\|usePreviewLayouts\|entity_preview_layouts -- frontend/src backend/src supabase/functions
-UNQUOTED_RC=1
-$ git grep -c entity_preview_layouts -- frontend/src backend/src supabase/functions
-backend/src/types/database.types.ts:3
-frontend/src/types/database.types.ts:3
-CONTROL_RC=0
-```
-
-The quoted command's six hits show it can report non-zero, so no separate positive control is needed.
-
-## BLOCKED: needs an operator ruling or a follow-up task
-
-- **Unmet item:** the judge criterion "`git grep -n preview-layouts\|usePreviewLayouts\|entity_preview_layouts -- frontend/src backend/src supabase/functions` = 0 hits".
-- **Why this plan cannot clear it:** all six hits are content inside `frontend/src/types/database.types.ts` and `backend/src/types/database.types.ts`, both generated Supabase snapshots. Neither path is in P102-14's fixed allowlist (`files_modified`), and no in-scope edit can change what git grep reads in them. The defect and its fix are both at those two paths.
-- **Remedy:** add those two paths to the allowlist, then strip the preview residue from both files. Line numbers are the same in both files, even though the files differ elsewhere (`cmp` first differs at line 33276):
-  - tables `entity_preview_layouts` (:12414), `preview_layout_fields` (:22650), `user_preview_preferences` (:28295)
-  - functions `get_entity_layouts` (:35002), `get_preview_layout` (:35844), `set_default_layout` (:37927)
-  - enums `preview_context`, `preview_entity_type`, `preview_field_type` under `Enums` (:39091, :39097, :39110) and `Constants` (:40478, :40485, :40499)
-
-  Strip all of it, not just the six grep-matching lines. Stripping only those would leave two tables whose foreign keys point at a relation that is gone. Nothing outside the snapshots reads these names. Verbatim output of the census that excluded the two snapshot paths:
-
-  ```text
-  git grep -n -E 'preview_context|preview_entity_type|preview_field_type|get_preview_layout|get_entity_layouts|set_default_layout|preview_layout_fields|user_preview_preferences' -- frontend/src backend/src supabase/functions ':!frontend/src/types/database.types.ts' ':!backend/src/types/database.types.ts'
-  OTHER_READERS_RC=1
-  ```
-
-  A full `supabase gen types` regeneration would also work, but it would pull every other schema drift since the snapshots were taken into this diff. Stripping keeps the change to the preview objects.
-- **Carry in the same follow-up:** these are also outside this allowlist and also refer to the deleted namespace.
-  - `scripts/glossary-senses.d/brief-stance.json:40` and `scripts/glossary-senses.d/dossier-b.json:36` still list `frontend/src/i18n/ar/preview-layouts.json`, so `glossary-census.mjs --slice` on either overlay throws.
-  - Dead tracked copies remain at `frontend/public/locales/{en,ar}/preview-layouts.json`.
-
-Everything else in the plan is done: the route, hook, dedicated types file, and both i18n JSON files are deleted; the i18n registrations are removed; the route tree is regenerated; the migration was applied twice; the 12 seed rows were exported first; and the catalog oracle returned `0 0 0 1`.
+- `scripts/glossary-senses.d/brief-stance.json:40` and `scripts/glossary-senses.d/dossier-b.json:36` still list the deleted `frontend/src/i18n/ar/preview-layouts.json`. `node scripts/glossary-census.mjs --slice <either overlay>` therefore throws `unknown ar slice file`. That tool is run by hand and is not wired into CI or lint.
+- Dead tracked copies remain at `frontend/public/locales/{en,ar}/preview-layouts.json`. `public/locales` is not wired into the i18n loader (static bundle in `src/i18n/index.ts`), so they have no runtime effect.
+- `reports/settings-admin-workflow-inspection-2026-06-09.md:89` is a dated historical inspection report that names the namespace. It is left as a record, not a defect.
+- The migration was applied with `psql -f` as the plan mandates (D-24), so `supabase_migrations.schema_migrations` has no row for `20260911000002`. Every statement is `IF EXISTS`, so a later `db push` re-apply does nothing (see the second apply above).
+- The CSV export is at `/private/tmp/…`, which is cleared on reboot. The plan named `.tickmarkr/overseer/`, which is outside the worktree. All 12 rows are also the seed `INSERT`s in `20260115100001_entity_preview_layouts.sql`, so the data can be rebuilt.
 
 ## Commits
 
 ```text
-ff93e377a refactor(frontend): remove preview layouts feature
-c0581964f chore(db): drop preview layout objects
-32bddb05d docs(planning): record preview layouts removal
+daa92d7d8 refactor(frontend): remove preview layouts feature
+db49f27fb chore(db): drop preview layout objects
+b09f82e5e docs(planning): record preview layouts removal
+f6f5cf02a docs(planning): record P102-14 grep criterion as blocked on scope
+e2fc51c89 chore(types): strip dropped preview layout objects from database types
 ```
+
+This SUMMARY update is committed on top of those.
