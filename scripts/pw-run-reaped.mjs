@@ -28,8 +28,9 @@
  * preceded by a fresh census that must revalidate every member's immutable identity tuple
  * {pid, pgid, lstart, cwd} (F4). There is NO bare-PID SIGKILL anywhere in this file. Any
  * unavailable census is `unavailable` and stops signalling (F1); any unreadable, unresolvable, or
- * out-of-root cwd refuses the WHOLE session (F3); any identity change refuses — we never follow
- * the number.
+ * out-of-root cwd refuses the WHOLE session (F3 — an unreadable one only after a bounded re-census;
+ * a member is excluded only when its pid then probes positively dead, P101-01); any identity
+ * change refuses — we never follow the number.
  *
  * THE VERDICT. Cleanup produces ONE verdict, a conjunction of positive observations:
  *   clean ⟺ every expected lease was found (or provably never started: no lease AND no new port
@@ -68,7 +69,7 @@
  * pre-spawn sweep plus `--sweep <root>` consume the orphan (Amendment 2: recovery is
  * product-owned, not an operator overlay).
  *
- * usage: node scripts/pw-run-reaped.mjs -- <playwright args...>      RUN (pass-through)
+ * usage: node scripts/pw-run-reaped.mjs -- [playwright args...]      RUN (pass-through; none = bare)
  *        node scripts/pw-run-reaped.mjs <spec> <project> <jsonOut>   RUN (legacy positional)
  *        node scripts/pw-run-reaped.mjs --lease-exec -- <cmd...>     LEASE WRITER (config-invoked)
  *        node scripts/pw-run-reaped.mjs --sweep <root>               ORPHAN RECOVERY
@@ -690,9 +691,37 @@ export const reapLeakedSession = (
     out.zero = false
     return out
   }
-  // cwd attribution for one member: a STRING reason on any failure, the enriched member otherwise.
+  const EXITED = Symbol('member exited before its cwd could be read')
+  // cwd attribution for one member: a STRING reason on any failure, EXITED when the member left the
+  // session before its cwd could be read, the enriched member otherwise.
+  //
+  // P101-01: an UNREADABLE cwd is RE-CENSUSED before it refuses the whole session. `lsof` reads no
+  // cwd for a process that is exiting, and the SIGKILL+sweep drill raced Playwright's own webServer
+  // teardown into exactly that: members leaving the session read UNREADABLE and the sweep refused
+  // WHOLE (run 0080). After a short bounded delay the session is censused again. A member still
+  // present under the SAME identity {pid, pgid, lstart} is re-read, and if its cwd still reads
+  // unreadable it REFUSES exactly as before (F3 fail-closed preserved). A member ABSENT from the
+  // re-census is EXCLUDED only when a global probe of its pid reads it positively `dead` (gone, or
+  // a zombie — no descriptors). Absence alone is not exit: a pid still LIVE after leaving the tuple
+  // (new pgid, new session, or a reused number) is an identity change and refuses. An unavailable
+  // re-census or probe refuses.
+  // ponytail: 5 × 200 ms bounds the wait per unreadable member; an exiting process leaves in ms.
   const attribute = (m) => {
-    const raw = cwdOf(m.pid, { runner })
+    let raw = cwdOf(m.pid, { runner })
+    for (let i = 0; (raw === null || raw === '') && i < 5; i++) {
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 200)
+      const again = census()
+      if (again === null)
+        return `member pid ${m.pid}: cwd UNREADABLE and the re-census is UNAVAILABLE — not ours to end`
+      if (!again.some((x) => x.pid === m.pid && x.pgid === m.pgid && x.lstart === m.lstart)) {
+        const p = probeProcess(m.pid, { runner })
+        if (p.state === 'dead') return EXITED
+        if (p.state === 'alive')
+          return `member pid ${m.pid}: cwd UNREADABLE and the pid is LIVE outside its bound {pgid ${m.pgid}, session ${sid}, lstart} — an identity change, never follow the number`
+        return `member pid ${m.pid}: cwd UNREADABLE and its exit is unprovable (${p.why}) — not ours to end`
+      }
+      raw = cwdOf(m.pid, { runner })
+    }
     if (raw === null || raw === '')
       return `member pid ${m.pid}: cwd UNREADABLE — a session we cannot fully attribute is not ours to end`
     let cwd
@@ -721,6 +750,7 @@ export const reapLeakedSession = (
   for (const m of first) {
     const v = attribute(m)
     if (typeof v === 'string') return refuse(`session ${sid} refused WHOLE: ${v}`)
+    if (v === EXITED) continue // left the session during the bounded re-census — excluded, never bound
     known.set(m.pid, { pid: m.pid, pgid: m.pgid, lstart: m.lstart, cwd: v.cwd })
   }
 
@@ -793,6 +823,7 @@ export const reapLeakedSession = (
     const ourPgid = pgidOf(process.pid, { runner })
     if (ourPgid === null)
       return unavailable('own pgid unresolvable at signal time — failing closed, no signals sent')
+    const live = [] // attributed members only — an exited member's pgid is never a signal target
     for (const m of cur) {
       const prev = known.get(m.pid)
       if (prev && (prev.pgid !== m.pgid || prev.lstart !== m.lstart))
@@ -802,6 +833,7 @@ export const reapLeakedSession = (
         )
       const v = attribute(m) // F3: containment re-checked on the at-use census
       if (typeof v === 'string') return refuse(`session ${sid} refused WHOLE at-use: ${v}`)
+      if (v === EXITED) continue // left the session during the bounded re-census — never signalled
       // Repair 3 (RULING-P99-54): the FULL bound tuple is recompared every round, canonical cwd
       // included — the old code re-checked pgid/lstart but only re-checked that cwd was still
       // CONTAINED, never that it was still the SAME cwd. A member that moved to a different (but
@@ -812,8 +844,9 @@ export const reapLeakedSession = (
           `session ${sid} refused WHOLE: pid ${m.pid} cwd changed (${prev.cwd} -> ${v.cwd}) — never follow the number`,
         )
       if (!prev) known.set(m.pid, { pid: m.pid, pgid: m.pgid, lstart: m.lstart, cwd: v.cwd })
+      live.push(m)
     }
-    const groups = [...new Set(cur.map((m) => m.pgid))].filter((g) => g > 1 && g !== ourPgid)
+    const groups = [...new Set(live.map((m) => m.pgid))].filter((g) => g > 1 && g !== ourPgid)
     out.pgids = [...new Set([...out.pgids, ...groups])]
     for (const g of groups) {
       // Repair 2 (RULING-P99-58 item 2): re-read and revalidate the lease authority AFTER the fresh
@@ -1684,7 +1717,7 @@ export const installExitHandlers = (finish, { log = console.error } = {}) => {
 
 const usage = () => {
   console.error(
-    'usage: pw-run-reaped.mjs (-- <playwright args...> | <spec> <project> <jsonOut> | ' +
+    'usage: pw-run-reaped.mjs (-- [playwright args...] | <spec> <project> <jsonOut> | ' +
       '--lease-exec -- <cmd...> | --sweep <root>)',
   )
   process.exit(2)
@@ -1699,7 +1732,8 @@ const usage = () => {
  * python3 missing: the lease is written with sid:null and a reason, and the command STILL runs —
  * an instrument must never sabotage the run it observes. RUN then reports `unavailable` and the
  * gate goes red. PW_LEASE_* env absent (ad-hoc `pnpm exec playwright test`, unroutable by
- * construction): warn and run UNLEASED — recovery for that path is `--sweep`, stated not papered.
+ * construction): warn and run UNLEASED. That session writes no lease, so it is NOT recoverable
+ * here — `--sweep` and RUN's pre-spawn sweep walk lease files only (P101-01); stated, not papered.
  */
 const leaseExecMode = (argv) => {
   const [dash, ...cmd] = argv
@@ -1791,7 +1825,8 @@ const sweepMode = (root) => {
 }
 
 /**
- * RUN. Pass-through (`-- <args>`) appends args to `pnpm exec playwright test`; the legacy
+ * RUN. Pass-through (`-- [args]`) appends args to `pnpm exec playwright test`; an EMPTY list is the
+ * bare invocation, every project the config declares (frontend `test:e2e`, P101-01). The legacy
  * positional form (<spec> <project> <jsonOut>) keeps working — the three closed plans still
  * contain it, and a landmine in a preserved-but-dead command is still a landmine.
  *
@@ -1810,7 +1845,6 @@ export const runMode = (
   let jsonOut = null
   if (argv[0] === '--') {
     pwArgs = argv.slice(1)
-    if (pwArgs.length === 0) usage()
   } else {
     const [spec, project, out] = argv
     if (spec === undefined || project === undefined || out === undefined) usage()
