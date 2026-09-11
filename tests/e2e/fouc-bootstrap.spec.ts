@@ -16,7 +16,7 @@
  * `testDir` is `./tests/e2e` (repo root) — so this file lives at the active
  * test location. Recorded as a deviation (Rule 3 — blocking fix).
  */
-// `test` alias: the P101-QUAR marker below is read by grep as `test.fixme(`.
+// `test` alias: the P101-QUAR marker below must use the test.fixme spelling the phase grep reads.
 import { test as base, test, expect } from '@playwright/test'
 
 // Chancery-light palette (byte-matches directions.ts PALETTES.chancery.light)
