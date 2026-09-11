@@ -118,6 +118,47 @@ Frontend TypeScript validation passed:
 
 Both implementation commits also completed the repository commit hooks, including the full Turbo build. `git diff --check` produced no output. No later task has remaining work from P102-08.
 
+## Retry verification, 2026-09-11
+
+The task-owned oracles still pass in this worktree:
+
+```text
+P102-08-GUIDE en=8/8 ar=8/8 expected en=8/8 ar=8/8 (whenToUse>=20 chars, examples>=2, commonLinks>=2, notFor>=20 chars)
+PASS guide
+  NS dossier strings=1066 candidates=4 ar_mirror=4 carved=4 ar_missing_keys=0 ar_extra_keys=0 carve_rows=4
+P102-LANE namespaces=1 at_end_state=1 expected 1 1 (candidates==carved, carved==carve_rows, ar_mirror==candidates, ar_missing_keys=0)
+PASS lane
+```
+
+The exact filtered parallel-truth proof also passes:
+
+```text
+RUN  v4.1.7 .../frontend
+
+Test Files  1 passed (1)
+Tests  1 passed (1)
+Duration  4.34s (transform 1.11s, setup 1.62s, import 1.81s, tests 6ms, environment 780ms)
+```
+
+The stale P99-58 dynamic-key test still asserts the pre-P102 hollow-guide state (`missing=7/8`) and fails after this task's required end state makes the instrument report `missing=0/8`:
+
+```text
+dossier type guide: union=8 [country,elected_official,engagement,forum,organization,person,topic,working_group]
+  typeGuide.<t>.whenToUse: fallback=present missing=0/8
+  typeGuide.<t>.notFor: fallback=present missing=0/8
+dynamic-key coverage: OK (2 site(s))
+RC=0
+```
+
+```text
+FAIL  src/components/dossier/tabs/__tests__/DossierEngagementsTab.test.tsx > P99-58 acceptance criteria > no DYNAMIC-KEY site drops its fallback while a reachable key is absent from a locale (RULING-P99-498) ...
+AssertionError: Target cannot be null or undefined.
+ ❯ src/components/dossier/tabs/__tests__/DossierEngagementsTab.test.tsx:498:52
+    498|     expect(dynamicCoverage.match(/missing=7\/8/g)).toHaveLength(2)
+```
+
+That assertion lives outside this task's allowed file scope; satisfying it would require undoing GUIDE-HOLLOW-01 or editing `frontend/src/components/dossier/tabs/__tests__/DossierEngagementsTab.test.tsx`.
+
 ## Commits
 
 - `1aedc222b feat(i18n): complete dossier type guidance`
