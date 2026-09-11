@@ -78,7 +78,8 @@ test.describe('MoU create (FEAT-01)', () => {
       throw new Error(`mou-create teardown: MoU delete failed: ${mous.error.message}`)
     }
     console.warn(
-      `[mou-create teardown] title=${UNIQUE_TITLE} queue_deleted=${queue.count} mous_deleted=${mous.count}`,
+      `[mou-create teardown] title=${UNIQUE_TITLE} ` +
+        `queue_deleted=${queue.count} mous_deleted=${mous.count}`,
     )
   })
 

@@ -176,8 +176,8 @@ test.describe('NAV-01 Elected Officials is reachable on all four exposure surfac
 
   // TEARDOWN (DATA-01 clause 2). Deletes what this worker's run created, by its own prefix, through
   // the service-role client (`getSupabaseAdmin`: SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY from
-  // .env.test; it THROWS when either is unset, so the teardown is never silently skipped). `persons`
-  // is the extension row of the `dossiers` row, so it goes first.
+  // .env.test; it THROWS when either is unset, so the teardown is never silently skipped).
+  // `persons` is the extension row of the `dossiers` row, so it goes first.
   test.afterAll(async () => {
     const admin = getSupabaseAdmin()
     const { data, error } = await admin
@@ -200,7 +200,8 @@ test.describe('NAV-01 Elected Officials is reachable on all four exposure surfac
       throw new Error(`97-01 teardown: dossiers delete failed: ${dossiers.error.message}`)
     }
     console.warn(
-      `[97-01 teardown] prefix=${EO_NAME_PREFIX} persons_deleted=${persons.count} dossiers_deleted=${dossiers.count}`,
+      `[97-01 teardown] prefix=${EO_NAME_PREFIX} ` +
+        `persons_deleted=${persons.count} dossiers_deleted=${dossiers.count}`,
     )
   })
 

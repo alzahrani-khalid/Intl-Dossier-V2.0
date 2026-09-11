@@ -32,8 +32,8 @@ const RUN_EPOCH = Date.now()
 const CREATED_EMAIL = `e2e-${RUN_EPOCH}@example.test`
 
 test.describe('User Management — D-10 loop', () => {
-  // TEARDOWN (DATA-01 clause 2). Deletes the account this run created, through a service-role client
-  // built from SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY (.env.test, loaded by
+  // TEARDOWN (DATA-01 clause 2). Deletes the account this run created, through a service-role
+  // client built from SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY (.env.test, loaded by
   // frontend/playwright.config.ts). A missing key THROWS: the teardown is never silently skipped.
   // public.users.id IS auth.users.id (FK + the on_auth_user_created trigger), so the email lookup
   // names the auth account, and auth.admin.deleteUser removes it (public.users cascades).
@@ -83,6 +83,13 @@ test.describe('User Management — D-10 loop', () => {
     await page.getByRole('button', { name: 'Create user' }).click()
 
     // On success the page navigates back to the list.
+    //
+    // KNOWN RED (102-07, measured 2026-09-11): this wait exceeds 30 s because the deployed
+    // `create-user` fn answers 500 EDGE_FUNCTION_ERROR after ~12 s with no CORS header, so the page
+    // toasts "Could not create the user" and never navigates. The thrower is `withRateLimit`'s
+    // `req.headers.set` on Deno's immutable incoming request headers
+    // (supabase/functions/_shared/rate-limiter.ts:186, shared by deactivate-/reactivate-user). The
+    // fix is server-side; a longer timeout here cannot help.
     await page.waitForURL(/\/users\/?$/)
 
     // Created users are is_active:false; the DEFAULT filter is "all", so the row
