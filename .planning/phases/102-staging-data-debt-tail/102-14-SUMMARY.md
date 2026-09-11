@@ -1,5 +1,5 @@
 ---
-status: complete
+status: blocked
 phase: 102-staging-data-debt-tail
 plan: 14
 requirement: PREVIEW-HOLLOW-01
@@ -161,9 +161,9 @@ P102-14-CATALOG tables_remaining=0 functions_remaining=0 types_remaining=0 contr
 PASS preview-dropped
 ```
 
-## Source grep and positive control
+## Source grep: criterion NOT met
 
-The exact requested command was run:
+The criterion command, quoted so git's basic regex receives the `\|` alternation. Rerun 2026-09-12 on this attempt's tree:
 
 ```text
 git grep -n 'preview-layouts\|usePreviewLayouts\|entity_preview_layouts' -- frontend/src backend/src supabase/functions
@@ -181,25 +181,48 @@ frontend/src/types/database.types.ts:28334:            referencedRelation: "enti
 REQUESTED_GREP_HITS=6
 ```
 
-Those six hits are stale generated database schema snapshots, both outside P102-14's fixed file scope. The feature-source form excluding only those generated snapshots returns the intended zero without hiding any editable frontend/backend/function source:
+The criterion requires 0. It is **not met**. The previous attempt's excluded-pathspec grep (`FEATURE_SOURCE_GREP_HITS=0`) was a different command, and the judge correctly rejected it as a substitute. It is withdrawn; no zero is claimed.
+
+Do not use the unquoted form as a pass either. The shell strips the backslashes, so git grep searches for the literal string `a|b|c`, which returns 0 on any tree. Verbatim output, beside a single-term control on the same tree:
 
 ```text
-git grep -n 'preview-layouts\|usePreviewLayouts\|entity_preview_layouts' -- frontend/src backend/src supabase/functions ':(exclude)frontend/src/types/database.types.ts' ':(exclude)backend/src/types/database.types.ts'
-FEATURE_SOURCE_GREP_HITS=0
+$ git grep -n preview-layouts\|usePreviewLayouts\|entity_preview_layouts -- frontend/src backend/src supabase/functions
+UNQUOTED_RC=1
+$ git grep -c entity_preview_layouts -- frontend/src backend/src supabase/functions
+backend/src/types/database.types.ts:3
+frontend/src/types/database.types.ts:3
+CONTROL_RC=0
 ```
 
-Positive control, verbatim output:
+The quoted command's six hits show it can report non-zero, so no separate positive control is needed.
 
-```text
-git grep -n "createFileRoute('/_protected/dossiers/')" -- frontend/src/routes | head -1
-frontend/src/routes/_protected/dossiers/index.tsx:13:export const Route = createFileRoute('/_protected/dossiers/')({
-```
+## BLOCKED: needs an operator ruling or a follow-up task
 
-No route, hook, dedicated preview-layout type, i18n namespace, or runtime backend/function reader remains. Refreshing the two generated database snapshots is intentionally left to a later schema-generation task because those paths are outside this plan's allowlist.
+- **Unmet item:** the judge criterion "`git grep -n preview-layouts\|usePreviewLayouts\|entity_preview_layouts -- frontend/src backend/src supabase/functions` = 0 hits".
+- **Why this plan cannot clear it:** all six hits are content inside `frontend/src/types/database.types.ts` and `backend/src/types/database.types.ts`, both generated Supabase snapshots. Neither path is in P102-14's fixed allowlist (`files_modified`), and no in-scope edit can change what git grep reads in them. The defect and its fix are both at those two paths.
+- **Remedy:** add those two paths to the allowlist, then strip the preview residue from both files. Line numbers are the same in both files, even though the files differ elsewhere (`cmp` first differs at line 33276):
+  - tables `entity_preview_layouts` (:12414), `preview_layout_fields` (:22650), `user_preview_preferences` (:28295)
+  - functions `get_entity_layouts` (:35002), `get_preview_layout` (:35844), `set_default_layout` (:37927)
+  - enums `preview_context`, `preview_entity_type`, `preview_field_type` under `Enums` (:39091, :39097, :39110) and `Constants` (:40478, :40485, :40499)
+
+  Strip all of it, not just the six grep-matching lines. Stripping only those would leave two tables whose foreign keys point at a relation that is gone. Nothing outside the snapshots reads these names. Verbatim output of the census that excluded the two snapshot paths:
+
+  ```text
+  git grep -n -E 'preview_context|preview_entity_type|preview_field_type|get_preview_layout|get_entity_layouts|set_default_layout|preview_layout_fields|user_preview_preferences' -- frontend/src backend/src supabase/functions ':!frontend/src/types/database.types.ts' ':!backend/src/types/database.types.ts'
+  OTHER_READERS_RC=1
+  ```
+
+  A full `supabase gen types` regeneration would also work, but it would pull every other schema drift since the snapshots were taken into this diff. Stripping keeps the change to the preview objects.
+- **Carry in the same follow-up:** these are also outside this allowlist and also refer to the deleted namespace.
+  - `scripts/glossary-senses.d/brief-stance.json:40` and `scripts/glossary-senses.d/dossier-b.json:36` still list `frontend/src/i18n/ar/preview-layouts.json`, so `glossary-census.mjs --slice` on either overlay throws.
+  - Dead tracked copies remain at `frontend/public/locales/{en,ar}/preview-layouts.json`.
+
+Everything else in the plan is done: the route, hook, dedicated types file, and both i18n JSON files are deleted; the i18n registrations are removed; the route tree is regenerated; the migration was applied twice; the 12 seed rows were exported first; and the catalog oracle returned `0 0 0 1`.
 
 ## Commits
 
 ```text
-55419bf40 refactor(frontend): remove preview layouts feature
-6b6178a8a chore(db): drop preview layout objects
+ff93e377a refactor(frontend): remove preview layouts feature
+c0581964f chore(db): drop preview layout objects
+32bddb05d docs(planning): record preview layouts removal
 ```
