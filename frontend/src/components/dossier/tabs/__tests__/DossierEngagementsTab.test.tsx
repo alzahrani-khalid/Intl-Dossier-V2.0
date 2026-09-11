@@ -495,7 +495,7 @@ describe('P99-58 acceptance criteria', () => {
     expect(
       productionWithoutLocalizedDynamicFallback.match(fallbackOptionPattern) ?? [],
     ).toHaveLength(0)
-    expect(dynamicCoverage.match(/missing=7\/8/g)).toHaveLength(2)
+    expect(dynamicCoverage.match(/missing=0\/8/g) ?? []).toHaveLength(2)
     expect(dynamicCoverage).toContain('dynamic-key coverage: OK (2 site(s))')
   })
 

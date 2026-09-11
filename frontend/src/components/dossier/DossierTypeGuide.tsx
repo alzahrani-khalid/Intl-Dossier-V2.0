@@ -38,8 +38,9 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
+import { dossierTypeColors } from '@/lib/semantic-colors'
 import type { DossierType } from '@/services/dossier-api'
-import type { DossierCardType } from '@/lib/dossier-type-guards'
+import { DOSSIER_TYPES, type DossierCardType } from '@/lib/dossier-type-guards'
 import { useDirection } from '@/hooks/useDirection'
 
 /**
@@ -97,72 +98,11 @@ function getTypeIcon(type: DossierCardType, className?: string) {
 /**
  * Get type-specific color classes
  *
- * D-58-04-01 (D-07 blue+purple collision rule): canonical mapping aligned to
- * `dossierTypeColors` in `frontend/src/lib/semantic-colors.ts`. Each branch maps
- * to a single semantic family (primary, secondary=accent-soft, success, warning,
- * destructive, accent, muted) using `/10` bg + `/30` border opacity steps.
- * Token tokens are mode-invariant, so no dark: variants are needed (D-09).
+ * Delegates to the canonical semantic colour map. Elected officials use the
+ * country entry because they are a displayed subtype rather than a DB dossier type.
  */
 function getTypeColors(type: DossierCardType): { bg: string; text: string; border: string } {
-  switch (type) {
-    case 'country':
-      return {
-        bg: 'bg-primary/10',
-        text: 'text-primary',
-        border: 'border-primary/30',
-      }
-    case 'organization':
-      return {
-        bg: 'bg-secondary',
-        text: 'text-secondary-foreground',
-        border: 'border-secondary',
-      }
-    case 'forum':
-      return {
-        bg: 'bg-success/10',
-        text: 'text-success',
-        border: 'border-success/30',
-      }
-    case 'engagement':
-      return {
-        bg: 'bg-warning/10',
-        text: 'text-warning',
-        border: 'border-warning/30',
-      }
-    case 'topic':
-      return {
-        bg: 'bg-destructive/10',
-        text: 'text-destructive',
-        border: 'border-destructive/30',
-      }
-    case 'working_group':
-      return {
-        bg: 'bg-accent',
-        text: 'text-accent-foreground',
-        border: 'border-accent',
-      }
-    case 'person':
-      return {
-        bg: 'bg-muted',
-        text: 'text-muted-foreground',
-        border: 'border-muted',
-      }
-    // WR-07: `semantic-colors.ts` resolves `dossierTypeColors[type] ?? dossierTypeColors.country`
-    // and holds no `elected_official` entry, so country/primary IS the canonical fallback for EO
-    // today — popover == stats card == canonical fallback. No new colour family (D-28).
-    case 'elected_official':
-      return {
-        bg: 'bg-primary/10',
-        text: 'text-primary',
-        border: 'border-primary/30',
-      }
-    default:
-      return {
-        bg: 'bg-muted',
-        text: 'text-muted-foreground',
-        border: 'border-muted',
-      }
-  }
+  return dossierTypeColors[type as DossierType] ?? dossierTypeColors.country!
 }
 
 /**
@@ -399,16 +339,7 @@ export function DossierTypeGuideGrid({
   className?: string
 }) {
   const { t } = useTranslation('dossier')
-
-  const types: DossierType[] = [
-    'country',
-    'organization',
-    'person',
-    'engagement',
-    'forum',
-    'working_group',
-    'topic',
-  ]
+  const types: DossierType[] = GUIDE_GRID_TYPES
 
   return (
     <div
@@ -465,6 +396,8 @@ export function DossierTypeGuideGrid({
     </div>
   )
 }
+
+export const GUIDE_GRID_TYPES: DossierType[] = [...DOSSIER_TYPES]
 
 // Backward compatibility exports - map old names to new names
 export const EntityTypeGuide = DossierTypeGuide
