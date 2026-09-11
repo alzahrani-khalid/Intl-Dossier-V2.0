@@ -9,12 +9,17 @@
 // Each test signs in with the TEST_USER pair in its own session (the global storageState is
 // emptied, so the sign-in is this spec's, not global-setup's), visits /engagements with the locale
 // stated on the navigation, SETTLES, and only then reads the surface. The settle is
-// tests/e2e/98-copy04-voice.spec.ts's (main visible, best-effort networkidle, fixed 3 s dwell) plus
-// a gate on "rows or error chrome, whichever appears" — never the pre-law 95/96 helpers.
+// tests/e2e/98-copy04-voice.spec.ts's (`main` asserted visible, best-effort networkidle, fixed 3 s
+// dwell) plus an ASSERTED gate on "visible rows or visible error chrome, whichever appears" — never
+// the pre-law 95/96 helpers. Both gates throw: a surface that never settles is a failure, not a read.
 //
-// On failure the test prints what the surface actually showed: the error-chrome text (soft, first,
-// so it leads the report's error message) or the visible body text beside the row count. That is
-// how the SUMMARY names a cause. No repair lives here (D-19: none is planned for an unseen cause).
+// Every read is of VISIBLE nodes only (`filter({ visible: true })`): a hidden or stale row node in
+// the DOM is not a rendered row, and must neither satisfy the settle nor count toward the 5.
+//
+// On failure the test says what the surface actually showed: the visible error-chrome text (soft,
+// first, so it leads the report's error message), or — when the surface never settled — that text
+// plus the visible body, re-thrown with the settle's own error. That is how the SUMMARY names a
+// cause. No repair lives here (D-19: none is planned for an unseen cause).
 import { test, expect, type Locator, type Page } from '@playwright/test'
 import { loginForListPages } from './support/list-pages-auth'
 
@@ -29,41 +34,52 @@ const ERROR_TITLE: Readonly<Record<Locale, string>> = {
   ar: 'تعذر تحميل البيانات',
 }
 
-const engagementRows = (page: Page): Locator => page.locator('[data-testid="engagement-row"]')
+const engagementRows = (page: Page): Locator =>
+  page.locator('[data-testid="engagement-row"]').filter({ visible: true })
 
 /** QueryErrorState (both variants) or the shared title from any error surface, incl. the router's. */
 const errorChrome = (page: Page, lng: Locale): Locator =>
   page
     .locator('[data-testid="query-error-state"], [data-testid="query-error-inline"]')
     .or(page.getByText(ERROR_TITLE[lng]))
+    .filter({ visible: true })
 
 const squash = (text: string): string => text.replace(/\s+/g, ' ').trim()
 
+const errorChromeText = async (page: Page, lng: Locale): Promise<string> =>
+  squash((await errorChrome(page, lng).allInnerTexts()).join(' | '))
+
 /**
- * Settle before capture. None of the waits throws: a surface that never shows `main`, rows or error
- * chrome is exactly what the probe must REPORT, and the row assertion below does so with the
- * visible text attached — a settle timeout would name the locator instead of the cause.
+ * Settle before capture, ported from 98-copy04's `settle` (:248). `main` visible and the
+ * rows-or-error gate are ASSERTED (they throw); only networkidle is best-effort, exactly as in
+ * 98-copy04, because a surface holding an open subscription never reaches it.
  */
 const settle = async (page: Page, lng: Locale): Promise<void> => {
-  await page
-    .getByRole('main')
-    .waitFor({ state: 'visible', timeout: SETTLE_TIMEOUT })
-    .catch(() => {})
+  await expect(page.getByRole('main')).toBeVisible({ timeout: SETTLE_TIMEOUT })
   await page.waitForLoadState('networkidle', { timeout: 60_000 }).catch(() => {})
-  await engagementRows(page)
-    .or(errorChrome(page, lng))
-    .first()
-    .waitFor({ state: 'visible', timeout: SETTLE_TIMEOUT })
-    .catch(() => {})
+  await expect(
+    engagementRows(page).or(errorChrome(page, lng)).first(),
+    `/engagements ${lng}: neither a visible engagement row nor visible error chrome appeared`,
+  ).toBeVisible({ timeout: SETTLE_TIMEOUT })
   await page.waitForTimeout(3_000)
 }
 
 const probe = async (page: Page, lng: Locale): Promise<void> => {
   await loginForListPages(page, lng)
   await page.goto(`/engagements?lng=${lng}`)
-  await settle(page, lng)
+  try {
+    await settle(page, lng)
+  } catch (error) {
+    // Re-thrown, never swallowed: the failure carries what the surface showed, not just a locator.
+    const chrome = await errorChromeText(page, lng)
+    const body = squash(await page.locator('body').innerText())
+    console.error(`[P102-05] /engagements ${lng} UNSETTLED chrome="${chrome}" body: ${body}`)
+    throw new Error(
+      `UNSETTLED ${lng}: error chrome "${chrome}"; body reads: ${body.slice(0, 300)}\n${String(error)}`,
+    )
+  }
 
-  const errorText = squash((await errorChrome(page, lng).allInnerTexts()).join(' | '))
+  const errorText = await errorChromeText(page, lng)
   if (errorText !== '') console.error(`[P102-05] /engagements ${lng} error chrome: ${errorText}`)
   expect.soft(errorText, `ERROR-CHROME ${lng}: ${errorText}`).toBe('')
 
@@ -73,9 +89,10 @@ const probe = async (page: Page, lng: Locale): Promise<void> => {
   const rows = await engagementRows(page).count()
   const shown = rows === EXPECTED_ROWS ? '' : squash(await page.locator('body').innerText())
   if (shown !== '') console.error(`[P102-05] /engagements ${lng} rows=${rows} body: ${shown}`)
-  expect(rows, `ROWS ${lng}: ${rows} of ${EXPECTED_ROWS}; body reads: ${shown.slice(0, 300)}`).toBe(
-    EXPECTED_ROWS,
-  )
+  expect(
+    rows,
+    `ROWS ${lng}: ${rows} visible of ${EXPECTED_ROWS}; body reads: ${shown.slice(0, 300)}`,
+  ).toBe(EXPECTED_ROWS)
 }
 
 test.describe('ENGREAD-01 — /engagements render probe', () => {
