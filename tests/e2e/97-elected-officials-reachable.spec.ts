@@ -44,9 +44,17 @@
 // blocked or stubbed — a green here means the real path resolved.
 import { test, expect, type Page } from '@playwright/test'
 import LoginPage from './support/pages/LoginPage'
+import { getSupabaseAdmin } from './support/helpers/supabase-admin'
 
 const email = process.env.TEST_USER_EMAIL ?? ''
 const password = process.env.TEST_USER_PASSWORD ?? ''
+
+// TEARDOWN RECORD (DATA-01, 102-07 / D-07). The one row this file writes is named from this
+// module-scoped epoch, so the afterAll below deletes exactly this run's rows by prefix and nothing
+// older (the historical e2e-97-01 rows are 102-06's). Module scope is per WORKER: the afterAll that
+// runs in the create test's worker holds the same epoch the create test named its row with.
+const RUN_EPOCH = Date.now()
+const EO_NAME_PREFIX = `e2e-97-01-elected-official-${RUN_EPOCH}`
 
 // TIMING. One budget for every settle in this file, matching 95-monitoring-mounts.spec.ts.
 // Generous enough to cover the query client's retry ladder so a slow-but-correct settle is not
@@ -165,6 +173,36 @@ const assertNoInternalLeak = async (page: Page): Promise<void> => {
 
 test.describe('NAV-01 Elected Officials is reachable on all four exposure surfaces', () => {
   test.use({ viewport: DESKTOP_1400 })
+
+  // TEARDOWN (DATA-01 clause 2). Deletes what this worker's run created, by its own prefix, through
+  // the service-role client (`getSupabaseAdmin`: SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY from
+  // .env.test; it THROWS when either is unset, so the teardown is never silently skipped). `persons`
+  // is the extension row of the `dossiers` row, so it goes first.
+  test.afterAll(async () => {
+    const admin = getSupabaseAdmin()
+    const { data, error } = await admin
+      .from('dossiers')
+      .select('id')
+      .like('name_en', `${EO_NAME_PREFIX}%`)
+    if (error !== null) {
+      throw new Error(`97-01 teardown: dossier lookup failed: ${error.message}`)
+    }
+    const ids = ((data ?? []) as { id: string }[]).map((row) => row.id)
+    if (ids.length === 0) {
+      return
+    }
+    const persons = await admin.from('persons').delete({ count: 'exact' }).in('id', ids)
+    if (persons.error !== null) {
+      throw new Error(`97-01 teardown: persons delete failed: ${persons.error.message}`)
+    }
+    const dossiers = await admin.from('dossiers').delete({ count: 'exact' }).in('id', ids)
+    if (dossiers.error !== null) {
+      throw new Error(`97-01 teardown: dossiers delete failed: ${dossiers.error.message}`)
+    }
+    console.warn(
+      `[97-01 teardown] prefix=${EO_NAME_PREFIX} persons_deleted=${persons.count} dossiers_deleted=${dossiers.count}`,
+    )
+  })
 
   test('sidebar row — admin user (the only session these specs have), desktop 1400', async ({ page }) => {
     await signInInline(page)
@@ -313,7 +351,7 @@ test.describe('NAV-01 Elected Officials is reachable on all four exposure surfac
     // Six sequential steps behind an inline sign-in do not fit the 30s default budget.
     test.setTimeout(120_000)
 
-    const nameEn = `e2e-97-01-elected-official-${Date.now()}`
+    const nameEn = EO_NAME_PREFIX
     const nameAr = 'مسؤول منتخب'
 
     await signInInline(page)

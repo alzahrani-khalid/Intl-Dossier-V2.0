@@ -24,11 +24,46 @@
  */
 
 import { test, expect } from '@playwright/test'
+import { createClient } from '@supabase/supabase-js'
+
+// TEARDOWN RECORD (DATA-01, 102-07 / D-07). The account the test creates is named from this
+// module-scoped epoch and the afterAll deletes exactly that email's account.
+const RUN_EPOCH = Date.now()
+const CREATED_EMAIL = `e2e-${RUN_EPOCH}@example.test`
 
 test.describe('User Management — D-10 loop', () => {
+  // TEARDOWN (DATA-01 clause 2). Deletes the account this run created, through a service-role client
+  // built from SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY (.env.test, loaded by
+  // frontend/playwright.config.ts). A missing key THROWS: the teardown is never silently skipped.
+  // public.users.id IS auth.users.id (FK + the on_auth_user_created trigger), so the email lookup
+  // names the auth account, and auth.admin.deleteUser removes it (public.users cascades).
+  test.afterAll(async () => {
+    const url = process.env.SUPABASE_URL ?? ''
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? ''
+    if (url === '' || serviceRoleKey === '') {
+      throw new Error('SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY missing from .env.test')
+    }
+    const admin = createClient(url, serviceRoleKey, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    })
+    const { data, error } = await admin.from('users').select('id').eq('email', CREATED_EMAIL)
+    if (error !== null) {
+      throw new Error(`user-management teardown: account lookup failed: ${error.message}`)
+    }
+    let deleted = 0
+    for (const { id } of (data ?? []) as { id: string }[]) {
+      const { error: deleteError } = await admin.auth.admin.deleteUser(id)
+      if (deleteError !== null) {
+        throw new Error(`user-management teardown: deleteUser failed: ${deleteError.message}`)
+      }
+      deleted += 1
+    }
+    console.warn(`[user-management teardown] email=${CREATED_EMAIL} accounts_deleted=${deleted}`)
+  })
+
   test('create → list → detail → role/status, plus IDOR smoke and AR pass', async ({ page }) => {
-    const epoch = Date.now()
-    const email = `e2e-${epoch}@example.test`
+    const epoch = RUN_EPOCH
+    const email = CREATED_EMAIL
     const username = `e2e_${epoch}`
     const fullName = 'E2E Test User'
 

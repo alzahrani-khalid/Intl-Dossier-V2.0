@@ -18,8 +18,15 @@
  */
 
 import { test, expect, type Page } from '@playwright/test'
+import { createClient } from '@supabase/supabase-js'
 
 const SIGNATORY_QUERY = process.env.E2E_MOU_QUERY ?? 'united'
+
+// TEARDOWN RECORD (DATA-01, 102-07 / D-07). The create test titles its MoU from this module-scoped
+// epoch and the afterAll deletes exactly that title. Module scope is per worker, so the afterAll in
+// the create test's worker holds the same title the test wrote.
+const RUN_EPOCH = Date.now()
+const UNIQUE_TITLE = `E2E MoU ${RUN_EPOCH}`
 
 // Type "united" (or E2E_MOU_QUERY) into the picker at `pickerName` and click the
 // result at `resultIndex`. Returns the selected dossier's display name so the
@@ -37,12 +44,50 @@ async function pickSignatory(page: Page, pickerName: RegExp, resultIndex: number
 }
 
 test.describe('MoU create (FEAT-01)', () => {
+  // TEARDOWN (DATA-01 clause 2). Deletes the MoU this run created, through a service-role client
+  // built from SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY (.env.test, loaded by
+  // frontend/playwright.config.ts). A missing key THROWS: the teardown is never silently skipped.
+  // The notification-queue rows the create enqueued go first, then the MoU (its other children
+  // cascade).
+  test.afterAll(async () => {
+    const url = process.env.SUPABASE_URL ?? ''
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? ''
+    if (url === '' || serviceRoleKey === '') {
+      throw new Error('SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY missing from .env.test')
+    }
+    const admin = createClient(url, serviceRoleKey, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    })
+    const { data, error } = await admin.from('mous').select('id').eq('title', UNIQUE_TITLE)
+    if (error !== null) {
+      throw new Error(`mou-create teardown: MoU lookup failed: ${error.message}`)
+    }
+    const ids = ((data ?? []) as { id: string }[]).map((row) => row.id)
+    if (ids.length === 0) {
+      return
+    }
+    const queue = await admin
+      .from('mou_notification_queue')
+      .delete({ count: 'exact' })
+      .in('mou_id', ids)
+    if (queue.error !== null) {
+      throw new Error(`mou-create teardown: queue delete failed: ${queue.error.message}`)
+    }
+    const mous = await admin.from('mous').delete({ count: 'exact' }).in('id', ids)
+    if (mous.error !== null) {
+      throw new Error(`mou-create teardown: MoU delete failed: ${mous.error.message}`)
+    }
+    console.warn(
+      `[mou-create teardown] title=${UNIQUE_TITLE} queue_deleted=${queue.count} mous_deleted=${mous.count}`,
+    )
+  })
+
   test('creates a MoU and shows it in the list with party names', async ({ page }) => {
     await page.goto('/mous')
 
     await page.getByRole('button', { name: /add mou/i }).click()
 
-    const uniqueTitle = `E2E MoU ${Date.now()}`
+    const uniqueTitle = UNIQUE_TITLE
     await page.getByLabel(/title \(english\)/i).fill(uniqueTitle)
     await page.getByLabel(/title \(arabic\)/i).fill('مذكرة تفاهم اختبارية')
 
