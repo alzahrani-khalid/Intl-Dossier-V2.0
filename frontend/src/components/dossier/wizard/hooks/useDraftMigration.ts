@@ -7,19 +7,12 @@
  */
 
 import { useEffect, useRef } from 'react'
+import { DOSSIER_TYPES } from '@/lib/dossier-type-guards'
 
 const OLD_DRAFT_KEY = 'dossier-create-draft'
 const DRAFT_KEY_PREFIX = 'dossier-create-'
 
-const VALID_TYPES: readonly string[] = [
-  'country',
-  'organization',
-  'forum',
-  'engagement',
-  'topic',
-  'working_group',
-  'person',
-]
+export const VALID_TYPES: readonly string[] = [...DOSSIER_TYPES]
 
 /**
  * Pure function that handles the actual migration logic.

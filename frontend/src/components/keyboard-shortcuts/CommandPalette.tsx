@@ -97,7 +97,7 @@ import {
   type QuickSwitcherWorkItem,
 } from '@/hooks/useQuickSwitcherSearch'
 import { getWorkItemUrl, type RecentItem } from '@/domains/dossiers/hooks/useQuickSwitcherSearch'
-import type { DossierType } from '@/lib/dossier-type-guards'
+import { DOSSIER_CARD_TYPES, type DossierType } from '@/lib/dossier-type-guards'
 import { resolveTimelineNavUrl } from '@/lib/timeline-navigation'
 import { useDirection } from '@/hooks/useDirection'
 import { useRecentNavigation } from '@/hooks/useRecentNavigation'
@@ -303,16 +303,7 @@ export const routeContexts: RouteContext[] = [
 ]
 
 // Ordered list of all 8 dossier types for entity sub-grouping
-const DOSSIER_TYPE_ORDER: string[] = [
-  'country',
-  'organization',
-  'forum',
-  'engagement',
-  'topic',
-  'working_group',
-  'person',
-  'elected_official',
-]
+export const DOSSIER_TYPE_ORDER: string[] = [...DOSSIER_CARD_TYPES]
 
 // i18n keys for dossier type group headings (maps to quickswitcher.groups.*)
 const dossierTypeGroupKeys: Record<string, string> = {
