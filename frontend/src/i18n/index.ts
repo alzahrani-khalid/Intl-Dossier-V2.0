@@ -239,8 +239,6 @@ import enEntityLinking from './en/entity-linking.json'
 import arEntityLinking from './ar/entity-linking.json'
 import enGraph from './en/graph.json'
 import arGraph from './ar/graph.json'
-import enPreviewLayouts from './en/preview-layouts.json'
-import arPreviewLayouts from './ar/preview-layouts.json'
 import enGeographicVisualization from './en/geographic-visualization.json'
 import arGeographicVisualization from './ar/geographic-visualization.json'
 import enPushNotifications from './en/push-notifications.json'
@@ -391,7 +389,6 @@ const resources = {
     'dossier-context': enDossierContext,
     'entity-linking': enEntityLinking,
     graph: enGraph,
-    'preview-layouts': enPreviewLayouts,
     'geographic-visualization': enGeographicVisualization,
     'push-notifications': enPushNotifications,
     'retention-policies': enRetentionPolicies,
@@ -527,7 +524,6 @@ const resources = {
     'dossier-context': arDossierContext,
     'entity-linking': arEntityLinking,
     graph: arGraph,
-    'preview-layouts': arPreviewLayouts,
     'geographic-visualization': arGeographicVisualization,
     'push-notifications': arPushNotifications,
     'retention-policies': arRetentionPolicies,
