@@ -1,14 +1,18 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
+import { createClient } from '@supabase/supabase-js'
 import { loginForListPages } from './support/list-pages-auth'
 import { seedRecentDossierStore } from './support/dossier-drawer-fixture'
 
-// Phase 77-01 (VERIFY-01): the frozen clock MUST align with the today-anchored
-// staging seed (b0000002-* engagement_dossiers refreshed to today-relative). The
-// WeekAhead widget buckets events by the browser clock (today/tomorrow/this_week/
-// next_week) and drops anything outside that window; get_upcoming_events filters
-// server-side by real NOW(). Both only overlap when the frozen clock is "today",
-// so this constant tracks the capture date (was 2026-05-08 for the 46-01 capture).
-const FROZEN_TIME = new Date('2026-07-03T12:00:00Z')
+// P102-15 (CARRY-06, 102-CONTEXT.md D-20): both clocks follow today. The WeekAhead widget buckets
+// events by the browser clock (today/tomorrow/this_week/next_week) and drops anything outside that
+// window, while get_upcoming_events filters server-side by real NOW(); the two only overlap when the
+// frozen clock is "today". A constant (2026-07-03 for the 77-01 capture) re-rotted the next day, so
+// FROZEN_TIME is today 12:00Z computed at run time, the beforeAll below moves the seed rows to
+// today-relative dates, and the week-ahead date column (`.week-date`) is masked.
+const FROZEN_TIME = new Date(new Date().setUTCHours(12, 0, 0, 0))
+
+const HOUR_MS = 60 * 60 * 1000
+const DAY_MS = 24 * HOUR_MS
 
 const SUPPRESS_TRANSITIONS_CSS = `
   *, *::before, *::after {
@@ -44,7 +48,62 @@ const READY_SELECTORS: Record<(typeof WIDGETS)[number][0], string> = {
   'dashboard-widget-recent-dossiers': '.recent-row',
 }
 
-test.beforeEach(async ({ page }) => {
+// The eight updates of supabase/seed/072-p102-today-relative-dashboard-fixtures.sql, on every run:
+// the 060-dashboard-demo.sql offsets from date_trunc('hour', NOW()), date_trunc('day', NOW()) and
+// CURRENT_DATE, computed in UTC like the database session.
+test.beforeAll(async () => {
+  const url = process.env.SUPABASE_URL ?? ''
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? ''
+  if (url === '' || serviceKey === '') {
+    throw new Error(
+      'SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY missing from .env.test: the week-ahead seed rows ' +
+        'cannot be moved to today, so every dashboard capture would compare against stale dates',
+    )
+  }
+  const db = createClient(url, serviceKey, { auth: { persistSession: false } })
+  const now = Date.now()
+  const hour = now - (now % HOUR_MS)
+  const day = now - (now % DAY_MS)
+  const at = (ms: number): string => new Date(ms).toISOString()
+  const on = (days: number): string => at(day + days * DAY_MS).slice(0, 10)
+  const updates: Array<[string, string, Record<string, string>]> = [
+    [
+      'engagement_dossiers',
+      'b0000002-0000-0000-0000-000000000001',
+      { start_date: at(hour + 2 * HOUR_MS), end_date: at(hour + 4 * HOUR_MS) },
+    ],
+    [
+      'engagement_dossiers',
+      'b0000002-0000-0000-0000-000000000002',
+      { start_date: at(day + DAY_MS + 10 * HOUR_MS), end_date: at(day + DAY_MS + 12 * HOUR_MS) },
+    ],
+    [
+      'engagement_dossiers',
+      'b0000002-0000-0000-0000-000000000003',
+      {
+        start_date: at(day + 2 * DAY_MS + 14 * HOUR_MS),
+        end_date: at(day + 4 * DAY_MS + 16 * HOUR_MS),
+      },
+    ],
+    ['calendar_entries', 'b0000006-0000-0000-0000-000000000001', { event_date: on(0) }],
+    ['calendar_entries', 'b0000006-0000-0000-0000-000000000002', { event_date: on(1) }],
+    ['calendar_entries', 'b0000006-0000-0000-0000-000000000003', { event_date: on(2) }],
+    ['calendar_entries', 'b0000006-0000-0000-0000-000000000004', { event_date: on(3) }],
+    ['calendar_entries', 'b0000006-0000-0000-0000-000000000005', { event_date: on(5) }],
+  ]
+  for (const [table, id, values] of updates) {
+    const { data, error } = await db.from(table).update(values).eq('id', id).select('id')
+    const rows = data?.length ?? 0
+    if (error !== null || rows !== 1) {
+      throw new Error(
+        `re-anchor ${table} ${id}: ${error?.message ?? `${rows} rows updated, expected 1`}`,
+      )
+    }
+  }
+})
+
+// Call after `page.clock.install` so the dashboard's first frame already sees the frozen clock.
+async function openDashboard(page: Page): Promise<void> {
   // Phase 77-01 (VERIFY-01): pin id.theme=light so this pre-swap baseline stays
   // light after the Phase-77 default flips to dark; Phase 80 re-compares
   // like-for-like. Runs before every navigation, before bootstrap.js reads
@@ -56,7 +115,6 @@ test.beforeEach(async ({ page }) => {
       /* storage may be denied in some configs */
     }
   })
-  await page.clock.install({ time: FROZEN_TIME })
   await page.addInitScript((css) => {
     const apply = (): void => {
       if (!document.head) {
@@ -77,30 +135,25 @@ test.beforeEach(async ({ page }) => {
   await page.waitForSelector('.dash-root')
   await page.waitForFunction(() => document.fonts.ready)
   await page.clock.runFor(100)
-})
+}
 
 // FIXTURE-01 (CI-04, 2026-08-13, ruling RUL120) — HONEST QUARANTINE. The seed is deliberately NOT
 // restored: these baselines pin mutable staging content, so reseeding deepens the dependency rather
 // than removing it (tracked separately as VISUAL-DEBT-01).
 //
-// Both widgets below render their real empty state, so the readiness assertion on the `.first()`
-// row locator fails and the test never reaches `toHaveScreenshot`. That is why `--update-snapshots`
-// leaves their baselines byte-unchanged and cannot repair them — verified 2026-08-13 on the macOS
-// reference machine, pinned Node v24.5.0. Their committed baselines (captured 2026-07-05 at
-// `f2dc476a`, when both widgets had data) are stale and unreachable.
+// The widget below renders its real empty state, so the readiness assertion on the `.first()` row
+// locator fails and the test never reaches `toHaveScreenshot`. That is why `--update-snapshots`
+// leaves its baseline byte-unchanged and cannot repair it — verified 2026-08-13 on the macOS
+// reference machine, pinned Node v24.5.0. Its committed baseline (captured 2026-07-05 at
+// `f2dc476a`, when the widget had data) is stale and unreachable. This is DATA debt, not spec debt:
+// `.vip-row` still exists at `VipVisits.tsx:45`. Evidence: `.tickmarkr/overseer/CI-04-RESULT.md`.
 //
-// These are DATA/CLOCK debt, not spec debt: `.week-row` still exists at
-// `src/pages/Dashboard/widgets/WeekAhead.tsx:65` and `.vip-row` at `VipVisits.tsx:45`. Nothing was
-// renamed. Evidence: `.tickmarkr/overseer/CI-04-RESULT.md`.
+// week-ahead left this list in P102-15 (CARRY-06, D-20). It was blocked by the double-clock
+// divergence: the browser clock was frozen to a constant capture date while get_upcoming_events
+// filters by real NOW(), so every row fell outside the frozen window. Both sides now follow today:
+// FROZEN_TIME is today 12:00Z at run time, the beforeAll re-anchors the b0000002/b0000006 rows to
+// today-relative dates (seed 072, the 060 offsets), and the `.week-date` column is masked.
 const FIXTURE_BLOCKED: Partial<Record<(typeof WIDGETS)[number][1], string>> = {
-  'week-ahead':
-    'FIXTURE-01 — no `.week-row` renders. The widget shows its empty state "No upcoming events" and ' +
-    'the KPI strip reads WEEK AHEAD 0. Cause is the double-clock divergence documented at the top of ' +
-    'this file: the browser clock is frozen to FROZEN_TIME (2026-07-03) while get_upcoming_events ' +
-    'filters SERVER-side by real NOW(), so the rows the server returns fall outside the window the ' +
-    'frozen browser clock buckets on, and every one is dropped. The two only overlap when FROZEN_TIME ' +
-    'is "today". Reseeding therefore does NOT fix this — re-pinning FROZEN_TIME to the capture date ' +
-    'does, and it re-rots the next day. Tracked as VISUAL-DEBT-01.',
   'vip-visits':
     'FIXTURE-01 — no `.vip-row` renders. The widget shows its empty state, which names its own fix ' +
     'verbatim: "No VIP visits with country data. Add VIP participant data to the dashboard seed, then ' +
@@ -111,6 +164,8 @@ for (const [selector, name] of WIDGETS) {
   test(`visual ${name}`, async ({ page }) => {
     const blockedReason = FIXTURE_BLOCKED[name]
     test.fixme(blockedReason !== undefined, blockedReason ?? '')
+    await page.clock.install({ time: FROZEN_TIME })
+    await openDashboard(page)
     await page.waitForSelector(`[data-testid="${selector}"]`)
     const widget = page.getByTestId(selector)
     await expect(widget).toBeVisible()
@@ -118,6 +173,31 @@ for (const [selector, name] of WIDGETS) {
     await expect(widget).toHaveScreenshot(`${name}.png`, {
       animations: 'disabled',
       maxDiffPixelRatio: 0.02,
+      mask: name === 'week-ahead' ? [widget.locator('.week-date')] : [],
     })
   })
 }
+
+// CARRY-06: the week-ahead capture must match its committed baseline under two clocks one day apart
+// (today 12:00Z, today+1 12:00Z) with only the date column masked. The three b0000002 engagement
+// titles are asserted before each capture, so a match can never come from an empty or masked-over
+// widget. The baseline is never regenerated to make this pass (roadmap CARRY-06).
+test('dashboard snapshots survive a date change', async ({ context }) => {
+  test.slow() // two dashboard loads, one per clock
+  for (const time of [FROZEN_TIME, new Date(FROZEN_TIME.getTime() + DAY_MS)]) {
+    const page = await context.newPage()
+    await page.clock.install({ time })
+    await openDashboard(page)
+    const widget = page.getByTestId('dashboard-widget-week-ahead')
+    await expect(widget.locator('.week-row').first()).toBeVisible({ timeout: 15_000 })
+    // Each engagement title renders twice (`.week-title` and the `.week-meta` line) because
+    // get_upcoming_events returns dossiers.name_en as both title and engagement_name, so the
+    // un-narrowed locator is a strict-mode violation (measured P102-15 run 1); first() is the title.
+    await expect(widget.getByText('Bilateral consultation — ESCWA').first()).toBeVisible()
+    await expect(widget.getByText('Prep session — G20 Data Gaps Initiative').first()).toBeVisible()
+    await expect(widget.getByText('Delegation visit — Indonesia BPS').first()).toBeVisible()
+    const mask = [widget.locator('.week-date')]
+    await expect.soft(widget).toHaveScreenshot('week-ahead.png', { mask })
+    await page.close()
+  }
+})
