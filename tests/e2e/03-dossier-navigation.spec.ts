@@ -24,12 +24,18 @@ test.describe('TEST-03 dossier navigation', () => {
     }
 
     // The RelationshipSidebar is a persistent desktop aside (role="complementary"),
-    // open by default and collapsible via its toggle button.
-    await expect(detail.relationshipSidebar).toBeVisible()
-    await expect(detail.relationshipSidebar).toHaveAttribute('aria-expanded', 'true')
+    // open by default and collapsible via its toggle button. The app-shell nav is a second
+    // complementary landmark, so scope to the aside that holds the sidebar toggle.
+    const relationshipSidebar = analystPage.getByRole('complementary').filter({
+      has: analystPage.getByRole('button', {
+        name: /(collapse|expand) sidebar|طي الشريط الجانبي|توسيع الشريط الجانبي/i,
+      }),
+    })
+    await expect(relationshipSidebar).toBeVisible()
+    await expect(relationshipSidebar).toHaveAttribute('aria-expanded', 'true')
     await detail.collapseRelationshipSidebar()
-    await expect(detail.relationshipSidebar).toHaveAttribute('aria-expanded', 'false')
+    await expect(relationshipSidebar).toHaveAttribute('aria-expanded', 'false')
     await detail.expandRelationshipSidebar()
-    await expect(detail.relationshipSidebar).toHaveAttribute('aria-expanded', 'true')
+    await expect(relationshipSidebar).toHaveAttribute('aria-expanded', 'true')
   })
 })

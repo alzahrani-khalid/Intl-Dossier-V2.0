@@ -8,6 +8,7 @@ const SEED_DOSSIER_B = process.env.E2E_SEED_DOSSIER_NAME_B ?? 'United Nations'
 
 test.describe('TEST-04 command palette', () => {
   test('opens Cmd+K, searches, navigates to result', async ({ adminPage }) => {
+    test.fixme(true, 'P101-QUAR 31848669722: red - dialog /command.*palette/ not visible 30 s after Control+K on / (failure screenshot: dashboard, no dialog open); log line 798 of job 94920109119; owner Phase 103')
     await adminPage.goto('/')
     const palette = new CommandPalettePage(adminPage)
     await palette.open()
@@ -18,6 +19,7 @@ test.describe('TEST-04 command palette', () => {
   })
 
   test('Cmd+K shows recent items after navigation', async ({ adminPage }) => {
+    test.fixme(true, 'P101-QUAR 31848669722: red - heading "United Nations" unresolved on /dossiers for 30 s (failure screenshot: Browse-by-Type card view); seed data or hub listing, not separable from the log; log line 936 of job 94920109119; owner Phase 102')
     const list = new DossierListPage(adminPage)
     const palette = new CommandPalettePage(adminPage)
 

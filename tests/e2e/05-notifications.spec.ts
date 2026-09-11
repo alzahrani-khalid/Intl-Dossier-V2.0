@@ -71,10 +71,20 @@ test.describe('TEST-05 notifications', () => {
     const notifications = new NotificationsPage(adminPage)
     await notifications.openPreferences()
 
-    await notifications.togglePreference('assignments', 'email', false)
+    // A toggle only edits local state; "Save Preferences" (rendered only while changes are
+    // unsaved) persists it. Flip the current value so there is always a change to save.
+    const toggle = adminPage.getByTestId('notification-pref-assignments-email')
+    await toggle.waitFor({ state: 'visible', timeout: 15_000 })
+    const target = (await toggle.getAttribute('aria-checked')) !== 'true'
+    await notifications.togglePreference('assignments', 'email', target)
+    const saved = adminPage.waitForResponse(
+      (r) =>
+        r.url().includes('/notification_category_preferences') && r.request().method() === 'POST',
+    )
+    await adminPage.getByRole('button', { name: /save preferences|حفظ التفضيلات/i }).click()
+    await saved
     await adminPage.reload()
 
-    const toggle = adminPage.getByTestId('notification-pref-assignments-email')
-    await expect(toggle).toHaveAttribute('aria-checked', 'false')
+    await expect(toggle).toHaveAttribute('aria-checked', String(target))
   })
 })
