@@ -62,6 +62,11 @@ test.describe('User Management — D-10 loop', () => {
   })
 
   test('create → list → detail → role/status, plus IDOR smoke and AR pass', async ({ page }) => {
+    // create-user, reactivate-user and deactivate-user each wait roughly 15 s for the unset
+    // Upstash rate limiter to fail open, so their three live edge calls exceed Playwright's 30 s
+    // default even when every request succeeds.
+    test.setTimeout(120_000)
+
     const epoch = RUN_EPOCH
     const email = CREATED_EMAIL
     const username = `e2e_${epoch}`
@@ -91,14 +96,9 @@ test.describe('User Management — D-10 loop', () => {
     // create now answers 201 after ~16 s; the limiter still stalls because UPSTASH_* is unset.
     await page.waitForURL(/\/users\/?$/)
 
-    // Created users are is_active:false; the DEFAULT filter is "all", so the row
-    // is visible. Search by the unique email (row-1-by-created_at is unreliable —
-    // assumption A5) to make the assertion deterministic.
-    //
-    // KNOWN RED (102-07, measured 2026-09-11): the search returns 0 rows. RLS policy
-    // users_select_active_authenticated lets an authenticated caller read only is_active = true
-    // rows, and create-user writes is_active:false, so the admin cannot see the new account. The
-    // fix is a policy change on public.users, outside this spec.
+    // Created users are is_active:false; the DEFAULT filter is "all", and the platform-admin
+    // SELECT policy keeps inactive accounts visible to administrators. Search by the unique email
+    // (row-1-by-created_at is unreliable — assumption A5) to make the assertion deterministic.
     await page.getByPlaceholder(/search users/i).fill(email)
     await expect(page.getByText(email).first()).toBeVisible()
 
@@ -127,14 +127,14 @@ test.describe('User Management — D-10 loop', () => {
     // Role was NOT applied — the overview badge still reads Viewer.
     await expect(page.getByText('Viewer').first()).toBeVisible()
 
-    // Deactivate (with confirm) → status flips to Inactive.
+    // New accounts start inactive, so first reactivate → status flips to Active.
+    await page.getByRole('button', { name: 'Reactivate User' }).click()
+    await expect(page.getByText('Active')).toBeVisible()
+
+    // Then deactivate (with confirm) → status returns to Inactive.
     await page.getByRole('button', { name: 'Deactivate User' }).click()
     await page.getByRole('button', { name: 'Deactivate', exact: true }).click()
     await expect(page.getByText('Inactive')).toBeVisible()
-
-    // Reactivate → status restored to Active.
-    await page.getByRole('button', { name: 'Reactivate User' }).click()
-    await expect(page.getByText('Active')).toBeVisible()
 
     // ---- 3. IDOR smoke (T-86-12) -------------------------------------------
     const supabaseUrl = process.env.VITE_SUPABASE_URL
