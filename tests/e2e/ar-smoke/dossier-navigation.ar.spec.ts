@@ -13,6 +13,8 @@ test.describe('TEST-03 dossier navigation (ar-smoke)', () => {
   test('navigates list -> detail -> tabs in Arabic, dir=rtl preserved', async ({
     analystPage,
   }) => {
+    // prettier-ignore
+    test.fixme(true, 'P101-QUAR 31848669722: spec drift in the shared helper - switchLanguage (tests/e2e/support/helpers/language.ts, outside this unit) sets ?lang=ar, a key the app does not read (the detector reads ?lng= since 05271fb43, and id.locale), so html dir stayed ltr at the first step; every later Arabic step (search, card heading by the English seed name, tabs) is unobserved on any recorded run; log line 1037 of job 94920109185; owner Phase 102')
     const list = new DossierListPage(analystPage)
     const detail = new DossierDetailPage(analystPage)
 
