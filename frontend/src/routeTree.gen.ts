@@ -97,7 +97,6 @@ import { Route as ProtectedDashboardProjectManagementRouteImport } from './route
 import { Route as ProtectedCalendarNewRouteImport } from './routes/_protected/calendar/new'
 import { Route as ProtectedAfterActionsAfterActionIdRouteImport } from './routes/_protected/after-actions/$afterActionId'
 import { Route as ProtectedAdminSystemRouteImport } from './routes/_protected/admin/system'
-import { Route as ProtectedAdminPreviewLayoutsRouteImport } from './routes/_protected/admin/preview-layouts'
 import { Route as ProtectedAdminFieldPermissionsRouteImport } from './routes/_protected/admin/field-permissions'
 import { Route as ProtectedAdminDataRetentionRouteImport } from './routes/_protected/admin/data-retention'
 import { Route as ProtectedAdminApprovalsRouteImport } from './routes/_protected/admin/approvals'
@@ -675,12 +674,6 @@ const ProtectedAdminSystemRoute = ProtectedAdminSystemRouteImport.update({
   path: '/admin/system',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedAdminPreviewLayoutsRoute =
-  ProtectedAdminPreviewLayoutsRouteImport.update({
-    id: '/admin/preview-layouts',
-    path: '/admin/preview-layouts',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
 const ProtectedAdminFieldPermissionsRoute =
   ProtectedAdminFieldPermissionsRouteImport.update({
     id: '/admin/field-permissions',
@@ -1421,7 +1414,6 @@ export interface FileRoutesByFullPath {
   '/admin/approvals': typeof ProtectedAdminApprovalsRoute
   '/admin/data-retention': typeof ProtectedAdminDataRetentionRoute
   '/admin/field-permissions': typeof ProtectedAdminFieldPermissionsRoute
-  '/admin/preview-layouts': typeof ProtectedAdminPreviewLayoutsRoute
   '/admin/system': typeof ProtectedAdminSystemRoute
   '/after-actions/$afterActionId': typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
   '/calendar/new': typeof ProtectedCalendarNewRoute
@@ -1618,7 +1610,6 @@ export interface FileRoutesByTo {
   '/admin/approvals': typeof ProtectedAdminApprovalsRoute
   '/admin/data-retention': typeof ProtectedAdminDataRetentionRoute
   '/admin/field-permissions': typeof ProtectedAdminFieldPermissionsRoute
-  '/admin/preview-layouts': typeof ProtectedAdminPreviewLayoutsRoute
   '/admin/system': typeof ProtectedAdminSystemRoute
   '/after-actions/$afterActionId': typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
   '/calendar/new': typeof ProtectedCalendarNewRoute
@@ -1816,7 +1807,6 @@ export interface FileRoutesById {
   '/_protected/admin/approvals': typeof ProtectedAdminApprovalsRoute
   '/_protected/admin/data-retention': typeof ProtectedAdminDataRetentionRoute
   '/_protected/admin/field-permissions': typeof ProtectedAdminFieldPermissionsRoute
-  '/_protected/admin/preview-layouts': typeof ProtectedAdminPreviewLayoutsRoute
   '/_protected/admin/system': typeof ProtectedAdminSystemRoute
   '/_protected/after-actions/$afterActionId': typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
   '/_protected/calendar/new': typeof ProtectedCalendarNewRoute
@@ -2023,7 +2013,6 @@ export interface FileRouteTypes {
     | '/admin/approvals'
     | '/admin/data-retention'
     | '/admin/field-permissions'
-    | '/admin/preview-layouts'
     | '/admin/system'
     | '/after-actions/$afterActionId'
     | '/calendar/new'
@@ -2220,7 +2209,6 @@ export interface FileRouteTypes {
     | '/admin/approvals'
     | '/admin/data-retention'
     | '/admin/field-permissions'
-    | '/admin/preview-layouts'
     | '/admin/system'
     | '/after-actions/$afterActionId'
     | '/calendar/new'
@@ -2417,7 +2405,6 @@ export interface FileRouteTypes {
     | '/_protected/admin/approvals'
     | '/_protected/admin/data-retention'
     | '/_protected/admin/field-permissions'
-    | '/_protected/admin/preview-layouts'
     | '/_protected/admin/system'
     | '/_protected/after-actions/$afterActionId'
     | '/_protected/calendar/new'
@@ -3197,13 +3184,6 @@ declare module '@tanstack/react-router' {
       path: '/admin/system'
       fullPath: '/admin/system'
       preLoaderRoute: typeof ProtectedAdminSystemRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
-    '/_protected/admin/preview-layouts': {
-      id: '/_protected/admin/preview-layouts'
-      path: '/admin/preview-layouts'
-      fullPath: '/admin/preview-layouts'
-      preLoaderRoute: typeof ProtectedAdminPreviewLayoutsRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/admin/field-permissions': {
@@ -4564,7 +4544,6 @@ interface ProtectedRouteChildren {
   ProtectedAdminApprovalsRoute: typeof ProtectedAdminApprovalsRoute
   ProtectedAdminDataRetentionRoute: typeof ProtectedAdminDataRetentionRoute
   ProtectedAdminFieldPermissionsRoute: typeof ProtectedAdminFieldPermissionsRoute
-  ProtectedAdminPreviewLayoutsRoute: typeof ProtectedAdminPreviewLayoutsRoute
   ProtectedAdminSystemRoute: typeof ProtectedAdminSystemRoute
   ProtectedAfterActionsAfterActionIdRoute: typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
   ProtectedDossiersCreateRoute: typeof ProtectedDossiersCreateRoute
@@ -4653,7 +4632,6 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAdminApprovalsRoute: ProtectedAdminApprovalsRoute,
   ProtectedAdminDataRetentionRoute: ProtectedAdminDataRetentionRoute,
   ProtectedAdminFieldPermissionsRoute: ProtectedAdminFieldPermissionsRoute,
-  ProtectedAdminPreviewLayoutsRoute: ProtectedAdminPreviewLayoutsRoute,
   ProtectedAdminSystemRoute: ProtectedAdminSystemRoute,
   ProtectedAfterActionsAfterActionIdRoute:
     ProtectedAfterActionsAfterActionIdRouteWithChildren,
