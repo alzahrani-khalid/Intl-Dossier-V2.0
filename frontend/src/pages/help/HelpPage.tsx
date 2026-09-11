@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { PageHeader } from '@/components/layout/PageHeader'
@@ -44,6 +45,7 @@ import { useDirection } from '@/hooks/useDirection'
  * - RTL support for Arabic
  */
 export function HelpPage() {
+  const { t } = useTranslation('common')
   const { isRTL } = useDirection()
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -163,10 +165,8 @@ export function HelpPage() {
     <div className="space-y-6">
       <PageHeader
         icon={<HelpCircle className="h-6 w-6" />}
-        title={isRTL ? 'كيف يمكننا مساعدتك؟' : 'How can we help you?'}
-        subtitle={
-          isRTL ? 'ابحث في المقالات أو تصفح الأدلة أدناه' : 'Search articles or browse guides below'
-        }
+        title={t('help.title')}
+        subtitle={t('help.subtitle')}
       />
 
       {/* Search Bar */}

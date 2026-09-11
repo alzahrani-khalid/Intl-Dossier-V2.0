@@ -1,19 +1,19 @@
 {
-  "title": "Dossiers Hub",
-  "create": "Create Dossier",
-  "edit": "Edit Dossier",
-  "archive": "Archive Dossier",
-  "generateBrief": "Generate Brief",
-  "viewDetails": "View Details",
+  "title": "Dossiers hub",
+  "create": "Create dossier",
+  "edit": "Edit dossier",
+  "archive": "Archive dossier",
+  "generateBrief": "Generate brief",
+  "viewDetails": "View details",
   "filters": {
     "title": "Filters",
     "type": "Type",
     "status": "Status",
-    "sensitivity": "Sensitivity Level",
+    "sensitivity": "Sensitivity level",
     "owner": "Owner",
     "tags": "Tags",
     "search": "Search dossiers...",
-    "reset": "Reset Filters",
+    "reset": "Reset filters",
     "select_type": "Select type...",
     "select_status": "Select status...",
     "select_sensitivity": "Select sensitivity...",
@@ -59,27 +59,27 @@
     "sensitivity": "Sensitivity",
     "summary": "Summary",
     "tags": "Tags",
-    "lastReview": "Last Review",
-    "reviewCadence": "Review Cadence",
+    "lastReview": "Last review",
+    "reviewCadence": "Review cadence",
     "created": "Created",
     "updated": "Updated",
     "version": "Version"
   },
   "stats": {
     "title": "Statistics",
-    "totalEngagements": "Total Engagements",
-    "totalPositions": "Total Positions",
-    "totalMous": "Total MoUs",
-    "activeCommitments": "Active Commitments",
-    "overdueCommitments": "Overdue Commitments",
-    "totalDocuments": "Total Documents",
+    "totalEngagements": "Total engagements",
+    "totalPositions": "Total positions",
+    "totalMous": "Total number of MoUs",
+    "activeCommitments": "Active commitments",
+    "overdueCommitments": "Overdue commitments",
+    "totalDocuments": "Total documents",
     "recentActivity": "Recent Activity (90 days)",
-    "relationshipHealth": "Relationship Health Score"
+    "relationshipHealth": "Relationship health score"
   },
   "timeline": {
     "title": "Timeline",
     "empty": "No timeline events found",
-    "loadMore": "Load More Events",
+    "loadMore": "Load more events",
     "selectFilter": "Select event type filters",
     "filtersSelected": "selected",
     "filterBy": "Filter",
@@ -94,7 +94,7 @@
       "commitment": "Commitment",
       "document": "Document",
       "intelligence": "Intelligence",
-      "internal_meeting": "Internal Meeting",
+      "internal_meeting": "Internal meeting",
       "deadline": "Deadline",
       "reminder": "Reminder",
       "holiday": "Holiday",
@@ -107,8 +107,8 @@
       "conference": "Conference",
       "workshop": "Workshop",
       "meeting": "Meeting",
-      "bilateral": "Bilateral Meeting",
-      "multilateral": "Multilateral Meeting",
+      "bilateral": "Bilateral meeting",
+      "multilateral": "Multilateral meeting",
       "consultation": "Consultation",
       "negotiation": "Negotiation",
       "ceremony": "Ceremony",
@@ -116,27 +116,27 @@
     }
   },
   "actions": {
-    "addEngagement": "Add Engagement",
-    "addPosition": "Add Position",
-    "logIntelligence": "Log Intelligence",
-    "uploadDocument": "Upload Document",
-    "addContact": "Add Contact"
+    "addEngagement": "Add engagement",
+    "addPosition": "Add position",
+    "logIntelligence": "Log intelligence",
+    "uploadDocument": "Upload document",
+    "addContact": "Add contact"
   },
   "keyContacts": {
-    "title": "Key Contacts",
+    "title": "Key contacts",
     "empty": "No contacts found",
     "name": "Name",
     "role": "Role",
     "organization": "Organization",
     "email": "Email",
     "phone": "Phone",
-    "lastInteraction": "Last Interaction"
+    "lastInteraction": "Last interaction"
   },
   "brief": {
-    "title": "Generate Executive Brief",
-    "dateRange": "Date Range",
-    "startDate": "Start Date",
-    "endDate": "End Date",
+    "title": "Generate executive brief",
+    "dateRange": "Date range",
+    "startDate": "Start date",
+    "endDate": "End date",
     "sections": "Sections to Include",
     "generating": "Generating brief...",
     "timeout": "Brief generation timeout",
@@ -146,24 +146,24 @@
     "ai": "AI",
     "manual": "Manual",
     "templates": {
-      "summary": "Executive Summary",
-      "recentActivity": "Recent Activity",
-      "commitments": "Open Commitments",
-      "positions": "Key Positions",
-      "health": "Relationship Health"
+      "summary": "Executive summary",
+      "recentActivity": "Recent activity",
+      "commitments": "Open commitments",
+      "positions": "Key positions",
+      "health": "Relationship health"
     }
   },
   "conflict": {
-    "title": "Version Conflict Detected",
+    "title": "Version conflict detected",
     "message": "This dossier was modified by another user. Please choose how to proceed:",
-    "keepMine": "Keep My Changes",
-    "useTheirs": "Use Their Changes",
+    "keepMine": "Keep my changes",
+    "useTheirs": "Use their changes",
     "cancel": "Cancel",
-    "currentVersion": "Current Version",
-    "remoteVersion": "Remote Version",
+    "currentVersion": "Current version",
+    "remoteVersion": "Remote version",
     "field": "Field",
-    "yourChange": "Your Change",
-    "theirChange": "Their Change"
+    "yourChange": "Your change",
+    "theirChange": "Their change"
   },
   "errors": {
     "loadFailed": "Failed to load dossiers",
@@ -184,7 +184,7 @@
   "empty": {
     "title": "No dossiers found",
     "description": "Create your first dossier to get started",
-    "action": "Create Dossier"
+    "action": "Create dossier"
   },
   "loading": "Loading dossiers...",
   "tabs": {
@@ -195,21 +195,21 @@
     "positions": "Positions",
     "mous": "MoUs",
     "intelligence": "Intelligence",
-    "contacts": "Key Contacts",
+    "contacts": "Key contacts",
     "commitments": "Commitments",
     "documents": "Documents",
     "files": "Files"
   },
   "relationships": {
-    "title": "Dossier Relationships",
-    "add": "Add Relationship",
-    "remove": "Remove Relationship",
-    "networkGraph": "Network Graph",
-    "listView": "List View",
+    "title": "Dossier relationships",
+    "add": "Add relationship",
+    "remove": "Remove relationship",
+    "networkGraph": "Network graph",
+    "listView": "List view",
     "empty": "No relationships found",
     "no_relationships": "No relationships found",
     "filter_by_type": "Filter by Type",
-    "all_types": "All Types",
+    "all_types": "All types",
     "legend": "Legend",
     "types": {
       "member_of": "Member of",
@@ -229,19 +229,19 @@
       "archived": "Archived"
     },
     "fields": {
-      "parentDossier": "Parent Dossier",
-      "childDossier": "Related Dossier",
-      "relationshipType": "Relationship Type",
+      "parentDossier": "Parent dossier",
+      "childDossier": "Related dossier",
+      "relationshipType": "Relationship type",
       "strength": "Strength",
-      "establishedDate": "Established Date",
-      "endDate": "End Date",
+      "establishedDate": "Established date",
+      "endDate": "End date",
       "notes": "Notes"
     },
     "graph": {
-      "zoomIn": "Zoom In",
-      "zoomOut": "Zoom Out",
-      "fitView": "Fit View",
-      "reset": "Reset View",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "fitView": "Fit view",
+      "reset": "Reset view",
       "loading": "Loading graph...",
       "noData": "No relationships to display"
     },
@@ -257,7 +257,7 @@
   },
   "documents": {
     "title": "Documents",
-    "upload": "Upload Document",
+    "upload": "Upload document",
     "download": "Download",
     "delete": "Delete",
     "preview": "Preview",
@@ -267,27 +267,27 @@
       "engagement": "Engagement",
       "position": "Position",
       "mou": "MoU",
-      "after_action": "After Action",
+      "after_action": "After action",
       "ticket": "Ticket",
       "assignment": "Assignment",
       "intelligence_signal": "Intelligence",
       "commitment": "Commitment"
     },
     "fields": {
-      "fileName": "File Name",
-      "fileSize": "File Size",
+      "fileName": "File name",
+      "fileSize": "File size",
       "mimeType": "Type",
-      "documentType": "Document Type",
+      "documentType": "Document type",
       "language": "Language",
       "tags": "Tags",
       "uploaded": "Uploaded",
-      "uploadedBy": "Uploaded By"
+      "uploadedBy": "Uploaded by"
     },
     "scanStatus": {
       "pending": "Scanning...",
       "clean": "Clean",
       "infected": "Infected",
-      "error": "Scan Error"
+      "error": "Scan error"
     },
     "sensitivity": {
       "public": "Public",
@@ -317,9 +317,9 @@
   },
   "calendar": {
     "title": "Calendar",
-    "addEvent": "Add Event",
-    "editEvent": "Edit Event",
-    "deleteEvent": "Delete Event",
+    "addEvent": "Add event",
+    "editEvent": "Edit event",
+    "deleteEvent": "Delete event",
     "today": "Today",
     "month": "Month",
     "week": "Week",
@@ -327,7 +327,7 @@
     "agenda": "Agenda",
     "empty": "No events scheduled",
     "entryTypes": {
-      "internal_meeting": "Internal Meeting",
+      "internal_meeting": "Internal meeting",
       "deadline": "Deadline",
       "reminder": "Reminder",
       "holiday": "Holiday",
@@ -341,18 +341,18 @@
       "eventDate": "Date",
       "eventTime": "Time",
       "duration": "Duration (minutes)",
-      "allDay": "All Day",
+      "allDay": "All day",
       "location": "Location",
-      "isVirtual": "Virtual Meeting",
-      "meetingLink": "Meeting Link",
+      "isVirtual": "Virtual meeting",
+      "meetingLink": "Meeting link",
       "organizer": "Organizer",
       "attendees": "Attendees",
-      "linkedItem": "Linked Item"
+      "linkedItem": "Linked item"
     },
     "recurrence": {
-      "enabled": "Recurring Event",
-      "pattern": "Recurrence Pattern",
-      "endDate": "End Date",
+      "enabled": "Recurring event",
+      "pattern": "Recurrence pattern",
+      "endDate": "End date",
       "daily": "Daily",
       "weekly": "Weekly",
       "monthly": "Monthly",
@@ -377,10 +377,10 @@
     }
   },
   "positionLinks": {
-    "title": "Linked Positions",
-    "link": "Link Position",
-    "unlink": "Unlink Position",
-    "bulkLink": "Bulk Link Positions",
+    "title": "Linked positions",
+    "link": "Link position",
+    "unlink": "Unlink position",
+    "bulkLink": "Bulk link positions",
     "empty": "No positions linked",
     "linkTypes": {
       "primary": "Primary",
@@ -389,9 +389,9 @@
     },
     "fields": {
       "position": "Position",
-      "linkType": "Link Type",
+      "linkType": "Link type",
       "addedAt": "Added",
-      "addedBy": "Added By",
+      "addedBy": "Added by",
       "notes": "Notes"
     },
     "errors": {
@@ -406,20 +406,20 @@
     }
   },
   "intelligence": {
-    "title": "Intelligence Signals",
-    "log": "Log Signal",
-    "edit": "Edit Signal",
-    "delete": "Delete Signal",
+    "title": "Intelligence signals",
+    "log": "Log signal",
+    "edit": "Edit signal",
+    "delete": "Delete signal",
     "validate": "Validate",
     "empty": "No intelligence signals logged",
-    "no_signals": "No Intelligence Signals",
-    "no_signals_filtered": "No Signals Found",
+    "no_signals": "No intelligence signals",
+    "no_signals_filtered": "No signals found",
     "no_signals_description": "No intelligence signals have been logged for this dossier yet",
     "error_loading": "Error loading intelligence signals",
     "error_generic": "An error occurred while loading intelligence signals. Please try again.",
-    "filter": "Filter Signals",
+    "filter": "Filter signals",
     "filter_by_type": "Filter by type",
-    "all_types": "All Types",
+    "all_types": "All types",
     "source": "Source",
     "logged_at": "Logged",
     "validated": "Validated",
@@ -455,24 +455,24 @@
     "fields": {
       "signalType": "Type",
       "source": "Source",
-      "sourceReliability": "Source Reliability",
+      "sourceReliability": "Source reliability",
       "sourceUrl": "Source URL",
       "title": "Title",
       "content": "Content",
-      "confidenceLevel": "Confidence Level",
+      "confidenceLevel": "Confidence level",
       "tags": "Tags",
-      "impactAssessment": "Impact Assessment",
-      "loggedBy": "Logged By",
-      "loggedAt": "Logged At",
-      "validatedBy": "Validated By",
-      "validatedAt": "Validated At"
+      "impactAssessment": "Impact assessment",
+      "loggedBy": "Logged by",
+      "loggedAt": "Logged at",
+      "validatedBy": "Validated by",
+      "validatedAt": "Validated at"
     },
     "reliability": {
       "1": "Unreliable",
       "2": "Questionable",
       "3": "Moderate",
       "4": "Reliable",
-      "5": "Highly Reliable"
+      "5": "Highly reliable"
     },
     "errors": {
       "loadFailed": "Failed to load intelligence signals",
@@ -490,17 +490,17 @@
   },
   "mous": {
     "title": "Memoranda of Understanding",
-    "add": "Add MoU",
-    "edit": "Edit MoU",
-    "delete": "Delete MoU",
-    "viewDocument": "View Document",
+    "add": "Add an MoU",
+    "edit": "Edit the MoU",
+    "delete": "Delete the MoU",
+    "viewDocument": "View document",
     "empty": "No MoUs found",
-    "no_mous": "No MoUs",
+    "no_mous": "No MoUs found",
     "no_mous_description": "This dossier has no memoranda of understanding yet",
     "signed": "Signed",
     "expires": "Expires",
     "effective": "Effective",
-    "renewal_required": "Renewal Required",
+    "renewal_required": "Renewal required",
     "error_loading": "Error loading MoUs",
     "error_generic": "An error occurred while loading MoUs. Please try again.",
     "status": {
@@ -511,7 +511,7 @@
       "renewed": "Renewed",
       "draft": "Draft",
       "negotiation": "Negotiation",
-      "pending_approval": "Pending Approval",
+      "pending_approval": "Pending approval",
       "signed": "Signed",
       "suspended": "Suspended",
       "terminated": "Terminated"
@@ -526,19 +526,19 @@
     "fields": {
       "title": "Title",
       "summary": "Summary",
-      "signedDate": "Signed Date",
-      "effectiveDate": "Effective Date",
-      "expiryDate": "Expiry Date",
-      "renewalRequiredBy": "Renewal Required By",
+      "signedDate": "Signed date",
+      "effectiveDate": "Effective date",
+      "expiryDate": "Expiry date",
+      "renewalRequiredBy": "Renewal required by",
       "status": "Status",
       "documentPath": "Document",
       "parties": "Parties",
-      "renewedBy": "Renewed By"
+      "renewedBy": "Renewed by"
     },
     "parties": {
       "title": "Signatories",
-      "add": "Add Party",
-      "remove": "Remove Party",
+      "add": "Add party",
+      "remove": "Remove party",
       "partyType": "Type",
       "partyRole": "Role",
       "signedByName": "Signed By (Name)",
@@ -571,25 +571,25 @@
     }
   },
   "hub": {
-    "title": "Dossiers Hub",
+    "title": "Dossiers hub",
     "description": "Manage diplomatic dossiers for countries, organizations, forums, and themes",
-    "create_button": "Create Dossier",
-    "error_title": "Error Loading Dossiers",
+    "create_button": "Create dossier",
+    "error_title": "Error loading dossiers",
     "error_generic": "An error occurred while loading dossiers",
     "empty_title": "No dossiers found",
     "empty_description": "Create your first dossier or adjust your filters",
-    "load_more": "Load More"
+    "load_more": "Load more"
   },
   "detail": {
-    "not_found_title": "Dossier Not Found",
-    "error_title": "Error Loading Dossier",
+    "not_found_title": "Dossier not found",
+    "error_title": "Error loading dossier",
     "error_generic": "An error occurred while loading the dossier",
     "back_to_hub": "Back to Dossiers Hub",
     "confirm_archive": "Are you sure you want to archive this dossier?",
     "tabs_label": "Dossier tabs",
     "tab_coming_soon": "This feature is coming soon",
-    "recent_briefs_title": "Recent Briefs",
-    "view_all_briefs": "View All Briefs"
+    "recent_briefs_title": "Recent briefs",
+    "view_all_briefs": "View all briefs"
   },
   "type": {
     "country": "Country",
@@ -613,5 +613,5 @@
     "monthsAgo": "{{count}} months ago",
     "yearsAgo": "{{count}} years ago"
   },
-  "untitled": "Untitled Dossier"
+  "untitled": "Untitled dossier"
 }
