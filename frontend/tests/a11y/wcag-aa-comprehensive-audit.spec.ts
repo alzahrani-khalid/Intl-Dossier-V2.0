@@ -378,6 +378,8 @@ test.describe('Screen Reader Support Audit', () => {
   test('Page should have proper landmarks', async ({ page }) => {
     await page.goto('/dashboard')
     await page.waitForLoadState('networkidle')
+    // networkidle is not a render signal (P101-12): wait for the shell before reading the DOM.
+    await expect(page.locator('main, [role="main"]').first()).toBeAttached({ timeout: 15_000 })
 
     const landmarks = await page.evaluate(() => {
       return {
