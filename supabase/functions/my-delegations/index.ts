@@ -26,6 +26,7 @@ interface Delegation {
   resource_type: string | null;
   resource_id: string | null;
   reason: string;
+  revoked: boolean;
   is_active: boolean;
   valid_from: string;
   valid_until: string;
@@ -39,6 +40,21 @@ interface MyDelegationsResponse {
   granted: Delegation[];
   received: Delegation[];
   total: number;
+}
+
+interface DelegationRow {
+  id: string;
+  grantor_id: string;
+  grantee_id: string;
+  resource_type: string | null;
+  resource_id: string | null;
+  reason: string;
+  valid_from: string;
+  valid_until: string;
+  revoked: boolean;
+  revoked_at: string | null;
+  revoked_by: string | null;
+  created_at: string;
 }
 
 serve(async (req) => {
@@ -127,51 +143,46 @@ serve(async (req) => {
 
     // Build base query
     let grantedQuery = supabaseAdmin
-      .from("delegations")
+      .from("permission_delegations")
       .select(`
         id,
         grantor_id,
         grantee_id,
-        source,
         resource_type,
         resource_id,
         reason,
-        is_active,
         valid_from,
         valid_until,
+        revoked,
         revoked_at,
         revoked_by,
-        created_at,
-        grantor:auth.users!grantor_id(email),
-        grantee:auth.users!grantee_id(email)
+        created_at
       `)
       .eq("grantor_id", user.id);
 
     let receivedQuery = supabaseAdmin
-      .from("delegations")
+      .from("permission_delegations")
       .select(`
         id,
         grantor_id,
         grantee_id,
-        source,
         resource_type,
         resource_id,
         reason,
-        is_active,
         valid_from,
         valid_until,
+        revoked,
         revoked_at,
         revoked_by,
-        created_at,
-        grantor:auth.users!grantor_id(email),
-        grantee:auth.users!grantee_id(email)
+        created_at
       `)
       .eq("grantee_id", user.id);
 
     // Apply active filter
     if (activeOnly) {
-      grantedQuery = grantedQuery.eq("is_active", true);
-      receivedQuery = receivedQuery.eq("is_active", true);
+      const now = new Date().toISOString();
+      grantedQuery = grantedQuery.eq("revoked", false).gte("valid_until", now);
+      receivedQuery = receivedQuery.eq("revoked", false).gte("valid_until", now);
     }
 
     // Apply expiring filter
@@ -190,8 +201,8 @@ serve(async (req) => {
     receivedQuery = receivedQuery.order("valid_until", { ascending: true });
 
     // Execute queries based on type filter
-    let granted: Delegation[] = [];
-    let received: Delegation[] = [];
+    let grantedRows: DelegationRow[] = [];
+    let receivedRows: DelegationRow[] = [];
 
     if (type === "granted" || type === "all") {
       const { data, error } = await grantedQuery;
@@ -214,31 +225,7 @@ serve(async (req) => {
         );
       }
       if (data) {
-        granted = data.map((d: any) => {
-          const validUntil = new Date(d.valid_until);
-          const now = new Date();
-          const expiresInMs = validUntil.getTime() - now.getTime();
-          const expiresInDays = Math.ceil(expiresInMs / (1000 * 60 * 60 * 24));
-
-          return {
-            id: d.id,
-            grantor_id: d.grantor_id,
-            grantor_email: d.grantor?.email || "",
-            grantee_id: d.grantee_id,
-            grantee_email: d.grantee?.email || "",
-            source: d.source,
-            resource_type: d.resource_type,
-            resource_id: d.resource_id,
-            reason: d.reason,
-            is_active: d.is_active,
-            valid_from: d.valid_from,
-            valid_until: d.valid_until,
-            revoked_at: d.revoked_at,
-            revoked_by: d.revoked_by,
-            expires_in_days: expiresInDays,
-            created_at: d.created_at,
-          };
-        });
+        grantedRows = data as DelegationRow[];
       }
     }
 
@@ -263,33 +250,61 @@ serve(async (req) => {
         );
       }
       if (data) {
-        received = data.map((d: any) => {
-          const validUntil = new Date(d.valid_until);
-          const now = new Date();
-          const expiresInMs = validUntil.getTime() - now.getTime();
-          const expiresInDays = Math.ceil(expiresInMs / (1000 * 60 * 60 * 24));
-
-          return {
-            id: d.id,
-            grantor_id: d.grantor_id,
-            grantor_email: d.grantor?.email || "",
-            grantee_id: d.grantee_id,
-            grantee_email: d.grantee?.email || "",
-            source: d.source,
-            resource_type: d.resource_type,
-            resource_id: d.resource_id,
-            reason: d.reason,
-            is_active: d.is_active,
-            valid_from: d.valid_from,
-            valid_until: d.valid_until,
-            revoked_at: d.revoked_at,
-            revoked_by: d.revoked_by,
-            expires_in_days: expiresInDays,
-            created_at: d.created_at,
-          };
-        });
+        receivedRows = data as DelegationRow[];
       }
     }
+
+    // The identity FKs target auth.users, while response emails live in
+    // public.users. Resolve every participant with one public-table query.
+    const emailByUserId = new Map<string, string>();
+    const ids = [
+      ...new Set(
+        [...grantedRows, ...receivedRows].flatMap((d) => [d.grantor_id, d.grantee_id]),
+      ),
+    ];
+    if (ids.length > 0) {
+      const { data: users, error: usersError } = await supabaseAdmin
+        .from("users")
+        .select("id, email")
+        .in("id", ids);
+      if (usersError) {
+        console.error("Delegation user lookup error:", usersError);
+      } else {
+        for (const delegationUser of users ?? []) {
+          emailByUserId.set(delegationUser.id, delegationUser.email);
+        }
+      }
+    }
+
+    const toDelegation = (d: DelegationRow): Delegation => {
+      const validUntil = new Date(d.valid_until);
+      const now = new Date();
+      const expiresInMs = validUntil.getTime() - now.getTime();
+
+      return {
+        id: d.id,
+        grantor_id: d.grantor_id,
+        grantor_email: emailByUserId.get(d.grantor_id) || "",
+        grantee_id: d.grantee_id,
+        grantee_email: emailByUserId.get(d.grantee_id) || "",
+        source: "permission",
+        resource_type: d.resource_type,
+        resource_id: d.resource_id,
+        reason: d.reason,
+        revoked: d.revoked,
+        is_active:
+          !d.revoked && now >= new Date(d.valid_from) && now <= validUntil,
+        valid_from: d.valid_from,
+        valid_until: d.valid_until,
+        revoked_at: d.revoked_at,
+        revoked_by: d.revoked_by,
+        expires_in_days: Math.ceil(expiresInMs / (1000 * 60 * 60 * 24)),
+        created_at: d.created_at,
+      };
+    };
+
+    const granted = grantedRows.map(toDelegation);
+    const received = receivedRows.map(toDelegation);
 
     const response: MyDelegationsResponse = {
       granted,
