@@ -50,7 +50,9 @@ const READY_SELECTORS: Record<(typeof WIDGETS)[number][0], string> = {
 
 // The eight updates of supabase/seed/072-p102-today-relative-dashboard-fixtures.sql, on every run:
 // the 060-dashboard-demo.sql offsets from date_trunc('hour', NOW()), date_trunc('day', NOW()) and
-// CURRENT_DATE, computed in UTC like the database session.
+// CURRENT_DATE. NOW() is the Supabase server clock (the Date header of a service-role request), not
+// this runner's clock, because get_upcoming_events filters by the server's NOW(); the truncation is
+// in UTC like the database session.
 test.beforeAll(async () => {
   const url = process.env.SUPABASE_URL ?? ''
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? ''
@@ -61,7 +63,14 @@ test.beforeAll(async () => {
     )
   }
   const db = createClient(url, serviceKey, { auth: { persistSession: false } })
-  const now = Date.now()
+  const probe = await fetch(`${url}/rest/v1/`, {
+    method: 'HEAD',
+    headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` },
+  })
+  const now = Date.parse(probe.headers.get('date') ?? '')
+  if (Number.isNaN(now)) {
+    throw new Error(`re-anchor: ${url}/rest/v1/ sent no Date header (HTTP ${probe.status})`)
+  }
   const hour = now - (now % HOUR_MS)
   const day = now - (now % DAY_MS)
   const at = (ms: number): string => new Date(ms).toISOString()
@@ -178,26 +187,35 @@ for (const [selector, name] of WIDGETS) {
   })
 }
 
-// CARRY-06: the week-ahead capture must match its committed baseline under two clocks one day apart
-// (today 12:00Z, today+1 12:00Z) with only the date column masked. The three b0000002 engagement
-// titles are asserted before each capture, so a match can never come from an empty or masked-over
-// widget. The baseline is never regenerated to make this pass (roadmap CARRY-06).
+// CARRY-06: the week-ahead capture must match its baseline under two browser clocks on the SAME
+// date, today 12:00Z and today 18:00Z, with only the date column masked. Not today+1 (OVERSEER
+// ruling after P102-15 att0 measured it): a clock a day ahead reads the 3600 s access token as
+// expired, so supabase-js looped on refresh grants until GoTrue answered 429 and the page landed on
+// /login; and a shifted date re-buckets the server-anchored rows under other TODAY/TOMORROW/NEXT
+// WEEK headers, which sit outside the `.week-date` mask. Day-shift invariance comes from the
+// beforeAll re-anchor and is re-proven on every real day the suite runs. The three b0000002
+// engagement titles are asserted on `.week-title` before each capture (a bare getByText also
+// matches the `.week-meta` copy of the same name), so a match can never come from an empty or
+// masked-over widget.
 test('dashboard snapshots survive a date change', async ({ context }) => {
   test.slow() // two dashboard loads, one per clock
-  for (const time of [FROZEN_TIME, new Date(FROZEN_TIME.getTime() + DAY_MS)]) {
+  for (const time of [FROZEN_TIME, new Date(FROZEN_TIME.getTime() + 6 * HOUR_MS)]) {
     const page = await context.newPage()
     await page.clock.install({ time })
     await openDashboard(page)
     const widget = page.getByTestId('dashboard-widget-week-ahead')
     await expect(widget.locator('.week-row').first()).toBeVisible({ timeout: 15_000 })
-    // Each engagement title renders twice (`.week-title` and the `.week-meta` line) because
-    // get_upcoming_events returns dossiers.name_en as both title and engagement_name, so the
-    // un-narrowed locator is a strict-mode violation (measured P102-15 run 1); first() is the title.
-    await expect(widget.getByText('Bilateral consultation — ESCWA').first()).toBeVisible()
-    await expect(widget.getByText('Prep session — G20 Data Gaps Initiative').first()).toBeVisible()
-    await expect(widget.getByText('Delegation visit — Indonesia BPS').first()).toBeVisible()
+    await expect(
+      widget.locator('.week-title', { hasText: 'Bilateral consultation — ESCWA' }),
+    ).toBeVisible()
+    await expect(
+      widget.locator('.week-title', { hasText: 'Prep session — G20 Data Gaps Initiative' }),
+    ).toBeVisible()
+    await expect(
+      widget.locator('.week-title', { hasText: 'Delegation visit — Indonesia BPS' }),
+    ).toBeVisible()
     const mask = [widget.locator('.week-date')]
-    await expect.soft(widget).toHaveScreenshot('week-ahead.png', { mask })
+    await expect(widget).toHaveScreenshot('week-ahead.png', { mask })
     await page.close()
   }
 })
