@@ -1,25 +1,27 @@
 ---
-status: blocked
+status: complete
 task: P102-03
-blocked_on: staging network and Supabase CLI authentication
+completed_at: 2026-09-11T18:46:52Z
 ---
 
 # P102-03 execution summary
 
-The allowlisted implementation is complete and committed. All nine delegation relation sites across the four edge functions now use `permission_delegations`; `my-delegations` derives activity from `revoked`, `valid_from`, and `valid_until`, emits `source: 'permission'`, and embeds email from `public.users`. The deterministic seed contains three rows: one active granted, one active received, and one revoked.
+All four delegation edge functions now use `public.permission_delegations`, the idempotent seed has been applied twice to staging, and every function was deployed. The deployed `my-delegations` handler returns the three rows split as two granted and one received; its active-only response returns the two active rows.
 
-Remote completion is blocked in this worker. The database hostname did not resolve and the Supabase CLI had no access token, so staging was not changed. The orchestrator must apply the seed twice, deploy all four functions, and rerun the three command oracles from the plan from an authenticated, networked checkout.
+`permission_delegations` points its user foreign keys at `auth.users`, so it has no PostgREST relationship to `public.users`. In the repair commit, `my-delegations` selects only base delegation columns and batch-loads both parties' emails from `public.users` by id. This replaces the invalid relationship embed while preserving the requirement that email values come only from `public.users`.
 
-## Local implementation and verification
-
-Commits:
+## Commits
 
 ```text
-f1d332fad fix(delegations): use permission delegation records
-337f47c7e chore(seed): add permission delegation examples
+2395e23e4 fix(delegations): use permission delegation records
+f2fa8f7f2 chore(seed): add permission delegation examples
+f767c40cf docs(phase-102): record delegation staging blocker
+8261d440c fix(delegations): resolve public user emails separately
 ```
 
-`npx eslint supabase/functions/my-delegations/index.ts supabase/functions/delegate-permissions/index.ts supabase/functions/revoke-delegation/index.ts supabase/functions/deactivate-user/index.ts`
+## Local verification
+
+`npx eslint supabase/functions/my-delegations/index.ts`
 
 ```text
 exit 0
@@ -31,96 +33,119 @@ exit 0
 exit 0
 ```
 
-The commit hook also ran the repository build successfully (`turbo run build`, exit 0). A cached-only Deno check was unavailable: this Deno version rejected the attempted cache-only flags, and `--no-remote` could not resolve the uncached `deno.land` import. No background process was started.
-
-Static relation census, with the zero control alongside the non-zero population:
+The commit hook also ran the repository build (`turbo run build`) successfully. Static relation census:
 
 ```text
-phantom .from('delegations') sites=0
-permission_delegations sites=9
-my-delegations=2 delegate-permissions=2 revoke-delegation=2 deactivate-user=3
-seed INSERT rows=3
+phantom=0
+permission_delegations=9
+my-delegations=2
+delegate-permissions=2
+revoke-delegation=2
+deactivate-user=3
+exit 0
 ```
 
-The P93 query-failure branches remain unchanged: each query error still answers status 500 with `QUERY_FAILED` and the same bilingual envelope.
+The diff carries changes in all four functions. `my-delegations` selects neither `source` nor an active-flag column; it derives `is_active` as `!revoked && now >= valid_from && now <= valid_until`, emits `source: "permission"`, and filters active-only rows using `revoked` and `valid_until`. Its two P93 `QUERY_FAILED` 500 branches are unchanged. The other three functions use `valid_until`, `revoked`, `revoked_at`, and `revoked_by` rather than active-flag writes.
 
-## Seed apply attempts
+## Seed applies (before deploys and oracles)
 
-Command: `PATH="/opt/homebrew/bin:$PATH"; set -a; . ./.env.test; set +a; psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f supabase/seed/070-p102-permission-delegations.sql`
+Command: `PATH="/opt/homebrew/bin:$PATH"; set -a; . ./.env.test; set +a; psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f supabase/seed/070-p102-permission-delegations.sql`, run twice.
 
 ```text
-SEED_APPLY_1_START 2026-09-11T18:23:36Z
-psql: error: could not translate host name "aws-1-eu-west-2.pooler.supabase.com" to address: nodename nor servname provided, or not known
-SEED_APPLY_1_EXIT 2
-SEED_APPLY_1_END 2026-09-11T18:23:36Z
-SEED_APPLY_2_START 2026-09-11T18:23:36Z
-psql: error: could not translate host name "aws-1-eu-west-2.pooler.supabase.com" to address: nodename nor servname provided, or not known
-SEED_APPLY_2_EXIT 2
-SEED_APPLY_2_END 2026-09-11T18:23:36Z
+SEED_APPLY_1_START 2026-09-11T18:45:38Z
+DO
+SEED_APPLY_1_EXIT 0
+SEED_APPLY_1_END 2026-09-11T18:45:39Z
+SEED_APPLY_2_START 2026-09-11T18:45:39Z
+DO
+SEED_APPLY_2_EXIT 0
+SEED_APPLY_2_END 2026-09-11T18:45:40Z
+COMMAND_EXIT 0
 ```
 
-The replay was attempted twice but could not reach PostgreSQL; idempotence is implemented as delete-by-three-deterministic-IDs followed by insert in one `DO` block, but is not staging-proven here.
+The second successful application proves the deterministic three-id delete-and-insert seed is idempotent.
 
-## Deploy attempts before oracle run
+## Deploy outputs (before oracle run)
 
-Each used `DO_NOT_TRACK=1 SUPABASE_TELEMETRY_DISABLED=true PATH="/opt/homebrew/bin:$PATH" supabase functions deploy <slug> --project-ref zkrcjzdemdmwhearhfgg`.
+Each command used `DO_NOT_TRACK=1 SUPABASE_TELEMETRY_DISABLED=true PATH="/opt/homebrew/bin:$PATH" supabase functions deploy <slug> --project-ref zkrcjzdemdmwhearhfgg`.
 
 ```text
-DEPLOY_my-delegations_START 2026-09-11T18:23:43Z
-{"_tag":"Error","error":{"code":"LegacyPlatformAuthRequiredError","message":"Access token not provided. Supply an access token by running `supabase login` or setting the SUPABASE_ACCESS_TOKEN environment variable."}}
-DEPLOY_my-delegations_EXIT 1
-DEPLOY_my-delegations_END 2026-09-11T18:23:43Z
-DEPLOY_delegate-permissions_START 2026-09-11T18:23:43Z
-{"_tag":"Error","error":{"code":"LegacyPlatformAuthRequiredError","message":"Access token not provided. Supply an access token by running `supabase login` or setting the SUPABASE_ACCESS_TOKEN environment variable."}}
-DEPLOY_delegate-permissions_EXIT 1
-DEPLOY_delegate-permissions_END 2026-09-11T18:23:44Z
-DEPLOY_revoke-delegation_START 2026-09-11T18:23:44Z
-{"_tag":"Error","error":{"code":"LegacyPlatformAuthRequiredError","message":"Access token not provided. Supply an access token by running `supabase login` or setting the SUPABASE_ACCESS_TOKEN environment variable."}}
-DEPLOY_revoke-delegation_EXIT 1
-DEPLOY_revoke-delegation_END 2026-09-11T18:23:45Z
-DEPLOY_deactivate-user_START 2026-09-11T18:23:45Z
-{"_tag":"Error","error":{"code":"LegacyPlatformAuthRequiredError","message":"Access token not provided. Supply an access token by running `supabase login` or setting the SUPABASE_ACCESS_TOKEN environment variable."}}
-DEPLOY_deactivate-user_EXIT 1
-DEPLOY_deactivate-user_END 2026-09-11T18:23:46Z
+DEPLOY_my-delegations_START 2026-09-11T18:45:48Z
+WARN: config section [inbucket] is deprecated. Please use [local_smtp] instead.
+Bundling Function: my-delegations
+Deploying Function: my-delegations (script size: 733 kB)
+{"project_ref":"zkrcjzdemdmwhearhfgg","functions":["my-delegations"],"dashboard_url":"https://supabase.com/dashboard/project/zkrcjzdemdmwhearhfgg/functions","message":"Deployed Functions."}
+DEPLOY_my-delegations_EXIT 0
+DEPLOY_my-delegations_END 2026-09-11T18:45:57Z
+
+DEPLOY_delegate-permissions_START 2026-09-11T18:45:57Z
+WARN: config section [inbucket] is deprecated. Please use [local_smtp] instead.
+Bundling Function: delegate-permissions
+Deploying Function: delegate-permissions (script size: 734 kB)
+{"project_ref":"zkrcjzdemdmwhearhfgg","functions":["delegate-permissions"],"dashboard_url":"https://supabase.com/dashboard/project/zkrcjzdemdmwhearhfgg/functions","message":"Deployed Functions."}
+DEPLOY_delegate-permissions_EXIT 0
+DEPLOY_delegate-permissions_END 2026-09-11T18:46:03Z
+
+DEPLOY_revoke-delegation_START 2026-09-11T18:46:03Z
+WARN: config section [inbucket] is deprecated. Please use [local_smtp] instead.
+Bundling Function: revoke-delegation
+Deploying Function: revoke-delegation (script size: 733 kB)
+{"project_ref":"zkrcjzdemdmwhearhfgg","functions":["revoke-delegation"],"dashboard_url":"https://supabase.com/dashboard/project/zkrcjzdemdmwhearhfgg/functions","message":"Deployed Functions."}
+DEPLOY_revoke-delegation_EXIT 0
+DEPLOY_revoke-delegation_END 2026-09-11T18:46:12Z
+
+DEPLOY_deactivate-user_RECAPTURE_START 2026-09-11T18:46:49Z
+WARN: config section [inbucket] is deprecated. Please use [local_smtp] instead.
+Bundling Function: deactivate-user
+No change found in Function: deactivate-user
+{"project_ref":"zkrcjzdemdmwhearhfgg","functions":["deactivate-user"],"dashboard_url":"https://supabase.com/dashboard/project/zkrcjzdemdmwhearhfgg/functions","message":"Deployed Functions."}
+DEPLOY_deactivate-user_RECAPTURE_EXIT 0
+DEPLOY_deactivate-user_RECAPTURE_END 2026-09-11T18:46:52Z
+COMMAND_EXIT 0
 ```
 
-`INSTRUMENT-CANNOT-RUN: deploy` — all four staging deploys require an authenticated Supabase CLI session.
+The original `deactivate-user` invocation immediately before the recapture advanced staging to version 5; its output stream was truncated after `Deploying Function`. The timestamped recapture records the same successful deployed bundle with exit 0, and the version oracle below independently proves the advance.
 
-## Post-work oracle outputs
+## Post-deploy oracles
 
 ### Deployed `my-delegations`
 
-The plan oracle short-circuited at its password-grant prerequisite, before either function request:
+The plan's password-grant/JWT oracle was run after all deploys (temporary response files were retained under `/private/tmp` because the managed harness rejects explicit `rm -f`):
 
 ```text
-curl: (6) Could not resolve host: zkrcjzdemdmwhearhfgg.supabase.co
-INSTRUMENT-CANNOT-RUN: no access_token from the password grant
-EXIT 3
+  BODY {"granted":[{"id":"b3ea1d69-38e3-4ea5-91aa-e65b04d54e8f","grantor_id":"de2734cf-f962-4e05-bf62-bc9e92efff96","grantor_email":"kazahrani@stats.gov.sa","grantee_id":"c2a93eff-ba3a-4aba-9037-da00965828d9
+P102-03-HTTP http=200 granted=2 received=1 total=3 expected http=200 granted>=1 received>=1 total=3
+P102-03-ACTIVE http=200 total=2 revoked_or_inactive_rows=0 expected http=200 total=2 revoked_or_inactive_rows=0
+PASS my-delegations
+EXIT 0
 ```
 
 ### Seed census
 
+The plan command uses POSIX word splitting, so it was run under bash. An earlier zsh invocation returned the correct SQL payload (`1 1 1 3`) as one positional argument and consequently failed only its shell parsing; the bash result is the operative oracle.
+
 ```text
-INSTRUMENT-CANNOT-RUN: psql exited 2 for test-user lookup :: psql: error: could not translate host name "aws-1-eu-west-2.pooler.supabase.com" to address: nodename nor servname provided, or not known
-EXIT 3
+P102-03-SEED granted_active=1 received_active=1 revoked=1 total=3 expected 1 1 1 3
+PASS seed
+EXIT 0
 ```
 
 ### Deploy versions
 
 ```text
-INSTRUMENT-CANNOT-RUN: supabase functions list exited 1 (CLI not logged in or no network) :: Access token not provided. Supply an access token by running `supabase login` or setting the SUPABASE_ACCESS_TOKEN environment variable. Try rerunning the command with --debug to troubleshoo
-EXIT 3
+P102-03-DEPLOY advanced=4/4 my-delegations=4(>3) delegate-permissions=6(>5) revoke-delegation=6(>5) deactivate-user=5(>4) expected advanced=4/4 (every slug version strictly greater than its HEAD value recorded 2026-09-10)
+PASS deploy-versions
+EXIT 0
 ```
 
 ## Anon table-grant observation
 
-P100-class observation, intentionally not repaired here: research §3.1 records that `anon` has full DML on `public.permission_delegations` (`INSERT`, `SELECT`, `UPDATE`, `DELETE`, `TRUNCATE`, `REFERENCES`, and `TRIGGER`), as does `authenticated`. The live recheck command was:
-
-`psql "$SUPABASE_DB_URL" -Atq -v ON_ERROR_STOP=1 -c "select grantee||'='||string_agg(privilege_type,',' order by privilege_type) from information_schema.role_table_grants where table_schema='public' and table_name='permission_delegations' and grantee in ('anon','authenticated') group by grantee order by grantee;"`
+P100-class observation, intentionally not repaired in this task. The staging role-grant query returned:
 
 ```text
-psql: error: could not translate host name "aws-1-eu-west-2.pooler.supabase.com" to address: nodename nor servname provided, or not known
-EXIT 2
+anon=DELETE,INSERT,REFERENCES,SELECT,TRIGGER,TRUNCATE,UPDATE
+authenticated=DELETE,INSERT,REFERENCES,SELECT,TRIGGER,TRUNCATE,UPDATE
+EXIT 0
 ```
 
-The lack of live output is an instrument failure, not evidence that the P100-class grant has been repaired.
+Thus `anon` still has full DML on `public.permission_delegations`; remediation remains owned by the P100 security-posture work rather than this scoped delegation repair.
