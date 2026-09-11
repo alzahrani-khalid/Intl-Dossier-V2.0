@@ -54,6 +54,8 @@ test.describe('Intake System Accessibility', () => {
   test('should support keyboard navigation on the intake form', async ({ page }) => {
     await page.goto('/intake/new')
     await page.waitForLoadState('networkidle')
+    // networkidle is not a render signal (P101-12): wait for the shell before pressing Tab.
+    await expect(page.locator('main, [role="main"]').first()).toBeAttached({ timeout: 15_000 })
 
     // Tab into the form and confirm focus lands on a real interactive element.
     await page.keyboard.press('Tab')
@@ -97,6 +99,8 @@ test.describe('Intake System Accessibility', () => {
   test('should have a main landmark and a single h1', async ({ page }) => {
     await page.goto('/intake/new')
     await page.waitForLoadState('networkidle')
+    // networkidle is not a render signal (P101-12): wait for the page before reading the DOM.
+    await expect(page.locator('main h1').first()).toBeAttached({ timeout: 15_000 })
 
     const structure = await page.evaluate(() => ({
       hasMain: !!document.querySelector('main, [role="main"]'),
