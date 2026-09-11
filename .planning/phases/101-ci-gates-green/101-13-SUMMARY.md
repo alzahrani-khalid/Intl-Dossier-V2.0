@@ -558,7 +558,28 @@ $ grep -n "preserveOutputDir" node_modules/.pnpm/playwright@1.60.0/node_modules/
 $ git status --short; lsof -ti tcp:5173 -sTCP:LISTEN    # after attempt 1's oracle run
 status-lines=0
 5173=0
+
+# --- attempt 1: the compiled oracle re-run on the committed SUMMARY (15f83f291) ---
+$ <first try at 06:55:27Z: pre-check read 5173 listeners=1 wrappers=3 -> ABORT-busy, nothing run>
+  (holder: the harness's acceptance gate for P101-12, `bash -lc R0="$PWD"; trap … # OVERSEER ruling run 0082 …`,
+   parent pid 26739 = the run daemon, cwd …--P101-12/frontend, started 06:54:45Z)
+$ <the same watcher, re-armed>
+BRANCH=FREE 5173 listeners=0 wrappers=0 after 61 polls at 07:00:47
+$ bash -c "$(cat o13-compiled.sh)"        # from the worktree root, after re-checking 5173 and wrappers
+pre: 5173 listeners=0 wrappers=0 at 07:00:59
+HEAD=15f83f291 status=[] start=07:00:59
+P101-13-BOUND files=3 markers with a run id=3 (any P101-QUAR=3, any fixme incl. pre-existing=3; control positions-keyboard-nav fixme=13) register rows=3 cells total=20 non-numeric=0 fixed rows=3 want the 24 (smokes 3 + RTL + Responsive 21) red tests each fixed or marked: markers+fixed>=1, markers==any-P101-QUAR, rows==markers, cells>=rows, non-numeric=0
+P101-13-RUN smokes expected=7 unexpected=0 skipped=2 flaky=0 sum=9 register_rows=2 register_cells=2 want unexpected=0 flaky=0 expected+skipped=9 skipped>=register_cells>=register_rows (pre-existing fixmes add to skipped, so >= not ==)
+P101-13-RUN rtl-mobile expected=80 unexpected=0 skipped=18 flaky=0 sum=98 register_rows=1 register_cells=18 want unexpected=0 flaky=0 expected+skipped=98 skipped>=register_cells>=register_rows (pre-existing fixmes add to skipped, so >= not ==)
+PASS
+oracle exit=0 end=07:02:05
+post: status-lines=0 5173=0
+code=0 verdict clean report published (smokes)
+code=0 verdict clean report published (rtl-mobile)
 ```
+
+The commit that adds this block changes only `## Commands run`. The oracle reads `## Quarantine register` and
+`## Fixed tests`, and neither changed.
 
 A zsh slip I made, recorded so it is not mistaken for a finding: my first smokes `--list` passed the three
 paths in one unquoted `$s`. zsh does not word-split, so Playwright read one nonexistent path
