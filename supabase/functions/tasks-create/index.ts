@@ -30,6 +30,16 @@ interface CreateTaskRequest {
 // than letting the DB enum reject them and leaking the raw Postgres error.
 const VALID_PRIORITIES = ['low', 'medium', 'high', 'urgent']
 const VALID_WORKFLOW_STAGES = ['todo', 'in_progress', 'review', 'done', 'cancelled']
+const STAGE_TO_STATUS: Record<
+  NonNullable<CreateTaskRequest['workflow_stage']>,
+  'pending' | 'in_progress' | 'review' | 'completed' | 'cancelled'
+> = {
+  todo: 'pending',
+  in_progress: 'in_progress',
+  review: 'review',
+  done: 'completed',
+  cancelled: 'cancelled',
+}
 
 Deno.serve(async (req) => {
   const corsHeaders = getCorsHeaders(req)
@@ -186,14 +196,15 @@ Deno.serve(async (req) => {
     const tenantId = profile?.organization_id ?? user.id
 
     // Prepare task data
+    const workflowStage = body.workflow_stage || 'todo'
     const taskData = {
       title: body.title.trim(),
       description: body.description?.trim() || null,
       assignee_id: body.assignee_id,
       engagement_id: body.engagement_id || null,
       priority: body.priority || 'medium',
-      workflow_stage: body.workflow_stage || 'todo',
-      status: 'pending',
+      workflow_stage: workflowStage,
+      status: STAGE_TO_STATUS[workflowStage],
       sla_deadline: body.sla_deadline || null,
       work_item_type: body.work_item_type || null,
       work_item_id: body.work_item_id || null,
