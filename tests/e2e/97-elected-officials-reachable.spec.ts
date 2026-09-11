@@ -349,8 +349,10 @@ test.describe('NAV-01 Elected Officials is reachable on all four exposure surfac
     // react-hook-form `name` attribute because the required labels render as plain text rather than
     // a `<label for>`, so those inputs carry no accessible name to target.
     //
-    // Six sequential steps behind an inline sign-in do not fit the 30s default budget.
-    test.setTimeout(120_000)
+    // Six sequential staging-backed wizard steps behind an inline sign-in can exhaust 120 s while
+    // their individual settle checks are still making progress; preserve those checks with a
+    // whole-flow budget that also leaves time for the final submit response.
+    test.setTimeout(180_000)
 
     const nameEn = EO_NAME_PREFIX
     const nameAr = 'مسؤول منتخب'

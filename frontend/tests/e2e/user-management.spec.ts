@@ -133,12 +133,14 @@ test.describe('User Management — D-10 loop', () => {
 
     // New accounts start inactive, so first reactivate → status flips to Active.
     await page.getByRole('button', { name: 'Reactivate User' }).click()
-    await expect(page.getByText('Active')).toBeVisible()
+    // The unset Upstash limiter takes roughly 15 s to fail open before onSuccess updates the badge.
+    await expect(page.getByText('Active', { exact: true })).toBeVisible({ timeout: 30_000 })
 
     // Then deactivate (with confirm) → status returns to Inactive.
     await page.getByRole('button', { name: 'Deactivate User' }).click()
     await page.getByRole('button', { name: 'Deactivate', exact: true }).click()
-    await expect(page.getByText('Inactive')).toBeVisible()
+    // test.setTimeout does not extend assertion timeouts; allow the same limiter stall here.
+    await expect(page.getByText('Inactive', { exact: true })).toBeVisible({ timeout: 30_000 })
 
     // ---- 3. IDOR smoke (T-86-12) -------------------------------------------
     const supabaseUrl = process.env.VITE_SUPABASE_URL
