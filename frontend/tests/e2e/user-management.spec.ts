@@ -81,7 +81,7 @@ test.describe('User Management — D-10 loop', () => {
     await page.getByLabel('Username').fill(username)
     await page.getByLabel('Full Name').fill(fullName)
     // Role picker (Radix Select) — pick Editor.
-    await page.getByRole('combobox').click()
+    await page.locator('form').getByRole('combobox').click()
     await page.getByRole('option', { name: 'Editor' }).click()
     await page.getByLabel('Clearance level').fill('2')
 
@@ -113,14 +113,18 @@ test.describe('User Management — D-10 loop', () => {
     await expect(page.getByText(username).first()).toBeVisible()
 
     // Change role editor → viewer (immediate response).
-    await page.getByRole('combobox').click()
+    const rolePicker = page
+      .getByRole('button', { name: 'Assign Role' })
+      .locator('..')
+      .getByRole('combobox')
+    await rolePicker.click()
     await page.getByRole('option', { name: 'Viewer' }).click()
     await page.getByRole('button', { name: 'Assign Role' }).click()
     await expect(page.getByText('Role assigned successfully')).toBeVisible()
     await expect(page.getByText('Viewer').first()).toBeVisible()
 
     // Attempt an admin grant → dual-approval response must be surfaced, not applied.
-    await page.getByRole('combobox').click()
+    await rolePicker.click()
     await page.getByRole('option', { name: 'Admin' }).click()
     await page.getByRole('button', { name: 'Assign Role' }).click()
     await expect(page.getByText('Admin role assignment requires dual approval')).toBeVisible()
