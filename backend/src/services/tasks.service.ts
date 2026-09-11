@@ -92,6 +92,17 @@ const STATUS_TO_STAGE: Record<string, NonNullable<UpdateTaskInput['workflow_stag
   cancelled: 'cancelled',
 }
 
+const STAGE_TO_STATUS: Record<
+  NonNullable<CreateTaskInput['workflow_stage']>,
+  NonNullable<TaskInsert['status']>
+> = {
+  todo: 'pending',
+  in_progress: 'in_progress',
+  review: 'review',
+  done: 'completed',
+  cancelled: 'cancelled',
+}
+
 export class TasksService {
   private supabase: SupabaseClient<Database>
 
@@ -131,14 +142,15 @@ export class TasksService {
       }
     }
 
+    const workflowStage = input.workflow_stage || 'todo'
     const taskData: TaskInsert = {
       title: input.title,
       description: input.description || null,
       assignee_id: input.assignee_id,
       engagement_id: input.engagement_id || null,
       priority: input.priority || 'medium',
-      workflow_stage: input.workflow_stage || 'todo',
-      status: 'pending',
+      workflow_stage: workflowStage,
+      status: STAGE_TO_STATUS[workflowStage],
       sla_deadline: input.sla_deadline || null,
       work_item_type: input.work_item_type || null,
       work_item_id: input.work_item_id || null,
@@ -636,6 +648,7 @@ export class TaskCreationService {
       })
     }
 
+    const workflowStage: NonNullable<CreateTaskInput['workflow_stage']> = 'todo'
     const taskData: TaskInsert = {
       title: commitment.description,
       description: `Task created from commitment in after-action record. مهمة تم إنشاؤها من التزام في سجل الإجراءات اللاحقة`,
@@ -647,9 +660,9 @@ export class TaskCreationService {
         typeof commitment.due_date === 'string'
           ? commitment.due_date
           : (commitment.due_date?.toISOString() ?? null),
-      status: 'pending',
+      status: STAGE_TO_STATUS[workflowStage],
       priority: (commitment.priority as 'low' | 'medium' | 'high' | 'urgent') || 'medium',
-      workflow_stage: 'todo',
+      workflow_stage: workflowStage,
       type: 'action_item',
       source: {
         type: 'commitment',
