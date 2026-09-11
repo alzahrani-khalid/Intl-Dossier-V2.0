@@ -3,13 +3,16 @@ phase: 102-staging-data-debt-tail
 plan: 7
 status: blocked
 blocked_on: >-
-  user-management still cannot pass 1/1, so oracle 2 stays RED (2/3). The create step is fixed
-  (rate-limiter.ts hunk, create-user v8, 201). The run now stops at the list search: RLS policy
-  users_select_active_authenticated reads only is_active = true rows and create-user writes
-  is_active:false, so the admin cannot see the account it just created. The test's later steps
-  then need deactivate-user and reactivate-user redeployed, which this plan forbids (deactivate-user
-  belongs to 102-03). Both need an overseer ruling or a new plan; see "Left for a later task".
-commits: [87257db40, 914684a73, 488ef4ffb, 3b4eca9da]
+  user-management still cannot pass 1/1, so oracle 2 stays RED (2/3). The attempt-3 gate run
+  reproduced it at the same locator. The create step is fixed (rate-limiter.ts hunk, create-user
+  v8, 201). The run stops at the list search: RLS policy users_select_active_authenticated reads
+  only is_active = true rows and create-user writes is_active:false, so the admin cannot see the
+  account it just created. Fixing that takes a public.users policy migration, and neither this
+  plan's files_modified nor any other phase-102 plan's can carry one. The later status steps need
+  deactivate-user and reactivate-user redeployed, and this plan says "redeploy ONLY create-user".
+  Since the rebase onto b25fca5da, that redeploy would no longer roll 102-03 back. See
+  "Repair attempt 3".
+commits: [a512c1c59, 0b0aa8806, 032590f2d, 1d6a5a3d9, 74593fe5e]
 requirements: [DATA-01]
 ---
 
@@ -19,6 +22,114 @@ requirements: [DATA-01]
 the remaining failure needs changes this plan does not own (an RLS policy, and two function
 redeploys the plan explicitly excludes). Writing `status: complete` would claim a criterion that is
 measured RED.
+
+## Repair attempt 3 (2026-09-11, rebased HEAD `74593fe5e`)
+
+The gate finding: oracle 2 is RED at the list assertion (`user-management.spec.ts:103`), and the
+reviewer asks for the user visibility and status paths to be fixed. **Neither fix can be made from
+this task, so this attempt changes no spec and no function, and reports ok:false.** What it
+re-derived:
+
+**R1. The gate's own oracle-2 run failed the way att2's did, at the same locator.** The account
+epoch 1789156588910 is 2026-09-11T19:56:28Z. Verbatim from the finding:
+
+```
+PW failed | create → list → detail → role/status, plus IDOR smoke and AR pass | Error: expect(locator).toBeVisible() failed  Locator: getByText('e2e-1789156588910@example.test').first() Expected: visible Timeout: 5000ms Error: element
+P102-07-FE wrapper_rc=1 passed=2 failed=1 accounts_left_from_this_run=0 mous_left_from_this_run=0 expected passed=3 failed=0 accounts_left=0 mous_left=0
+```
+
+**R2. The rebased commits are the prior attempt's commits, unchanged** (`git patch-id --stable`).
+The unrelated pair is a control: it shows the instrument can report DIFFERENT.
+
+```
+87257db40=bbacacc89cef a512c1c59=bbacacc89cef equal
+914684a73=03247785171d 0b0aa8806=03247785171d equal
+488ef4ffb=6aaeab646509 032590f2d=6aaeab646509 equal
+3b4eca9da=19065385a93a 1d6a5a3d9=19065385a93a equal
+e32714215=62c4d145e4d6 74593fe5e=62c4d145e4d6 equal
+control (unrelated pair must differ):
+87257db40=bbacacc89cef 032590f2d=6aaeab646509 DIFFERENT
+```
+
+The SHAs cited in the sections below map as follows: 87257db40→a512c1c59, 914684a73→0b0aa8806,
+488ef4ffb→032590f2d, 3b4eca9da→1d6a5a3d9, e32714215→74593fe5e.
+
+A first run of this comparison used a zsh loop over `"$a $b"` strings. zsh does not word-split
+those, so both sides came back empty and printed "equal". That run was void and was re-run above
+with explicit arguments and the control.
+
+**R3. Staging has not changed since att2.** Policies on `public.users` (psql over `pg_policy`):
+
+```
+POLICY users_delete_service_role | DELETE | (auth.role() = 'service_role'::text) |
+POLICY users_insert_trigger_or_service_role | INSERT |  | ((auth.role() = 'service_role'::text) OR ( SELECT (count(*) = 0)
+   FROM pg_stat_activity
+  WHERE ((pg_stat_activity.pid = pg_backend_pid()) AND (pg_stat_activity.application_name = 'PostgREST'::text))))
+POLICY users_select_active_authenticated | SELECT | ((auth.role() = 'authenticated'::text) AND (is_active = true)) |
+POLICY users_select_self | SELECT | (auth.uid() = id) |
+POLICY users_select_service_role | SELECT | (auth.role() = 'service_role'::text) |
+POLICY users_update_self | UPDATE | (auth.uid() = id) | (auth.uid() = id)
+POLICY users_update_service_role | UPDATE | (auth.role() = 'service_role'::text) | (auth.role() = 'service_role'::text)
+```
+
+Function versions (`supabase functions list -o json`; updated_at is in epoch ms, and the UTC
+conversion is added in brackets):
+
+```
+assign-role v6 1786894691612 verify_jwt True
+create-user v8 1789155455155 verify_jwt True      [2026-09-11T19:37:35Z, the att2 deploy]
+deactivate-user v5 1789152378428 verify_jwt True  [2026-09-11T18:46:18Z, 102-03's deploy]
+reactivate-user v4 1786894828793 verify_jwt True  [2026-08-16T15:40:28Z]
+```
+
+**R4. One thing did change: this base now carries 102-03.**
+
+```
+fa4ba94b0=5ec0f2f222ed cf6166375=5ec0f2f222ed
+cf6166375 is ancestor of HEAD
+deactivate-user permission_delegations=3 from_delegations=0
+```
+
+Att2 objected that a redeploy of deactivate-user from this tree would roll 102-03's change back.
+That no longer holds. The plan's "redeploy ONLY create-user" still holds.
+
+**R5. No phase-102 plan owns the B1 fix.** Grepping `files_modified` in every `102-*-PLAN.md` for
+migrations or the user functions:
+
+```
+102-03-PLAN.md:   - supabase/functions/{my-delegations,delegate-permissions,revoke-delegation,deactivate-user}/index.ts
+102-04-PLAN.md:   - supabase/migrations/20260911000001_p102_task_insert_sync.sql
+102-07-PLAN.md:   - supabase/functions/_shared/rate-limiter.ts   # OVERSEER ruling P102-07 …
+102-14-PLAN.md:   - supabase/migrations/20260911000002_p102_drop_preview_layouts.sql
+```
+
+The detail page reads the same RLS-bound table (`UserDetailPage.tsx:115-120`,
+`.from('users')…eq('id', userId)…single()`). So an inactive account is unreadable on `/users/:id`
+as well as in the list.
+
+**Why no in-scope change closes it:**
+
+| blocker | fix | reachable from this task? |
+| --- | --- | --- |
+| B1: RLS hides inactive rows from the admin | an admin SELECT policy on `public.users` (a migration), or create-user writing `is_active: true` | no. Migrations and create-user are outside `files_modified`, and the plan says "do not touch create-user" |
+| B3: deactivate-user and reactivate-user answer 500 at the limiter | redeploy both from this tree | no. The plan says "redeploy ONLY create-user", and judge truth 3 asks for both to be listed as left un-redeployed |
+| B2, B4: step order and time budget | reorder the spec, and add a `test.setTimeout` that names the Upstash stall | in scope, but they can't be checked until B1 and B3 land, so changing them now would be a guess |
+
+Spec-side workarounds were considered and rejected. Activating the account through the service
+role, or through reactivate-user's API before the list step, or skipping the status steps, would
+make the test pass while hiding B1. B1 is the defect this test exists to catch. By the same policy,
+a user an admin deactivates also drops out of that admin's list (derived from the USING clause, not
+measured).
+
+**Rulings requested:**
+
+1. A plan that owns a `public.users` admin SELECT policy migration, or a product ruling that
+   created accounts start active.
+2. Authority to redeploy deactivate-user and reactivate-user from a tree that carries `032590f2d`.
+   This tree now qualifies.
+
+With both, the spec still needs B2 (Reactivate before Deactivate, unless accounts start active) and
+B4. Then re-run oracle 2.
 
 | leg | teardown | measured outcome, this attempt (HEAD `3b4eca9da`) |
 | --- | --- | --- |
