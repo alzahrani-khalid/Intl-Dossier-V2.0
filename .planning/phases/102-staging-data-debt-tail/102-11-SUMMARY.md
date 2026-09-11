@@ -78,4 +78,10 @@ PASS lane
 
 ## Scope
 
-No key was renamed, no Arabic plural-suffix key was deleted, no test was changed, and no path outside the plan allowlist was edited. There is no work left for a later task.
+No key was renamed, no Arabic plural-suffix key was deleted, no test was changed, and no path outside the plan allowlist was edited.
+
+## Known follow-up outside this lane
+
+`tests/e2e/93-custom-dashboard-error.spec.ts:144` still asserts the old exact, case-sensitive literal `Custom Dashboard`, while `dashboard-widgets.customDashboard` now renders `Custom dashboard`. That test path is outside this plan's fixed allowlist, so the assertion was not edited here; it needs an orchestrator ruling or a later scoped task to re-case the superseded literal byte-for-byte under P102-09.
+
+The census defines this lane's measured population, but its candidate predicate does not detect roughly 40 surviving Title Case strings containing lowercase joiners, `&`, or parenthesized text. Examples include `Greater Than or Equal`, `Filter by Source`, `Mark All as Read`, `Inactive Users ({{count}})`, `Permissions to Delegate`, `Actions to Execute`, `Assigned to Member`, `Work Items by Status`, and `End Date & Time`. These strings remain for a later copy task with a population definition that covers those forms.
