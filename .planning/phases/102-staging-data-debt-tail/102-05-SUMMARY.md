@@ -3,12 +3,13 @@ status: complete
 phase: 102-staging-data-debt-tail
 plan: 5
 requirements: [P52FIXTURE-01, ENGREAD-01]
+attempt: 2
 commits:
-  - a152946e3 feat(seed): add P102 engagement extension rows and P52 rename
-  - c072e84c6 test(e2e): add /engagements render probe for ENGREAD-01
+  - 4b9690d07 feat(seed): add P102 engagement extension rows and P52 rename (attempt 1 a152946e3, replayed patch-identical)
+  - 3b409d91a test(e2e): add /engagements render probe for ENGREAD-01 (attempt 1 c072e84c6, replayed patch-identical)
 engread_01_verdict: NOT-REPRODUCED-AT-RENDER
 oracle_p52: PASS (exit 0)
-oracle_render: FAIL (exit 1). This is an INSTRUMENT DEFECT and not the spec. The report shows expected=2 unexpected=0 skipped=0 and the oracle mis-parses it. See §9.
+oracle_render: PASS (exit 0) on attempt 2, against the plan as repaired by 57b9b920d. Attempt 1 exited 1 on the same passing report because of the unanchored stats parse (§9). See §12.
 ---
 
 # 102-05 SUMMARY: engagement extension rows, the P52 rename, and the /engagements render probe
@@ -21,9 +22,9 @@ oracle_render: FAIL (exit 1). This is an INSTRUMENT DEFECT and not the spec. The
 | Both named ids carry `bilateral_meeting`/`diplomatic` inside 2026, end > start | **DONE** | same oracle `seeded_pair=2` |
 | P52 `name_en`/`name_ar` equal the plan's copy verbatim | **DONE** | same oracle `renamed=1` |
 | Seed applied twice, idempotent | **DONE** | apply 1 `INSERT 0 2 / UPDATE 1`, apply 2 `INSERT 0 0 / UPDATE 0` (§3) |
-| API positive control run BEFORE the spec | **DONE** | both paths `HTTP=200`, 5 rows, `total=5` (§4) |
-| Render spec authored, run through `scripts/pw-run-reaped.mjs` | **DONE** | report `expected=2 unexpected=0 skipped=0 flaky=0`, both titles `passed` (§5, §8.2) |
-| Render **command oracle** exits 0 | **NO, exit 1.** The oracle cannot pass by construction (§9) | `passed=2⏎0`: its `expected=` grep also matches inside `unexpected=0` |
+| API positive control run BEFORE the spec | **DONE** | both paths `HTTP=200`, 5 rows, `total=5`, on both attempts (§4, §12.3) |
+| Render spec authored, run through `scripts/pw-run-reaped.mjs` | **DONE** | report `expected=2 unexpected=0 skipped=0 flaky=0`, both titles `passed`, on 3 runs (§5, §8.2, §12.5) |
+| Render **command oracle** exits 0 | **YES, exit 0 on attempt 2** (§12.5), against the plan as repaired by `57b9b920d` | `passed=2 failed=0 skipped=0`, `PASS render`. Attempt 1 exited 1 on a passing report: `passed=2⏎0`, because the unanchored `expected=` grep also matched inside `unexpected=0` (§9) |
 | ENGREAD-01 verdict | **NOT-REPRODUCED-AT-RENDER** (never "fixed") | §10 |
 
 ## 1. Populations re-derived
@@ -266,6 +267,8 @@ count=3
 
 ## 8. Command oracles, run AFTER the work (HEAD `c072e84c6`, both run under `bash`)
 
+This is the attempt-1 record, against the pre-repair plan. The authoritative after-work run is §12 (attempt 2, repaired oracle).
+
 ### 8.1 P52 catalog oracle
 
 ```
@@ -292,7 +295,9 @@ stats {"startTime": "2026-09-11T18:49:09.060Z", "duration": 14616.899, "expected
 
 The criterion reads "its published report shows expected=2 unexpected=0 skipped=0". The report does show that, on two independent runs, with the wrapper clean (`wrapper_rc=0`) both times. The command oracle still exits 1, and no spec can change that (§9).
 
-## 9. The render oracle cannot pass: the operator must repair it
+## 9. The render oracle could not pass at attempt 1 (REPAIRED by `57b9b920d`)
+
+**Status: repaired.** The overseer anchored the plan's `expected=` grep to `(^| )expected=[0-9]+` (`57b9b920d`) and merged it into the run branch (`8dcc83b00`). `unexpected=` and `skipped=` stay unanchored. That is sound, because neither name occurs inside another field (§12.1 drills the parse both ways). Attempt 2 ran the repaired oracle and it exited 0 (§12.5). The rest of this section is the attempt-1 record as written.
 
 This oracle is **unsatisfiable by construction** (§7). Its green state (`expected=2 unexpected=0`) parses as `PWPASS=2⏎0`, so it exits 1 on the very report it demands. This worker did not edit it:
 - the plan is outside this task's file scope;
@@ -325,11 +330,147 @@ The row is **not "fixed"**: no code was repaired and none was planned (D-19). Th
 
 ## 11. Left for named later tasks
 
-- **Operator:** repair the `PWRUN` stats parse in the 102-05, 102-07 and 102-15 oracles (§9).
+- **Operator (done):** the `PWRUN` stats-parse repair landed in `57b9b920d`. The anchored grep is present in 102-05, 102-07 and 102-15, and the unanchored form in none of them (§12.1).
 - **102-06:** the P52 dossier's `description_en`/`description_ar` (`Test fixture engagement for Phase 52 ...`) are untouched here by plan. 102-06's sweep rewrites them. The P52 NAME no longer matches its class regex.
 - **102-13:** the ONS engagement `7c0d830b` now has its `engagement_dossiers` row, so the `after_action_records` 905b6a3a parent path is unblocked for the PDF probe.
 - **102-15:** re-anchors the three `b0000002` engagements' dates. That is outside this plan's population; this plan did not touch them.
 
+## 12. Attempt 2: re-dispatch after the oracle repair (2026-09-11, run 0083)
+
+Attempt 1's only failed gate was the render command oracle, which exited 1 on a passing report (§8.2, §9). The overseer repaired the plan (`57b9b920d`) and merged it into the run branch (`8dcc83b00`). This attempt's work commits are attempt 1's, replayed onto that base with no change:
+
+```
+$ git range-diff 8dcc83b00~1..2373247c0 8dcc83b00..HEAD
+1:  a152946e3 = 1:  4b9690d07 feat(seed): add P102 engagement extension rows and P52 rename
+2:  c072e84c6 = 2:  3b409d91a test(e2e): add /engagements render probe for ENGREAD-01
+3:  2373247c0 = 3:  0eec30b9c docs(phase-102): record 102-05 seed, render probe and ENGREAD-01 verdict
+```
+
+`=` means patch-identical. Attempt 2 did not edit the seed or the spec, so the §6 negative-polarity drill still applies to the spec's bytes. This SUMMARY is the only file attempt 2 changes. Execution order below is the order the commands ran.
+
+### 12.1 Where the oracles were read from, and the repair checked
+
+Both oracle commands were extracted from the plan's front-matter with `js-yaml`, not copied by hand, into the worker scratchpad. Each was then run with `bash -lc`, the engine's shell. Pin:
+
+```
+commands 2
+HEAD=0eec30b9c plan_blob=6eb4f7bbb plan_last_commit=57b9b920d
+syntax_ok
+```
+
+The repair is present. Checked with a fixed-string grep:
+
+```
+anchored(-F): 1
+unanchored-old(-F, control): 0
+control on plan@2373247c0-era blob: 1
+```
+
+The zero sits beside its control: the same fixed-string grep finds the unanchored form in the pre-repair plan blob (`8dcc83b00~1`). A first check used a regex grep, not a fixed-string one, and it returned 0 for the anchored form. That zero belonged to the check. `(^| )` is regex syntax, so that pattern never described the literal text. The fixed-string recheck above replaces it.
+
+The same repair in the sibling plans:
+
+```
+102-05 anchored=1 unanchored=0
+102-07 anchored=2 unanchored=0
+102-15 anchored=1 unanchored=0
+```
+
+Parse drill: the repaired pipeline from the oracle, fed a passing line, a failing line and a skipped line, under the oracle's own PATH:
+
+```
+grep=/usr/bin/grep
+[expected=2 unexpected=0 skipped=0 flaky=0] -> PWPASS=[2] PWFAIL=[0] PWSKIP=[0] verdict=PASS
+[expected=0 unexpected=2 skipped=0 flaky=0] -> PWPASS=[0] PWFAIL=[2] PWSKIP=[0] verdict=FAIL
+[expected=1 unexpected=0 skipped=1 flaky=0] -> PWPASS=[1] PWFAIL=[0] PWSKIP=[1] verdict=FAIL
+```
+
+The repaired parse reads `2` where attempt 1 read `2⏎0`. It also reds the report shape the §6 drill produced (`unexpected=2`), so its PASS below is not a constant.
+
+### 12.2 Pre-run census (no other suite, port free)
+
+```
+== :5173 listeners ==
+== playwright/vite procs (this worktree) ==
+== any playwright test procs ==
+22456 claude --model opus --strict-mcp-config --mcp-config {"mcpServers":{}} … (line cut at 200 chars by the census)
+PW_REUSE=unset E2E_BASE_URL=unset
+```
+
+The one hit is a `claude` process that matched on its prompt text. It is not a Playwright or Vite process.
+
+### 12.3 API positive control, run BEFORE the spec (test-user JWT, research §5.2)
+
+The token was minted by GoTrue password grant with the `TEST_USER` pair. Only its length is printed. The response bodies went to the scratchpad, not the worktree.
+
+```
+start=2026-09-11T19:05:23Z HEAD=0eec30b9c
+TOKEN_LEN=922 (value withheld)
+HTTP=200
+ENG_BODY_ROWS=5 {"page":1,"limit":20,"total":5,"totalPages":1,"has_more":false}
+   b0000002-0000-0000-0000-000000000003 | Delegation visit — Indonesia BPS
+   b0000002-0000-0000-0000-000000000002 | Prep session — G20 Data Gaps Initiative
+   b0000002-0000-0000-0000-000000000001 | Bilateral consultation — ESCWA
+   7c0d830b-5dc7-4419-a0ad-ce550031712d | Bilateral engagement with ONS — census methodology exchange
+   00000000-0000-0052-0000-000000000001 | Bilateral consultation — statistical cooperation framework
+HTTP=200
+RPC_BODY_ROWS=5
+   b0000002-0000-0000-0000-000000000003 | official_visit | Delegation visit — Indonesia BPS
+   b0000002-0000-0000-0000-000000000002 | working_group | Prep session — G20 Data Gaps Initiative
+   b0000002-0000-0000-0000-000000000001 | consultation | Bilateral consultation — ESCWA
+   7c0d830b-5dc7-4419-a0ad-ce550031712d | bilateral_meeting | Bilateral engagement with ONS — census methodology exchange
+   00000000-0000-0052-0000-000000000001 | bilateral_meeting | Bilateral consultation — statistical cooperation framework
+HTTP/2 200 
+content-range: 0-4/5
+exit=0 end=2026-09-11T19:05:27Z
+```
+
+This is identical to attempt 1 (§4): both paths 200, `total=5`, 5 RPC rows, and exact count `0-4/5`.
+
+### 12.4 P52 catalog oracle, after the work
+
+```
+HEAD=0eec30b9c at 2026-09-11T19:05:27Z
+P102-05-P52 engagement_dossiers_typed=5 extension_rows=5 seeded_pair=2 renamed=1 expected 5 5 2 1
+PASS p52
+exit=0
+```
+
+The seed was not applied a third time. The two recorded applies (§3: `INSERT 0 2 / UPDATE 1`, then `INSERT 0 0 / UPDATE 0`) stand, and this oracle proves the end state still holds on staging.
+
+### 12.5 Render oracle, after the work (the only suite running)
+
+```
+HEAD=0eec30b9c start=2026-09-11T19:05:44Z
+P102-05-RENDER wrapper_rc=0 passed=2 failed=0 skipped=0 expected passed=2 failed=0 skipped=0 (the en and ar renders of /engagements each show exactly 5 engagement rows on a settled surface with the locale asserted)
+PASS render
+exit=0
+end=2026-09-11T19:06:01Z
+report=frontend/test-results/pw-reaped-2590d57f25f864cf631ed77cb8d5fa6a.json
+stats {"startTime": "2026-09-11T19:05:45.048Z", "duration": 16223.912, "expected": 2, "skipped": 0, "unexpected": 0, "flaky": 0}
+ TEST e2e/102-engagements-render.spec.ts | renders 5 engagement rows on a settled en surface | project chromium | passed | 8396ms
+ TEST e2e/102-engagements-render.spec.ts | renders 5 engagement rows on a settled ar surface | project chromium | passed | 8719ms
+```
+
+`git status --short` was empty right after this run (`test-results/` is gitignored, `.gitignore:105`).
+
+### 12.6 Post-run census
+
+```
+== post-run :5173 listeners ==
+== post-run playwright/vite procs ==
+21813 codex -a never -s workspace-write --dangerously-bypass-hook-trust --disable plugins -c mcp_servers={} -c mcp_servers.node_repl.enabled=false -c mcp_server
+(end census)
+```
+
+No listener is left on :5173. The one hit is a `codex` process that matched on its command-line text. It is not a Vite or Playwright process, and the wrapper did not start it.
+
+### 12.7 ENGREAD-01 on attempt 2
+
+The verdict is unchanged: **NOT-REPRODUCED-AT-RENDER**. A third settled render agrees with the first two and with the API: 5 rows in `en` and in `ar`, the locale asserted, no error chrome. It is still not "fixed". The §10 bounds all still apply.
+
 ## Deviations
 
-None. Only the three `files_modified` paths changed. The drill file was created and deleted inside `frontend/tests/e2e/` in one command and never staged; `git status --short` after it showed only this plan's spec.
+Attempt 1: none. Only the three `files_modified` paths changed. The drill file was created and deleted inside `frontend/tests/e2e/` in one command and never staged; `git status --short` after it showed only this plan's spec.
+
+Attempt 2: none. This SUMMARY is the only file it changes. The oracle scripts, the API-control script and its response bodies stayed in the worker scratchpad.
