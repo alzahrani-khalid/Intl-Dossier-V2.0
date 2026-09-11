@@ -55,8 +55,6 @@ interface DelegationRow {
   revoked_at: string | null;
   revoked_by: string | null;
   created_at: string;
-  grantor?: { email: string } | null;
-  grantee?: { email: string } | null;
 }
 
 serve(async (req) => {
@@ -158,9 +156,7 @@ serve(async (req) => {
         revoked,
         revoked_at,
         revoked_by,
-        created_at,
-        grantor:users!grantor_id(email),
-        grantee:users!grantee_id(email)
+        created_at
       `)
       .eq("grantor_id", user.id);
 
@@ -178,9 +174,7 @@ serve(async (req) => {
         revoked,
         revoked_at,
         revoked_by,
-        created_at,
-        grantor:users!grantor_id(email),
-        grantee:users!grantee_id(email)
+        created_at
       `)
       .eq("grantee_id", user.id);
 
@@ -211,27 +205,7 @@ serve(async (req) => {
     let receivedRows: DelegationRow[] = [];
 
     if (type === "granted" || type === "all") {
-      let { data, error } = await grantedQuery;
-      // Staging currently points these FKs at the authentication identity table,
-      // while the response contract requires public.users emails. Keep the
-      // required public.users embed as the canonical query and temporarily fall
-      // back to base columns when PostgREST cannot discover that relationship.
-      if (error?.code === "PGRST200") {
-        ({ data, error } = await grantedQuery.select(`
-          id,
-          grantor_id,
-          grantee_id,
-          resource_type,
-          resource_id,
-          reason,
-          valid_from,
-          valid_until,
-          revoked,
-          revoked_at,
-          revoked_by,
-          created_at
-        `));
-      }
+      const { data, error } = await grantedQuery;
       if (error) {
         // Diagnostics stay server-side. The caller never receives the PostgREST
         // object, the relation name, or the SQLSTATE — only a bilingual envelope.
@@ -256,23 +230,7 @@ serve(async (req) => {
     }
 
     if (type === "received" || type === "all") {
-      let { data, error } = await receivedQuery;
-      if (error?.code === "PGRST200") {
-        ({ data, error } = await receivedQuery.select(`
-          id,
-          grantor_id,
-          grantee_id,
-          resource_type,
-          resource_id,
-          reason,
-          valid_from,
-          valid_until,
-          revoked,
-          revoked_at,
-          revoked_by,
-          created_at
-        `));
-      }
+      const { data, error } = await receivedQuery;
       if (error) {
         // Diagnostics stay server-side. The caller never receives the PostgREST
         // object, the relation name, or the SQLSTATE — only a bilingual envelope.
@@ -296,22 +254,19 @@ serve(async (req) => {
       }
     }
 
-    // Resolve only emails absent from the embed. This compatibility path can be
-    // removed once the live FKs expose public.users relationships to PostgREST.
+    // The identity FKs target auth.users, while response emails live in
+    // public.users. Resolve every participant with one public-table query.
     const emailByUserId = new Map<string, string>();
-    const userIds = [
+    const ids = [
       ...new Set(
-        [...grantedRows, ...receivedRows].flatMap((d) => [
-          ...(d.grantor?.email ? [] : [d.grantor_id]),
-          ...(d.grantee?.email ? [] : [d.grantee_id]),
-        ]),
+        [...grantedRows, ...receivedRows].flatMap((d) => [d.grantor_id, d.grantee_id]),
       ),
     ];
-    if (userIds.length > 0) {
+    if (ids.length > 0) {
       const { data: users, error: usersError } = await supabaseAdmin
         .from("users")
         .select("id, email")
-        .in("id", userIds);
+        .in("id", ids);
       if (usersError) {
         console.error("Delegation user lookup error:", usersError);
       } else {
@@ -329,11 +284,9 @@ serve(async (req) => {
       return {
         id: d.id,
         grantor_id: d.grantor_id,
-        grantor_email:
-          d.grantor?.email || emailByUserId.get(d.grantor_id) || "",
+        grantor_email: emailByUserId.get(d.grantor_id) || "",
         grantee_id: d.grantee_id,
-        grantee_email:
-          d.grantee?.email || emailByUserId.get(d.grantee_id) || "",
+        grantee_email: emailByUserId.get(d.grantee_id) || "",
         source: "permission",
         resource_type: d.resource_type,
         resource_id: d.resource_id,
