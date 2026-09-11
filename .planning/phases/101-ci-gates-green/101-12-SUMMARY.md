@@ -6,12 +6,12 @@ completed: 2026-09-11
 requirements: [CARRY-02, CARRY-09]
 run_id: 31848669701
 job_id: 94920552794
-base: 693371a86
+base: 130d090c3
 red_tests: 18
 fixed: 12
 quarantined: 6
 wrapped_run: expected=120 unexpected=0 skipped=62 flaky=0 (182)
-oracle_exit: 1 (run half, instrument - the mark file is deleted by the Playwright outputDir cleanup; see the Instrument defect section)
+oracle_exit: 0 (the compiled oracle the gate executes, re-run 2026-09-11T06:46:42Z after the overseer ruling moved its mark out of test-results; the earlier exit 1 is kept under ## Oracle)
 ---
 
 # 101-12 SUMMARY: the five red a11y specs - 18 red tests, 12 fixed for spec drift, 6 quarantined in-spec
@@ -31,19 +31,24 @@ oracle_exit: 1 (run half, instrument - the mark file is deleted by the Playwrigh
 - **6 are quarantined** with ONE in-spec marker, `test.fixme(true, 'P101-QUAR 31848669701: ...')`, the
   first statement of the `-headings` test body. That body sits inside the six-type loop, so one marker
   skips 6 reporter cells (register `cells` = 6).
-- **Wrapped run (D-13)**: the full `a11y` project, 182 tests, run through `pw-run-reaped.mjs`, wrapper
-  exit 0. Result: `expected=120 unexpected=0 skipped=62 flaky=0`. All 12 fixed cells passed and all 6
-  quarantined cells were skipped. Skipped reconciles as **62 >= 6 (cells) >= 1 (rows)**.
-- **The plan's oracle exits 1, at its run half, for an instrument reason.** The bound half passes. The
-  run half looks up the published report with `find test-results … -newer test-results/p101-12-a11y.mark`.
-  Playwright empties `frontend/test-results/` at run start, so the mark is gone when `find` runs, and
-  the oracle prints `published report=[]` although the wrapper exited 0 and published it. The
-  oracle's own verdict line, applied to that report, prints the passing line above (exit 0). The
-  remedy is a one-token change to the oracle, which is outside this unit's file scope. It is recorded
-  under `## Instrument defect in the oracle's run half` for an operator ruling.
+- **Wrapped run (D-13)**: the full `a11y` project, 182 tests, run through `pw-run-reaped.mjs` by the
+  oracle, wrapper exit 0. Result: `expected=120 unexpected=0 skipped=62 flaky=0`. All 12 fixed cells
+  passed and all 6 quarantined cells were skipped. Skipped reconciles as **62 >= 6 (cells) >= 1 (rows)**.
+  Two wrapped runs read the same numbers (06:20Z and 06:46Z). The second is the run of record.
+- **The oracle passes, exit 0.** This is the compiled oracle the gate executes (`.tickmarkr/graph.json`,
+  task `P101-12`, `acceptance[1]`), re-run at 2026-09-11T06:46:42Z. Both halves pass: the bound line, then
+  `P101-12-RUN a11y expected=120 unexpected=0 skipped=62 flaky=0 sum=182 register_rows=1 register_cells=6`,
+  then `PASS`. The previous attempt's run exited 1 on an instrument defect: the oracle kept its mark file
+  in `frontend/test-results/`, which Playwright empties at run start. The overseer has since ruled on it
+  (run 0082). The compiled oracle now creates the mark and the wrapper log with `mktemp`, outside
+  `test-results/`. This unit did not edit the oracle, the plan, or the config. Both runs are quoted under
+  `## Oracle`.
 - Nothing under `frontend/src` or `backend/src` changed. No test was deleted, no project-level skip was
   added, no baseline was touched. The a11y project still lists `Total: 182 tests in 13 files`.
-  Commits: `3c63d259d` (the 5 specs) and the commit carrying this SUMMARY.
+  Commits: `ee3d426c0` (the 5 specs) and the commits carrying this SUMMARY. The spec commit was made as
+  `3c63d259d`, then carried onto base `130d090c3` as `a3661cde0` and `ee3d426c0`. `git diff` between those
+  two on `frontend/tests/a11y` is empty, and the specs are unchanged from `ee3d426c0` to HEAD `65dfb7475`,
+  where the run of record ran.
 
 ## Main finding - the 18 are a render race, not missing landmarks
 
@@ -226,12 +231,39 @@ test would let it scan a fuller page and could turn it red; that is not this uni
 
 ## Wrapped run (D-13)
 
-The plan's oracle ran the full `a11y` project through the wrapper from `frontend/`
-(`node ../scripts/pw-run-reaped.mjs -- --project=a11y`; wrapper exit `rc=0`). 5173 was free and no
-other Playwright or Vite suite was live (census under `## Commands run`). The wrapper published
-`frontend/test-results/pw-reaped-774c253172e5240a7bf8b7dd13b5aa20.json` and archived a durable copy
-outside the worktree, at `.pw-reports/2026-09-11T06-22-01-549Z-pw-reaped-774c253172e5240a7bf8b7dd13b5aa20.json`
-in the main checkout. That copy is 362151 bytes and byte-identical to the worktree copy (`cmp -s`).
+**Run of record (06:46Z).** The gate's compiled oracle ran the full `a11y` project through the wrapper
+from `frontend/` (`node ../scripts/pw-run-reaped.mjs -- --project=a11y`; wrapper exit `rc=0`, oracle exit
+0, full output under `## Oracle`). 5173 was free and no other Playwright or Vite suite was live (census
+under `## Commands run`). The wrapper published
+`frontend/test-results/pw-reaped-f86c10167ba42e1f2f608c5884f175f3.json` and archived a durable copy
+outside the worktree, at `.pw-reports/2026-09-11T06-48-13-558Z-pw-reaped-f86c10167ba42e1f2f608c5884f175f3.json`
+in the main checkout. The copy is byte-identical to the worktree copy (`cmp -s`). **Its `stats` block,
+verbatim:**
+
+```
+{"startTime":"2026-09-11T06:46:43.220Z","duration":90073.981,"expected":120,"skipped":62,"unexpected":0,"flaky":0}
+```
+
+The reader over that report (the same reader as the first run's, below), output verbatim. The last fold
+line is the 18 cells of this unit by status and per-attempt result:
+
+```
+report=test-results/pw-reaped-f86c10167ba42e1f2f608c5884f175f3.json bytes=362138 mtime=2026-09-11T09:48:13
+{"startTime":"2026-09-11T06:46:43.220Z","duration":90073.981,"expected":120,"skipped":62,"unexpected":0,"flaky":0}
+rows=182
+by status={"skipped":62,"expected":120}
+-- not expected/skipped:
+-- skipped per file={"a11y/color-contrast.spec.ts":1,"a11y/dossiers-rtl-a11y.spec.ts":6,"a11y/editor-keyboard-nav.spec.ts":8,"a11y/intake-accessibility.spec.ts":6,"a11y/keyboard-navigation.spec.ts":1,"a11y/positions-a11y-ar.spec.ts":2,"a11y/positions-a11y-en.spec.ts":2,"a11y/positions-keyboard-nav.spec.ts":13,"a11y/positions-screen-reader-bilingual.spec.ts":16,"a11y/screen-reader-ar.spec.ts":2,"a11y/screen-reader-en.spec.ts":3,"a11y/wcag-aa-comprehensive-audit.spec.ts":2}
+-- the 18: n=18 {"expected/passed":12,"skipped/skipped":6}
+archive=.pw-reports/2026-09-11T06-48-13-558Z-pw-reaped-f86c10167ba42e1f2f608c5884f175f3.json
+cmp identical
+```
+
+**First run (06:20Z, the previous attempt).** Same wrapper command, same numbers. The wrapper published
+`frontend/test-results/pw-reaped-774c253172e5240a7bf8b7dd13b5aa20.json`. Playwright emptied
+`test-results/` at the start of the run of record, so the worktree copy is gone. The durable copy remains
+at `.pw-reports/2026-09-11T06-22-01-549Z-pw-reaped-774c253172e5240a7bf8b7dd13b5aa20.json` in the main
+checkout: 362151 bytes, byte-identical to the worktree copy when it was checked (`cmp -s`).
 **Its `stats` block, verbatim:**
 
 ```
@@ -294,6 +326,10 @@ its pre-existing fixme cells. `expected + skipped = 120 + 62 = 182`, the hard-co
 
 ## Instrument defect in the oracle's run half
 
+**Status: ruled on, and the re-run passes.** The overseer (run 0082) applied the `mktemp` remedy
+proposed below to the compiled oracle: the mark and the wrapper log now live outside `test-results/`.
+The re-run exits 0 (`## Oracle`). The measurement below records the first run.
+
 The oracle's `one()` creates its reference mark and wrapper log inside `frontend/test-results/`
 (`MK="test-results/p101-12-$NAME.mark"`), runs the wrapper, then looks up the report with
 `find test-results -maxdepth 1 -name 'pw-reaped-*.json' -newer "$MK"`. Playwright removes the contents of
@@ -316,10 +352,11 @@ find with the oracle's mark path:   [bfs: error: bfs -S dfs -regextype findutils
 (`find` in this worker's zsh is `bfs`; the oracle, run by `bash` with `/opt/homebrew/bin` first on
 `PATH`, printed the `find:` message quoted above. Both say the same thing: the reference file is missing.)
 
-Consequently, as written, the run half exits 1 on every run, whatever the suite does. That holds for
-the plan text and for the compiled copy the gate executes: `.tickmarkr/graph.json`
-`tasks/11/acceptance/1/command` differs from the plan text only by the overseer's leading `blob-report`
-cleanup trap (diff under `## Oracle`). **Remedy for an operator ruling (outside this unit's file scope):**
+Consequently, as first written, the run half exited 1 on every run, whatever the suite did. At that time
+this held for the plan text and for the compiled copy the gate executes: `.tickmarkr/graph.json`
+`tasks/11/acceptance/1/command` then differed from the plan text only by the overseer's leading
+`blob-report` cleanup trap. The plan text still reads that way (the plan is outside this unit's scope).
+The compiled copy no longer does (current diff under `## Oracle`). **Remedy for an operator ruling (outside this unit's file scope):**
 create the mark outside the directory Playwright cleans, e.g. `MK=$(mktemp -t p101-12-mark)`, and
 likewise the wrapper log. With that one change, this run's report yields the passing verdict line above.
 This unit did not edit the oracle, the plan, or the config. The graded cannot shape its grader.
@@ -335,9 +372,10 @@ the 18 attempts of the six `-aria` cells, so the log does not show an unlabeled-
 
 ## Left for named later tasks
 
-- **Operator (ruling on this plan's oracle):** move `MK` (and the wrapper log) out of
-  `frontend/test-results/`, then re-run the oracle. If P101-13's oracle shares the same `one()` (not read
-  by this unit), the same applies there.
+- **Operator (ruled, run 0082):** the compiled oracle's `MK` and wrapper log now live outside
+  `frontend/test-results/`, and P101-13's compiled oracle carries the same change. The plan text
+  (`101-12-PLAN.md`) still carries the old `MK` line. The plan is outside this unit's scope and the gate
+  does not execute that text. Back-porting the ruling into the plan is the operator's call.
 - **Phase 102:** lift the `-headings` marker once the dossier record loads in the CI environment: the
   `/api` backend the job never starts, or whatever keeps `useDossier` loading there. Re-run the six
   cells in CI. The owner decides whether the job should start the backend or the app should render a
@@ -551,6 +589,25 @@ After the run: `git status --porcelain=v1 -uall` → only `?? .planning/phases/1
 `frontend/playwright-report`, `frontend/test-results` and `frontend/.pw-leases` are present and gitignored;
 there is no `blob-report/`. 5173 holders=0.
 
+The run of record (06:46Z). The anchored census before it (numeric pids only, each pid's own cwd, paths
+relative to the main checkout, the `claude` command line cut at 110 characters):
+
+```
+2026-09-11T06:46:27Z
+5173 holders=0
+30369 [Fri Sep 11 09:46:23 2026    ] cwd=/private/tmp/tkr-spec-v252 :: node (vitest 2)
+36753 [Fri Sep 11 09:44:50 2026    ] cwd=/.tickmarkr/worktrees.noindex/tickmarkr-run-20260911-033231-0000000000000082--P101-13 :: claude --model opus --strict-mcp-config --mcp-config {"mcpServers":{}} --settings {"promptSuggestionEnabled":f
+52981 [Fri Sep 11 09:42:45 2026    ] cwd=/private/tmp/tkr-spec-v252 :: node (vitest)
+53221 [Fri Sep 11 09:45:07 2026    ] cwd=/private/tmp/tkr-spec-v252 :: node (vitest 3)
+99972 [Fri Sep 11 09:45:54 2026    ] cwd=/private/tmp/tkr-spec-v252 :: node (vitest 1)
+env: E2E_BASE_URL=[] CI=[]
+```
+
+The `pgrep -f 'playwright|vite|pw-run-reaped'` pattern matches `vitest` and the P101-13 worker's
+`claude` command line. None of these is a Playwright or Vite suite. After the run (06:48:36Z):
+`5173 holders=0`, the same kind of non-suite processes, `git status --porcelain=v1 -uall` gave 0 lines,
+and `ls -d <wt>/blob-report <wt>/frontend/blob-report` gave `No such file or directory` for both.
+
 ## Zeros and their controls
 
 | zero | the control that proves the instrument could see non-zero |
@@ -571,8 +628,47 @@ there is no `blob-report/`. 5173 holders=0.
 
 ## Oracle
 
-Second run (the verdict of record; the same extracted script, from the worktree root, with this
-SUMMARY's register and FIXED table in place), verbatim:
+**Run of record: exit 0.** This is the compiled oracle the gate executes, extracted from
+`.tickmarkr/graph.json` (task `P101-12`, `acceptance[1].command`, 5637 bytes, sha256 prefix
+`5c86990d323b25b8`; the extraction asserts the task id). It ran with `bash` from the worktree root, with
+this SUMMARY's register and FIXED table in place. Verbatim:
+
+```
+2026-09-11T06:46:42Z
+P101-12-BOUND files=5 markers with a run id=1 (any P101-QUAR=1, any fixme incl. pre-existing=11; control positions-keyboard-nav fixme=13) register rows=1 cells total=6 non-numeric=0 fixed rows=7 want the 18 (a11y job 94920552794) red tests each fixed or marked: markers+fixed>=1, markers==any-P101-QUAR, rows==markers, cells>=rows, non-numeric=0
+P101-12-RUN a11y expected=120 unexpected=0 skipped=62 flaky=0 sum=182 register_rows=1 register_cells=6 want unexpected=0 flaky=0 expected+skipped=182 skipped>=register_cells>=register_rows (pre-existing fixmes add to skipped, so >= not ==)
+PASS
+oracle exit=0
+2026-09-11T06:48:13Z
+```
+
+The compiled copy against the plan text (js-yaml extraction of `must_haves.truths[oracle=command]`) as
+of this run. `graph.json` was modified at 09:44 local, after the previous attempt's SUMMARY commit at 09:29:
+
+```
+$ diff o12-plan.sh o12-compiled.sh
+0a1
+> R0="$PWD"; trap 'rm -rf "$R0/blob-report" "$R0/frontend/blob-report"' EXIT  # OVERSEER ruling run 0082: with CI set the root config adds the blob reporter, which writes blob-report/ (untracked, not ignored) after the cleanliness check and withdraws a 7/7-green merge
+24c25,26
+<   MK="test-results/p101-12-$NAME.mark"; touch "$MK"; node ../scripts/pw-run-reaped.mjs -- "$@" > "test-results/p101-12-$NAME.wrapper.log" 2>&1; WRC=$?
+---
+>   MK=$(mktemp "${TMPDIR:-/tmp}/p101-12-$NAME.mark.XXXXXX") || { echo "INSTRUMENT-CANNOT-RUN: mktemp failed"; exit 3; }; WL="${MK%.mark.*}.wrapper.log"  # OVERSEER ruling run 0082: the mark and the wrapper log must live OUTSIDE test-results, which Playwright empties at run start (the P101-01 run-0076 class); the -newer comparison works across directories
+>   node ../scripts/pw-run-reaped.mjs -- "$@" > "$WL" 2>&1; WRC=$?
+diff exit=1
+```
+
+That run's mark and wrapper log, both outside the worktree, and the log's closing lines (cut at 200
+characters):
+
+```
+WL=/var/folders/xz/s67kmj4x68n4qlkkbrvfhvfr0000gn/T//p101-12-a11y.wrapper.log bytes=672
+MK=/var/folders/xz/s67kmj4x68n4qlkkbrvfhvfr0000gn/T//p101-12-a11y.mark.mostGp
+pw-run-reaped: report archived outside the worktree -> /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.pw-reports/2026-09-11T06-48-13-558Z-pw-reaped-f86c10167ba42e1f2f608c5884f175f3.json
+pw-run-reaped: playwright exited code=0 signal=null; group 46722 -> {"termed":false,"killed":false,"alreadyGone":true,"unavailable":false,"identityMismatch":false,"finalZero":true}; session already-em
+```
+
+**The previous attempt's run: exit 1.** This was the plan-text oracle before the ruling: the same
+extracted script, from the worktree root, with this SUMMARY's register and FIXED table in place. Verbatim:
 
 ```
 2026-09-11T06:20:17Z
@@ -589,7 +685,8 @@ pre-existing fixme lines in the other four files + this unit's 1. The run half's
 defect above. Its wording, "an unclean session withholds the report (90)", does not describe this
 session: the wrapper exited 0 and published the report.
 
-The compiled copy the gate executes, against the plan text:
+The compiled copy the gate executed at that time, against the plan text (the previous attempt's diff,
+before the `MK` ruling):
 
 ```
 $ diff o12.sh o12-compiled.sh     # o12-compiled.sh = .tickmarkr/graph.json tasks/11/acceptance/1/command
@@ -601,5 +698,5 @@ $ diff o12.sh o12-compiled.sh     # o12-compiled.sh = .tickmarkr/graph.json task
 marker carries a `3184866*` run id, one marker and seven FIXED rows exist, the register has exactly one
 row per marker with a positive integer cells column (6 >= 1), and the grep control reads 13. The run
 half is the `a11y` project through the wrapper at its hard-coded 182, with `unexpected=0 flaky=0` and
-`skipped >= register cells >= register rows`. The suite satisfies it (62 >= 6 >= 1, 120 + 62 = 182). The
-oracle cannot say so until its mark leaves `frontend/test-results/`.
+`skipped >= register cells >= register rows`. The suite satisfies it (62 >= 6 >= 1, 120 + 62 = 182), and
+the oracle says so: exit 0 in the run of record above.
