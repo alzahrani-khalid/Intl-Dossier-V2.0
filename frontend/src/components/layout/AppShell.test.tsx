@@ -28,6 +28,12 @@ import { DirectionProvider as RadixDirectionProvider } from '@radix-ui/react-dir
 
 const routerMock = { pathname: '/dashboard' }
 
+// NavUser (rendered by Sidebar since Phase 92) reads direction via useLanguage; no
+// LanguageProvider in this harness, so pin the hook.
+vi.mock('@/hooks/useDirection', () => ({
+  useDirection: () => ({ direction: 'ltr' as const, isRTL: false }),
+}))
+
 vi.mock('@tanstack/react-router', () => ({
   useRouterState: (opts: { select: (s: { location: { pathname: string } }) => unknown }) =>
     opts.select({ location: { pathname: routerMock.pathname } }),
@@ -76,6 +82,13 @@ vi.mock('@/store/authStore', () => ({
       },
     }
     return typeof selector === 'function' ? selector(state) : state
+  }),
+}))
+
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: () => ({
+    user: { id: 'u1', email: 'k.alzahrani@gastat.gov.sa', name: 'Khalid Alzahrani', role: 'admin' },
+    logout: vi.fn(),
   }),
 }))
 

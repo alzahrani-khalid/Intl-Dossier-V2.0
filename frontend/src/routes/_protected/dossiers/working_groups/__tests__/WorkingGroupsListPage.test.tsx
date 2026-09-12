@@ -27,6 +27,9 @@ vi.mock('@tanstack/react-router', () => ({
   }),
   useNavigate: (): typeof navigateSpy => navigateSpy,
   useSearch: (): Record<string, unknown> => ({}),
+  Link: ({ to, children }: { to: string; children: ReactNode }): ReactNode => (
+    <a href={to}>{children}</a>
+  ),
 }))
 
 // useWorkingGroups adapter + its extracted fetcher.

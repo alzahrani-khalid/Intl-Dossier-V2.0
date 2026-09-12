@@ -13,6 +13,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 const locationMock = { pathname: '/dashboard' }
 
+// NavUser (rendered by Sidebar since Phase 92) reads direction via useLanguage; no
+// LanguageProvider in this harness, so pin the hook.
+vi.mock('@/hooks/useDirection', () => ({
+  useDirection: () => ({ direction: 'ltr' as const, isRTL: false }),
+}))
+
 vi.mock('@tanstack/react-router', () => ({
   Link: ({
     to,
@@ -45,6 +51,10 @@ vi.mock('@/store/authStore', () => ({
 // Global i18n mock in tests/setup.ts echoes unknown keys verbatim. We rely on
 // that behaviour: `t('navigation.operations')` → `'navigation.operations'`,
 // which lets our regex assertions match on `/operations/i` etc.
+
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: () => ({ user: authState.user, logout: vi.fn() }),
+}))
 
 import { Sidebar } from './Sidebar'
 

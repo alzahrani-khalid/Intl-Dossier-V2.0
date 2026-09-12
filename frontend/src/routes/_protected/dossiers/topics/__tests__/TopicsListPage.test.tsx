@@ -9,7 +9,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, cleanup, fireEvent } from '@testing-library/react'
-import type { ReactElement } from 'react'
+import type { ReactElement, ReactNode } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { LanguageProvider } from '@/components/language-provider/language-provider'
 import { usePeekStore } from '@/store/peekStore'
@@ -27,6 +27,9 @@ vi.mock('@tanstack/react-router', () => ({
   }),
   useNavigate: (): typeof navigateSpy => navigateSpy,
   useSearch: (): Record<string, unknown> => currentSearch,
+  Link: ({ to, children }: { to: string; children: ReactNode }): ReactNode => (
+    <a href={to}>{children}</a>
+  ),
 }))
 
 const useTopicsMock = vi.fn()

@@ -35703,6 +35703,10 @@ export type Database = {
           status: string
         }[]
       }
+      get_relationship_health_summary: {
+        Args: never
+        Returns: Database["public"]["Views"]["relationship_health_summary"]["Row"][]
+      }
       get_relationship_health_trends: {
         Args: { p_end_date?: string; p_start_date?: string }
         Returns: {
