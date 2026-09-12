@@ -22,11 +22,15 @@ import { createClient } from '@supabase/supabase-js'
 
 const SIGNATORY_QUERY = process.env.E2E_MOU_QUERY ?? 'united'
 
-// TEARDOWN RECORD (DATA-01, 102-07 / D-07). The create test titles its MoU from this module-scoped
-// epoch and the afterAll deletes exactly that title. Module scope is per worker, so the afterAll in
-// the create test's worker holds the same title the test wrote.
-const RUN_EPOCH = Date.now()
-const UNIQUE_TITLE = `E2E MoU ${RUN_EPOCH}`
+// TEARDOWN RECORD (DATA-01, 102-07 / D-07). The create test titles its MoU from an epoch
+// assigned ONLY inside that test; the afterAll deletes exactly that title. The assignment lives
+// inside the creating test — NOT at module scope — because fullyParallel can run this file's AR
+// dialog test in its own worker, and workers spawned in the same millisecond each evaluate this
+// module and draw the SAME Date.now() (the 2026-09-12T01:01Z run recorded the mou-create and
+// user-management workers sharing one epoch). A worker that never ran the create test leaves this
+// null and its afterAll deletes nothing — a module-scope epoch here could delete the create
+// test's in-flight MoU while that test is still asserting.
+let uniqueTitle: string | null = null
 
 // Type "united" (or E2E_MOU_QUERY) into the picker at `pickerName` and click the
 // result at `resultIndex`. Returns the selected dossier's display name so the
@@ -48,8 +52,13 @@ test.describe('MoU create (FEAT-01)', () => {
   // built from SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY (.env.test, loaded by
   // frontend/playwright.config.ts). A missing key THROWS: the teardown is never silently skipped.
   // The notification-queue rows the create enqueued go first, then the MoU (its other children
-  // cascade).
   test.afterAll(async () => {
+    const title = uniqueTitle
+    if (title === null) {
+      // This worker never ran the create test (fullyParallel gives every worker its own module
+      // instance); it created nothing, so there is nothing of ITS OWN to delete.
+      return
+    }
     const url = process.env.SUPABASE_URL ?? ''
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? ''
     if (url === '' || serviceRoleKey === '') {
@@ -58,7 +67,7 @@ test.describe('MoU create (FEAT-01)', () => {
     const admin = createClient(url, serviceRoleKey, {
       auth: { persistSession: false, autoRefreshToken: false },
     })
-    const { data, error } = await admin.from('mous').select('id').eq('title', UNIQUE_TITLE)
+    const { data, error } = await admin.from('mous').select('id').eq('title', title)
     if (error !== null) {
       throw new Error(`mou-create teardown: MoU lookup failed: ${error.message}`)
     }
@@ -77,9 +86,24 @@ test.describe('MoU create (FEAT-01)', () => {
     if (mous.error !== null) {
       throw new Error(`mou-create teardown: MoU delete failed: ${mous.error.message}`)
     }
+    // The staging trigger audit_mous (AFTER INSERT/UPDATE/DELETE on mous, running
+    // public.audit_trigger_function) writes a public.audit_log row (entity_type='mous',
+    // entity_id=<mou id>) when the MoU is created AND ANOTHER when the delete above runs, so
+    // this MUST come after the mous delete — ordering it first would leave the DELETE-trigger
+    // row behind. audit_log is a different table from user-management's audit_logs and has no
+    // FK/cascade to mous, so nothing else removes either row.
+    const audit = await admin
+      .from('audit_log')
+      .delete({ count: 'exact' })
+      .eq('entity_type', 'mous')
+      .in('entity_id', ids)
+    if (audit.error !== null) {
+      throw new Error(`mou-create teardown: audit_log delete failed: ${audit.error.message}`)
+    }
     console.warn(
-      `[mou-create teardown] title=${UNIQUE_TITLE} ` +
-        `queue_deleted=${queue.count} mous_deleted=${mous.count}`,
+      `[mou-create teardown] title=${title} ` +
+        `queue_deleted=${queue.count} mous_deleted=${mous.count} ` +
+        `audit_log_deleted=${audit.count}`,
     )
   })
 
@@ -88,7 +112,7 @@ test.describe('MoU create (FEAT-01)', () => {
 
     await page.getByRole('button', { name: /add mou/i }).click()
 
-    const uniqueTitle = UNIQUE_TITLE
+    uniqueTitle = `E2E MoU ${Date.now()}`
     await page.getByLabel(/title \(english\)/i).fill(uniqueTitle)
     await page.getByLabel(/title \(arabic\)/i).fill('مذكرة تفاهم اختبارية')
 

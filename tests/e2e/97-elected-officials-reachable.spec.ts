@@ -49,12 +49,15 @@ import { getSupabaseAdmin } from './support/helpers/supabase-admin'
 const email = process.env.TEST_USER_EMAIL ?? ''
 const password = process.env.TEST_USER_PASSWORD ?? ''
 
-// TEARDOWN RECORD (DATA-01, 102-07 / D-07). The one row this file writes is named from this
-// module-scoped epoch, so the afterAll below deletes exactly this run's rows by prefix and nothing
-// older (the historical e2e-97-01 rows are 102-06's). Module scope is per WORKER: the afterAll that
-// runs in the create test's worker holds the same epoch the create test named its row with.
-const RUN_EPOCH = Date.now()
-const EO_NAME_PREFIX = `e2e-97-01-elected-official-${RUN_EPOCH}`
+// TEARDOWN RECORD (DATA-01, 102-07 / D-07). The row this file writes is named from an epoch
+// assigned ONLY inside the create test, so the afterAll below deletes exactly this run's rows and
+// nothing older (the historical e2e-97-01 rows are 102-06's). The assignment lives inside the
+// creating test — NOT at module scope — because fullyParallel spreads this file's tests across
+// workers that each evaluate this module, and workers spawned in the same millisecond draw the
+// SAME Date.now(): the 2026-09-12T00:51Z run recorded a worker whose afterAll (epoch set at
+// module scope, nothing created by it) DELETING another worker's in-flight dossier mid-test. A
+// worker that never ran the create test leaves this null and its afterAll deletes nothing.
+let eoNamePrefix: string | null = null
 
 // TIMING. One budget for every settle in this file, matching 95-monitoring-mounts.spec.ts.
 // Generous enough to cover the query client's retry ladder so a slow-but-correct settle is not
@@ -179,11 +182,15 @@ test.describe('NAV-01 Elected Officials is reachable on all four exposure surfac
   // .env.test; it THROWS when either is unset, so the teardown is never silently skipped).
   // `persons` is the extension row of the `dossiers` row, so it goes first.
   test.afterAll(async () => {
+    const prefix = eoNamePrefix
+    if (prefix === null) {
+      // This worker never ran the create test (fullyParallel gives every worker its own module
+      // instance); it created nothing, so there is nothing of ITS OWN to delete. Deleting by a
+      // module-scope epoch here is exactly what deleted a sibling worker's in-flight dossier.
+      return
+    }
     const admin = getSupabaseAdmin()
-    const { data, error } = await admin
-      .from('dossiers')
-      .select('id')
-      .like('name_en', `${EO_NAME_PREFIX}%`)
+    const { data, error } = await admin.from('dossiers').select('id').like('name_en', `${prefix}%`)
     if (error !== null) {
       throw new Error(`97-01 teardown: dossier lookup failed: ${error.message}`)
     }
@@ -210,14 +217,25 @@ test.describe('NAV-01 Elected Officials is reachable on all four exposure surfac
     if (queue.error !== null) {
       throw new Error(`97-01 teardown: embedding queue delete failed: ${queue.error.message}`)
     }
+    // dossiers-create (supabase/functions/dossiers-create/index.ts:284) inserts a
+    // dossier_owners row {dossier_id, user_id, role_type:'owner'} right after the dossier. The
+    // table's only FK is user_id -> auth.users; dossier_id has NO FK and no cascade, so deleting
+    // the dossier alone orphans it. It must go before the dossier delete, keyed by dossier_id.
+    const owners = await admin
+      .from('dossier_owners')
+      .delete({ count: 'exact' })
+      .in('dossier_id', ids)
+    if (owners.error !== null) {
+      throw new Error(`97-01 teardown: dossier_owners delete failed: ${owners.error.message}`)
+    }
     const dossiers = await admin.from('dossiers').delete({ count: 'exact' }).in('id', ids)
     if (dossiers.error !== null) {
       throw new Error(`97-01 teardown: dossiers delete failed: ${dossiers.error.message}`)
     }
     console.warn(
-      `[97-01 teardown] prefix=${EO_NAME_PREFIX} ` +
+      `[97-01 teardown] prefix=${prefix} ` +
         `persons_deleted=${persons.count} queue_deleted=${queue.count} ` +
-        `dossiers_deleted=${dossiers.count}`,
+        `owners_deleted=${owners.count} dossiers_deleted=${dossiers.count}`,
     )
   })
 
@@ -369,7 +387,8 @@ test.describe('NAV-01 Elected Officials is reachable on all four exposure surfac
     // still has its own settle assertion. Do not mask a stuck wizard by raising this again.
     test.setTimeout(120_000)
 
-    const nameEn = EO_NAME_PREFIX
+    eoNamePrefix = `e2e-97-01-elected-official-${Date.now()}`
+    const nameEn = eoNamePrefix
     const nameAr = 'مسؤول منتخب'
 
     await signInInline(page)
