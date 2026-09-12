@@ -14,6 +14,15 @@ const FROZEN_TIME = new Date(new Date().setUTCHours(12, 0, 0, 0))
 const HOUR_MS = 60 * 60 * 1000
 const DAY_MS = 24 * HOUR_MS
 
+// The browser zone of the two week-ahead tests: UTC-02:00 ("Etc/GMT+2" is the POSIX sign), no DST.
+// Engagement b0000002-…-0001 starts at date_trunc('hour', NOW()) + 2 h, so anywhere from D 02:00Z
+// to D+1 01:00Z depending on the server hour of the beforeAll. The local day D at UTC-02:00 runs
+// from D 02:00Z to D+1 02:00Z, so the row sits under TODAY at every server hour. In the runner's
+// zone (+03) it moved to TOMORROW from 19:00Z, and the unmasked group headers moved with it
+// (P102-15 att3). The calendar rows (09:00–17:00Z) and the 12:00Z / 18:00Z clocks keep their local
+// date. The other widget baselines keep the runner's zone.
+const WEEK_AHEAD_TIMEZONE = 'Etc/GMT+2'
+
 const SUPPRESS_TRANSITIONS_CSS = `
   *, *::before, *::after {
     transition: none !important;
@@ -173,7 +182,8 @@ async function openDashboard(page: Page): Promise<void> {
 // divergence: the browser clock was frozen to a constant capture date while get_upcoming_events
 // filters by real NOW(), so every row fell outside the frozen window. Both sides now follow today:
 // FROZEN_TIME is today 12:00Z at run time, the beforeAll re-anchors the b0000002/b0000006 rows to
-// today-relative dates (seed 072, the 060 offsets), and the `.week-date` column is masked.
+// today-relative dates (seed 072, the 060 offsets), the `.week-date` column is masked, and the
+// browser runs at WEEK_AHEAD_TIMEZONE so no row changes group with the server hour.
 const FIXTURE_BLOCKED: Partial<Record<(typeof WIDGETS)[number][1], string>> = {
   'vip-visits':
     'FIXTURE-01 — no `.vip-row` renders. The widget shows its empty state, which names its own fix ' +
@@ -182,19 +192,24 @@ const FIXTURE_BLOCKED: Partial<Record<(typeof WIDGETS)[number][1], string>> = {
 }
 
 for (const [selector, name] of WIDGETS) {
-  test(`visual ${name}`, async ({ page }) => {
-    const blockedReason = FIXTURE_BLOCKED[name]
-    test.fixme(blockedReason !== undefined, blockedReason ?? '')
-    await page.clock.install({ time: FROZEN_TIME })
-    await openDashboard(page)
-    await page.waitForSelector(`[data-testid="${selector}"]`)
-    const widget = page.getByTestId(selector)
-    await expect(widget).toBeVisible()
-    await expect(widget.locator(READY_SELECTORS[selector]).first()).toBeVisible({ timeout: 15_000 })
-    await expect(widget).toHaveScreenshot(`${name}.png`, {
-      animations: 'disabled',
-      maxDiffPixelRatio: 0.02,
-      mask: name === 'week-ahead' ? [widget.locator('.week-date')] : [],
+  test.describe(() => {
+    if (name === 'week-ahead') test.use({ timezoneId: WEEK_AHEAD_TIMEZONE })
+    test(`visual ${name}`, async ({ page }) => {
+      const blockedReason = FIXTURE_BLOCKED[name]
+      test.fixme(blockedReason !== undefined, blockedReason ?? '')
+      await page.clock.install({ time: FROZEN_TIME })
+      await openDashboard(page)
+      await page.waitForSelector(`[data-testid="${selector}"]`)
+      const widget = page.getByTestId(selector)
+      await expect(widget).toBeVisible()
+      await expect(widget.locator(READY_SELECTORS[selector]).first()).toBeVisible({
+        timeout: 15_000,
+      })
+      await expect(widget).toHaveScreenshot(`${name}.png`, {
+        animations: 'disabled',
+        maxDiffPixelRatio: 0.02,
+        mask: name === 'week-ahead' ? [widget.locator('.week-date')] : [],
+      })
     })
   })
 }
@@ -209,25 +224,28 @@ for (const [selector, name] of WIDGETS) {
 // engagement titles are asserted on `.week-title` before each capture (a bare getByText also
 // matches the `.week-meta` copy of the same name), so a match can never come from an empty or
 // masked-over widget.
-test('dashboard snapshots survive a date change', async ({ context }) => {
-  test.slow() // two dashboard loads, one per clock
-  for (const time of [FROZEN_TIME, new Date(FROZEN_TIME.getTime() + 6 * HOUR_MS)]) {
-    const page = await context.newPage()
-    await page.clock.install({ time })
-    await openDashboard(page)
-    const widget = page.getByTestId('dashboard-widget-week-ahead')
-    await expect(widget.locator('.week-row').first()).toBeVisible({ timeout: 15_000 })
-    await expect(
-      widget.locator('.week-title', { hasText: 'Bilateral consultation — ESCWA' }),
-    ).toBeVisible()
-    await expect(
-      widget.locator('.week-title', { hasText: 'Prep session — G20 Data Gaps Initiative' }),
-    ).toBeVisible()
-    await expect(
-      widget.locator('.week-title', { hasText: 'Delegation visit — Indonesia BPS' }),
-    ).toBeVisible()
-    const mask = [widget.locator('.week-date')]
-    await expect(widget).toHaveScreenshot('week-ahead.png', { mask })
-    await page.close()
-  }
+test.describe(() => {
+  test.use({ timezoneId: WEEK_AHEAD_TIMEZONE })
+  test('dashboard snapshots survive a date change', async ({ context }) => {
+    test.slow() // two dashboard loads, one per clock
+    for (const time of [FROZEN_TIME, new Date(FROZEN_TIME.getTime() + 6 * HOUR_MS)]) {
+      const page = await context.newPage()
+      await page.clock.install({ time })
+      await openDashboard(page)
+      const widget = page.getByTestId('dashboard-widget-week-ahead')
+      await expect(widget.locator('.week-row').first()).toBeVisible({ timeout: 15_000 })
+      await expect(
+        widget.locator('.week-title', { hasText: 'Bilateral consultation — ESCWA' }),
+      ).toBeVisible()
+      await expect(
+        widget.locator('.week-title', { hasText: 'Prep session — G20 Data Gaps Initiative' }),
+      ).toBeVisible()
+      await expect(
+        widget.locator('.week-title', { hasText: 'Delegation visit — Indonesia BPS' }),
+      ).toBeVisible()
+      const mask = [widget.locator('.week-date')]
+      await expect(widget).toHaveScreenshot('week-ahead.png', { mask })
+      await page.close()
+    }
+  })
 })
