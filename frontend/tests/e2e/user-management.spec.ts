@@ -52,11 +52,29 @@ test.describe('User Management — D-10 loop', () => {
     }
     let deleted = 0
     for (const { id } of (data ?? []) as { id: string }[]) {
+      // audit_logs has no FK/cascade to auth.users, so it outlives deleteUser. Every audit row
+      // this run wrote (user_created, role_changed, role_change_requested, user_reactivated,
+      // user_deactivated) is keyed entity_type='user' + entity_id=<created user id>; the
+      // create-user entry also carries the email inside new_values. Delete them BEFORE the
+      // auth account goes away so the run leaves zero rows of its own creation.
+      const audit = await admin
+        .from('audit_logs')
+        .delete({ count: 'exact' })
+        .eq('entity_type', 'user')
+        .eq('entity_id', id)
+      if (audit.error !== null) {
+        throw new Error(
+          `user-management teardown: audit_logs delete failed: ${audit.error.message}`,
+        )
+      }
       const { error: deleteError } = await admin.auth.admin.deleteUser(id)
       if (deleteError !== null) {
         throw new Error(`user-management teardown: deleteUser failed: ${deleteError.message}`)
       }
       deleted += 1
+      console.warn(
+        `[user-management teardown] email=${CREATED_EMAIL} id=${id} audit_logs_deleted=${audit.count}`,
+      )
     }
     console.warn(`[user-management teardown] email=${CREATED_EMAIL} accounts_deleted=${deleted}`)
   })

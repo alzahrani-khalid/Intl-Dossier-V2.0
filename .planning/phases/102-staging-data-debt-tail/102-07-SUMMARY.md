@@ -12,7 +12,7 @@ All three staging-writing specs now delete their own run-scoped rows, and the fi
 ## Changes
 
 - `tests/e2e/97-elected-officials-reachable.spec.ts`: module-scoped `RUN_EPOCH` / `EO_NAME_PREFIX`; `afterAll` uses `getSupabaseAdmin()` (service role from `.env.test`) to delete `persons` then `dossiers` by prefix. The final repair fixes the stuck submit locator: the button is sentence-case `Create dossier`, not `Create Dossier`; the timeout was returned to 120 s.
-- `frontend/tests/e2e/user-management.spec.ts`: module-scoped `RUN_EPOCH` / `CREATED_EMAIL`; `afterAll` finds the created `public.users.id` and calls `auth.admin.deleteUser(id)`. The create timeout cause remains the `withRateLimit` immutable-header bug fixed below; status checks keep exact `Active` / `Inactive` with 30 s assertion budgets for the unset-Upstash fail-open stall. The admin-role step asserts the dual-approval toast and NOTHING else — the earlier accepted-500 branch is deleted and its root cause is repaired by migration `20260912000001` below. The status loop runs reactivate → deactivate because the deployed create-user v8 creates accounts `is_active=false` (observed, below).
+- `frontend/tests/e2e/user-management.spec.ts`: module-scoped `RUN_EPOCH` / `CREATED_EMAIL`; `afterAll` finds the created `public.users.id`, deletes that user's `audit_logs` rows (`entity_type='user'` + `entity_id=id` — the table has no FK/cascade, so these outlive `deleteUser`), then calls `auth.admin.deleteUser(id)`. The create timeout cause remains the `withRateLimit` immutable-header bug fixed below; status checks keep exact `Active` / `Inactive` with 30 s assertion budgets for the unset-Upstash fail-open stall. The admin-role step asserts the dual-approval toast and NOTHING else — the earlier accepted-500 branch is deleted and its root cause is repaired by migration `20260912000001` below. The status loop runs reactivate → deactivate because the deployed create-user v8 creates accounts `is_active=false` (observed, below).
 - `frontend/tests/e2e/mou-create.spec.ts`: module-scoped `RUN_EPOCH` / `UNIQUE_TITLE`; `afterAll` deletes `mou_notification_queue` then `mous` by created title. The final repair clicks the real submit label, `Create an MoU`.
 - `supabase/functions/_shared/rate-limiter.ts`: only the three immutable `req.headers.set(...)` mutations and their comment were removed.
 - `supabase/migrations/20260911000009_p102_users_select_platform_admin.sql`: only the idempotent `users_select_platform_admin` SELECT policy on `public.is_platform_admin(auth.uid())` was added.
@@ -302,6 +302,49 @@ passed, including `create → list → detail → role/status, plus IDOR smoke a
 STRICT dual-approval assertion. Teardown stderr:
 `[mou-create teardown] title=E2E MoU 1789171071059 queue_deleted=1 mous_deleted=1` and
 `[user-management teardown] email=e2e-1789171071060@example.test accounts_deleted=1`.
+
+## Retry-a3 (this attempt): user-management teardown now covers audit_logs
+
+Review finding (material): the user-management teardown deleted the auth account but left
+`audit_logs` rows written by create-user / assign-role / reactivate-user / deactivate-user —
+`audit_logs` has no FK/cascade to `auth.users`, so they survived `deleteUser`.
+
+### The rows the run writes
+
+Verified against the LIVE staging schema (`information_schema.columns`, staging
+zkrcjzdemdmwhearhfgg): `audit_logs(id, entity_type, entity_id, action, old_values, new_values,
+user_id, user_role, ip_address, user_agent, required_mfa, mfa_verified, mfa_method,
+correlation_id, session_id, created_at)` — the `entity_type`/`entity_id` shape, NOT the
+partitioned `event_type`/`resource_id` shape some committed migrations show. No non-internal
+triggers on the live table (the immutable-table triggers in `20251011214945` are not present on
+staging). Every audit row this spec's run writes is keyed to the created user
+(`create-user/index.ts:487-509`, `assign-role/index.ts:251-253,361-363`,
+`deactivate-user/index.ts:295-297`, `reactivate-user/index.ts:142-144`):
+`entity_type='user'`, `entity_id=<created user id>`, action ∈ {`user_created`, `role_changed`,
+`role_change_requested`, `user_reactivated`, `user_deactivated`}; the `user_created` entry also
+carries the email inside `new_values`. Fix (spec `afterAll`): delete
+`audit_logs where entity_type='user' and entity_id=id` BEFORE `auth.admin.deleteUser(id)`.
+
+### FE oracle, rerun verbatim after the repair, plus an audit census
+
+Command: the plan's FE `oracle: command` block verbatim (`PWRUN frontend e2e/user-management.spec.ts e2e/mou-create.spec.ts --project=chromium` + post-run census), followed by
+`select count(*) from audit_logs where entity_type='user' and created_at >= T0`.
+
+```
+run_start=2026-09-12T00:08:27Z
+pw-run-reaped: playwright exited code=0 signal=null; session already-empty; verdict clean
+P102-07-FE wrapper_rc=0 rows_left=0 0
+P102-07-FE-AUDIT audit_logs_user_rows_since_run_start=0
+```
+
+Report `frontend/test-results/pw-reaped-112289e480550f3d1448e585aafa9978.json` (startTime
+`2026-09-12T00:08:27.582Z`, duration 61.5 s): `expected=3 unexpected=0 skipped=0 flaky=0`.
+Teardown stderr (from the archived report):
+`[user-management teardown] email=e2e-1789171714711@example.test id=33d6b38f-7b4a-480e-bb3b-d5981e95c607 audit_logs_deleted=5`,
+`[user-management teardown] email=e2e-1789171714711@example.test accounts_deleted=1`,
+`[mou-create teardown] title=E2E MoU 1789171714718 queue_deleted=1 mous_deleted=1`.
+The 5 deleted audit rows are exactly the run's own five actions; the post-run census shows zero
+`entity_type='user'` audit rows created at or after the run's start, zero accounts, zero MoUs.
 
 ## Static checks
 
