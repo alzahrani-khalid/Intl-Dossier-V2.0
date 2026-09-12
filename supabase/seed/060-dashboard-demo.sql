@@ -170,7 +170,7 @@ BEGIN
   -- 5. AA_COMMITMENTS (Overdue) — 8 commitments owned by test user, all overdue
   -- ============================================================================
   INSERT INTO aa_commitments (id, dossier_id, title, description, priority, status, owner_type, owner_user_id, tracking_mode, due_date) VALUES
-    ('b0000003-0000-0000-0000-000000000001'::uuid, v_d_china,       'Test commitment for China partnership',         'Initial test commitment for China partnership scoping.',          'high',   'pending',     'internal', v_user_id, 'automatic', CURRENT_DATE - 147),
+    ('b0000003-0000-0000-0000-000000000001'::uuid, v_d_china,       'Advance China Statistical Partnership',         'Initial partnership scoping for statistical cooperation with China.', 'high', 'pending',     'internal', v_user_id, 'automatic', CURRENT_DATE - 147),
     ('b0000003-0000-0000-0000-000000000002'::uuid, v_d_china,       'Review Belt and Road participation terms',      'Review participation terms for Belt and Road initiative.',        'high',   'in_progress', 'internal', v_user_id, 'automatic', CURRENT_DATE - 62),
     ('b0000003-0000-0000-0000-000000000003'::uuid, v_d_china,       'Re-engage on post-Belt-and-Road trade note',    'Follow up on trade note circulated post-Belt-and-Road.',          'medium', 'pending',     'internal', v_user_id, 'automatic', CURRENT_DATE - 12),
     ('b0000003-0000-0000-0000-000000000004'::uuid, v_d_g20,         'Finalize G20 cooperation agreement',            'Finalize cooperation framework for G20 DGI-3 phase.',             'high',   'in_progress', 'internal', v_user_id, 'automatic', CURRENT_DATE - 141),
@@ -182,7 +182,7 @@ BEGIN
   -- Arabic titles for the demo commitments (the INSERT above leaves title_ar NULL).
   -- Required so RTL surfaces (e.g. the dossier work-items tab) render Arabic titles.
   UPDATE aa_commitments SET title_ar = CASE id
-    WHEN 'b0000003-0000-0000-0000-000000000001'::uuid THEN 'التزام تجريبي لشراكة الصين'
+    WHEN 'b0000003-0000-0000-0000-000000000001'::uuid THEN 'تعزيز الشراكة الإحصائية مع الصين'
     WHEN 'b0000003-0000-0000-0000-000000000002'::uuid THEN 'مراجعة شروط المشاركة في مبادرة الحزام والطريق'
     WHEN 'b0000003-0000-0000-0000-000000000003'::uuid THEN 'إعادة التواصل بشأن مذكرة التجارة لما بعد مبادرة الحزام والطريق'
     WHEN 'b0000003-0000-0000-0000-000000000004'::uuid THEN 'إنهاء اتفاقية التعاون مع مجموعة العشرين'
