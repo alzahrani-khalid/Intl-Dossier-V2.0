@@ -603,7 +603,7 @@ async function getOverdueCommitments(
           title_en: `Overdue: ${commitment.title || 'Commitment'}`,
           title_ar: `متأخر: ${commitment.title_ar || 'التزام'}`,
           description_en: `Deadline passed T+${daysOverdue} days ago.`,
-          description_ar: `تجاوز الموعد النهائي بـ T+${daysOverdue} يوم.`,
+          description_ar: `تجاوز الموعد النهائي بـ ${daysOverdue} يوم.`,
           action_label_en: 'Update Status',
           action_label_ar: 'تحديث الحالة',
           action_route: `/my-work`,
