@@ -223,8 +223,8 @@ async function generateAlerts(
       severity: healthData.breakdown.days_since_engagement >= 90 ? 'high' : 'medium',
       title_en: 'Engagement Gap Detected',
       title_ar: 'تم اكتشاف فجوة في التفاعل',
-      description_en: `No engagement with this relationship for ${healthData.breakdown.days_since_engagement} days.`,
-      description_ar: `لا يوجد تفاعل مع هذه العلاقة منذ ${healthData.breakdown.days_since_engagement} يومًا.`,
+      description_en: `No engagement in T+${healthData.breakdown.days_since_engagement} days.`,
+      description_ar: `لا يوجد تفاعل خلال T+${healthData.breakdown.days_since_engagement} يوم.`,
       alert_data: { days: healthData.breakdown.days_since_engagement },
       expires_at: expiresAt.toISOString(),
     });
