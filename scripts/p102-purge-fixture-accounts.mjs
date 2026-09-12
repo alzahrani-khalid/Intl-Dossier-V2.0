@@ -101,6 +101,9 @@ const psql = (sql, { raw = false } = {}) => {
 
 const sqlLiteral = (value) => `'${value.replaceAll("'", "''")}'`
 
+const UUID_RE = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i
+const UUID_LINE_RE = /^([0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}),/
+
 const queryFixtureUsers = () => {
   const rows = psql(
     `select id::text || E'\\t' || email from auth.users where ${DELETE_PREDICATE} order by id`,
@@ -109,7 +112,9 @@ const queryFixtureUsers = () => {
   return rows.split('\n').map((row) => {
     const tab = row.indexOf('\t')
     if (tab < 1) throw new Error(`could not parse fixture user row: ${row}`)
-    return { id: row.slice(0, tab), email: row.slice(tab + 1) }
+    const id = row.slice(0, tab).toLowerCase()
+    if (!UUID_RE.test(id)) throw new Error(`fixture user id is not a uuid: ${row.slice(0, tab)}`)
+    return { id, email: row.slice(tab + 1) }
   })
 }
 
@@ -135,30 +140,43 @@ const writeAndSync = (path, contents) => {
   }
 }
 
-const exportCsv = (directory, file, table, userColumn) => {
-  const sql =
-    table === 'auth.users'
-      ? `copy (select * from ${table} where ${DELETE_PREDICATE} order by id) to stdout with (format csv, header true)`
-      : `copy (select * from ${table} where ${userColumn} in (select id from auth.users where ${DELETE_PREDICATE}) order by ${userColumn}) to stdout with (format csv, header true)`
+// Extract the id column of the exported auth.users CSV: ids are the first column, so every
+// record starts with a bare uuid followed by a comma. Continuation lines from embedded
+// newlines in later quoted columns cannot match this anchor, and the exact set-equality check
+// below fails safe if one ever did.
+const csvAuthIds = (csv) =>
+  csv
+    .toString('utf8')
+    .split('\n')
+    .slice(1)
+    .map((line) => UUID_LINE_RE.exec(line)?.[1])
+    .filter((id) => id !== undefined)
+    .map((id) => id.toLowerCase())
+    .sort()
+
+// Selection, every CSV export, and every deleteUser call all bind to this one immutable id
+// set, so concurrent churn cannot make the script delete an id that was never exported.
+const exportCsv = (directory, file, table, userColumn, fixtureIdsSql) => {
+  const sql = `copy (select * from ${table} where ${userColumn} = any(${fixtureIdsSql}) order by ${userColumn}) to stdout with (format csv, header true)`
   const csv = psql(sql, { raw: true })
   const path = join(directory, file)
   writeAndSync(path, csv)
   const rows = count(
-    table === 'auth.users'
-      ? `select count(*) from ${table} where ${DELETE_PREDICATE}`
-      : `select count(*) from ${table} where ${userColumn} in (select id from auth.users where ${DELETE_PREDICATE})`,
+    `select count(*) from ${table} where ${userColumn} = any(${fixtureIdsSql})`,
   )
   console.log(`exported ${file} rows=${rows}`)
-  return rows
+  return { rows, csv }
 }
 
 // Reproduce research §1.6 from the catalog. No blocking FK names are maintained by hand.
-const generatedCensus = (userPredicate) => {
-  const formatPredicate = userPredicate.replaceAll("'", "''").replaceAll('%', '%%')
+// idSourceSql is the full subquery producing the user ids to census over, so the fixture
+// census covers exactly the immutable delete set rather than re-deriving a live population.
+const generatedCensus = (idSourceSql) => {
+  const formatSource = idSourceSql.replaceAll("'", "''").replaceAll('%', '%%')
   const union = psql(`
     select string_agg(
       format(
-        'select %L::text as fk, count(*)::bigint as n from %I.%I where %I in (select id from auth.users where ${formatPredicate})',
+        'select %L::text as fk, count(*)::bigint as n from %I.%I where %I in (${formatSource})',
         n.nspname || '.' || c.relname || '.' || a.attname,
         n.nspname,
         c.relname,
@@ -192,6 +210,8 @@ const fixtureUsers = queryFixtureUsers()
 if (fixtureUsers.length === 0) {
   throw new Error('refusing to create a newer empty export: the fixture delete set is empty')
 }
+const fixtureIds = fixtureUsers.map((user) => user.id)
+const fixtureIdsSql = `'{${fixtureIds.join(',')}}'::uuid[]`
 
 const keepSql = KEEP_EMAILS.map(sqlLiteral).join(', ')
 const keepOutsideDelete = count(
@@ -207,12 +227,16 @@ console.log(
   `keep-list pre-delete outside_delete=${outsideDelete} keep_list_outside_delete=${keepOutsideDelete}`,
 )
 
-const fixtureCensus = generatedCensus(DELETE_PREDICATE)
+const fixtureCensus = generatedCensus(
+  `select id from auth.users where id = any(${fixtureIdsSql})`,
+)
 console.log(`BLOCKING_FK_TOTAL_CONSTRAINTS=${fixtureCensus.total}`)
 console.log(`BLOCKING_FK_WITH_ROWS=${fixtureCensus.offenders.length}`)
 for (const offender of fixtureCensus.offenders) console.log(`BLOCKING_FK ${offender}`)
 
-const controlCensus = generatedCensus(`email = ${sqlLiteral(KEEP_EMAILS[0])}`)
+const controlCensus = generatedCensus(
+  `select id from auth.users where email = ${sqlLiteral(KEEP_EMAILS[0])}`,
+)
 console.log(`BLOCKING_FK_CONTROL_WITH_ROWS=${controlCensus.offenders.length}`)
 for (const offender of controlCensus.offenders) console.log(`BLOCKING_FK_CONTROL ${offender}`)
 
@@ -231,8 +255,11 @@ mkdirSync(exportDirectory)
 console.log(`export_path=${exportDirectory}`)
 
 const exportCounts = new Map()
+let authCsv = null
 for (const [file, table, userColumn] of EXPORTS) {
-  exportCounts.set(table, exportCsv(exportDirectory, file, table, userColumn))
+  const { rows, csv } = exportCsv(exportDirectory, file, table, userColumn, fixtureIdsSql)
+  exportCounts.set(table, rows)
+  if (table === 'auth.users') authCsv = csv
 }
 const exportCompletedEpoch = Math.floor(Date.now() / 1000)
 if (exportCounts.get('auth.users') !== fixtureUsers.length) {
@@ -240,6 +267,19 @@ if (exportCounts.get('auth.users') !== fixtureUsers.length) {
     `fixture population changed during export: selected=${fixtureUsers.length} exported=${exportCounts.get('auth.users')}`,
   )
 }
+const exportedIds = csvAuthIds(authCsv)
+const selectedIds = [...fixtureIds].sort()
+if (
+  exportedIds.length !== selectedIds.length ||
+  exportedIds.some((id, index) => id !== selectedIds[index])
+) {
+  throw new Error(
+    `exported auth.users id set does not equal the selected fixture id set: exported=${exportedIds.length} selected=${selectedIds.length}`,
+  )
+}
+console.log(
+  `verified exported auth.users ids equal the selected fixture id set exactly (${selectedIds.length} ids)`,
+)
 
 const admin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false },
