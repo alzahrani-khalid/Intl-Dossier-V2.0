@@ -11,9 +11,9 @@ All three staging-writing specs now delete their own run-scoped rows, and the fi
 
 ## Changes
 
-- `tests/e2e/97-elected-officials-reachable.spec.ts`: module-scoped `RUN_EPOCH` / `EO_NAME_PREFIX`; `afterAll` uses `getSupabaseAdmin()` (service role from `.env.test`) to delete `persons`, then the `embedding_update_queue` rows the dossier INSERT enqueued (`entity_type='dossiers'`, no FK/cascade — see Retry-a4), then `dossiers`, all by prefix. The final repair fixes the stuck submit locator: the button is sentence-case `Create dossier`, not `Create Dossier`; the timeout was returned to 120 s.
+- `tests/e2e/97-elected-officials-reachable.spec.ts`: the create test assigns the run's prefix to a module-level `let` INSIDE the test (NOT at module scope — see Retry-a5; a module-scope epoch collided across workers and let a sibling worker's afterAll delete an in-flight dossier); `afterAll` uses `getSupabaseAdmin()` (service role from `.env.test`) to delete `persons`, then the `embedding_update_queue` rows the dossier INSERT enqueued (`entity_type='dossiers'`, no FK/cascade — Retry-a4), then `dossier_owners` (`dossier_id` has no FK/cascade — Retry-a5), then `dossiers`, all by that prefix, returning early when the creating test never ran in that worker. The final repair fixes the stuck submit locator: the button is sentence-case `Create dossier`, not `Create Dossier`; the timeout was returned to 120 s.
 - `frontend/tests/e2e/user-management.spec.ts`: module-scoped `RUN_EPOCH` / `CREATED_EMAIL`; `afterAll` finds the created `public.users.id`, deletes that user's `audit_logs` rows (`entity_type='user'` + `entity_id=id` — the table has no FK/cascade, so these outlive `deleteUser`), then calls `auth.admin.deleteUser(id)`. The create timeout cause remains the `withRateLimit` immutable-header bug fixed below; status checks keep exact `Active` / `Inactive` with 30 s assertion budgets for the unset-Upstash fail-open stall. The admin-role step asserts the dual-approval toast and NOTHING else — the earlier accepted-500 branch is deleted and its root cause is repaired by migration `20260912000001` below. The status loop runs reactivate → deactivate because the deployed create-user v8 creates accounts `is_active=false` (observed, below).
-- `frontend/tests/e2e/mou-create.spec.ts`: module-scoped `RUN_EPOCH` / `UNIQUE_TITLE`; `afterAll` deletes `mou_notification_queue` then `mous` by created title. The final repair clicks the real submit label, `Create an MoU`.
+- `frontend/tests/e2e/mou-create.spec.ts`: the create test assigns the run's title to a module-level `let` INSIDE the test (Retry-a5, same worker-collision guard); `afterAll` deletes `mou_notification_queue`, then `mous`, then the `public.audit_log` rows the `audit_mous` trigger wrote for those ids (`entity_type='mous'`, INSERT- and DELETE-trigger rows both — Retry-a5), by created title. The final repair clicks the real submit label, `Create an MoU`.
 - `supabase/functions/_shared/rate-limiter.ts`: only the three immutable `req.headers.set(...)` mutations and their comment were removed.
 - `supabase/migrations/20260911000009_p102_users_select_platform_admin.sql`: only the idempotent `users_select_platform_admin` SELECT policy on `public.is_platform_admin(auth.uid())` was added.
 - `supabase/migrations/20260912000001_p102_pending_role_approvals_requester_id.sql` (retry 13, this attempt): aligns `public.pending_role_approvals` to what the deployed `assign-role` inserts — adds `requester_id`, syncs it with `requested_by` in a BEFORE trigger, drops the NOT NULL on `reason`. Root-cause evidence below.
@@ -387,8 +387,15 @@ Report `test-results/pw-reaped-cd31760beb10fe8e3fbf76d18c625a49.json` (startTime
 `2026-09-12T00:50:51.464Z`): `expected=5 unexpected=0 skipped=0 flaky=0`. Teardown stderr (from
 the archived report):
 `[97-01 teardown] prefix=e2e-97-01-elected-official-1789174256659 persons_deleted=1 queue_deleted=1 dossiers_deleted=1`.
-`queue_deleted=1` proves the census is a measurement, not a blind instrument: the run created
-exactly one queue row (one dossier create) and the teardown deleted it.
+`queue_deleted=1` proves the census is a measurement, not a blind instrument. CORRECTION
+(recorded in Retry-a5 after the review): the sentence that stood here — "the run created exactly
+one queue row (one dossier create)" — was FALSE. The archived report for this run
+(`.pw-reports/2026-09-12T00-51-22-401Z-pw-reaped-cd31760beb10fe8e3fbf76d18c625a49.json`) shows
+TWO teardown executions and TWO dossier creates: workers 0 and 1 both drew epoch 1789174256659
+(module-scope `Date.now()`), worker 0's afterAll deleted worker 1's in-flight dossier while the
+create was still running (`persons_deleted=0 queue_deleted=1 dossiers_deleted=1`), and the
+mutation's `retry: 1` then created a second dossier — the source of that run's two
+`dossier_owners` orphans. The guard that removes this class is Retry-a5's fix 3.
 
 ### FE oracle, rerun verbatim against the final tree
 
@@ -412,6 +419,119 @@ dual-approval assertion. Teardown stderr (from the archived report):
 `[mou-create teardown] title=E2E MoU 1789174348339 queue_deleted=1 mous_deleted=1`,
 `[user-management teardown] email=e2e-1789174350339@example.test id=ee8d40ff-3dd4-424b-9453-a101968a70e3 audit_logs_deleted=5`,
 `[user-management teardown] email=e2e-1789174350339@example.test accounts_deleted=1`.
+
+
+## Retry-a5 (this attempt): dossier_owners + audit_log coverage, and the cross-worker epoch collision
+
+Review findings (three materials): (1) the EO teardown left `dossier_owners` rows orphaned;
+(2) mou-create left `public.audit_log` rows written by the `audit_mous` trigger; (3) the
+module-scope `RUN_EPOCH` collided across workers spawned in the same millisecond, so a sibling
+worker's afterAll could delete the create test's in-flight rows (observed in the 00:51 EO run and
+the 01:01 FE run), and this SUMMARY misreported the run where it happened.
+
+### Fix 1 — EO teardown now deletes dossier_owners
+
+`dossiers-create` (`supabase/functions/dossiers-create/index.ts:284`) inserts
+`dossier_owners {dossier_id, user_id, role_type:'owner'}` right after the dossier. Live staging
+schema (2026-09-12T01:15Z): columns `dossier_id, user_id, assigned_at, role_type` — the table's
+only FK is `user_id -> auth.users`; `dossier_id` has NO FK and no cascade, so the prior teardown
+orphaned one row per green run (14 orphans total on staging at the probe, one per recorded green
+EO run minute plus two from the 00:51 collision run — matching the reviewer's census). Fix: in
+the afterAll, `dossier_owners delete ... in('dossier_id', ids)` between the queue delete and the
+dossiers delete.
+
+### Fix 2 — mou-create teardown now deletes audit_log
+
+The staging trigger `audit_mous` (AFTER INSERT/UPDATE/DELETE on `mous`, running
+`public.audit_trigger_function`; verified live in `pg_trigger` 2026-09-12T01:15Z) writes a
+`public.audit_log` row (`entity_type='mous'`, `entity_id=<mou id>`) when the MoU is created AND
+another when the teardown deletes it. Live schema: `audit_log(id, tenant_id, entity_type,
+entity_id, action, user_id, timestamp, ...)` — note the time column is `timestamp`, NOT
+`created_at`, so the plan's census keyed on `created_at` cannot see this class; and `audit_log`
+is a DIFFERENT table from user-management's `audit_logs`. At the probe: 32 `entity_type='mous'`
+rows total, 29 written since 2026-09-11T18:00Z — an INSERT+DELETE pair per recorded run title,
+matching the reviewer. Fix: after the `mous` delete (ordering matters — the DELETE trigger writes
+its own row), `audit_log delete ... eq('entity_type','mous').in('entity_id', ids)`.
+
+### Fix 3 — the epoch is assigned inside the creating test, not at module scope
+
+Both configs set `fullyParallel: true`, so every worker that runs any test in a file also runs
+that file's `afterAll`, and each worker evaluates the module afresh — but workers spawned in the
+same millisecond draw the SAME `Date.now()`. The 00:51 EO run recorded worker 0's afterAll
+(nothing created) deleting worker 1's in-flight dossier; the 01:01 FE run recorded the mou-create
+and user-management workers sharing epoch 1789174872429. Fix (97-01 and mou-create): a
+module-level `let` assigned ONLY inside the creating test, with the afterAll returning early when
+it is null — a worker that never ran the create test deletes nothing. user-management keeps its
+module-scope epoch: its file holds exactly ONE test, so the only worker that runs its afterAll is
+the creator's own, and its prefix (an email) cannot collide with mou-create's (a title).
+
+### EO oracle, rerun verbatim after the repairs
+
+Command: the plan's EO `oracle: command` block verbatim, followed by supplementary censuses
+(`dossier_owners` by `assigned_at`, orphan total) from a timestamp taken immediately before the run.
+
+```
+supplementary_window_start=2026-09-12T01:16:50Z
+P102-07-EO wrapper_rc=0 passed=5 failed=0 rows_left_from_this_run=0 expected passed=5 failed=0 rows_left=0
+PASS eo-teardown
+ORACLE_EXIT=0
+dossier_owners_rows_since_run_start=0
+dossier_owners_orphans_total=14   (unchanged by this run — no new rows)
+```
+
+Report `test-results/pw-reaped-e12b44953cea83c7ec44afc2d9e06071.json` (startTime
+2026-09-12T01:16:50Z): `expected=5 unexpected=0 skipped=0 flaky=0`. Teardown stderr:
+`[97-01 teardown] prefix=e2e-97-01-elected-official-1789175822414 persons_deleted=1 queue_deleted=1 owners_deleted=1 dossiers_deleted=1`.
+Worker spread (fix 3 proof): five tests across workers 0 (sidebar, hub card, hub click) and 1
+(compare, create); exactly ONE `[97-01 teardown]` execution — worker 0's afterAll returned on the
+null prefix and deleted nothing.
+
+### FE oracle, rerun verbatim after the repairs
+
+Command: the plan's FE `oracle: command` block verbatim, followed by supplementary censuses
+(`audit_log` mous rows by `"timestamp"`, `audit_logs` user rows by `created_at`) from a timestamp
+taken immediately before the run. A 12 s gap after the EO run let its webServer release :5173.
+
+```
+supplementary_window_start=2026-09-12T01:17:54Z
+P102-07-FE wrapper_rc=0 passed=3 failed=0 accounts_left_from_this_run=0 mous_left_from_this_run=0 expected passed=3 failed=0 accounts_left=0 mous_left=0
+PASS fe-teardown
+ORACLE_EXIT=0
+audit_log_mous_rows_since_run_start=0
+audit_logs_user_rows_since_run_start=0
+```
+
+Report `frontend/test-results/pw-reaped-a0ba9ffceb481164869e075a8081a24f.json` (startTime
+2026-09-12T01:18:02Z, actualWorkers=2): `expected=3 unexpected=0 skipped=0 flaky=0`. Teardown
+stderr: `[mou-create teardown] title=E2E MoU 1789175883650 queue_deleted=1 mous_deleted=1
+audit_log_deleted=2` — two, because the audit_mous trigger wrote one row for the INSERT and one
+for the teardown's own DELETE, and both are gone (the post-run census reads 0). Also
+`[user-management teardown] email=e2e-1789175884144@example.test id=9dea96df-894b-460c-8d8d-50c3915216dc audit_logs_deleted=5`
+and `accounts_deleted=1`. Worker spread (fix 3 proof): the mou create test ran in worker 0, the
+mou AR test and user-management in worker 1; exactly ONE `[mou-create teardown]` execution —
+worker 1's afterAll returned on the null title and deleted nothing while the create test's MoU
+was still in flight.
+
+### Static checks, rerun after the repairs
+
+Command: `pnpm exec eslint tests/e2e/97-elected-officials-reachable.spec.ts frontend/tests/e2e/mou-create.spec.ts && git diff --check`
+
+```
+LINT_OK
+```
+
+Command: `git diff -U0 cfefbdd2597e -- tests/e2e/97-elected-officials-reachable.spec.ts frontend/tests/e2e/user-management.spec.ts frontend/tests/e2e/mou-create.spec.ts | grep -E "^[+-].*(test|describe)\(" || echo NO_TITLE_CHANGES`
+
+```
+NO_TITLE_CHANGES
+```
+
+### Residue left for the historical-cleanup lane
+
+The 14 pre-existing `dossier_owners` orphans, the 32 `audit_log` mous rows, and the 88
+`embedding_update_queue` orphans predate this attempt's runs; each was counted live at the
+2026-09-12T01:15Z probe and none grew during the oracle runs above. They belong to the same
+historical-cleanup lane as 102-06's rows, not to this teardown contract.
 
 ## Static checks
 
