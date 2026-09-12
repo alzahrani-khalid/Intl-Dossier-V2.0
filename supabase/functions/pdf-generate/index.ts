@@ -2,8 +2,12 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 // @ts-ignore: pdfkit is a CommonJS module without type declarations
 import PDFDocument from 'npm:pdfkit@0.15.2';
+// @ts-ignore: bidi-js ships no type declarations
+import bidiFactory from 'npm:bidi-js@1.1.0';
 import { Buffer } from 'node:buffer';
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
+
+const bidi = bidiFactory();
 
 interface AfterActionRecord {
   id: string;
@@ -65,10 +69,11 @@ async function verifyStepUpMFA(supabase: any, token: string): Promise<boolean> {
 }
 
 // Amiri covers Arabic (including Arabic-Indic digits) and Latin, so a single embedded
-// TTF renders both locales; pdfkit subsets it into the PDF.
+// TTF renders both locales; pdfkit subsets it into the PDF. Both URLs are pinned to the
+// immutable commit of the Amiri 1.001 tag (7232342a); the raw/master ref 404s.
 const ARABIC_FONT_URLS = [
-  'https://cdn.jsdelivr.net/gh/aliftype/amiri@1.001/fonts/Amiri-Regular.ttf',
-  'https://github.com/aliftype/amiri/raw/master/fonts/Amiri-Regular.ttf',
+  'https://cdn.jsdelivr.net/gh/aliftype/amiri@7232342a5a4bb934ce284039a4f55ac9ce4995a0/fonts/Amiri-Regular.ttf',
+  'https://raw.githubusercontent.com/aliftype/amiri/7232342a5a4bb934ce284039a4f55ac9ce4995a0/fonts/Amiri-Regular.ttf',
 ];
 
 let arabicFontPromise: Promise<Buffer> | null = null;
@@ -95,19 +100,55 @@ function loadArabicFont(): Promise<Buffer> {
 
 const ARABIC_CHAR_RE = /[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻿]/;
 
-// pdftotext reverses any RTL ActualText span, so the span carries the
-// char-reversed line and extraction yields the logical-order string.
+// Invisible bidi control characters emitted by Intl date formatting (e.g. the RLM
+// runs inside ar-SA dates). They have no glyph in Amiri, so strip them before layout;
+// bidi-js re-derives the ordering below. Isolate characters (U+2066..U+2069) are
+// kept at this stage because the template wraps the ISO timestamp in a first-strong
+// isolate to keep it intact inside RTL lines; ISOLATE_RE removes them from the
+// reordered output instead.
+const BIDI_CONTROL_RE = /[\u061C\u200E\u200F\u202A-\u202E]/g;
+const ISOLATE_RE = /[\u2066-\u2069]/g;
+
+// UTF-16BE hex with BOM, code-point safe (surrogate pairs for astral characters).
 function toActualTextHex(text: string): string {
   let hex = 'FEFF';
-  const reversed = [...text].reverse();
-  for (const char of reversed) {
-    hex += char.charCodeAt(0).toString(16).toUpperCase().padStart(4, '0');
+  for (const char of text) {
+    const cp = char.codePointAt(0) ?? 0;
+    if (cp > 0xffff) {
+      const hi = 0xd800 + ((cp - 0x10000) >> 10);
+      const lo = 0xdc00 + ((cp - 0x10000) & 0x3ff);
+      hex += hi.toString(16).toUpperCase().padStart(4, '0') + lo.toString(16).toUpperCase().padStart(4, '0');
+    } else {
+      hex += cp.toString(16).toUpperCase().padStart(4, '0');
+    }
   }
   return hex;
 }
 
-// Generate a structurally valid PDF (xref/trailer, embedded subset fonts) whose
-// Arabic lines stay extractable in logical order by pdftotext.
+// pdfkit/fontkit shapes each Arabic-script run and then reverses it internally
+// (Arabic letters and Arabic-Indic digits alike), but keeps the run order of the
+// input string. So: reorder the logical line to UAX#9 visual order with bidi-js,
+// then hand pdfkit each Arabic-script token char-reversed so its internal flip
+// lands the shaped glyphs in correct visual order — words right-to-left, digit
+// runs reading left-to-right. Returns the visual string alongside: it is exactly
+// the glyph sequence drawn on the page, and it is what the marked-content
+// ActualText span carries so text extraction matches the rendered page.
+function toVisualOrder(line: string): { visual: string; pdfkitInput: string } {
+  const levels = bidi.getEmbeddingLevels(line, 'rtl');
+  const visual = bidi.getReorderedString(line, levels).replace(ISOLATE_RE, '');
+  const pdfkitInput = visual
+    .split(/(\s+)/)
+    .filter(part => part.length > 0)
+    .map(part => (ARABIC_CHAR_RE.test(part) ? [...part].reverse().join('') : part))
+    .join('');
+  return { visual, pdfkitInput };
+}
+
+// Generate a structurally valid PDF (xref/trailer, embedded subset fonts). Arabic
+// lines are reordered to UAX#9 visual order before drawing so the rendered page
+// reads correctly (words right-to-left, Arabic-Indic digit runs left-to-right),
+// and the ActualText span carries that same visual string so extraction matches
+// the rendered page.
 async function generatePDFContent(
   record: AfterActionRecord,
   language: string,
@@ -134,7 +175,7 @@ async function generatePDFContent(
   doc.fontSize(fontSize);
 
   for (const rawLine of content.split('\n')) {
-    const line = rawLine.replace(/\s+$/, '');
+    const line = rawLine.replace(/\s+$/, '').replace(BIDI_CONTROL_RE, '');
     if (y > pageHeight - margin) {
       doc.addPage();
       y = margin;
@@ -145,10 +186,18 @@ async function generatePDFContent(
     }
     if (ARABIC_CHAR_RE.test(line)) {
       doc.font(arabicFont);
-      const width = doc.widthOfString(line);
+      const ordered = toVisualOrder(line);
+      // A trailing whitespace run at the visual end of the line keeps bidi-aware
+      // text extractors from collapsing the last inter-word space at the line
+      // seam (UAX#9 resets whitespace at the line end to the paragraph level).
+      if (!/\s$/.test(ordered.visual)) {
+        ordered.visual += '  ';
+        ordered.pdfkitInput += '  ';
+      }
+      const width = doc.widthOfString(ordered.pdfkitInput);
       const x = Math.max(margin, pageWidth - margin - width);
-      doc.addContent(`/Span <</ActualText <${toActualTextHex(line)}>>> BDC`);
-      doc.text(line, x, y, { lineBreak: false });
+      doc.addContent(`/Span <</ActualText <${toActualTextHex(ordered.visual)}>>> BDC`);
+      doc.text(ordered.pdfkitInput, x, y, { lineBreak: false });
       doc.addContent('EMC');
     } else {
       doc.font('Helvetica');
@@ -291,7 +340,7 @@ ${i + 1}. ${f.description}
 ${record.notes ? `\nملاحظات:\n${record.notes}` : ''}
 
 ---
-تم الإنشاء: ${new Date().toISOString()}
+تم الإنشاء: \u2066${new Date().toISOString()}\u2069
 ${isConfidential ? '\n*** سري - عدم التوزيع ***' : ''}
 `;
 
