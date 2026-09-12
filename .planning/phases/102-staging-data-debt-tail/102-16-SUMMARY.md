@@ -122,8 +122,8 @@ The unrestricted run returned the following population, and an `awk` count over 
 table returned the zero population:
 
 ```text
-ROUTE population: 203 full paths in FileRoutesByFullPath (186 distinct after trailing-slash normalisation) — derived at run time, never frozen: this phase deletes routes by design (D-08).
-ZERO_INBOUND=95 of 186 table rows
+ROUTE population: 202 full paths in FileRoutesByFullPath (185 distinct after trailing-slash normalisation) — derived at run time, never frozen: this phase deletes routes by design (D-08).
+ZERO_INBOUND=94 of 185 table rows
 ```
 
 The same run printed all 14 named routes with `LIVE 0 (none)` and these positive controls verbatim:

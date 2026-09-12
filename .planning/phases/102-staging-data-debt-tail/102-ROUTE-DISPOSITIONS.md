@@ -7,8 +7,8 @@ measured: 2026-09-12
 
 # Route dispositions for the 14 named zero-inbound routes
 
-At HEAD, `scripts/inbound-link-classify.mjs` derives 203 full route-tree paths, 186 distinct paths
-after trailing-slash normalization, and 95 zero-inbound rows. Each route below has `LIVE=0`; the
+At HEAD, `scripts/inbound-link-classify.mjs` derives 202 full route-tree paths, 185 distinct paths
+after trailing-slash normalization, and 94 zero-inbound rows. Each route below has `LIVE=0`; the
 classifier’s known-linked, boundary, and demo-only pins all pass. Counts in `reads` were re-derived
 from staging project `zkrcjzdemdmwhearhfgg` in one read-only `psql` run.
 
@@ -35,6 +35,6 @@ contract is unknowable from this repository, so deletion would be a product act;
 ## Re-derived population
 
 ```text
-ROUTE population: 203 full paths in FileRoutesByFullPath (186 distinct after trailing-slash normalisation) — derived at run time, never frozen: this phase deletes routes by design (D-08).
-ZERO_INBOUND=95 of 186 table rows
+ROUTE population: 202 full paths in FileRoutesByFullPath (185 distinct after trailing-slash normalisation) — derived at run time, never frozen: this phase deletes routes by design (D-08).
+ZERO_INBOUND=94 of 185 table rows
 ```
