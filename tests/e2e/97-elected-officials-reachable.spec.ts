@@ -44,9 +44,20 @@
 // blocked or stubbed — a green here means the real path resolved.
 import { test, expect, type Page } from '@playwright/test'
 import LoginPage from './support/pages/LoginPage'
+import { getSupabaseAdmin } from './support/helpers/supabase-admin'
 
 const email = process.env.TEST_USER_EMAIL ?? ''
 const password = process.env.TEST_USER_PASSWORD ?? ''
+
+// TEARDOWN RECORD (DATA-01, 102-07 / D-07). The row this file writes is named from an epoch
+// assigned ONLY inside the create test, so the afterAll below deletes exactly this run's rows and
+// nothing older (the historical e2e-97-01 rows are 102-06's). The assignment lives inside the
+// creating test — NOT at module scope — because fullyParallel spreads this file's tests across
+// workers that each evaluate this module, and workers spawned in the same millisecond draw the
+// SAME Date.now(): the 2026-09-12T00:51Z run recorded a worker whose afterAll (epoch set at
+// module scope, nothing created by it) DELETING another worker's in-flight dossier mid-test. A
+// worker that never ran the create test leaves this null and its afterAll deletes nothing.
+let eoNamePrefix: string | null = null
 
 // TIMING. One budget for every settle in this file, matching 95-monitoring-mounts.spec.ts.
 // Generous enough to cover the query client's retry ladder so a slow-but-correct settle is not
@@ -165,6 +176,68 @@ const assertNoInternalLeak = async (page: Page): Promise<void> => {
 
 test.describe('NAV-01 Elected Officials is reachable on all four exposure surfaces', () => {
   test.use({ viewport: DESKTOP_1400 })
+
+  // TEARDOWN (DATA-01 clause 2). Deletes what this worker's run created, by its own prefix, through
+  // the service-role client (`getSupabaseAdmin`: SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY from
+  // .env.test; it THROWS when either is unset, so the teardown is never silently skipped).
+  // `persons` is the extension row of the `dossiers` row, so it goes first.
+  test.afterAll(async () => {
+    const prefix = eoNamePrefix
+    if (prefix === null) {
+      // This worker never ran the create test (fullyParallel gives every worker its own module
+      // instance); it created nothing, so there is nothing of ITS OWN to delete. Deleting by a
+      // module-scope epoch here is exactly what deleted a sibling worker's in-flight dossier.
+      return
+    }
+    const admin = getSupabaseAdmin()
+    const { data, error } = await admin.from('dossiers').select('id').like('name_en', `${prefix}%`)
+    if (error !== null) {
+      throw new Error(`97-01 teardown: dossier lookup failed: ${error.message}`)
+    }
+    const ids = ((data ?? []) as { id: string }[]).map((row) => row.id)
+    if (ids.length === 0) {
+      return
+    }
+    const persons = await admin.from('persons').delete({ count: 'exact' }).in('id', ids)
+    if (persons.error !== null) {
+      throw new Error(`97-01 teardown: persons delete failed: ${persons.error.message}`)
+    }
+    // The dossier INSERT fires trg_queue_dossier_embedding (20260111500001) and
+    // trg_dossiers_embedding_update (20260122000001), each enqueueing an unprocessed
+    // embedding_update_queue row keyed entity_type='dossiers' + entity_id=dossier id (the
+    // partial unique index dedupes them to one row per create). The table is polymorphic —
+    // no FK to dossiers, no cascade — and its processor is not running on staging, so the
+    // row persists forever unless deleted here. Both triggers fire on INSERT OR UPDATE
+    // only, never DELETE, so removing it before the dossier delete leaves no successor.
+    const queue = await admin
+      .from('embedding_update_queue')
+      .delete({ count: 'exact' })
+      .eq('entity_type', 'dossiers')
+      .in('entity_id', ids)
+    if (queue.error !== null) {
+      throw new Error(`97-01 teardown: embedding queue delete failed: ${queue.error.message}`)
+    }
+    // dossiers-create (supabase/functions/dossiers-create/index.ts:284) inserts a
+    // dossier_owners row {dossier_id, user_id, role_type:'owner'} right after the dossier. The
+    // table's only FK is user_id -> auth.users; dossier_id has NO FK and no cascade, so deleting
+    // the dossier alone orphans it. It must go before the dossier delete, keyed by dossier_id.
+    const owners = await admin
+      .from('dossier_owners')
+      .delete({ count: 'exact' })
+      .in('dossier_id', ids)
+    if (owners.error !== null) {
+      throw new Error(`97-01 teardown: dossier_owners delete failed: ${owners.error.message}`)
+    }
+    const dossiers = await admin.from('dossiers').delete({ count: 'exact' }).in('id', ids)
+    if (dossiers.error !== null) {
+      throw new Error(`97-01 teardown: dossiers delete failed: ${dossiers.error.message}`)
+    }
+    console.warn(
+      `[97-01 teardown] prefix=${prefix} ` +
+        `persons_deleted=${persons.count} queue_deleted=${queue.count} ` +
+        `owners_deleted=${owners.count} dossiers_deleted=${dossiers.count}`,
+    )
+  })
 
   test('sidebar row — admin user (the only session these specs have), desktop 1400', async ({ page }) => {
     await signInInline(page)
@@ -310,10 +383,12 @@ test.describe('NAV-01 Elected Officials is reachable on all four exposure surfac
     // react-hook-form `name` attribute because the required labels render as plain text rather than
     // a `<label for>`, so those inputs carry no accessible name to target.
     //
-    // Six sequential steps behind an inline sign-in do not fit the 30s default budget.
+    // The live create response is staging-backed, so keep a whole-flow budget while every step
+    // still has its own settle assertion. Do not mask a stuck wizard by raising this again.
     test.setTimeout(120_000)
 
-    const nameEn = `e2e-97-01-elected-official-${Date.now()}`
+    eoNamePrefix = `e2e-97-01-elected-official-${Date.now()}`
+    const nameEn = eoNamePrefix
     const nameAr = 'مسؤول منتخب'
 
     await signInInline(page)
@@ -344,8 +419,9 @@ test.describe('NAV-01 Elected Officials is reachable on all four exposure surfac
     await page.locator('input[name="term_start"]').fill('2026-01-01')
     await nextButton.click()
 
-    // Step 4 — Review and submit.
-    await page.getByRole('button', { name: 'Create Dossier', exact: true }).click()
+    // Step 4 — Review and submit. The shared shell renders sentence-case "Create dossier";
+    // exact Title Case was the stuck locator, not a slow wizard.
+    await page.getByRole('button', { name: 'Create dossier', exact: true }).click()
 
     // The behavioural claim: the create path LANDS somewhere real. A create affordance that
     // submits into a 500 is a nav entry pointing at a known-broken surface.

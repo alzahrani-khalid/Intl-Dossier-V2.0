@@ -24,11 +24,69 @@
  */
 
 import { test, expect } from '@playwright/test'
+import { createClient } from '@supabase/supabase-js'
+
+// TEARDOWN RECORD (DATA-01, 102-07 / D-07). The account the test creates is named from this
+// module-scoped epoch and the afterAll deletes exactly that email's account.
+const RUN_EPOCH = Date.now()
+const CREATED_EMAIL = `e2e-${RUN_EPOCH}@example.test`
 
 test.describe('User Management — D-10 loop', () => {
+  // TEARDOWN (DATA-01 clause 2). Deletes the account this run created, through a service-role
+  // client built from SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY (.env.test, loaded by
+  // frontend/playwright.config.ts). A missing key THROWS: the teardown is never silently skipped.
+  // public.users.id IS auth.users.id (FK + the on_auth_user_created trigger), so the email lookup
+  // names the auth account, and auth.admin.deleteUser removes it (public.users cascades).
+  test.afterAll(async () => {
+    const url = process.env.SUPABASE_URL ?? ''
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? ''
+    if (url === '' || serviceRoleKey === '') {
+      throw new Error('SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY missing from .env.test')
+    }
+    const admin = createClient(url, serviceRoleKey, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    })
+    const { data, error } = await admin.from('users').select('id').eq('email', CREATED_EMAIL)
+    if (error !== null) {
+      throw new Error(`user-management teardown: account lookup failed: ${error.message}`)
+    }
+    let deleted = 0
+    for (const { id } of (data ?? []) as { id: string }[]) {
+      // audit_logs has no FK/cascade to auth.users, so it outlives deleteUser. Every audit row
+      // this run wrote (user_created, role_changed, role_change_requested, user_reactivated,
+      // user_deactivated) is keyed entity_type='user' + entity_id=<created user id>; the
+      // create-user entry also carries the email inside new_values. Delete them BEFORE the
+      // auth account goes away so the run leaves zero rows of its own creation.
+      const audit = await admin
+        .from('audit_logs')
+        .delete({ count: 'exact' })
+        .eq('entity_type', 'user')
+        .eq('entity_id', id)
+      if (audit.error !== null) {
+        throw new Error(
+          `user-management teardown: audit_logs delete failed: ${audit.error.message}`,
+        )
+      }
+      const { error: deleteError } = await admin.auth.admin.deleteUser(id)
+      if (deleteError !== null) {
+        throw new Error(`user-management teardown: deleteUser failed: ${deleteError.message}`)
+      }
+      deleted += 1
+      console.warn(
+        `[user-management teardown] email=${CREATED_EMAIL} id=${id} audit_logs_deleted=${audit.count}`,
+      )
+    }
+    console.warn(`[user-management teardown] email=${CREATED_EMAIL} accounts_deleted=${deleted}`)
+  })
+
   test('create → list → detail → role/status, plus IDOR smoke and AR pass', async ({ page }) => {
-    const epoch = Date.now()
-    const email = `e2e-${epoch}@example.test`
+    // create-user, reactivate-user and deactivate-user each wait roughly 15 s for the unset
+    // Upstash rate limiter to fail open, so their three live edge calls exceed Playwright's 30 s
+    // default even when every request succeeds.
+    test.setTimeout(120_000)
+
+    const epoch = RUN_EPOCH
+    const email = CREATED_EMAIL
     const username = `e2e_${epoch}`
     const fullName = 'E2E Test User'
 
@@ -41,18 +99,24 @@ test.describe('User Management — D-10 loop', () => {
     await page.getByLabel('Username').fill(username)
     await page.getByLabel('Full Name').fill(fullName)
     // Role picker (Radix Select) — pick Editor.
-    await page.getByRole('combobox').click()
+    await page.locator('form').getByRole('combobox').click()
     await page.getByRole('option', { name: 'Editor' }).click()
     await page.getByLabel('Clearance level').fill('2')
 
     await page.getByRole('button', { name: 'Create user' }).click()
 
     // On success the page navigates back to the list.
+    //
+    // 102-07: this wait used to exceed 30 s. `withRateLimit` called `req.headers.set` on Deno's
+    // immutable incoming request headers, so create-user threw, answered 500 with no CORS header,
+    // and the page never navigated. The fix deletes those three lines from
+    // supabase/functions/_shared/rate-limiter.ts, deployed as create-user v8 (2026-09-11). The
+    // create now answers 201 after ~16 s; the limiter still stalls because UPSTASH_* is unset.
     await page.waitForURL(/\/users\/?$/)
 
-    // Created users are is_active:false; the DEFAULT filter is "all", so the row
-    // is visible. Search by the unique email (row-1-by-created_at is unreliable —
-    // assumption A5) to make the assertion deterministic.
+    // Created users are is_active:false; the DEFAULT filter is "all", and the platform-admin
+    // SELECT policy keeps inactive accounts visible to administrators. Search by the unique email
+    // (row-1-by-created_at is unreliable — assumption A5) to make the assertion deterministic.
     await page.getByPlaceholder(/search users/i).fill(email)
     await expect(page.getByText(email).first()).toBeVisible()
 
@@ -67,28 +131,41 @@ test.describe('User Management — D-10 loop', () => {
     await expect(page.getByText(username).first()).toBeVisible()
 
     // Change role editor → viewer (immediate response).
-    await page.getByRole('combobox').click()
+    const rolePicker = page
+      .getByRole('button', { name: 'Assign Role' })
+      .locator('..')
+      .getByRole('combobox')
+    await rolePicker.click()
     await page.getByRole('option', { name: 'Viewer' }).click()
     await page.getByRole('button', { name: 'Assign Role' }).click()
     await expect(page.getByText('Role assigned successfully')).toBeVisible()
     await expect(page.getByText('Viewer').first()).toBeVisible()
 
     // Attempt an admin grant → dual-approval response must be surfaced, not applied.
-    await page.getByRole('combobox').click()
+    // (102-07: the approval-table schema mismatch that made this step answer 500
+    // APPROVAL_CREATION_FAILED is repaired by migration
+    // 20260912000001_p102_pending_role_approvals_requester_id.sql — a 500 here is a red,
+    // never an accepted branch.)
+    await rolePicker.click()
     await page.getByRole('option', { name: 'Admin' }).click()
     await page.getByRole('button', { name: 'Assign Role' }).click()
     await expect(page.getByText('Admin role assignment requires dual approval')).toBeVisible()
     // Role was NOT applied — the overview badge still reads Viewer.
     await expect(page.getByText('Viewer').first()).toBeVisible()
 
-    // Deactivate (with confirm) → status flips to Inactive.
+    // New accounts start inactive — observed on staging 2026-09-11 against the deployed
+    // create-user v8 (201 in ~15 s; public.users.is_active=false on the fresh row) — so the
+    // detail page offers "Reactivate User" first and the status loop runs reactivate →
+    // deactivate. First reactivate → status flips to Active.
+    await page.getByRole('button', { name: 'Reactivate User' }).click()
+    // The unset Upstash limiter takes roughly 15 s to fail open before onSuccess updates the badge.
+    await expect(page.getByText('Active', { exact: true })).toBeVisible({ timeout: 30_000 })
+
+    // Then deactivate (with confirm) → status returns to Inactive.
     await page.getByRole('button', { name: 'Deactivate User' }).click()
     await page.getByRole('button', { name: 'Deactivate', exact: true }).click()
-    await expect(page.getByText('Inactive')).toBeVisible()
-
-    // Reactivate → status restored to Active.
-    await page.getByRole('button', { name: 'Reactivate User' }).click()
-    await expect(page.getByText('Active')).toBeVisible()
+    // test.setTimeout does not extend assertion timeouts; allow the same limiter stall here.
+    await expect(page.getByText('Inactive', { exact: true })).toBeVisible({ timeout: 30_000 })
 
     // ---- 3. IDOR smoke (T-86-12) -------------------------------------------
     const supabaseUrl = process.env.VITE_SUPABASE_URL
