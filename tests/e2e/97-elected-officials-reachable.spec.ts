@@ -195,13 +195,29 @@ test.describe('NAV-01 Elected Officials is reachable on all four exposure surfac
     if (persons.error !== null) {
       throw new Error(`97-01 teardown: persons delete failed: ${persons.error.message}`)
     }
+    // The dossier INSERT fires trg_queue_dossier_embedding (20260111500001) and
+    // trg_dossiers_embedding_update (20260122000001), each enqueueing an unprocessed
+    // embedding_update_queue row keyed entity_type='dossiers' + entity_id=dossier id (the
+    // partial unique index dedupes them to one row per create). The table is polymorphic —
+    // no FK to dossiers, no cascade — and its processor is not running on staging, so the
+    // row persists forever unless deleted here. Both triggers fire on INSERT OR UPDATE
+    // only, never DELETE, so removing it before the dossier delete leaves no successor.
+    const queue = await admin
+      .from('embedding_update_queue')
+      .delete({ count: 'exact' })
+      .eq('entity_type', 'dossiers')
+      .in('entity_id', ids)
+    if (queue.error !== null) {
+      throw new Error(`97-01 teardown: embedding queue delete failed: ${queue.error.message}`)
+    }
     const dossiers = await admin.from('dossiers').delete({ count: 'exact' }).in('id', ids)
     if (dossiers.error !== null) {
       throw new Error(`97-01 teardown: dossiers delete failed: ${dossiers.error.message}`)
     }
     console.warn(
       `[97-01 teardown] prefix=${EO_NAME_PREFIX} ` +
-        `persons_deleted=${persons.count} dossiers_deleted=${dossiers.count}`,
+        `persons_deleted=${persons.count} queue_deleted=${queue.count} ` +
+        `dossiers_deleted=${dossiers.count}`,
     )
   })
 
