@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import i18n from '@/i18n'
 import { TaskDetailPage } from '../../../pages/TaskDetailPage'
 
 export const Route = createFileRoute('/_protected/tasks/$id')({
@@ -16,10 +17,12 @@ export const Route = createFileRoute('/_protected/tasks/$id')({
 
   // Error handling for invalid routes
   errorComponent: ({ error }) => {
+    // The rejection is internal — console only (D-08); the route renders i18n copy.
+    console.error('Task route error:', error)
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4">
         <h1 className="text-2xl font-bold text-danger">Error Loading Task</h1>
-        <p className="text-ink-muted">{error.message}</p>
+        <p className="text-ink-muted">{i18n.t('common:errors.queryFailed.description')}</p>
       </div>
     )
   },

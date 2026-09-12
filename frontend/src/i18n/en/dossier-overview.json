@@ -41,7 +41,8 @@
 
   "error": {
     "title": "Error loading dossier overview",
-    "description": "Failed to load the dossier overview. Please try again."
+    "description": "Failed to load the dossier overview. Please try again.",
+    "invalidId": "Invalid dossier ID"
   },
 
   "dossierType": {
@@ -140,6 +141,31 @@
     "completed": "Completed",
     "cancelled": "Cancelled",
     "overdue": "Overdue"
+  },
+
+  "sourceStatus": {
+    "pending": "Pending",
+    "in_progress": "In progress",
+    "review": "In review",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "overdue": "Overdue",
+    "draft": "Draft",
+    "submitted": "Submitted",
+    "triaged": "Triaged",
+    "assigned": "Assigned",
+    "converted": "Converted",
+    "closed": "Closed",
+    "merged": "Merged",
+    "under_review": "Under review",
+    "approved": "Approved",
+    "published": "Published",
+    "planned": "Planned",
+    "ongoing": "Ongoing",
+    "postponed": "Postponed",
+    "active": "Active",
+    "historical": "Historical",
+    "terminated": "Terminated"
   },
 
   "priority": {

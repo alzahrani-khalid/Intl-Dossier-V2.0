@@ -31,6 +31,7 @@ import {
   BenchmarkPreview,
 } from '@/components/dashboard-widgets'
 import { useWidgetDashboard } from '@/hooks/useWidgetDashboard'
+import { QueryErrorState } from '@/components/error-states/QueryErrorState'
 import { toast } from 'sonner'
 
 /**
@@ -178,6 +179,7 @@ export function CustomDashboardPage() {
   const {
     widgets,
     widgetData,
+    widgetStates,
     isEditMode,
     selectedWidget,
     isLibraryOpen,
@@ -220,6 +222,26 @@ export function CustomDashboardPage() {
     toast.success(t('layoutSaved'))
   }
 
+  // A widget whose query REJECTED is rendered as an explicit failure with its own retry, not
+  // handed to the grid: the grid derives its loading flag from `!data`, so a rejected widget
+  // would sit there as a permanent spinner over an empty body — a failure dressed as pending.
+  const hasFailed = (widget: (typeof widgets)[number]): boolean =>
+    widgetStates[widget.id as string]?.isError ?? false
+  const failedWidgets = widgets.filter(hasFailed)
+  const healthyWidgets = widgets.filter((widget) => !hasFailed(widget))
+
+  // The grid only holds the healthy widgets, so a reorder inside it must re-append the failed
+  // ones — otherwise dragging in edit mode would drop them from the persisted layout.
+  const handleReorder = (reordered: Parameters<typeof reorderWidgets>[0]) => {
+    reorderWidgets(
+      [...reordered, ...failedWidgets].map((widget, index) => ({ ...widget, order: index })),
+    )
+  }
+
+  const visibleFailedWidgets = failedWidgets
+    .filter((widget) => widget.isVisible)
+    .sort((a, b) => a.order - b.order)
+
   return (
     <div className="space-y-6">
       <DashboardHeader
@@ -247,15 +269,36 @@ export function CustomDashboardPage() {
       ) : widgets.length === 0 ? (
         <EmptyState onAddWidget={() => setIsLibraryOpen(true)} t={t} />
       ) : (
-        <WidgetGrid
-          widgets={widgets}
-          widgetData={widgetData}
-          isEditMode={isEditMode}
-          onReorder={reorderWidgets}
-          onRemove={handleRemoveWidget}
-          onSettings={openSettings}
-          onRefresh={refreshWidget}
-        />
+        <>
+          {visibleFailedWidgets.length > 0 && (
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {visibleFailedWidgets.map((widget) => (
+                <div
+                  key={widget.id}
+                  data-testid="widget-error-region"
+                  className="col-span-1 sm:col-span-2 flex flex-col gap-2"
+                >
+                  <span className="text-sm font-medium text-ink truncate">{widget.title}</span>
+                  <QueryErrorState
+                    variant="inline"
+                    onRetry={() => refreshWidget(widget.id as string)}
+                    isRetrying={widgetStates[widget.id as string]?.isRefetching ?? false}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+
+          <WidgetGrid
+            widgets={healthyWidgets}
+            widgetData={widgetData}
+            isEditMode={isEditMode}
+            onReorder={handleReorder}
+            onRemove={handleRemoveWidget}
+            onSettings={openSettings}
+            onRefresh={refreshWidget}
+          />
+        </>
       )}
 
       {/* Widget Library Sheet */}

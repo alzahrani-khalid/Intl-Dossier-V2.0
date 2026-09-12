@@ -81,7 +81,7 @@ export function StepGuidanceBanner({
       <button
         type="button"
         onClick={handleDismiss}
-        aria-label={t('common:dismiss', 'Dismiss')}
+        aria-label={t('common:dismiss')}
         className="absolute end-2 top-2 inline-flex items-center justify-center rounded-md p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring min-h-11 min-w-11 sm:min-h-8 sm:min-w-8"
       >
         <X className="h-4 w-4" />

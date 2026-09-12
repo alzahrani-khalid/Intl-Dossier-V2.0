@@ -14,6 +14,8 @@ test.describe('Elected Official Wizard — happy path', () => {
     adminPage,
     uniqueId,
   }): Promise<void> => {
+    // prettier-ignore
+    test.fixme(true, 'P101-QUAR 31848669722: test red - getByPlaceholder(/Enter name in English/) never resolved on step 1; since 32-02 (bb84eaa24) step 1 is PersonBasicInfoStep (honorific, first and last name) and the basic step also validates last_name_en, last_name_ar and nationality_id, so the four-step flow needs a rewrite that cannot be verified without the E2E_* credentials; log line 1526 of job 94920109119; owner Phase 102')
     const page = adminPage
     const nameEn = uniqueId('e2e-elected-official-en')
     const nameAr = 'مسؤول منتخب'
@@ -81,6 +83,8 @@ test.describe('Elected Official Wizard — happy path', () => {
     adminPage,
     uniqueId,
   }): Promise<void> => {
+    // prettier-ignore
+    test.fixme(true, 'P101-QUAR 31848669722: test red - getByPlaceholder(/Enter name in English/) never resolved on step 1; since 32-02 (bb84eaa24) step 1 is PersonBasicInfoStep (honorific, first and last name) and the basic step also validates last_name_en, last_name_ar and nationality_id, so the four-step flow needs a rewrite that cannot be verified without the E2E_* credentials; log line 1582 of job 94920109119; owner Phase 102')
     const page = adminPage
     const nameEn = uniqueId('e2e-elected-official-ar')
     const nameAr = `تجربة المسؤول ${Date.now()}`
@@ -132,6 +136,8 @@ test.describe('Elected Official Wizard — happy path', () => {
     adminPage,
     uniqueId,
   }): Promise<void> => {
+    // prettier-ignore
+    test.fixme(true, 'P101-QUAR 31848669722: test red - getByPlaceholder(/Enter name in English/) never resolved on step 1; since 32-02 (bb84eaa24) step 1 is PersonBasicInfoStep (honorific, first and last name) and the basic step also validates last_name_en, last_name_ar and nationality_id, so the four-step flow needs a rewrite that cannot be verified without the E2E_* credentials; log line 1638 of job 94920109119; owner Phase 102')
     const page = adminPage
     const nameEn = uniqueId('e2e-elected-official-both-lists')
     const nameAr = 'كلا القائمتين'

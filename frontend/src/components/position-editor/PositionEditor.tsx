@@ -547,7 +547,7 @@ export function PositionEditor({
           </p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowConflictDialog(false)}>
-              {t('common:common.cancel')}
+              {t('common:cancel')}
             </Button>
             <Button onClick={handleConflictReload} className="gap-2">
               <RefreshCw className="size-4" />

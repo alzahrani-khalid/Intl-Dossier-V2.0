@@ -7,7 +7,7 @@
 
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { format } from 'date-fns'
+import { formatDayMonth } from '@/lib/format-date'
 import {
   LineChart,
   Line,
@@ -29,7 +29,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
 import type { EngagementMetrics } from '@/types/analytics.types'
 import { DEFAULT_CHART_COLORS } from '@/types/analytics.types'
-import { AnalyticsPreviewOverlay } from './AnalyticsPreviewOverlay'
 import { useDirection } from '@/hooks/useDirection'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 import { toFormatLocale } from '@/lib/format-locale'
@@ -77,10 +76,6 @@ interface EngagementMetricsChartProps {
   data?: EngagementMetrics
   isLoading?: boolean
   className?: string
-  /** Show preview overlay when no data */
-  showPreview?: boolean
-  /** Callback when user wants to see sample data */
-  onShowSampleData?: () => void
 }
 
 // Token refs (matches DEFAULT_CHART_COLORS pattern in analytics.types.ts)
@@ -94,18 +89,16 @@ export function EngagementMetricsChart({
   data,
   isLoading,
   className,
-  showPreview = true,
-  onShowSampleData,
 }: EngagementMetricsChartProps) {
-  const { t } = useTranslation('analytics')
+  const { t, i18n } = useTranslation('analytics')
   const { isRTL } = useDirection()
   const trendData = useMemo(() => {
     if (!data?.engagementTrend) return []
     return data.engagementTrend.map((point) => ({
       ...point,
-      dateLabel: format(new Date(point.date), 'd MMM'),
+      dateLabel: formatDayMonth(new Date(point.date)),
     }))
-  }, [data?.engagementTrend])
+  }, [data?.engagementTrend, i18n.language])
 
   const typeData = useMemo(() => {
     if (!data?.engagementsByType) return []
@@ -140,15 +133,6 @@ export function EngagementMetricsChart({
   }
 
   if (!data) {
-    if (showPreview) {
-      return (
-        <AnalyticsPreviewOverlay
-          chartType="engagements"
-          onShowSampleData={onShowSampleData}
-          className={className}
-        />
-      )
-    }
     return (
       <Card className={className}>
         <CardHeader>

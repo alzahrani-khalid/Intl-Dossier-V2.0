@@ -8,6 +8,7 @@
  */
 
 import { Component, ErrorInfo, ReactNode } from 'react'
+import { isNotFound } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -50,6 +51,13 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    // A thrown notFound() is router control flow, not a failure: it must reach the router's own
+    // boundary untouched (render() re-throws it below). Reporting it here would file a Sentry
+    // error for every 404 the app renders on purpose.
+    if (isNotFound(error)) {
+      return
+    }
+
     // Log error to console in development
     if (import.meta.env.DEV) {
       console.error('[ErrorBoundary] Caught error:', error)
@@ -97,6 +105,14 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   render() {
+    // TanStack Router signals "no such record" by THROWING notFound(). This boundary is mounted at
+    // routes/__root.tsx:54, INSIDE the router's CatchNotFound, so swallowing the throw here would
+    // render "Something went wrong" for a page that is merely absent. Re-throw so the root
+    // notFoundComponent (routes/__root.tsx:72) receives it. Real errors are unaffected.
+    if (this.state.hasError && isNotFound(this.state.error)) {
+      throw this.state.error
+    }
+
     if (this.state.hasError) {
       // Use custom fallback if provided
       if (this.props.fallback) {
@@ -139,21 +155,16 @@ function ErrorFallback({
 }: ErrorFallbackProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-return (
-    <div
-      className="flex min-h-screen items-center justify-center bg-muted/30 p-4 sm:p-6 lg:p-8"
-    >
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-muted/30 p-4 sm:p-6 lg:p-8">
       <div className="w-full max-w-2xl">
         <Alert variant="destructive" className="mb-6">
           <AlertTriangle className="size-5" />
           <AlertTitle className="mb-2 text-start text-lg sm:text-xl">
-            {t('error.boundary.title', 'Something went wrong')}
+            {t('error.boundary.title')}
           </AlertTitle>
           <AlertDescription className="text-start">
-            {t(
-              'error.boundary.description',
-              'An unexpected error occurred. Please try refreshing the page or return to the home page.',
-            )}
+            {t('error.boundary.description')}
           </AlertDescription>
         </Alert>
 
@@ -161,7 +172,7 @@ return (
         {error && (
           <div className="mb-6 rounded-lg border bg-card p-4 sm:p-6">
             <p className="break-all text-start font-mono text-sm text-destructive sm:text-base">
-              {error.message || t('error.boundary.unknownError', 'Unknown error')}
+              {error.message || t('error.boundary.unknownError')}
             </p>
           </div>
         )}
@@ -170,7 +181,7 @@ return (
         {showDetails && errorInfo && (
           <details className="mb-6 rounded-lg border bg-card p-4 sm:p-6">
             <summary className="mb-2 cursor-pointer text-start text-sm font-medium sm:text-base">
-              {t('error.boundary.technicalDetails', 'Technical Details')}
+              {t('error.boundary.technicalDetails')}
             </summary>
             <pre className="mt-2 overflow-auto rounded bg-muted p-4 text-start text-xs sm:text-sm">
               {errorInfo.componentStack}
@@ -182,11 +193,11 @@ return (
         <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
           <Button onClick={onReset} className=" w-full sm: sm:w-auto" variant="default">
             <RefreshCw className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-            {t('error.boundary.tryAgain', 'Try Again')}
+            {t('error.boundary.tryAgain')}
           </Button>
           <Button onClick={onGoHome} className=" w-full sm: sm:w-auto" variant="outline">
             <Home className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-            {t('error.boundary.goHome', 'Go to Home')}
+            {t('error.boundary.goHome')}
           </Button>
         </div>
       </div>

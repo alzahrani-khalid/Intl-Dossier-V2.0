@@ -18,8 +18,7 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { formatDayFirst } from '@/lib/format-date'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatRelativeTime } from '@/lib/format-date'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import type {
   NotificationsWidgetConfig,
@@ -94,49 +93,21 @@ function getCategoryColor(category: NotificationCategory) {
 }
 
 /**
- * Format relative time for notifications
- */
-function formatRelativeTime(dateString: string, locale: string): string {
-  const date = new Date(dateString)
-  const now = new Date()
-  const diffMs = now.getTime() - date.getTime()
-  const diffMinutes = Math.floor(diffMs / (1000 * 60))
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
-
-  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' })
-
-  if (diffMinutes < 1) {
-    return rtf.format(0, 'second')
-  } else if (diffMinutes < 60) {
-    return rtf.format(-diffMinutes, 'minute')
-  } else if (diffHours < 24) {
-    return rtf.format(-diffHours, 'hour')
-  } else if (diffDays < 7) {
-    return rtf.format(-diffDays, 'day')
-  } else {
-    return formatDayFirst(date)
-  }
-}
-
-/**
  * Single notification item component
  */
 function NotificationItem({
   notification,
-  locale,
   isRTL,
   onMarkAsRead,
 }: {
   notification: NotificationData
-  locale: string
   isRTL: boolean
   onMarkAsRead?: () => void
 }) {
   const Icon = getCategoryIcon(notification.category)
   const colors = getCategoryColor(notification.category)
 
-  const relativeTime = formatRelativeTime(notification.createdAt, locale)
+  const relativeTime = formatRelativeTime(notification.createdAt)
 
   return (
     <div
@@ -189,9 +160,8 @@ export function NotificationsWidget({
   isLoading,
   onMarkAsRead,
 }: NotificationsWidgetProps) {
-  const { t, i18n } = useTranslation('dashboard-widgets')
+  const { t } = useTranslation('dashboard-widgets')
   const { isRTL } = useDirection()
-  const locale = toFormatLocale(i18n.language)
 
   const { settings } = config
 
@@ -253,7 +223,6 @@ export function NotificationsWidget({
           <NotificationItem
             key={notification.id}
             notification={notification}
-            locale={locale}
             isRTL={isRTL}
             onMarkAsRead={() => onMarkAsRead?.(notification.id)}
           />

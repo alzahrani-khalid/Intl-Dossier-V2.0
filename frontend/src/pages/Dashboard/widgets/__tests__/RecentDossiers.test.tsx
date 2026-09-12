@@ -41,6 +41,11 @@ vi.mock('@/store/dossierStore', () => ({
 const i18nLanguageHolder: { value: string } = { value: 'en' }
 
 vi.mock('react-i18next', () => ({
+  // Phase 98 (D-25): the component now imports `@/lib/format-date`, which imports the
+  // i18n SINGLETON to read the session language at call time. That module calls
+  // `.use(initReactI18next)` at import, so a partial react-i18next mock without this
+  // export fails the whole suite at import time rather than at an assertion.
+  initReactI18next: { type: '3rdParty', init: (): void => undefined },
   useTranslation: (): { t: (k: string) => string; i18n: { language: string } } => ({
     t: (k: string): string => k,
     i18n: { language: i18nLanguageHolder.value },

@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { DataTable } from '@/components/table/DataTable'
 import { supabase } from '@/lib/supabase'
-import { format } from 'date-fns'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { useDirection } from '@/hooks/useDirection'
 import { CreateMouDialog } from '@/components/mous/CreateMouDialog'
 
@@ -75,7 +75,7 @@ function WorkflowIndicator({ state }: { state: string }) {
           variant="ghost"
           className="h-6 px-2"
           disabled
-          title={t('common.notYetAvailable')}
+          title={t('common:notYetAvailable')}
         >
           <ChevronRight className={`h-3 w-3 ${isRTL ? 'rotate-180' : ''}`} />
           {t(`mous.statuses.${stateConfig.next}`)}
@@ -178,13 +178,13 @@ export function MousPage() {
             {row.original.signing_date && (
               <div className="flex items-center gap-1">
                 <FileText className="h-3 w-3" />
-                {format(new Date(row.original.signing_date), 'dd MMM yyyy')}
+                {formatDayFirstYear(new Date(row.original.signing_date))}
               </div>
             )}
             {row.original.expiry_date && (
               <div className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />
-                {format(new Date(row.original.expiry_date), 'dd MMM yyyy')}
+                {formatDayFirstYear(new Date(row.original.expiry_date))}
               </div>
             )}
           </div>
@@ -221,7 +221,7 @@ export function MousPage() {
   return (
     <div className="container mx-auto py-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">{t('navigation.mous')}</h1>
+        <h1 className="text-3xl font-bold">{t('common:mous.pageTitle')}</h1>
         <Button onClick={() => setCreateOpen(true)}>
           <Plus className="h-4 w-4 me-2" />
           {t('mous.addMou')}
@@ -281,12 +281,12 @@ export function MousPage() {
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>{t('common.filter')}</CardTitle>
+          <CardTitle>{t('common:filter')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex gap-4">
             <Input
-              placeholder={t('common.search')}
+              placeholder={t('common:search.label')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="max-w-sm"
@@ -297,7 +297,7 @@ export function MousPage() {
                 size="sm"
                 onClick={() => setFilterState('all')}
               >
-                {t('common.all')}
+                {t('common:all')}
               </Button>
               {workflowStates.map((state) => (
                 <Button
@@ -317,10 +317,10 @@ export function MousPage() {
       <Card>
         <CardContent className="p-0">
           {isLoading ? (
-            <div className="p-8 text-center">{t('common.loading')}</div>
+            <div className="p-8 text-center">{t('common:loading')}</div>
           ) : isError ? (
             <div className="p-8 text-center text-destructive" role="alert">
-              {t('common.error', { defaultValue: 'Failed to load MoUs' })}
+              {t('common:error.label')}
             </div>
           ) : mous && mous.length > 0 ? (
             <DataTable
@@ -331,7 +331,7 @@ export function MousPage() {
               }}
             />
           ) : (
-            <div className="p-8 text-center text-muted-foreground">{t('common.noData')}</div>
+            <div className="p-8 text-center text-muted-foreground">{t('common:noData')}</div>
           )}
         </CardContent>
       </Card>

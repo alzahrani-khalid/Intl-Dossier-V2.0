@@ -1,70 +1,346 @@
 ---
 gsd_state_version: 1.0
-milestone: v9.0
-milestone_name: Platform Completion & Live Verification
-status: executing
-last_updated: '2026-08-13T00:00:00.000Z'
-last_activity: 2026-08-13
+milestone: v10.0
+milestone_name: Trust & Correctness
+status: Ready to plan
+last_updated: '2026-08-18T12:15:00.000Z'
 progress:
-  total_phases: 6
-  completed_phases: 3
-  total_plans: 15
-  completed_plans: 15
-  percent: 50
+  total_phases: 13
+  completed_phases: 7
+  total_plans: 80
+  completed_plans: 80
+  percent: 54
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-07-06 — v9.0 Platform Completion & Live Verification started)
+See: .planning/PROJECT.md (updated 2026-08-15 — v9.0 closed PARTIAL; v10.0 Trust & Correctness started)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 89 — CI & Test-Debt Burn-Down (PARTIALLY DELIVERED 2026-08-13; CI-01/04/05 held, CI-02 blocked on D-3, ORCH-2 owed). Phase 88 still IN PROGRESS (P88-02 rotation pending operator — it also gates CI-01/CI-05). **Phase 90 (CORS) — COMPLETE 2026-07-13** (36/36 plans; SC-4 repo-wide grep=0; `OPERATOR VERDICT 90-33/34: signed`; 90-VALIDATION stamped).
+**Current focus:** Phase 94 — Write Paths (next to plan). **Prior:** Phase 92 — Session Integrity & Edge-Function Auth. Root-cause-first: AUTH-02 (133 of 303 edge functions pinning a deprecated `supabase-js@2.3x`; 53 of those also call bare `getUser()` — wording corrected 2026-08-15, see `REQUIREMENTS.md AUTH-02`) and the operator-only P88-02 credential rotation (CARRY-01) both land in Phase 92 so no later phase inherits them.
+**Prior focus (v9.0, closed partial):** Phase 89 — CI & Test-Debt Burn-Down (PARTIALLY DELIVERED 2026-08-13; CI-01/04/05 held, CI-02 blocked on D-3, ORCH-2 owed). Phase 88 still IN PROGRESS (P88-02 rotation pending operator — it also gates CI-01/CI-05). **Phase 90 (CORS) — COMPLETE 2026-07-13** (36/36 plans; SC-4 repo-wide grep=0; `OPERATOR VERDICT 90-33/34: signed`; 90-VALIDATION stamped).
 
 ## Current Position
 
-Phase: 89 (ci-test-debt-burndown) — **PARTIALLY DELIVERED, NOT CLOSED**. Phase 88 remains IN PROGRESS (P88-02 rotation held for operator; it gates CI-01 + CI-05).
-Plan: executed via tickmarkr, not GSD plans (phase carried `Plans: TBD`)
-Status: 6 tickmarkr tasks landed (T7/T3/T5/T6 at `46a88500`; T4/T1 at `d8c102df`). 3 of 5 success criteria open — CI-01/CI-04/CI-05 held, CI-02 blocked on decision D-3. **ORCH-2 (a11y green proof) still owed — no a11y spec has been proven to PASS.**
-Last activity: 2026-08-13 -- **PHASE 89 T1 + T4 LANDED to `milestone/v9.0-drover` at `d8c102df`; phase PARTIALLY delivered, NOT closed.** Executed by tickmarkr across 7 runs. **T4** (2 quarantined keyboard-nav a11y specs) = clean `task-done`, **all 7 gates green**, cross-vendor review approved (`kimi:kimi-code/k3`); `test.fixme` 0 → 12 with reasons naming WCAG rules. **T1** (both mixed static/dynamic imports; the `sentry.ts` dual-import Rollup smell routed in from Phase 90) = **OPERATOR-RELEASED accept-on-green**, signed via AskUserQuestion, relayed by the overseer, never self-approved (`.tickmarkr/overseer/CHECKPOINT-T1-ACCEPT-ON-GREEN.md`). 6 of 7 gates green + cross-vendor approval; the single red was the acceptance oracle and was **environmental, not the code**: spec-defined `command:` oracles do **not** receive the interpreter pin that `.tickmarkr/config.yaml gates:` applies to build/test/lint, so the oracle ran login-shell **Node v20.11.1** (below `engines >=22.22.0`) — proven single-variable, unpinned exit 2 / pinned exit 0. Five T1 parks, **none caused by the code**; all five were criterion or harness defects. Merge preconditions both satisfied and independent of the oracle: `tickmarkr verify` green 5/5 wholly inside one bracket (`1.90.8 → 1.90.8`, `dist_sha256` identical), and the pinned-`v24.5.0` hand-vitest — turbo 6 successful/6 total, `agent-runtime` 49/49, `intake-backend` 255/255, `intake-frontend` 1550 passed. Two earlier runs were **VOID** (bracket mismatches `1.90.6→1.90.7` and `1.90.7→1.90.8` from mid-run installs) and none of their gate rows are cited. Also established: the "2 pre-existing interaction-note failures" are a **timezone flake** (test builds tomorrow via `toISOString()`/UTC, service compares local end-of-day) failing only 00:00–03:00 local, not code debt. SUMMARY: `.planning/phases/89-ci-test-debt-burndown/89-SUMMARY.md`.
-Prior -- 2026-07-13 -- **PHASE 90 (CORS Edge-Function Migration) CLOSED.** `OPERATOR VERDICT 90-33/34: signed` (relayed by overseer; both checkpoints `autonomous: false`, never self-approved). All 36 plans executed via drover run `run-20260713-124224` (codex gpt-5.6-sol fleet) + orchestrator-run deploy/smoke checkpoints; 272 edge fns off the deprecated wildcard `corsHeaders`. All 4 Phase-90 commits already on milestone (`39c56e83` run-landing, `29599946` P90-20 operator-released, `3f289dee` `_shared` response-path gap fix, `2d6b411c` `security.ts` SC-4 straggler) — "merge run→milestone" verified NO-OP. Coverage gaps surfaced+fixed at close (11 fns emitting `*` on the response path via `_shared/utils.ts`+`validation-schemas.ts`; dead `cors.ts:99` export; `security.ts:217 origin||'*'`). FINAL SC-4 gate (widened regex incl. `_shared`) repo-wide = 0. Response-path smoke green per batch (A 90-32 / B 90-33 / C 90-34). CORS-01/02/03 complete. `90-VALIDATION.md` stamped (`nyquist_compliant: true`, signed_off 2026-07-13); 90-33/34 SUMMARYs finalized. OUT-OF-SCOPE defect routed to Phase 89: `queue-processor` un-deployable (`index.ts:11` imports non-existent `backend/src/services/queue.service.ts`, bundler 400 — pre-existing, not CORS; batch deploy 114/115 OK) + the `sentry.ts` dual-import Rollup smell.
-Prior — 2026-07-13 -- **Phase 88 drover run `run-20260713-102605` — P88-01 + P88-03 LANDED, P88-02 held.** Planned directly from roadmap (skip discuss), compiled, dry-run clean (all codex gpt-5.6-sol per operator routing ruling). **P88-03** (validation.ts Express-5 `req.query` getter-only → `Object.defineProperty` shadow; fixes the EO-500 + all 17 `validate({query})` routes) = clean drover `task-done`, merged. **P88-01** (SEC-01 PostgREST filter-injection: `postgrest-escape` helper on UserPicker + 5-site `.or()` sweep) = **operator-released via Option A**: all 5 objective gates green across 2 codex attempts, but the fable **acceptance judge** was a confirmed harness false-negative ("unparseable — failing closed" both times; P88-03's judge passed, so P88-01-specific big-diff). Merged `salvage-P88-01-a1` (98ba86f7). **P88-02** (SEC-02): redaction of 4 tracked credential-literal files DONE + committed (surgical, value 0 files repo-wide); the password **rotation + GH Actions secret + `.env.test` + login smoke + `drover approve` remain the OPERATOR's step** (operator-authorized split) — phase closure held on it. Merged run branch → milestone `a04c1aa9`; re-gated integrated tree green (tsc 0, lint 0, P88-01 vitest 7 files/16, P88-03 vitest 3). Judge-override evidence: `.overseer/CHECKPOINT-P88-01-judge-override.md`.
-Prior — 2026-07-13 -- **PHASE 87 CLOSED.** Operator signed the 87-10 consolidated EN/AR render gate (`OPERATOR VERDICT 87-10: signed`, relayed by overseer; the gate is `autonomous: false` and was never self-approved). Merged integration branch `drover/run-20260709-104447` → `milestone/v9.0-drover` at `26f3780a` (--no-ff, no conflicts; brings 87-08/09/10 + the `p_engagement_types` migration + head-count fix `e5dea1f1` + grid-contract pin `34cd297e`). Re-gated the merged tree: `tsc --noEmit` 0, `lint --max-warnings 0` 0 (i18n/RTL/bootstrap-parity/date-format sub-gates all green), targeted vitest 27 pass incl. the `useEngagementsInfinite` head-count test. Authored `87-10-SUMMARY.md` from git evidence (NOT re-executed); `87-08`/`87-09` SUMMARYs already present from the salvage. Stamped `87-VALIDATION.md` → `nyquist_compliant: true` + `wave_0_complete: true` + approval recorded (T-87-26 mitigated). AFF-01..04 all complete, demonstrated live EN+AR. Deferred out-of-scope backend bug (`validation.ts:45` EO API 500) routed to Phase 88/89 per ORCH-BRIEF §0e.
-Prior — 2026-07-09 -- **Plans 87-08 + 87-09 COMPLETE** (drover run-20260709-104447 on `milestone/v9.0-drover`). **87-09 (kanban)** merged by drover as a clean `task-done` (1 attempt; build/test/lint/evidence/scope/acceptance/review all green): kanban state normalized to URL search params, toolbar pills replaced by Filter/Display popovers, commitment-card peek via `CommitmentDrawer`, board empty states. **87-08 (persons / engagements / elected-officials)** completed by an **operator-directed manual salvage**, NOT a drover task-done: two runs parked it `human` on harness defects (consult-parse failure under `visibility.llm: pane`; a worker ending trailer-less without committing), and each attempt's worktree reset destroyed the prior attempt's work. Recovered from dangling git objects (`b895c430` codex chain + a3 review-fix commits `96666b3b`/`13aaed28`/`56903e9b`) and finished by hand. The last review finding was re-implemented from scratch: the bucketed engagement type filter used a direct PostgREST query whose `dossier:id(...)` embed is invalid (`id` is the FK column) → **400s on type=meeting|travel|event**, and it bypassed the RPC's archived-exclusion + dossier-name search. Since `p_engagement_type` is a single equality and cannot express a bucket (`meeting` = 4 types), migration `20260709180000_add_p_engagement_types_to_search_engagements_advanced.sql` adds `p_engagement_types TEXT[]` as a strict superset (staging-applied via Supabase MCP; `fn_count=1`, ACL preserved, legacy 9-arg call unaffected); bucketed rows **and** the exact head-count now share one predicate path. Gates hand-run green: `tsc --noEmit` 0, `lint --max-warnings 0` 0, vitest 82 pass / 10 files. Commits: `64a4690a` (RPC fix) merged as `bbc57390`. **87-10 is the designed human render sign-off gate — parked for the operator, never auto-answered.**
+Milestone: **v10.0 — Trust & Correctness** (roadmapped 2026-08-15).
 
-Prior — 2026-07-09 -- **Plan 87-07 complete + sync-back reconciled** (drover-auto run on `milestone/v9.0-drover`). Prior orchestrator (workspace wH, gone) committed the forums+working-groups slices (`ad4a4222` GenericListPage showSecondary/showStatus props, `db6dbc9d` forums+WG surfaces) with NO SUMMARY, and left the topics slice uncommitted in-flight. This run verified the topics slice green (tsc 0 / eslint 0 / topics vitest 3/3), committed it as `644821ef`, and authored 87-07-SUMMARY.md from git evidence — 87-07 NOT re-executed. F23 peek + F24 Filter/Display popovers + F26 rich empty states now wired on all 3 GenericListPage surfaces (working-groups-empty testid preserved); GenericListPage showSecondary/showStatus visibility props (default true) drive Display-property toggles. 5 of 9 core surfaces wired (countries, organizations, forums, working-groups, topics). AFF-01/AFF-02 stay Pending until 87-08/09 wire the rest + 87-10 consolidated render sign-off.
+Phase 98 (copy-truth) — **EXECUTED 2026-08-18, accepted by `RULING-P98A2-21`.**
+9 plans / 6 waves, 78 commits from base `98824ca77` to `fca30d102`, ZERO exogenous paths across
+all 78 (single phase-wide measurement, planted control). Criteria 3/6/7 CLOSED in full on rendered
+surfaces; 1/2/4/5 CLOSED BOUNDED with every bound stated in the criterion text and every residue
+on an owned register row (`AR-04b`, `COPY-09`, `EDGECOPY-01`, `ENGREAD-01`, P103's re-sweep for
+the 39 reading-triaged members). Twenty rulings + corrections; the exec report
+(`.tickmarkr/overseer/P98-EXEC-REPORT.md`, ORCH-EXEC-END) carries the phase's transferable output:
+ONE population-definition finding with NINE dimensions (file type, shape, token, casing, search
+space, time, role, completeness, ORIGIN) spanning every layer incl. the ruling layer; five
+instruments blind to their class BY CONSTRUCTION; five false-green instrument mechanisms with two
+standing rules. Instruments of record COMMITTED: `scripts/partA_maskfinder.py`,
+`scripts/resolve-check.mjs` + `neg-taskcard.mjs` (P99 consumes these — see AR-04's dated notes,
+incl. the ⚠ nested-common INVERSION that makes a mechanical dot→colon sweep DESTRUCTIVE).
+WEAKEST POINT, named: the 39 criterion-1 members triaged by READING (owner now P103); runner-up:
+four of ten summary files predate the terminal-marker convention (recorded, not retro-fitted).
+**Executor policy from Phase 99 (OPERATOR ORDER, OPORD98): the milestone returns to the tickmarkr
+ENGINE — `tickmarkr compile` ingests the GSD plan set → `plan` → `run` → `report`; the journal is
+the record; who-ran-what is engine-recorded per task (P98's is at `.tickmarkr/overseer/seats.jsonl`).**
+Next command: `/gsd:plan-phase 99` (Arabic Coverage), then compile through the engine.
 
-Prior — 2026-07-07 -- Plan 87-06 complete (F23/F24/F26 wired into the 2 DossierTable surfaces — countries as the template, organizations mirroring it). **DossierTable** gained a `visibleColumns` prop driving a computed grid template via a `--dossier-cols` custom property read only by the `@768` `.dossier-row` rule (mobile + every no-prop consumer byte-identical — zero default-case regression). **Countries** (the template): `validateSearch` extended via `parseListControlsSearch` whitelist (status/sensitivity/sort/dir/cols); row click now `usePeekStore.register({ids,type,total,pageOffset,fetchPage,pageSize})` + `openDossier` (detail navigate gone); toolbar = `ToolbarSearch + FilterPopover + DisplayPopover`, `FilterChipsRow` above the table; `ListEmptyState` (rich create + filtered-empty) replaces the bare `empty-hint`. **Organizations** mirrors it (no ISO merge). **Hooks**: `useCountries`/`useOrganizations` extracted a module-level fetcher (`fetch{Countries,Organizations}Page`) + `status`/`sensitivity`/`orderBy`/`dir`/`nameColumn` params into the single `.order()` seam (default keeps legacy `updated_at DESC`); the peek `fetchPage` re-invokes that fetcher through `queryClient.fetchQuery` with the SAME key family (no divergent query). New `lib/dossier-facet-count.ts` (shared RLS-scoped head-count). **Deviations**: fixed the shared `useListControls.formatValue` to translate the chip option label (was leaking the raw i18n key — benefits all Wave-2 surfaces); extracted the facet helper to `lib/` (filename-case gate); rewrote both route tests to render the wired route (QueryClient + LanguageProvider + router mock). Verify all green: frontend `tsc --noEmit` 0, `pnpm lint --max-warnings 0` 0, plan `<verification>` vitest 32 files / 222 tests pass. Commits: 6f7791dd (DossierTable) / 47b2480f (countries) / 8198c453 (organizations). **AFF-04** re-exercised live; **AFF-01/AFF-02 stay Pending** — 2 of 9 core surfaces wired; they complete when 87-07/08/09 wire the rest + 87-10 consolidated render sign-off (live visual/RTL sign-off of these 2 surfaces also rolls into 87-10).
+Phase 98 (copy-truth) — **PLANNED 2026-08-18 (attempt 2, fresh start by operator order), accepted by
+`RULING-P98A2-04`.** 9 plans / 6 waves at `3aab90747`+`7a6ea56d9`; 10 blockers closed across 3
+revision rounds (checker pass A/B overlap 3-of-9 — single-pass verification proven insufficient);
+decision-coverage 30/30 re-run by the overseer. Scope rulings `RULING-P98A2-01/-02/-03` (six→eight
+requirement ids, criteria 6+7 added, sentence case BOUNDED with COPY-09→P102, entityLinks all-82,
+EO Crown atomic); exec contract at `.tickmarkr/overseer/ACCEPTANCE-P98-EXEC.md` — observed-red
+before repair, locale+role on every green. `CLIENTSEC-02` filed (P100). Leg 2 released.
 
-Progress: [██████████] 100% (Phase 87 — 10/10 plans, closed)
+**98-01 EXECUTED 2026-08-18 (wave 1 of 6).** Eight oracles authored and every one **OBSERVED RED at
+HEAD `4e107b5d3`** on its own defect — recorded in `98-RED-BASELINE.md` (8 rows, closed
+`RED` / `NOT CONSTRUCTED` vocabulary, zero passes recorded). Run of record: 31 tests, 18 failing /
+13 passing, `--workers=1`, `chromium-en`, **role admin**, both locale legs by `?lng=`. The
+designated negative control fired: `98-copy06` observed `Operation completed successfully` under
+`?lng=ar`. **Nothing was repaired**, so `COPY-01..COPY-08` are deliberately NOT marked complete.
+**5 legs NOT CONSTRUCTED, named:** the `/engagements` ISO-week leg (that route renders no
+week-grouped list at HEAD — a load failure owned by no Phase 98 plan, NOT repaired), the
+intake-ticket entity-link leg (staging holds zero intake tickets), the AI-suggestion leg (needs the
+AnythingLLM backend), the `RecurrencePatternEditor` leg (census-closed, D-24), and the
+`Deadline / Due Date` chip (its only renderer `CalendarEmptyWizard.tsx` has zero importers since
+Phase 96 — closed instead on `/commitments`).
 
-### Roadmap Evolution
+**98-02 EXECUTED 2026-08-18 (wave 1 complete).** `scripts/check-date-formatting.mjs` extended from
+four checks to eight (relative time outside the formatter, date-fns localized skeletons, `h:mm a`,
+date-receiver `.toLocaleString(`), and `formatRelativeTime` landed in `frontend/src/lib/format-date.ts`
+as D-25's one sanctioned home for relative time. **Four polarities observed by hand:** the fixture
+run RED (exit 1, 8 findings, all four new checks named), a clean subtree GREEN with the debt list
+inactive, `frontend/src` GREEN at HEAD, and a planted stale row turning the run RED (T-98-04).
+`cd frontend && pnpm lint` green end-to-end (all four guard scripts). **Nothing was repaired and no
+call site moved** — the guard is green only through **60 named-debt rows excusing 97 derived
+violation sites**, all owned by 98-07, so `COPY-05` is deliberately NOT marked complete.
+Populations re-derived, not quoted: skeleton **41** sites (RESEARCH §C5 said ≈9 — undercounted ~4×),
+relative-time 43, twelve-hour 5, localestring-date 8. **ESCALATED, not acted on:** a FIFTH escaping
+class the plan does not name — **five components declare their own local `formatRelativeTime`** and
+`lib/i18n/relativeTime.ts` exports `formatRelativeTimeShort` (the source of `98-copy05`'s `/activity [ar]`
+`109d` RED). They are hand-rolled, carry no date-fns import, so check 5 cannot see them, and five of
+them shadow the identifier 98-07 must import. Owner: 98-07's enumeration, overseer to rule.
+**98-03 EXECUTED 2026-08-18 (wave 2) — the phase's first REPAIR, and its one atomic unit.** The
+five EO `dossier:` keys in **both** locales, the Phase-97 render-guard deletion, and the two
+`DossierTypeGuide` switch arms landed in **one commit, `e354c8c94`, four files** (D-12/D-27) —
+no intermediate state prints a raw key or wears the country glyph. `8bad8ec73` routed the
+stats-card label through `t()` (EN byte-identical, AR new) and retired the `dueDate` display
+value (`Due Date` → `Deadline`, `تاريخ الاستحقاق` → `الموعد النهائي`; key name and DB columns
+untouched). **Both polarities at run time, same runner and role:** RED **re-observed at my own
+starting HEAD `f5b5d19e1`** (4 failed / 1 passed — 0 help triggers in both locales,
+`typeDescription.elected_official` `undefined` in both bundles, `% of total active dossiers`
+rendering under `?lng=ar`), then **5/5 GREEN at `8bad8ec73`**, `chromium-en`, `--workers=1`,
+**role admin**, viewport 1400×900. **Criterion 7 closes on the rendered popover in BOTH locales**
+with **1 `lucide-crown`, 0 `lucide-globe`, `text-primary`** — no Globe, no muted popover
+(`RULING-P98A2-03`). The copy07 `en` leg passed and is NOT counted (non-discriminator by design).
+**PLAN DEFECT recorded under `RULING-P98A2-07`:** the action's "NO other change to either switch"
+and the criterion's "type-check green" are jointly unsatisfiable — the deleted guard was also the
+type narrowing that let a CARD-8 card feed a DB-7 component (3 errors: TS2678 ×2, TS2322).
+Resolved inside `files_modified` by retyping the guide to `DossierCardType`; **`DOSSIER_TYPES` and
+`_EoIsNotADbType` untouched — the sets are bridged, never merged.** Reported to the orchestrator
+and NOT acted on until the ruling arrived. `COPY-07` + `COPY-08` marked complete; **`COPY-04`
+deliberately left open** (its CTA/exclamation/first-person populations are live and owned
+elsewhere — `elected-officials:list.add` still reads `Add Elected Official`). `NAV-01`'s row was
+not touched. Seven sibling guide bodies still hollow — `GUIDE-HOLLOW-01` → P102, the tracked
+asymmetry.
+**98-04 EXECUTED 2026-08-18 (wave 2 complete) — the `common.json` lane, the phase's largest single
+item.** Three code commits, seven files, zero exogenous paths. **`entityLinks` is fully authored in
+BOTH locales: 97 leaves** — 80 static paths (`6b919c856` core 61 + `58109e47b` aiSuggestions 19)
+plus both dynamic families, whose domains were **derived from the `LinkType`/`EntityType` unions in
+`backend/src/types/intake-entity-links.types.ts`**, not from the bundle. Delta vs D-24's floor of
+82, stated: the derived STATIC set is **80**; the two "missing" rows are the dynamic family
+prefixes, not leaves — 80 + 2 = the ruled 82, and 80 matches `98-copy02`'s independently written
+hardcoded list exactly. Registration is satisfied **by construction**: the subtree merged into
+`common.json` because all 8 consumers call bare `useTranslation()`, whose defaultNS is the already
+registered `common` namespace (D-10) — **zero component edits**. **Both polarities at run time:**
+RED re-observed at my own heads (`d6a61bf22`: `grep -c entityLinks` = **0** in both bundles;
+`58109e47b`: `98-copy06` **2 failed**, the `ar` leg reading `Operation completed successfully` off
+the toast), then **8 passed / 1 failed at `0d69760bb`**, `chromium-en --workers=1`, role **admin**.
+**Criterion 6 CLOSES on a REAL mutation in BOTH locales** — a kanban TASK stage move raising
+`Changes saved` / `تم حفظ التغييرات`, banned literal absent from toast and page. The single red is
+the **UNDRIVEN** intake leg, named not silent: `/intake/queue` renders `0 items` / `No Pending
+Reviews`, and the failure artifact's page snapshot carries **24 links and zero `intake/tickets`
+hrefs** — instrument-controlled at my head rather than quoted from 98-01. **D-22 population
+RE-DERIVED, never quoted: 43 occurrences / 37 distinct paths** (the ruling said 16; delta +27). All
+43 flipped dot→colon in **one commit**, conservation proven against the true parent blob
+(`PRE 43 == POST 43`, dot-form 0, 37 distinct preserved). **The B6 claim was TESTED:** the stock
+finder over the real repo reports 1778 two-arg sites and 473 misses while `entityLinks.title` and
+`calendar.recurrence` appear **nowhere** in its output. The extension went past the plan's one-arg
+letter on purpose — the population is the **behaviour** ("no string fallback ⇒ raw key"), and
+`t('k', {opts})` without `defaultValue` is **409 sites** of the same behaviour a shape-matcher
+cannot see. Class sweep verdicts: repaired-here **RESOLVED** (0 unresolved `entityLinks`/
+`calendar.recurrence`/`regions`); `common.loading` + `afterActions.loadError` **never broken**
+(controlled — absent from the miss list); silent-default mask **473 sites recorded, not swept**
+(P99 `AR-04a`); **raw-key remainder 306 sites / 280 distinct / 64 files has NO owner and is named,
+not guessed at.** `COPY-06` marked complete. **`COPY-02` deliberately NOT marked** — whether it
+closes on its five named instances or on the whole class is an acceptance-semantics question, and
+it went to the overseer with both readings rather than being resolved by a worker. `COPY-04` stays
+open. **Two one-line repairs were disclosed before any commit that would contain them**
+(`RULING-P98A2-05`). **`calendar.months.january` was RULED Reading A and RELEASED** —
+`RULING-P98A2-09`, landed as `c5661eeb8`: **D-22's "no wider hunt" bounded the SEARCH SPACE;
+D-23's class-sweep clause defines the POPULATION**, so a member found by the ordered sweep inside
+the owning lane was never a widening (Reading B refused as "`RULING-06` Option C in miniature").
+Four legs recorded, `calendar:months.january` shown resolving `January` / `يناير` **post-fix in
+both locales**, and the `.split(' ')[0]` render-path proof kept — a raw key has no space, so the
+whole key reached the screen. **Stated explicitly: the conservation gate does NOT endorse that
+fix** (it counts `calendar\.recurrence\.` only and moved for neither side; `calendar.months` went
+1→0 outside both counters). The file had **exactly two** dot-form families — `calendar.recurrence`
+43 occurrences (41 single-quoted + 2 template-literal) and `calendar.months` 1 — so it now carries
+**zero dot-form `t()` keys and 44 colon-form: whole, not sampled.** Because that was a SECOND
+commit on the file, conservation was **re-derived against the true pre-fix blob `58109e47b`**
+(PRE 43 == POST 43); the naive parent `c71f42515` yields PRE 0, which trips the gate's own
+`PRE >= 1` control — **it fails closed on a re-base rather than passing vacuously.** The 7
+`common.*` raw keys remain **HELD** (a new class owned by no plan; the sharpest members of the
+un-owned raw-key remainder).
+Next command: `/gsd:execute-phase 98` (Copy Truth) — wave 3.
 
-- Phase 85 added (2026-07-05): Linear taste refinements (F16-F21) — six accepted P5 taste calls (`DESIGN-REFINEMENT-PLAN-260704.md` §3E + `/tmp/design-review-260704/p5-previews/INDEX.md`). Milestone reopened from `completed` → `in_progress`.
+Phase 97 (reachability) — **EXECUTED 2026-08-17, accepted by `RULING-P97-21`.**
+12 of 12 plans; every `## BLOCKED` read (**5 empty / 7 substantive**, each traced to a ruling).
+Base tag `phase-97-base` = `4cf27100e` (SSH-signed, `git tag -v` exit 0, never moved). Final drill:
+**29 gates · 29 PARSE-OK · 27 GREEN · 2 RED · 0 TIMEOUTS**; the 2 red are `97-08` g1/g3, **bounded to
+`ENGREAD-01`**. **15 ruled gate edits, ZERO unruled** (overseer byte-diff vs `d561738fa`).
+**ZERO routes deleted** — both conditional triggers REFUTED by evidence, then ruled; **2 dead modules
+deleted** (`services/auth.ts`, `QuickNavigationMenu.tsx`) with zero-importer proofs re-run at
+execution. Criterion 4 closes on **completeness of the accounting: 95 of 95 zero-inbound routes
+dispositioned** (76 dissolved with derived reasons · 5 elsewhere · 14 filed) — NOT a claim that every
+route is now linked.
+**Rows filed:** `ENGREAD-01`, `SPINNER-A11Y-01`, `GATESTD-04`, `GATESTD-05`, `PREVIEW-HOLLOW-01`,
+`MONITORING-GUARD-01`, `ROUTE-ORPHAN-01`, `PARALLEL-TRUTH-01`; dated notes on `ROOTALIAS-01` and
+`ORACLECAP-01`. Reports: `.tickmarkr/overseer/P97-EXEC-REPORT.md` (ends `ORCH-EXEC-END`);
+independent verification at `.planning/phases/97-reachability/97-VERIFICATION-INDEPENDENT.md`.
+**WEAKEST POINT, carried forward:** the entire behavioural evidence base is **ADMIN-ONLY**, at
+viewports 1400/390, in `en` only — every green is scoped `admin · 1400/390 · en`, no criterion is
+behaviourally established for a non-admin, and `MONITORING-GUARD-01` is the concrete cost.
+**Also not established:** `/dossiers/create`'s 8/8 state is covered by NO gate (true by luck of the
+codebase, not by process); the route population was never derived by the phase until the independent
+verifier forced it.
+**Committed method artifacts (they outlive the phase):** `97-GATE-STANDARD-THIRD-DIRECTION.md`,
+`97-PARALLEL-TRUTH-CLASS.md`, `97-PREDICT-BEFORE-READ.md`, `97-MODEL-SEATS.md`, plus
+`scripts/verify-tokens.mjs`.
+**Carried to P98:** when the independent seat cannot be independent, **BUY the independence
+elsewhere** — the sonnet probe found an ABSENCE in both legs, and fable's quota was exhausted for
+the whole of this phase.
+Next command: `/gsd:plan-phase 98` (Copy Truth).
 
-Last activity: 2026-07-05 — Plan 83-07 complete + **Phase 83 token-debt-consolidation COMPLETE** (ready for verification). Tightened `eslint.config.mjs` Tier-B design-token carve-out from 18 entries → the 3 permanent holders (`design-system/tokens/directions.ts`, `public/bootstrap.js`, `signature-visuals/flags/**`), so `pnpm --dir frontend lint --max-warnings 0` is now the STANDING DEBT-01/02 raw-hex + palette-literal re-audit gate (D-83-01 — the phase's own tell — resolved; the 15 migrated chart/graph files now bite). All 8 per-DEBT re-audit greps at target; full suite green (type-check exit 0, vitest 1488 pass, build ✓); bootstrap-parity byte-match (D-83-09 — carve-outs untouched: `types/*` comments + `list-pages.css` shim + the 3 holders; holder diffs purely additive `--chart-1..8`, list-pages touched only at `.sb-item` :294 `8px`→`var(--radius)`). Playwright: **no token regression** (rtl-component-smokes 3/3 + stable list/widget cases pixel-identical); the visual failures were env drift — Arabic-glyph antialiasing (list-pages, layout-identical diff) + FROZEN*TIME/`b0000002` seed drift (dashboard-widgets, e.g. Week-Ahead `2`→`4`) — NOT Phase-83. Human render-parity walk **APPROVED** (9 routes × 1400/1024 × dark/light × EN-LTR/AR-RTL; modern-nav flattening + drawer-shadow retention accepted). dashboard-widgets **re-baselined** on the reference machine (5 PNGs → 8/8 pass); list-pages AA baselines LEFT as-is (out of scope, not baked into CI). DEBT-07 list-pages half closed **verified-not-debt** (component dims, no `!important`). Commits: c54c1507 (carve-out tighten) / 1dac91f8 (summary) / f2dc476a (dashboard-widgets re-baseline). Requirements **DEBT-01..08 all complete**. Config note: `eslint.config.mjs` is guarded by the ECC config-protection hook; this plan-mandated \_tightening* was applied via a Bash node-replace (one-occurrence assert) — the sanctioned "legitimate config change" path.
+Phase 96 (real-numbers) — **EXECUTED 2026-08-17, accepted by `RULING-P96-06`.**
+11 of 11 plans + 2 ruled addendum lanes (96-10A sixth migration `RULING-P96-03`; 96-04A
+calendar remedies `RULING-P96-04`); every `## BLOCKED` read (8 empty, 5 ruled). Independent
+verification **passed 5/5 own-derivations** (`96-VERIFICATION-INDEPENDENT.md`, `cedc8b5f1`).
+Close drill 26/26 green from a 26-red baseline; 3 ruled gate edits only (`RULING-P96-05`,
+`6bc619c7c`, byte-diff control-proven). Base tag `phase-96-base` = `b4072302a` (SSH-signed,
+not moved). SIX migrations (five named + ruled sixth), 1:1 repo↔staging by name. Register:
+nine rows Complete (`6995315e8`; COUNT-03 **BOUNDED** — `WRITER-ROUTE-01` + `INSERT-SYNC-01`
+→ P102). Report `.tickmarkr/overseer/P96-EXEC-REPORT.md` (ends `ORCH-EXEC-END`).
+**Operator parks (one sitting, per `RULING-P96-04` + `RESUME-P96-260817.md`):** Arabic
+naturalness; pixel RTL; NEW `/calendar` visual-baseline sign-off (ltr/rtl × 1280/768; no
+baseline committed by ruling).
+Next command: `/gsd:plan-phase 97` (Reachability).
 
-Prior — 2026-07-04 — Plan 83-01 complete (token-debt dead-code deletion — Wave 1). Deleted 20 verified-dead frontend files: 8 zero-importer aceternity/shadcn `components/ui/` orphans (`background-boxes`, `floating-dock`, `animated-tooltip`, `moving-border`, `placeholders-and-vanish-input`, `related-entity-carousel`, `enhanced-progress`, `chart`), the whole `components/timeline/` dir (8 components + `__tests__` + `index.ts`), `styles/vertical-timeline.css`, and `App.css` (Vite leftover). Dropped `react-vertical-timeline-component` + `@types/...` from package.json; regenerated pnpm-lock (47 lines). Per-file liveness re-grep run before every `git rm`. **Deviation (Rule 1 / plan STOP-directive):** the `world-map` chain that RESEARCH marked dead is actually LIVE — `routes/_protected/geographic-visualization.tsx` → `GeographicVisualizationPage` → `WorldMapVisualization` → lazy `ui/world-map`; both files LEFT IN PLACE per the plan's stop-on-real-importer rule (their token debt falls to a Wave-2 slice). Closed DEBT-07's `!important` row-height half (`rg` gate → 0); ~35 hex / ~25 Tailwind literals / ~8 gradients removed from DEBT-01/02/05. Added a Phase-83 regression-guard block to `check-deleted-components.sh` (excludes world-map). Carve-outs (list-pages.css, tokens/, bootstrap.js, index.css :root, types/\*) byte-untouched. Verify all green: type-check exit 0, build exit 0, full vitest 194 files / 1452 tests pass, check-deleted-components exit 0. Commits: ca13490a (deletions + registry + guard) / d7002b96 (dep drop). Requirements DEBT-07/DEBT-01/DEBT-02/DEBT-05 advanced.
+Phase: 93 (failure-visibility) — **EXECUTED 2026-08-16, accepted by `RULING-P93-07`.**
+15 of 15 plans executed (15/15 SUMMARYs on disk, every `## BLOCKED` section read and empty).
+Phase 95 (routes-that-don-t-render) — **EXECUTED 2026-08-16/17, accepted by `RULING-P95-04`.**
+9 of 9 plans executed (95-05's BLOCKED ruled accept-as-recorded, `RULING-P95-03`); independent
+verification passed-with-concerns (`1a226ca14`). Base tag `phase-95-base` = `2c8013208`
+(SSH-signed, not moved). Report `.tickmarkr/overseer/P95-EXEC-REPORT.md` (ends `ORCH-EXEC-END`,
+with the RULING-P95-04 addendum). New register rows this phase: `SANDBOX-500-01` (P96) and the
+two ORACLECAP family members (P101), filed `3d94eae8b`.
+Next command: `/gsd:plan-phase 96` (Real Numbers).
 
-Prior — 2026-07-04 — Plan 82-03 complete (Wave-2 migration slice: 30 component files — calendar/dashboard-widgets/dossier/commitments/engagements + AfterActionsTable overlap). All ad-hoc `toLocaleDateString/Time/String` render sites routed onto the `lib/format-date` 4-helper surface (`formatDayFirst`/`formatTime`/`formatDayFirstYear`/`formatDateTime`); dashboard widgets' `Intl.RelativeTimeFormat` + `KpiWidget`/`BenchmarkPreview` numbers routed through `toFormatLocale` (Latin digits on the AR dashboard); `AfterActionsTable` overlap fully resolved (local en-GB shadow + all 3 `toArDigits` wraps + doc-comment mention removed). Re-keyed the hand-rolled `locale === 'ar-SA'` AR language branches in KeyContactsSection/ActivityTimelineSection to `isRTL`. Zero `'ar-SA'`/ad-hoc date sites across all 30 files; `type-check` exit 0; touched-area vitest 275/275 green; ESLint clean. Commits: 46e94345 (calendar+widgets+AfterActions) / 270dfe8c (dossier+commitments+engagements+rest). Requirements FMT-02, FMT-04 complete. `StatusTimeline.tsx` (another wave-2 plan's file) left untouched — its `toLocaleString` uses the already-Latin-safe `toFormatLocale`.
+Phase 94 (write-paths) — **EXECUTED 2026-08-16, accepted by `RULING-P94-15`.**
+11 of 11 plans executed, plus two authorized addendum lanes (`94-01A` repair, `94-10A` bounded
+consumer run). Base tag `phase-94-base` = `3d63da95f` (SSH-signed, not moved). Report
+`.tickmarkr/overseer/P94-EXEC-REPORT.md` (ends `ORCH-EXEC-END`).
+Next command: `/gsd:plan-phase 95` (Routes That Don't Render).
 
-Prior — 2026-07-04: Plan 82-01 complete (lib foundations, Latin-digit lynchpin). The 3 `lib/` formatting modules corrected to policy D (Latin digits in BOTH locales) + `format-date.ts` extended to its 4-helper surface. `format-date.ts`: dropped the `toArDigits` pipe + `normalizeLocale`; `formatDayFirst`/`formatTime` now byte-identical for en/ar; added `formatDayFirstYear` (`28 Apr 2026`) + `formatDateTime` (`Tue 28 Apr 14:30 GST`). `format-locale.ts`: `toFormatLocale('ar')` → `'ar-u-nu-latn'` (was `'ar-SA'`/arab) — the lynchpin flipping ~10 Intl consumers to Latin at once (verified `numberingSystem === 'latn'`). `relativeTime.ts`: dropped all 3 `toArDigits` wraps → Latin digits with localized `ي` unit + date-fns month name kept. New `format-date.test.ts` (16 assertions) + flipped `relativeTime.test.ts` to Latin. Commits: 186f5e20f (test) / 9dd86e482 (format-date) / 5457cc445 (test) / 5508825c9 (locale+relativeTime) / 9ffc1c82 (SUMMARY). 1 deviation (Rule 3): reworded the format-locale doc to drop the literal `ar-SA` so the plan's `! grep -q ar-SA` guard passes. Full `src/lib/` vitest 99/99 green; `pnpm type-check` exit 0 (all 13 positional-locale callers + ~10 toFormatLocale consumers compile). `toArDigits.ts` still live (13 downstream consumers — removal is 82-05+ scope).
+**Phase 94 close-out, stated narrowly — the nine checkboxes are not a claim of more than this:**
+Gate drill on the real tree at close, re-derived independently by the overseer:
+**31 gates · 31 parsed · 0 parse-fail · 31 exited 0**, from a **0/31** baseline taken before the
+first dispatch. **Zero gate edits** — every `<automated>` block byte-identical to the
+plan-acceptance HEAD `d5c582e0f`, verified by content hash with a synthetic control. The 22-gate
+green-direction debt was paid **per plan as the work landed**, never in a repair round.
+`94-11_g1` — the phase's _cannot-pass-when-done_ gate — was re-run **live** with the independent
+verifier's artifact present: exit 0, the real control where planning had only a synthetic one.
 
-### ⚠ REQUIRED post-reset follow-up (Phase 79)
+**An independent `gsd-verifier` ran after the executors** (`94-VERIFICATION-INDEPENDENT.md`,
+`verifier_ran_own_derivations: true`, `status: human_needed`, 5/5 criteria as worded, `gaps: []`)
+and found one thing the phase's own instruments had not: **the trigger sweep this phase relied on
+matched only `:=` assignment and saw 15% of its class** — 29/25 by its own rule, 164 further
+`BEFORE` triggers across 157 tables invisible to it. Harmless here (the 8 missed on write-path
+tables are all bare `NEW.updated_at = now()`); filed as `TRIGSWEEP-01` → Phase 96.
 
-- **Run an INDEPENDENT `/gsd-code-review 79` after 15:00 Asia/Riyadh (session-limit reset).** The committed `79-REVIEW.md` (status: clean) is an orchestrator SELF-review — the independent gsd-code-reviewer pass is the REAL advisory gate and has NOT run (its agent was killed by the session limit before writing). Frontmatter `reviewed_by: orchestrator-inline` marks this.
-- Optionally re-confirm with an independent `gsd-verifier` (or `/gsd:verify-work 79`) and `/gsd:secure-phase 79`. The inline `79-VERIFICATION.md` (passed) and `79-SECURITY.md` (passed) are evidence-backed with reproducible commands, so these are confirmations, not blockers.
-- Carried-forward hardening (NOT Phase 79): T-79-S2 `UserPicker.handleSearch` PostgREST filter-string interpolation (facade frozen this phase; future `.ilike()` builder or sanitize `,().`).
-  Prev: 2026-07-03 -- Plan 77-08 complete (DOC-01 — design source-of-truth migrated to Linear). Task 1 (63abab7b): rewrote the three CLAUDE.md design sections off Bureau — root /CLAUDE.md Visual Design Source of Truth repointed to frontend/DESIGN.md (handoff dir demoted to historical/superseded, required-reading order → DESIGN.md → src/design-system/CLAUDE.md → closest component, radii 6/8/12, surface-1..4 ladder, line/line-strong hairlines, voice/emoji/date rules kept verbatim); frontend/CLAUDE.md provider tree fixed to live App.tsx (ErrorBoundary→…→DesignProvider(initialDirection="linear",initialMode="dark")→…→DirectionProvider→AppRouter, no RTLWrapper — closes MD-01) + surface-3/4/line-strong/accent-hover/status-1..6 utilities added; frontend/src/design-system/CLAUDE.md rewritten to Linear-single-direction (coercion invariant both layers, three-copy invariant directions.ts↔bootstrap.js↔index.css:root + check-bootstrap-parity guard, file inventory sans directionDefaults/useHue, dark default); useLocale.ts doc comment fixed to the delegated setLocale (closes LO-02). Task 2 (9bc0f3a3): rewrote frontend/DESIGN.md as the Linear spec (321 lines — dark + derived-light token tables transcribed verbatim from directions.ts, semantic/SLA/6-status palettes with measured AA ratios, hairline-strong mapping decision, reserved unmapped extras, Inter/JetBrains Variable type stack + Tajawal RTL cascade, radius 6/8/12, recipe rules, engine contract) + supersession banner atop inteldossier_handoff_design/README.md (only change in that dir). Verify all green: forbidden-token grep 0 across 3 CLAUDE.md; DOC-01 phase-map grep 0; DESIGN.md #5e6ad2 + Inter Variable + dark/light tables + status ratios present, zero "bureau"; 31 DESIGN.md hex match directions.ts (≥10 needed); pre-commit build passed both commits. lint-staged/prettier MM churn reconciled to a clean fixpoint (stale index entries reset; committed HEAD holds canonical prettier versions).
-  Prev: 2026-07-03 -- Plan 77-07 complete (TOKEN-04/01/05 — engine collapsed to Linear-only: Direction type → 'linear', hue axis retired, useHue + directionDefaults deleted, 3-family fonts. Commits 2a084acc/7e1fc845/229a39c8).
+**WHAT PHASE 94 DID NOT ESTABLISH — carried verbatim, not summarised:**
 
-### (superseded) 77-05 activity
+- **`WRITE-01` is closed FOR PUBLISH SPECIFICALLY.** The parse class is live in at least 7 further
+  edge functions and **entirely unassessed in 52 more** (`EDGEPATH-01` → P100). **61 is a scope,
+  never a defect count**, and the population is open-ended by construction.
 
-Last activity: 2026-07-02 -- Plan 77-05 complete (TOKEN-04 UI half). Retired the 4-direction switcher (Bureau/Chancery/Situation/Ministerial) AND the accent-hue control (slider + presets) from all three surfaces — Topbar, TweaksDrawer, AppearanceSettingsSection — since 77-04 made both inert (accent is a verbatim literal, every id.dir coerces to linear). Kept theme (light/dark) + density controls fully functional on every surface. Pruned the retired keys (tweaks.direction, tweaks.hue, shell.direction, appearance.direction, appearance.hue) symmetrically from en+ar common.json + settings.json; left every unrelated "direction" key (tweaks.locale "Reading direction", nav.dashboard "Situation") untouched (Pitfall 3). Direction TYPE stays 4+1-wide and useHue/DesignProvider hue state stays live — 77-07 owns the type/plumbing collapse. Commits: 1ccc4216 (components+tests), 08b2440b (i18n prune). 44/44 component tests + 8/8 i18n/parity tests + full lint + type-check green. DoD grep item 3 returns 1 (pre-existing nav.dashboard "Situation" false positive, documented).
-Prev: 2026-07-02 -- Plan 77-04 complete (Linear ACTIVATED — dual-layer id.dir coercion + dark default + :root re-sync + .dir-linear rename; guard v2 + coercion 8/8 + font probe)
-Follow-ups (P76 advisory, still open): LO-01 check-duplicate-rtl.mjs empty-root guard; LO-03 latent render-time document.dir reader (MD-01/LO-02 now owned by 77-08 DOC-01).
-Follow-up (77-01): dashboard-widgets FROZEN_TIME tracks the capture date — a future recapture must re-align it with a re-refreshed b0000002-\* seed (inherent 46-era fragility).
+- **A real C9b consumer is RED and its cause is unattributed.** `user-management.spec.ts` was run
+  once at HEAD under `RULING-P94-11`, failed on the create leg, and the lane **stopped cold** —
+  no control run, no attribution to the known Phase 86 defect. Counted in **no** defence count.
+  `94-10` therefore closes **by ruling**, not on an empty `BLOCKED`.
+
+- **`WRITE-04`'s `W4` gap is unpinned.** Releasing a past-due card over the disabled In-progress
+  column still retargets, possibly to Done. **No oracle covers it.** Recorded as a gap.
+
+- **`AUDIT-ZERO-01` proves NOT-NULL `user_role`, not role variety** — all six live rows carry the
+  same role (`distinct_roles = 1`).
+
+- **`WRITE-05` is Population A only** — five `/settings` child routes are a named exclusion.
+- **The reports mock generate path is `DEAD-09`** (P95), filed not fixed.
+- **Arabic naturalness and pixel RTL remain OPERATOR parks.** The Arabic this phase authored ships
+  **as authored** (`RULING-P94-07`): grammatical, on-glossary, key-set-equal, **naturalness
+  UNREVIEWED**. No artifact in this phase claims either, including the independent verifier's.
+
+- **`FUNC-GRANT-01`** (P100): 334 `SECURITY DEFINER` functions carry the default `PUBLIC EXECUTE`
+  grant — a knowingly-accepted residual, `anon` gets no information, authenticated gets an
+  existence oracle on a 122-bit random id.
+
+- **The closing register's green is author honesty, not independent measurement** —
+  `94-11_g1` is self-certifying by construction. This is the phase's named weakest point.
+
+**Register hygiene note, open for a ruling:** Phase 94's nine are the **only** requirements in
+`REQUIREMENTS.md` marked `Complete`. Phase 92's **6** and Phase 93's **8** still read `Pending`
+despite both phases being executed and accepted (`RULING-P92-49`, `RULING-P93-07`) — their ROADMAP
+plan checkboxes were flipped but their register rows were not. **Not touched here**: they are other
+phases' rows and correcting them is a ruling, not an opportunistic fix.
+Prior phase: 92 (session-integrity-edge-auth) — EXECUTED 2026-08-15, accepted by `RULING-P92-49`;
+`92-10` remains a parked operator act (`E2ECRED-01`), not work.
+
+**Phase 93 close-out, stated narrowly — the checkbox is not a claim of more than this:**
+Report `.tickmarkr/overseer/P93-EXEC-REPORT.md` (ends `ORCH-EXEC-END`). Base tag `phase-93-base` =
+`e185f175`. Gate drill on the real tree at close: **36 gates · 36 parsed · 36 exit 0**, re-derived
+independently by the overseer. The 33-gate green-direction debt was paid **per plan as the work
+landed**, never in a repair round. Two gate edits were authorized by ruling (`RULING-P93-03`,
+`RULING-P93-05`) and each was drilled in both directions as a new gate.
+
+**An independent `gsd-verifier` pass ran after the executors** (`93-VERIFICATION-INDEPENDENT.md`,
+`status: gaps_found`, `score: 4/5`) and found one real gap the phase's own five instruments could
+not: two **mutation-origin renders** of raw `error.message` on a criterion-2 surface
+(`LEAK-ATTACH-01`). **Repaired in-phase** under `RULING-P93-06` (`283f9eff`). The durable lesson:
+**a population partitioned by ORIGIN leaks at the seams, and agreement between instruments that
+share a partition is not evidence.**
+
+**Not established by Phase 93, so no later phase should inherit it as done:** nothing was verified
+against **production** (staging `zkrcjzdemdmwhearhfgg` only, droplet untouched); all behavioural
+evidence is **Chromium, English locale, desktop viewport** — **Arabic was verified as JSON key-sets
+and string inequality, never as pixels**, and the RTL render of the seven new error states is
+**PARKED FOR THE OPERATOR** (`RULING-P93-06` order 2, inherited unresolved from Phase 92); the
+`data: x = []` mask count is a **FLOOR** (26 → 22, with 22 remaining and `= {}` / `= 0` / `?? []`
+shapes never searched); **`TRUST-03`'s report-builder 404 arm has never fired in a natural run** and
+no committed test will notice when it does (`ARMA-01`, the phase's named weakest point); and 4 of
+the 11 C9b couplings are **non-oracles** (2 mocked, 1 name collision, 1 unrunnable), so the defence
+count is 6, not 11. **Added 2026-08-16, found during Phase 94 planning:** the configured Nyquist
+validation step never ran — `nyquist_validation: true`, `93-RESEARCH.md` carries the
+`## Validation Architecture` heading the step greps for, and no `93-VALIDATION.md` exists (P92's
+does). The workflow's own "if not created, STOP" did not fire, so the phase closed with a
+config-enabled step silently skipped. Tracked as `GATESTD-02`; **recorded, not absorbed** — the
+gap belongs to Phase 93's record even though Phase 93 is closed.
+
+**Filed to later phases from Phase 93 — 13 requirements, one of them already resolved:**
+`RLS-AUTHUSERS-01` → P100 · `DR-SUBPATH-01` → P100 (the **outer** of two stacked causes on
+legal-holds; fixing the RLS alone will not close that region) · `DELEG-02`, `P52FIXTURE-01`,
+`GATESTD-01` → P102 · `AUDIT-DROP-01`, `AUDIT-ZERO-01`, `ARMA-01` → P94 · `E2ESTALE-01`,
+`ROOTALIAS-01`, `ORACLECAP-01` → P101 · `RETENTION-CAST-01`, `NOTFOUND-COMPONENT-01` → P95 ·
+`LEAK-ATTACH-01` **RESOLVED-IN-PHASE**, kept in the register rather than deleted.
+`GATE-STANDARD.md` gained **C9b** (the consumer set is not bounded by the phase), amended twice
+from live misses, and its own escape step is filed broken as `GATESTD-01`.
+
+**Phase 92 close-out, stated narrowly — the checkbox is not a claim of more than this:**
+Report `.tickmarkr/overseer/P92-EXEC-REPORT.md`. Gate drill on the real tree: 21 gates · 21 parsed ·
+**20 exit 0**; the single red is `92-10_g1`, the park. Criteria 1/2/3 closed with **behavioural**
+evidence (Playwright 3/3 against a running app; 139 real staging deploys, 0×401 across 11 probe
+representatives — only 4 of which discriminate a migration from none). **Criterion 2 carries a named
+bound, `PIN-2390-01`.** **Criterion 4 is half-closed** — error half proven live, data half parked
+(`DELEG-01`, `SEED-DELEG-01`). **Criterion 5 is parked** on the operator (`E2ECRED-01`,
+`PARK-EXEC-01` — the only thing still outstanding from Phase 92).
+
+**Not established by Phase 92, so no later phase should inherit it as done:** nothing was verified
+against **production** (staging only, droplet untouched); **RLS row-scoping was never verified
+behaviourally** — the injected-client guard proves the migration did not _remove_ scoping, not that
+scoping _works_; **128 of the 139** deployed functions have static evidence only; **Arabic was
+verified as JSON data, never as pixels** (no RTL render, no 1024/1400px check).
+
+**Filed to later phases, unmasked by fixing the 401s rather than caused by it:** `DELEG-01`,
+`DR-42501`, `AUDIT-42703`, `PIN-2390-01` → Phase 93; `SEED-DELEG-01` → Phase 102.
+`GATE-STANDARD.md` gained **C9a** (cross-plan sweeps must read `<files>` blocks, not only
+`files_modified`).
+Roadmap: 13 phases, **92-104**. **All v1 requirements mapped, 0 orphaned, 0 duplicated.**
+The requirement **count is not restated here** — it lives in one place with its derivation command:
+the traceability table at the foot of `.planning/REQUIREMENTS.md` (`RULING-P92-19`).
+Scope: the 2026-08-15 live-app audit — 144 findings across 190 routes, 19 ship-blockers —
+plus v9.0's carry-forward.
+Audit of record: `.planning/audits/live-audit-2026-08-15/INDEX.md` (re-runnable via its
+`probe.mjs` + `00-BRIEF.md`) — **Phase 103 re-runs it to prove the findings closed rather than
+assumed.**
+Terminal gate: **Phase 104 (LIVE-01/02/03) is hardware-gated** on an undecided on-prem GPU host
+and depends on no other phase. Recorded recommendation: ship v10.0 with **LIVE-01/02/03 carried to
+v11.0** — every v1 requirement except those three — if the host is still undecided when Phase 103
+closes.
+
+Predecessor: v9.0 closed PARTIAL at 3/6 phases on 2026-08-15, merged via PR #98 (`e990ed84`),
+tagged `v9.0`. Its open items are the CARRY-\* requirements below.
 
 ## Quick Tasks Completed
 
@@ -184,6 +460,8 @@ Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/mi
 - [Phase ?]: 83-06: modern-nav re-skinned onto Linear DS tokens; bespoke shadow/radius/space/hsl ladders + glassmorphism deleted (613->190 lines); demo route kept, restyled flat
 - [Phase ?]: 83-06: bg-panel/text-content-text/bg-badge/text-icon-rail-\* are undefined no-op Tailwind classes (no @theme or config mapping); real var() consumers were the tokens-file recipes + IconButton.tsx only — deletion proven safe
 - [Phase 84]: COPY-01: marketing voice removed from 4 en i18n namespaces (21 '!', 6 Discover/easily, 'Let us show you around'); ar mirrored en (D-84-05); duplicate-detection.json + ar 'اكتشاف التعارضات' left untouched (D-84-09). Values-only, en/ar key parity + label-parity green.
+- [Phase ?]: 98-01: eight named oracles — COPY-07 gets its own spec; 98-VALIDATION's fold-in option is superseded by its own Wave-0 eight-file requirement and D-08
+- [Phase ?]: 98-01: oracles assert rendered === i18n bundle rather than hardcoded prose, so each proves the component reads the key and cannot go stale against a legitimate rewording
 
 ### Open Todos
 
@@ -306,3 +584,12 @@ file. Bookkeeping debt only — no open functional work.
 ## Operator Next Steps
 
 - Start the next milestone with /gsd-new-milestone
+
+## Performance Metrics
+
+| Phase | Plan | Duration | Notes                                                                                                |
+| ----- | ---- | -------- | ---------------------------------------------------------------------------------------------------- |
+| 98    | 01   | ~2h      | 3 tasks · 9 files · 8 oracles proven RED at HEAD                                                     |
+| 98    | 02   | ~1h      | 2 tasks · 6 files · 4 new checks drilled RED; 60 debt rows / 97 sites                                |
+| 98    | 03   | ~1h      | 2 tasks · 4 files · RED 4/5 → GREEN 5/5 both locales; criterion 7 + COPY-07 closed                   |
+| 98    | 04   | ~2h      | 3 tasks · 7 files · 97 entityLinks leaves ×2 locales; criterion 6 closed both locales; 43→0 dot-form |

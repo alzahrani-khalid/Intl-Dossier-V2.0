@@ -4,8 +4,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { formatDistanceToNow } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
+import { formatDateTime } from '@/lib/format-date'
 import { MoreHorizontal, Play, Copy, Trash2, Settings, History, Zap, Clock } from 'lucide-react'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -43,7 +42,6 @@ export function WorkflowRuleCard({
 }: WorkflowRuleCardProps) {
   const { t } = useTranslation('workflow-automation')
   const { isRTL } = useDirection()
-  const locale = isRTL ? ar : enUS
 
   const triggerOption = getTriggerTypeOption(rule.trigger_type)
   const entityOption = getEntityTypeOption(rule.entity_type)
@@ -92,7 +90,7 @@ export function WorkflowRuleCard({
                   className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
                 >
                   <MoreHorizontal className="h-4 w-4" />
-                  <span className="sr-only">{t('common:common.actions.openMenu')}</span>
+                  <span className="sr-only">{t('common:actions.openMenu')}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
@@ -157,11 +155,7 @@ export function WorkflowRuleCard({
             <Clock className="h-3 w-3" />
             {rule.last_triggered_at ? (
               <span>
-                {t('labels.last_triggered')}:{' '}
-                {formatDistanceToNow(new Date(rule.last_triggered_at), {
-                  addSuffix: true,
-                  locale,
-                })}
+                {t('labels.last_triggered')}: {formatDateTime(rule.last_triggered_at)}
               </span>
             ) : (
               <span>{t('messages.noExecutions')}</span>

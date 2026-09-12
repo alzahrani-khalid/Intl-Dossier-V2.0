@@ -7,7 +7,7 @@
 
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { format } from 'date-fns'
+import { formatDayMonth } from '@/lib/format-date'
 import {
   LineChart,
   Line,
@@ -28,7 +28,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
 import type { CommitmentFulfillment } from '@/types/analytics.types'
-import { AnalyticsPreviewOverlay } from './AnalyticsPreviewOverlay'
 import { useDirection } from '@/hooks/useDirection'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 import { toFormatLocale } from '@/lib/format-locale'
@@ -78,10 +77,6 @@ interface CommitmentFulfillmentChartProps {
   data?: CommitmentFulfillment
   isLoading?: boolean
   className?: string
-  /** Show preview overlay when no data */
-  showPreview?: boolean
-  /** Callback when user wants to see sample data */
-  onShowSampleData?: () => void
 }
 
 const STATUS_COLORS = {
@@ -101,18 +96,16 @@ export function CommitmentFulfillmentChart({
   data,
   isLoading,
   className,
-  showPreview = true,
-  onShowSampleData,
 }: CommitmentFulfillmentChartProps) {
-  const { t } = useTranslation('analytics')
+  const { t, i18n } = useTranslation('analytics')
   const { isRTL } = useDirection()
   const trendData = useMemo(() => {
     if (!data?.fulfillmentTrend) return []
     return data.fulfillmentTrend.map((point) => ({
       ...point,
-      dateLabel: format(new Date(point.date), 'd MMM'),
+      dateLabel: formatDayMonth(new Date(point.date)),
     }))
-  }, [data?.fulfillmentTrend])
+  }, [data?.fulfillmentTrend, i18n.language])
 
   const statusData = useMemo(() => {
     if (!data) return []
@@ -170,15 +163,6 @@ export function CommitmentFulfillmentChart({
   }
 
   if (!data) {
-    if (showPreview) {
-      return (
-        <AnalyticsPreviewOverlay
-          chartType="commitments"
-          onShowSampleData={onShowSampleData}
-          className={className}
-        />
-      )
-    }
     return (
       <Card className={className}>
         <CardHeader>

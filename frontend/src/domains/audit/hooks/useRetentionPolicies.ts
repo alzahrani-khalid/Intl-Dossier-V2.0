@@ -36,6 +36,20 @@ import type {
   RetentionExecutionLog,
 } from '@/types/retention-policy.types'
 
+/**
+ * Unwrap the `{ data: [...] }` envelope every `/data-retention/*` list endpoint answers.
+ *
+ * Validate-or-throw, never coerce. A body carrying no array under `data` is a broken response, and
+ * the honest render for it is the region's error state — coercing to `[]` would print "No policies"
+ * over rows the server did send (RETENTION-CAST-01). The six list queryFns below all route through
+ * this one guard, so the lie cannot come back one hook at a time.
+ */
+function unwrapListEnvelope<T>(body: unknown): T[] {
+  const data = (body as { data?: unknown } | null | undefined)?.data
+  if (!Array.isArray(data)) throw new Error('malformed retention envelope')
+  return data as T[]
+}
+
 export const retentionKeys = {
   all: ['retention'] as const,
   policies: () => [...retentionKeys.all, 'policies'] as const,
@@ -68,7 +82,8 @@ export function useRetentionPolicies(params?: Record<string, unknown>) {
 
   return useQuery<RetentionPolicy[]>({
     queryKey: retentionKeys.policyList(params),
-    queryFn: () => getRetentionPoliciesApi(searchParams) as Promise<RetentionPolicy[]>,
+    queryFn: async () =>
+      unwrapListEnvelope<RetentionPolicy>(await getRetentionPoliciesApi(searchParams)),
     staleTime: 5 * 60 * 1000,
   })
 }
@@ -126,7 +141,7 @@ export function useLegalHolds(params?: Record<string, unknown>) {
 
   return useQuery<LegalHold[]>({
     queryKey: retentionKeys.legalHoldList(params),
-    queryFn: () => getLegalHoldsApi(searchParams) as Promise<LegalHold[]>,
+    queryFn: async () => unwrapListEnvelope<LegalHold>(await getLegalHoldsApi(searchParams)),
     staleTime: 5 * 60 * 1000,
   })
 }
@@ -187,7 +202,7 @@ export function useDeleteLegalHold() {
 export function useRetentionStatistics() {
   return useQuery<RetentionStatistics[]>({
     queryKey: retentionKeys.statistics(),
-    queryFn: () => getRetentionStatistics() as Promise<RetentionStatistics[]>,
+    queryFn: async () => unwrapListEnvelope<RetentionStatistics>(await getRetentionStatistics()),
     staleTime: 5 * 60 * 1000,
   })
 }
@@ -202,7 +217,8 @@ export function usePendingActions(params?: Record<string, unknown>) {
 
   return useQuery<PendingRetentionAction[]>({
     queryKey: retentionKeys.pendingActions(params),
-    queryFn: () => getPendingActionsApi(searchParams) as Promise<PendingRetentionAction[]>,
+    queryFn: async () =>
+      unwrapListEnvelope<PendingRetentionAction>(await getPendingActionsApi(searchParams)),
     staleTime: 60 * 1000,
   })
 }
@@ -217,7 +233,8 @@ export function useExpiringRecords(params?: Record<string, unknown>) {
 
   return useQuery<ExpiringEntity[]>({
     queryKey: retentionKeys.expiring(params),
-    queryFn: () => getExpiringRecordsApi(searchParams) as Promise<ExpiringEntity[]>,
+    queryFn: async () =>
+      unwrapListEnvelope<ExpiringEntity>(await getExpiringRecordsApi(searchParams)),
     staleTime: 60 * 1000,
   })
 }
@@ -225,7 +242,7 @@ export function useExpiringRecords(params?: Record<string, unknown>) {
 export function useExecutionLog() {
   return useQuery<RetentionExecutionLog[]>({
     queryKey: retentionKeys.executionLog(),
-    queryFn: () => getExecutionLog() as Promise<RetentionExecutionLog[]>,
+    queryFn: async () => unwrapListEnvelope<RetentionExecutionLog>(await getExecutionLog()),
     staleTime: 30 * 1000,
   })
 }

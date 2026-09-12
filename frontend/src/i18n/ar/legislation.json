@@ -110,7 +110,7 @@
       "dates": "التواريخ الرئيسية",
       "commentPeriod": "فترة التعليقات",
       "links": "الروابط والمراجع",
-      "dossier": "الملف المرتبط"
+      "dossier": "الدوسيه المرتبط"
     },
     "fields": {
       "titleEn": "العنوان (الإنجليزية)",
@@ -139,7 +139,7 @@
       "tags": "الوسوم",
       "sectors": "القطاعات المتأثرة",
       "keywords": "الكلمات المفتاحية",
-      "dossier": "ربط بملف",
+      "dossier": "ربط بدوسيه",
       "parentLegislation": "التشريع الأصلي"
     },
     "placeholders": {
@@ -180,8 +180,8 @@
       "type": "الدور",
       "joinedDate": "تاريخ الانضمام",
       "notes": "ملاحظات",
-      "linkPerson": "ربط بملف شخص",
-      "linkOrganization": "ربط بملف منظمة"
+      "linkPerson": "ربط بدوسيه شخص",
+      "linkOrganization": "ربط بدوسيه منظمة"
     }
   },
 
@@ -330,7 +330,7 @@
     "referenceNumber": "المرجع",
     "jurisdiction": "الاختصاص القضائي",
     "issuingBody": "الجهة المصدرة",
-    "linkedDossier": "الملف المرتبط",
+    "linkedDossier": "الدوسيه المرتبط",
     "parentLegislation": "التشريع الأصلي",
     "sources": "المصادر",
     "sourceUrl": "المصدر",

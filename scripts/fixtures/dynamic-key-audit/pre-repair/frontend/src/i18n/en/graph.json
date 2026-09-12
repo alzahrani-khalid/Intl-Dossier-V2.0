@@ -1,0 +1,45 @@
+{
+  "country": "x",
+  "organization": "x",
+  "forum": "x",
+  "engagement": "x",
+  "type": {
+    "country": "x",
+    "organization": "x",
+    "forum": "x",
+    "engagement": "x",
+    "topic": "x",
+    "working_group": "x",
+    "person": "x",
+    "elected_official": "x"
+  },
+  "relationship": {
+    "member_of": "x",
+    "participates_in": "x",
+    "cooperates_with": "x",
+    "bilateral_relation": "x",
+    "partnership": "x",
+    "parent_of": "x",
+    "subsidiary_of": "x",
+    "related_to": "x",
+    "represents": "x",
+    "hosted_by": "x",
+    "sponsored_by": "x",
+    "involves": "x",
+    "discusses": "x",
+    "participant_in": "x",
+    "observer_of": "x",
+    "affiliate_of": "x",
+    "successor_of": "x",
+    "predecessor_of": "x"
+  },
+  "analyze": {
+    "template": {
+      "forumMembership": "x",
+      "sharedCommittees": "x",
+      "engagementChain": "x",
+      "shortestPath": "x"
+    },
+    "count": { "membership": "x", "intersection": "x", "chain": "x", "path": "x" }
+  }
+}

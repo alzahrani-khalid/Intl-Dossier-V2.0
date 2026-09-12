@@ -10,10 +10,9 @@
 import { useTranslation } from 'react-i18next'
 import { useElectedOfficial } from '@/domains/elected-officials/hooks/useElectedOfficials'
 import { Skeleton } from '@/components/ui/skeleton'
-import { format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
 import { Landmark } from 'lucide-react'
 import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 interface ElectedOfficialOfficeCardProps {
   dossierId: string
@@ -24,7 +23,6 @@ export function ElectedOfficialOfficeCard({
 }: ElectedOfficialOfficeCardProps): React.ReactElement {
   const { t, i18n } = useTranslation('elected-officials')
   const isRTL = i18n.language === 'ar'
-  const dateLocale = isRTL ? ar : enUS
 
   const { data: official, isLoading, isError } = useElectedOfficial(dossierId)
 
@@ -54,7 +52,7 @@ export function ElectedOfficialOfficeCard({
   const formatDate = (dateStr: string | null | undefined): string => {
     if (dateStr == null || dateStr === '') return '-'
     try {
-      return format(new Date(dateStr), 'PP', { locale: dateLocale })
+      return formatDayFirstYear(new Date(dateStr))
     } catch {
       return dateStr
     }
@@ -106,14 +104,10 @@ export function ElectedOfficialOfficeCard({
 
       {isError && official === undefined ? (
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('dossier:overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('dossier:overview.sectionError')}
         </p>
       ) : displayRows.length === 0 ? (
-        <p className="text-muted-foreground text-sm text-center py-8">
-          {t('detail.officeEmpty', { defaultValue: 'No office data available' })}
-        </p>
+        <p className="text-muted-foreground text-sm text-center py-8">{t('detail.officeEmpty')}</p>
       ) : (
         <dl className="space-y-3">
           {displayRows.map((row) => (

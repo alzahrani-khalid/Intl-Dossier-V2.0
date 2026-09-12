@@ -338,8 +338,8 @@ const ENTITY_TEMPLATES: Record<
       },
       {
         field: 'due_date',
-        header: 'Due Date (YYYY-MM-DD)',
-        headerAr: 'تاريخ الاستحقاق',
+        header: 'Deadline (YYYY-MM-DD)',
+        headerAr: 'الموعد النهائي',
         required: false,
         example: '2025-04-15',
       },

@@ -19,17 +19,17 @@
     "watchlist": "الكيانات المراقبة",
     "watchlistDescription": "تحديثات النشاط من الكيانات التي تتابعها.",
     "deadlines": "المواعيد النهائية القادمة",
-    "deadlinesDescription": "المهام والالتزامات والتذاكر التي تقترب من تاريخ استحقاقها.",
+    "deadlinesDescription": "المهام والالتزامات والتذاكر التي تقترب من مواعيدها النهائية.",
     "unresolvedTickets": "التذاكر غير المحلولة",
     "unresolvedTicketsDescription": "تذاكر الاستقبال المفتوحة التي تتطلب انتباهاً.",
     "assignments": "المهام المعلقة",
     "assignmentsDescription": "المهام وعناصر العمل المسندة إليك.",
     "commitments": "الالتزامات النشطة",
-    "commitmentsDescription": "الالتزامات من الارتباطات التي تتابعها.",
+    "commitmentsDescription": "الالتزامات من المشاركات التي تتابعها.",
     "mentions": "الإشارات الأخيرة",
     "mentionsDescription": "التعليقات والملاحظات التي تم ذكرك فيها.",
     "calendar": "أحداث التقويم",
-    "calendarDescription": "الاجتماعات والأحداث والارتباطات القادمة."
+    "calendarDescription": "الاجتماعات والأحداث والمشاركات القادمة."
   },
 
   "watchlist": {
@@ -42,9 +42,9 @@
     "manageWatchlist": "إدارة قائمة المراقبة ←",
     "types": {
       "person": "الأشخاص",
-      "engagement": "الارتباطات",
+      "engagement": "المشاركات",
       "commitment": "الالتزامات",
-      "dossier": "الملفات",
+      "dossier": "الدوسيهات",
       "organization": "المنظمات",
       "forum": "المنتديات",
       "position": "المواقف",

@@ -24,12 +24,15 @@ export interface DossierSearchResult {
   sensitivity_level: number
   tags?: string[]
   relevance_score: number
-  matched_fields: string[]
   created_at: string
   updated_at: string
 
-  // Key stats for dossier cards
-  stats: DossierStats
+  // OPTIONAL BECAUSE NO DEPLOYED FUNCTION RETURNS THEM (DEAD-01). The `search` fn answers with
+  // rows carrying no match breakdown and no per-dossier counts. The adapter therefore leaves both
+  // absent instead of filling in zeros — a fabricated count renders as a fact. Consumers show the
+  // stat row only when the server actually sent stats.
+  matched_fields?: string[]
+  stats?: DossierStats
 }
 
 /**
@@ -70,12 +73,17 @@ export interface RelatedWorkItem {
   priority?: 'low' | 'medium' | 'high' | 'urgent'
   relevance_score: number
   matched_fields: string[]
-  created_at: string
   updated_at: string
   deadline?: string
 
+  // OPTIONAL BECAUSE THE REAL SOURCE OMITS THEM (DEAD-01). `quickswitcher-search` sends no
+  // `created_at`, and it attaches a dossier only where the row has one — tasks and commitments
+  // routinely arrive without any owning dossier. Dropping those rows to satisfy a required field
+  // would hide real work items; consumers render the context badge only when a context exists.
+  created_at?: string
+
   // Dossier context - which dossier this item is linked to
-  dossier_context: DossierContext
+  dossier_context?: DossierContext
 
   // Inheritance info
   inheritance_source?: 'direct' | 'engagement' | 'after_action' | 'position' | 'mou'

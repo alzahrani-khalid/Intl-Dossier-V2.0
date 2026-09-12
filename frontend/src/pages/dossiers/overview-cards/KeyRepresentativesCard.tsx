@@ -33,8 +33,8 @@ export function KeyRepresentativesCard({
     { staleTime: 30_000 },
   )
 
-  const title = t('overview.representatives.title', { defaultValue: 'Key Representatives' })
-  const addLabel = t('overview.representatives.add', { defaultValue: 'Add representative' })
+  const title = t('overview.representatives.title')
+  const addLabel = t('overview.representatives.add')
 
   const AddLink = (): React.ReactElement => (
     <Link
@@ -68,9 +68,7 @@ export function KeyRepresentativesCard({
       <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
         <h3 className="text-base font-semibold leading-tight text-start mb-4">{title}</h3>
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('overview.sectionError')}
         </p>
       </div>
     )
@@ -88,7 +86,7 @@ export function KeyRepresentativesCard({
 
       {reps.length === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">
-          {t('overview.representatives.empty', { defaultValue: 'No representatives linked' })}
+          {t('overview.representatives.empty')}
         </p>
       ) : (
         <div className="space-y-2">
@@ -136,7 +134,6 @@ export function KeyRepresentativesCard({
             <p className="w-full text-sm text-muted-foreground py-2 text-start">
               {t('overview.representatives.more', {
                 count: MAX_REPS,
-                defaultValue: 'Showing first {{count}}',
               })}
             </p>
           )}

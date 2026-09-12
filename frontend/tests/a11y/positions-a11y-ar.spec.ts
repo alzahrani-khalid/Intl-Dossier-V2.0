@@ -74,6 +74,8 @@ test.describe('Positions Accessibility (Arabic RTL)', () => {
 
   test('should support RTL keyboard navigation', async ({ page }) => {
     await gotoAr(page, '/positions')
+    // networkidle is not a render signal (P101-12): wait for the shell before pressing Tab.
+    await expect(page.locator('main, [role="main"]').first()).toBeAttached({ timeout: 15_000 })
 
     // Tab navigation should work in RTL and land on a real focusable element.
     await page.keyboard.press('Tab')

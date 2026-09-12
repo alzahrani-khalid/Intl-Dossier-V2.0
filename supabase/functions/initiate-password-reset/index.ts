@@ -14,6 +14,7 @@ import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { Redis } from 'https://esm.sh/@upstash/redis@1'
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
+import { writeAuditLog } from '../_shared/audit.ts'
 
 // Initialize Supabase client
 const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
@@ -126,7 +127,7 @@ serve(async (req) => {
     // Look up user by email
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('id, email, full_name, mfa_enabled, language_preference')
+      .select('id, email, full_name, mfa_enabled, language_preference, role')
       .eq('email', email)
       .eq('is_active', true)
       .single()
@@ -175,19 +176,29 @@ serve(async (req) => {
     // For non-MFA users, send reset email directly
     await sendResetEmail(user.email, user.full_name || email, resetToken, language)
 
-    // Log audit event
-    await supabase.from('audit_logs').insert({
-      event_type: 'password_reset_initiated',
-      user_id: user.id,
-      resource_type: 'user',
-      resource_id: user.id,
-      action: 'update',
-      metadata: {
-        email: user.email,
-        mfa_required: false,
-      },
-      created_at: new Date().toISOString(),
-    })
+    // Log audit event.
+    // Grade: LOG-LOUDLY-AND-CONTINUE (D-18) — the reset email has already been sent.
+    if (!user.role) {
+      console.error(
+        `AUDIT-ZERO-01: audit write SKIPPED — no user_role resolves for ${user.id} (initiate-password-reset:password_reset_initiated)`,
+      )
+    } else {
+      await writeAuditLog(
+        supabase,
+        {
+          entity_type: 'user',
+          entity_id: user.id,
+          action: 'password_reset_initiated',
+          user_id: user.id,
+          user_role: user.role,
+          new_values: {
+            email: user.email,
+            mfa_required: false,
+          },
+        },
+        'initiate-password-reset',
+      )
+    }
 
     return new Response(
       JSON.stringify({

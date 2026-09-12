@@ -97,6 +97,7 @@
   },
   "statuses": {
     "planned": "Planned",
+    "scheduled": "Scheduled",
     "confirmed": "Confirmed",
     "in_progress": "In Progress",
     "completed": "Completed",

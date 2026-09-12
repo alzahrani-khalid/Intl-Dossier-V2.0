@@ -162,7 +162,7 @@ function DossierTypeBadge({ type }: { type: DossierType }) {
   return (
     <Badge variant="secondary" className="text-xs gap-1">
       <Icon className="h-3 w-3" />
-      <span>{t(`types.${type}`)}</span>
+      <span>{t(`dossier-recommendations:types.${type}`)}</span>
     </Badge>
   )
 }
@@ -420,7 +420,7 @@ export function DossierRecommendationCard({
                     variant="ghost"
                     onClick={() => handleFeedback(true)}
                     className="h-8 w-8"
-                    aria-label={t('common:common.actions.thumbsUp', { defaultValue: 'Helpful' })}
+                    aria-label={t('common:actions.thumbsUp')}
                   >
                     <ThumbsUp className="h-4 w-4" />
                   </Button>
@@ -429,9 +429,7 @@ export function DossierRecommendationCard({
                     variant="ghost"
                     onClick={() => handleFeedback(false)}
                     className="h-8 w-8"
-                    aria-label={t('common:common.actions.thumbsDown', {
-                      defaultValue: 'Not helpful',
-                    })}
+                    aria-label={t('common:actions.thumbsDown')}
                   >
                     <ThumbsDown className="h-4 w-4" />
                   </Button>

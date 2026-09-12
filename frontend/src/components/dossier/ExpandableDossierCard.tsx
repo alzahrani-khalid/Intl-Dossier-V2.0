@@ -14,7 +14,7 @@
 
 import { useEffect, useId, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { formatDayFirstYear } from '@/lib/format-date'
+import { formatDayFirstYear, formatRelativeTime } from '@/lib/format-date'
 import { AnimatePresence, m } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -190,23 +190,6 @@ function getInitials(name: string): string {
   return (words[0]!.charAt(0) + words[words.length - 1]!.charAt(0)).toUpperCase()
 }
 
-/**
- * Format date to relative time
- */
-function formatRelativeTime(date: string, t: any): string {
-  const now = new Date()
-  const then = new Date(date)
-  const diffMs = now.getTime() - then.getTime()
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
-
-  if (diffDays === 0) return t('time.today')
-  if (diffDays === 1) return t('time.yesterday')
-  if (diffDays < 7) return t('time.daysAgo', { count: diffDays })
-  if (diffDays < 30) return t('time.weeksAgo', { count: Math.floor(diffDays / 7) })
-  if (diffDays < 365) return t('time.monthsAgo', { count: Math.floor(diffDays / 30) })
-  return t('time.yearsAgo', { count: Math.floor(diffDays / 365) })
-}
-
 export function ExpandableDossierCard({
   dossier,
   isActive,
@@ -224,7 +207,7 @@ export function ExpandableDossierCard({
 
   const displayName = isRTL ? dossier.name_ar : dossier.name_en
   const displayDescription = isRTL ? dossier.description_ar : dossier.description_en
-  const relativeTime = formatRelativeTime(dossier.updated_at, t)
+  const relativeTime = formatRelativeTime(dossier.updated_at)
   const countryCode = dossier.type === 'country' ? getCountryCode(displayName) : null
 
   useEffect(() => {

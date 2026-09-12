@@ -6,8 +6,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { formatDistanceToNow } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
+import { formatDateTime } from '@/lib/format-date'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -47,7 +46,6 @@ export function DuplicateCandidateCard({
 }: DuplicateCandidateCardProps) {
   const { t } = useTranslation('duplicate-detection')
   const { isRTL } = useDirection()
-  const dateLocale = isRTL ? ar : enUS
 
   const scorePercentage = Math.round(candidate.overall_score * 100)
 
@@ -111,13 +109,13 @@ export function DuplicateCandidateCard({
                 <div className="text-end">
                   <div className="text-2xl font-bold">{scorePercentage}%</div>
                   <div className="text-xs text-muted-foreground">
-                    {t('similarity_score', 'Similarity')}
+                    {t('similarity_score')}
                   </div>
                 </div>
               </TooltipTrigger>
               <TooltipContent>
                 <p>
-                  {t('similarity_tooltip', 'Overall similarity score based on multiple factors')}
+                  {t('similarity_tooltip')}
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -130,7 +128,7 @@ export function DuplicateCandidateCard({
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {/* Source entity */}
           <div className="rounded-lg border p-3 bg-muted/30">
-            <div className="text-xs text-muted-foreground mb-1">{t('entity_1', 'Entity 1')}</div>
+            <div className="text-xs text-muted-foreground mb-1">{t('entity_1')}</div>
             <div className="font-medium truncate">
               {isRTL ? candidate.source_name_ar : candidate.source_name_en}
             </div>
@@ -141,7 +139,7 @@ export function DuplicateCandidateCard({
 
           {/* Target entity */}
           <div className="rounded-lg border p-3 bg-muted/30">
-            <div className="text-xs text-muted-foreground mb-1">{t('entity_2', 'Entity 2')}</div>
+            <div className="text-xs text-muted-foreground mb-1">{t('entity_2')}</div>
             <div className="font-medium truncate">
               {isRTL ? candidate.target_name_ar : candidate.target_name_en}
             </div>
@@ -153,7 +151,7 @@ export function DuplicateCandidateCard({
 
         {/* Similarity breakdown */}
         <div className="space-y-2">
-          <div className="text-sm font-medium">{t('matching_factors', 'Matching Factors')}</div>
+          <div className="text-sm font-medium">{t('matching_factors')}</div>
           <div className="flex flex-wrap gap-1">
             {matchingFields.map((field) => (
               <Badge key={field} variant="secondary" className="text-xs">
@@ -167,7 +165,7 @@ export function DuplicateCandidateCard({
             ))}
             {matchingFields.length === 0 && (
               <span className="text-xs text-muted-foreground">
-                {t('no_strong_matches', 'No strong field matches')}
+                {t('no_strong_matches')}
               </span>
             )}
           </div>
@@ -177,18 +175,14 @@ export function DuplicateCandidateCard({
         <div className="space-y-1">
           <Progress value={scorePercentage} className="h-2" />
           <div className="flex justify-between text-xs text-muted-foreground">
-            <span>{t('low_similarity', 'Low')}</span>
-            <span>{t('high_similarity', 'High')}</span>
+            <span>{t('low_similarity')}</span>
+            <span>{t('high_similarity')}</span>
           </div>
         </div>
 
         {/* Detection time */}
         <div className="text-xs text-muted-foreground">
-          {t('detected', 'Detected')}{' '}
-          {formatDistanceToNow(new Date(candidate.detected_at), {
-            addSuffix: true,
-            locale: dateLocale,
-          })}
+          {t('detected')} {formatDateTime(candidate.detected_at)}
         </div>
       </CardContent>
 
@@ -200,7 +194,7 @@ export function DuplicateCandidateCard({
           onClick={() => onViewDetails(candidate)}
         >
           <Eye className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
-          {t('view_details', 'View Details')}
+          {t('view_details')}
         </Button>
         <Button
           variant="outline"
@@ -210,7 +204,7 @@ export function DuplicateCandidateCard({
           disabled={isLoading}
         >
           <X className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
-          {t('not_duplicate', 'Not Duplicate')}
+          {t('not_duplicate')}
         </Button>
         <Button
           size="sm"
@@ -219,7 +213,7 @@ export function DuplicateCandidateCard({
           disabled={isLoading}
         >
           <Merge className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
-          {t('merge', 'Merge')}
+          {t('merge')}
         </Button>
       </CardFooter>
     </Card>

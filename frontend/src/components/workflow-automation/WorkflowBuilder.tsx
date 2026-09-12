@@ -273,9 +273,7 @@ export function WorkflowBuilder({ rule, onSave, onCancel }: WorkflowBuilderProps
                 <div className="flex items-center justify-between">
                   <div>
                     <Label htmlFor="is_active">{t('labels.is_active')}</Label>
-                    <p className="text-xs text-muted-foreground">
-                      {t('help.isActive', { defaultValue: 'Enable or disable this workflow' })}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{t('help.isActive')}</p>
                   </div>
                   <Switch id="is_active" checked={isActive} onCheckedChange={setIsActive} />
                 </div>

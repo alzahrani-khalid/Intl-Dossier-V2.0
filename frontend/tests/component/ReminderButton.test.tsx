@@ -33,7 +33,7 @@ describe('ReminderButton', () => {
     render(<ReminderButton assignmentId={assignmentId} assigneeId={assigneeId} />)
 
     const button = screen.getByRole('button', { name: /follow-up reminder/i })
-    expect(button).toHaveTextContent(/follow up/i)
+    expect(button).toHaveTextContent(/send reminder/i)
     expect(button).toHaveClass('min-h-11', 'min-w-11')
     expect(button.className).not.toMatch(/ml-|mr-|pl-|pr-/)
   })
@@ -97,7 +97,7 @@ describe('ReminderButton', () => {
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith(
         expect.objectContaining({
-          title: 'Reminder Sent',
+          title: 'Reminder sent',
           variant: 'default',
         }),
       )

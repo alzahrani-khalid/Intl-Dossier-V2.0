@@ -1,0 +1,8 @@
+{
+  "quickActions": {
+    "analyzeForumMembership": "x",
+    "analyzeSharedCommittees": "x",
+    "analyzeEngagementChains": "x",
+    "analyzeShortestPath": "x"
+  }
+}

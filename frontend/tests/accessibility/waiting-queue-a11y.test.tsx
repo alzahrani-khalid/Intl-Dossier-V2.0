@@ -299,7 +299,7 @@ describe('Waiting Queue Accessibility Tests (WCAG AA)', () => {
       )
 
       const toolbar = screen.getByRole('toolbar')
-      expect(toolbar).toHaveTextContent('3 items selected')
+      expect(toolbar).toHaveTextContent('3 selected')
     })
 
     it('should support keyboard navigation for all actions', async () => {
@@ -311,10 +311,10 @@ describe('Waiting Queue Accessibility Tests (WCAG AA)', () => {
       )
 
       const sendRemindersButton = screen.getByRole('button', {
-        name: 'Send Reminders',
+        name: 'Send reminders',
       })
       const clearButton = screen.getByRole('button', {
-        name: 'Clear Selection',
+        name: 'Clear selection',
       })
 
       // Tab through buttons
@@ -332,8 +332,8 @@ describe('Waiting Queue Accessibility Tests (WCAG AA)', () => {
         </TestWrapper>,
       )
 
-      expect(screen.getByRole('button', { name: 'Send Reminders' })).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: 'Clear Selection' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Send reminders' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Clear selection' })).toBeInTheDocument()
     })
   })
 

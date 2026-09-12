@@ -171,10 +171,10 @@
     "document_plural": "مستندات",
     "ticket": "تذكرة",
     "ticket_plural": "تذاكر",
-    "dossier": "ملف",
-    "dossier_plural": "ملفات",
-    "engagement": "ارتباط",
-    "engagement_plural": "ارتباطات",
+    "dossier": "دوسيه",
+    "dossier_plural": "دوسيهات",
+    "engagement": "مشاركة",
+    "engagement_plural": "مشاركات",
     "commitment": "التزام",
     "commitment_plural": "التزامات",
     "deliverable": "مخرج",
@@ -216,6 +216,8 @@
   },
 
   "accessibility": {
+    "cardView": "عرض البطاقات",
+    "tableView": "عرض الجدول",
     "toolbar": "شريط أدوات الإجراءات الجماعية",
     "selectionCheckbox": "مربع اختيار لـ {{name}}",
     "selectAllCheckbox": "مربع اختيار تحديد جميع العناصر",

@@ -6,10 +6,12 @@
  * rich + filtered empty states.
  */
 
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { useCallback, useMemo, type ReactElement } from 'react'
+import { Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { ListPageShell, DossierTable, ToolbarSearch } from '@/components/list-page'
 import type { DossierTableRow, DossierTableColumn } from '@/components/list-page'
 import {
@@ -216,7 +218,7 @@ function OrganizationsListRoute(): ReactElement {
       <ToolbarSearch
         value={search.search ?? ''}
         onChange={onSearchChange}
-        placeholder={t('list-pages:search.placeholder', { defaultValue: 'Search…' })}
+        placeholder={t('list-pages:search.placeholder')}
       />
       <FilterPopover
         config={organizationsListConfig}
@@ -241,11 +243,17 @@ function OrganizationsListRoute(): ReactElement {
 
   return (
     <ListPageShell
-      title={t('organizations:title', { defaultValue: isArabic ? 'المنظمات' : 'Organizations' })}
-      subtitle={t('organizations:subtitle', {
-        defaultValue: isArabic ? 'كل ملفات المنظمات' : 'All organization dossiers',
-      })}
+      title={t('organizations:title')}
+      subtitle={t('organizations:subtitle')}
       toolbar={toolbar}
+      actions={
+        <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">
+          <Link to="/dossiers/organizations/create">
+            <Plus className="h-4 w-4 me-2" />
+            {t('empty-states:list.organization.cta')}
+          </Link>
+        </Button>
+      }
       isLoading={query.isLoading}
       isEmpty={!query.isLoading && rows.length === 0}
       emptyState={

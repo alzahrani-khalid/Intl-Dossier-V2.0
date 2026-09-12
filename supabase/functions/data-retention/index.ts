@@ -1,5 +1,5 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
+import { createClient } from 'jsr:@supabase/supabase-js@2'
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
 
 interface RetentionPolicy {
@@ -85,10 +85,11 @@ serve(async (req) => {
     )
 
     // Get current user
+    const token = authHeader.replace('Bearer ', '')
     const {
       data: { user },
       error: userError,
-    } = await supabaseClient.auth.getUser()
+    } = await supabaseClient.auth.getUser(token)
 
     if (userError || !user) {
       return new Response(
@@ -271,13 +272,13 @@ async function handleGet(
     const { data, error } = await query
 
     if (error) {
+      console.error('Failed to fetch policies:', error)
       return new Response(
         JSON.stringify({
           error: {
             code: 'FETCH_ERROR',
             message_en: 'Failed to fetch policies',
             message_ar: 'فشل في جلب السياسات',
-            details: error,
           },
         }),
         {
@@ -333,13 +334,13 @@ async function handleGet(
     const { data, error } = await query
 
     if (error) {
+      console.error('Failed to fetch legal holds:', error)
       return new Response(
         JSON.stringify({
           error: {
             code: 'FETCH_ERROR',
             message_en: 'Failed to fetch legal holds',
             message_ar: 'فشل في جلب الحجوزات القانونية',
-            details: error,
           },
         }),
         {
@@ -359,13 +360,13 @@ async function handleGet(
     const { data, error } = await supabase.rpc('get_retention_statistics')
 
     if (error) {
+      console.error('Failed to fetch statistics:', error)
       return new Response(
         JSON.stringify({
           error: {
             code: 'FETCH_ERROR',
             message_en: 'Failed to fetch statistics',
             message_ar: 'فشل في جلب الإحصائيات',
-            details: error,
           },
         }),
         {
@@ -393,13 +394,13 @@ async function handleGet(
     })
 
     if (error) {
+      console.error('Failed to fetch expiring entities:', error)
       return new Response(
         JSON.stringify({
           error: {
             code: 'FETCH_ERROR',
             message_en: 'Failed to fetch expiring entities',
             message_ar: 'فشل في جلب الكيانات المنتهية',
-            details: error,
           },
         }),
         {
@@ -427,13 +428,13 @@ async function handleGet(
     })
 
     if (error) {
+      console.error('Failed to fetch pending actions:', error)
       return new Response(
         JSON.stringify({
           error: {
             code: 'FETCH_ERROR',
             message_en: 'Failed to fetch pending actions',
             message_ar: 'فشل في جلب الإجراءات المعلقة',
-            details: error,
           },
         }),
         {
@@ -464,13 +465,13 @@ async function handleGet(
     const { data, error } = await query
 
     if (error) {
+      console.error('Failed to fetch execution log:', error)
       return new Response(
         JSON.stringify({
           error: {
             code: 'FETCH_ERROR',
             message_en: 'Failed to fetch execution log',
             message_ar: 'فشل في جلب سجل التنفيذ',
-            details: error,
           },
         }),
         {
@@ -525,13 +526,13 @@ async function handlePost(
       .single()
 
     if (error) {
+      console.error('Failed to create policy:', error)
       return new Response(
         JSON.stringify({
           error: {
             code: 'CREATE_ERROR',
             message_en: 'Failed to create policy',
             message_ar: 'فشل في إنشاء السياسة',
-            details: error,
           },
         }),
         {
@@ -562,13 +563,13 @@ async function handlePost(
       .single()
 
     if (error) {
+      console.error('Failed to create legal hold:', error)
       return new Response(
         JSON.stringify({
           error: {
             code: 'CREATE_ERROR',
             message_en: 'Failed to create legal hold',
             message_ar: 'فشل في إنشاء الحجز القانوني',
-            details: error,
           },
         }),
         {
@@ -605,13 +606,13 @@ async function handlePost(
     })
 
     if (error) {
+      console.error('Failed to apply retention policy:', error)
       return new Response(
         JSON.stringify({
           error: {
             code: 'APPLY_ERROR',
             message_en: 'Failed to apply retention policy',
             message_ar: 'فشل في تطبيق سياسة الاحتفاظ',
-            details: error,
           },
         }),
         {
@@ -648,13 +649,13 @@ async function handlePost(
       .single()
 
     if (error) {
+      console.error('Failed to set manual hold:', error)
       return new Response(
         JSON.stringify({
           error: {
             code: 'HOLD_ERROR',
             message_en: 'Failed to set manual hold',
             message_ar: 'فشل في تعيين الحجز اليدوي',
-            details: error,
           },
         }),
         {
@@ -680,13 +681,13 @@ async function handlePost(
     })
 
     if (error) {
+      console.error('Failed to release legal hold:', error)
       return new Response(
         JSON.stringify({
           error: {
             code: 'RELEASE_ERROR',
             message_en: 'Failed to release legal hold',
             message_ar: 'فشل في إطلاق الحجز القانوني',
-            details: error,
           },
         }),
         {
@@ -755,13 +756,13 @@ async function handleUpdate(
       .single()
 
     if (error) {
+      console.error('Failed to update policy:', error)
       return new Response(
         JSON.stringify({
           error: {
             code: 'UPDATE_ERROR',
             message_en: 'Failed to update policy',
             message_ar: 'فشل في تحديث السياسة',
-            details: error,
           },
         }),
         {
@@ -788,13 +789,13 @@ async function handleUpdate(
       .single()
 
     if (error) {
+      console.error('Failed to update legal hold:', error)
       return new Response(
         JSON.stringify({
           error: {
             code: 'UPDATE_ERROR',
             message_en: 'Failed to update legal hold',
             message_ar: 'فشل في تحديث الحجز القانوني',
-            details: error,
           },
         }),
         {
@@ -854,13 +855,13 @@ async function handleDelete(
       .eq('id', resourceId)
 
     if (error) {
+      console.error('Failed to delete policy:', error)
       return new Response(
         JSON.stringify({
           error: {
             code: 'DELETE_ERROR',
             message_en: 'Failed to delete policy',
             message_ar: 'فشل في حذف السياسة',
-            details: error,
           },
         }),
         {
@@ -903,13 +904,13 @@ async function handleDelete(
     const { error } = await supabase.from('legal_holds').delete().eq('id', resourceId)
 
     if (error) {
+      console.error('Failed to delete legal hold:', error)
       return new Response(
         JSON.stringify({
           error: {
             code: 'DELETE_ERROR',
             message_en: 'Failed to delete legal hold',
             message_ar: 'فشل في حذف الحجز القانوني',
-            details: error,
           },
         }),
         {

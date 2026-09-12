@@ -17,7 +17,7 @@
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 
 // ============================================================================
@@ -638,7 +638,11 @@ async function handleRequest(req: Request, corsHeaders: Record<string, string>) 
         const dossierType = url.searchParams.get('type');
         const minScore = url.searchParams.get('min_score');
 
-        let query = supabase.from('stakeholder_network_summary').select('*');
+        const serviceClient = createClient(
+          Deno.env.get('SUPABASE_URL') ?? '',
+          Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+        );
+        let query = serviceClient.from('stakeholder_network_summary').select('*');
 
         if (dossierType) {
           query = query.eq('dossier_type', dossierType);

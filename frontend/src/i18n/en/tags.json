@@ -17,7 +17,8 @@
     "expand": "Expand",
     "collapse": "Collapse",
     "expandAll": "Expand All",
-    "collapseAll": "Collapse All"
+    "collapseAll": "Collapse All",
+    "tagCount": "{{count}} tags"
   },
   "actions": {
     "create": "Create Tag",
@@ -110,7 +111,9 @@
   },
   "search": {
     "placeholder": "Search tags...",
-    "noResults": "No tags found",
+    "noResults": {
+      "title": "No tags found"
+    },
     "matchType": {
       "exact": "Exact match",
       "prefix": "Starts with",

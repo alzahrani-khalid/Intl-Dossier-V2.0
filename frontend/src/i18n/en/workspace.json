@@ -4,6 +4,7 @@
     "context": "Context",
     "positions": "Positions",
     "signals": "Signals",
+    "digests": "Digests",
     "tasks": "Tasks",
     "calendar": "Calendar",
     "docs": "Docs",
@@ -17,6 +18,7 @@
   },
   "docs": {
     "upload": "Upload document",
+    "count": "{{count}} documents",
     "count_one": "{{count}} document",
     "count_other": "{{count}} documents",
     "untitled": "Untitled brief"

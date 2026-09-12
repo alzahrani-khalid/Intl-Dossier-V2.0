@@ -24,6 +24,7 @@ import {
   Target,
   Briefcase,
   User,
+  Crown,
   HelpCircle,
   Check,
   X,
@@ -37,11 +38,23 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
+import { dossierTypeColors } from '@/lib/semantic-colors'
 import type { DossierType } from '@/services/dossier-api'
+import { DOSSIER_TYPES, type DossierCardType } from '@/lib/dossier-type-guards'
 import { useDirection } from '@/hooks/useDirection'
 
+/**
+ * This component DISPLAYS dossier kinds, so it speaks the CARD-8
+ * (`DossierCardType`), not the DB-7 (`DossierType`) — `dossier-type-guards.ts:61-72`
+ * assigns display surfaces to the card set and query surfaces to the DB set. The
+ * two sets are NOT merged here: `DOSSIER_TYPES` and its `_EoIsNotADbType`
+ * anti-merge assertion are untouched, so no `dossiers.type` count bucket is created.
+ * Until Phase 98 the `type !== 'elected_official' &&` render guard in
+ * `DossierTypeStatsCard.tsx` was doing this narrowing implicitly; deleting the guard
+ * (D-12) makes the prop's real domain explicit.
+ */
 export interface DossierTypeGuideProps {
-  type: DossierType
+  type: DossierCardType
   /** Render as compact tooltip or full popover */
   variant?: 'tooltip' | 'popover' | 'inline'
   /** Custom trigger element */
@@ -51,13 +64,13 @@ export interface DossierTypeGuideProps {
   /** Whether to show the info icon trigger */
   showTrigger?: boolean
   /** Callback when type is selected (for wizard integration) */
-  onSelect?: (type: DossierType) => void
+  onSelect?: (type: DossierCardType) => void
 }
 
 /**
  * Get type-specific icon component
  */
-function getTypeIcon(type: DossierType, className?: string) {
+function getTypeIcon(type: DossierCardType, className?: string) {
   const iconProps = { className: className || 'h-5 w-5' }
 
   switch (type) {
@@ -75,6 +88,8 @@ function getTypeIcon(type: DossierType, className?: string) {
       return <Briefcase {...iconProps} />
     case 'person':
       return <User {...iconProps} />
+    case 'elected_official':
+      return <Crown {...iconProps} />
     default:
       return <Globe {...iconProps} />
   }
@@ -83,63 +98,11 @@ function getTypeIcon(type: DossierType, className?: string) {
 /**
  * Get type-specific color classes
  *
- * D-58-04-01 (D-07 blue+purple collision rule): canonical mapping aligned to
- * `dossierTypeColors` in `frontend/src/lib/semantic-colors.ts`. Each branch maps
- * to a single semantic family (primary, secondary=accent-soft, success, warning,
- * destructive, accent, muted) using `/10` bg + `/30` border opacity steps.
- * Token tokens are mode-invariant, so no dark: variants are needed (D-09).
+ * Delegates to the canonical semantic colour map. Elected officials use the
+ * country entry because they are a displayed subtype rather than a DB dossier type.
  */
-function getTypeColors(type: DossierType): { bg: string; text: string; border: string } {
-  switch (type) {
-    case 'country':
-      return {
-        bg: 'bg-primary/10',
-        text: 'text-primary',
-        border: 'border-primary/30',
-      }
-    case 'organization':
-      return {
-        bg: 'bg-secondary',
-        text: 'text-secondary-foreground',
-        border: 'border-secondary',
-      }
-    case 'forum':
-      return {
-        bg: 'bg-success/10',
-        text: 'text-success',
-        border: 'border-success/30',
-      }
-    case 'engagement':
-      return {
-        bg: 'bg-warning/10',
-        text: 'text-warning',
-        border: 'border-warning/30',
-      }
-    case 'topic':
-      return {
-        bg: 'bg-destructive/10',
-        text: 'text-destructive',
-        border: 'border-destructive/30',
-      }
-    case 'working_group':
-      return {
-        bg: 'bg-accent',
-        text: 'text-accent-foreground',
-        border: 'border-accent',
-      }
-    case 'person':
-      return {
-        bg: 'bg-muted',
-        text: 'text-muted-foreground',
-        border: 'border-muted',
-      }
-    default:
-      return {
-        bg: 'bg-muted',
-        text: 'text-muted-foreground',
-        border: 'border-muted',
-      }
-  }
+function getTypeColors(type: DossierCardType): { bg: string; text: string; border: string } {
+  return dossierTypeColors[type as DossierType] ?? dossierTypeColors.country!
 }
 
 /**
@@ -150,9 +113,9 @@ function GuideContent({
   variant,
   onSelect,
 }: {
-  type: DossierType
+  type: DossierCardType
   variant: 'tooltip' | 'popover' | 'inline'
-  onSelect?: (type: DossierType) => void
+  onSelect?: (type: DossierCardType) => void
 }) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
@@ -321,7 +284,7 @@ export function DossierTypeGuide({
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
         className,
       )}
-      aria-label={t('typeGuide.learnMore', 'Learn more about this dossier type')}
+      aria-label={t('typeGuide.learnMore')}
     >
       <HelpCircle className="h-4 w-4" />
     </button>
@@ -376,16 +339,7 @@ export function DossierTypeGuideGrid({
   className?: string
 }) {
   const { t } = useTranslation('dossier')
-
-  const types: DossierType[] = [
-    'country',
-    'organization',
-    'person',
-    'engagement',
-    'forum',
-    'working_group',
-    'topic',
-  ]
+  const types: DossierType[] = GUIDE_GRID_TYPES
 
   return (
     <div
@@ -442,6 +396,8 @@ export function DossierTypeGuideGrid({
     </div>
   )
 }
+
+export const GUIDE_GRID_TYPES: DossierType[] = [...DOSSIER_TYPES]
 
 // Backward compatibility exports - map old names to new names
 export const EntityTypeGuide = DossierTypeGuide

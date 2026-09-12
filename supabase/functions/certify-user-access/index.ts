@@ -12,8 +12,9 @@
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
+import { createClient } from 'jsr:@supabase/supabase-js@2'
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
+import { writeAuditLog } from '../_shared/audit.ts'
 
 interface CertifyUserRequest {
   review_id: string
@@ -82,6 +83,8 @@ serve(async (req) => {
       },
     )
 
+    const token = authHeader.replace('Bearer ', '')
+
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
@@ -96,7 +99,7 @@ serve(async (req) => {
     const {
       data: { user: requester },
       error: userError,
-    } = await supabaseClient.auth.getUser()
+    } = await supabaseClient.auth.getUser(token)
 
     if (userError || !requester) {
       return new Response(
@@ -310,28 +313,37 @@ serve(async (req) => {
       )
     }
 
-    // Log to audit_logs
-    await supabaseAdmin.from('audit_logs').insert({
-      user_id: requester.id,
-      target_user_id: body.user_id,
-      event_type: 'user_access_certified',
-      resource_type: 'access_certification',
-      resource_id: body.review_id,
-      action: 'certify',
-      changes: {
-        after: {
+    // Log to audit_logs. Grade: PRECONDITION (PARK-94-08 (a), D-18) — an access
+    // certification is the audit record; if it cannot be recorded the action is
+    // refused. Stated tension: the certification row is already persisted, so the
+    // caller sees a 500 for an action that took effect. That is the intended trade.
+    const certificationAudit = await writeAuditLog(
+      supabaseAdmin,
+      {
+        entity_type: 'access_certification',
+        entity_id: body.review_id,
+        action: 'user_access_certified',
+        user_id: requester.id,
+        user_role: requesterData.role,
+        new_values: {
+          certified_user_id: body.user_id,
           certified: body.certified,
           certification_status: certificationStatus,
           requested_changes: body.requested_changes || null,
+          source: 'access_review',
+          review_id: body.review_id,
+          ip_address: req.headers.get('x-forwarded-for'),
         },
+        user_agent: req.headers.get('user-agent') || 'unknown',
       },
-      metadata: {
-        source: 'access_review',
-        review_id: body.review_id,
-      },
-      ip_address: req.headers.get('x-forwarded-for') || '0.0.0.0',
-      user_agent: req.headers.get('user-agent') || 'unknown',
-    })
+      'certify-user-access',
+    )
+    if (!certificationAudit.ok) {
+      return new Response(
+        JSON.stringify({ error: 'Failed to record audit entry', code: 'AUDIT_WRITE_FAILED' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      )
+    }
 
     // Create notification for the user if changes were requested
     if (!body.certified) {

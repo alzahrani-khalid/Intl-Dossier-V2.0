@@ -78,6 +78,13 @@ export function AfterActionsTable({
         </thead>
         <tbody>
           {rows.map((r) => {
+            // Phase 94-07 (D-13): `after-actions-list-all` composes the engagement in code and
+            // emits null when the lookup misses. The row is LISTED and stays navigable — the old
+            // inner-join embed deleted it from a list the user is told is complete. `text-warn`,
+            // not danger: nothing failed, the record is incomplete. No role, no icon, no badge —
+            // this is persistent state, not an interruption. Every other join-dependent cell
+            // already falls back to an em dash (`formatDayFirst('')`, `?? '—'`).
+            const engagementMissing = r.engagement === null || r.engagement === undefined
             const engagementTitle =
               locale === 'ar'
                 ? (r.engagement?.title_ar ?? r.engagement?.title_en ?? '—')
@@ -98,7 +105,13 @@ export function AfterActionsTable({
                     className="row-affordance"
                     style={{ color: 'inherit', textDecoration: 'none' }}
                   >
-                    {engagementTitle}
+                    {engagementMissing ? (
+                      <span className="text-warn font-normal [font-size:var(--t-body)]">
+                        {t('degraded.engagementMissing')}
+                      </span>
+                    ) : (
+                      engagementTitle
+                    )}
                   </Link>
                 </td>
                 <td dir="ltr" style={{ fontFamily: 'var(--font-mono)', color: 'var(--ink-mute)' }}>

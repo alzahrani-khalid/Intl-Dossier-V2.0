@@ -21,28 +21,22 @@ import { useTranslation } from 'react-i18next'
 import { m, AnimatePresence } from 'framer-motion'
 import { Cloud, CloudOff, Check, Loader2, AlertCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { formatDistanceToNow } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
+import { formatTime } from '@/lib/format-date'
 import type { AutoSaveIndicatorProps } from '@/types/form-auto-save.types'
-import { useDirection } from '@/hooks/useDirection'
 
 export function AutoSaveIndicator({ status, className, compact = false }: AutoSaveIndicatorProps) {
   const { t } = useTranslation('form-auto-save')
-  const { isRTL } = useDirection()
   const { isSaving, hasUnsavedChanges, lastSavedAt, error, isStorageAvailable } = status
 
   // Format the last saved time
   const lastSavedText = React.useMemo(() => {
     if (!lastSavedAt) return null
     try {
-      return formatDistanceToNow(new Date(lastSavedAt), {
-        addSuffix: true,
-        locale: isRTL ? ar : enUS,
-      })
+      return formatTime(lastSavedAt)
     } catch {
       return t('indicator.recently')
     }
-  }, [lastSavedAt, isRTL, t])
+  }, [lastSavedAt, t])
 
   // Determine the current state
   const getState = (): 'saving' | 'saved' | 'unsaved' | 'error' | 'unavailable' => {

@@ -25,8 +25,8 @@ describe('BulkActionToolbar', () => {
     renderToolbar(5)
 
     expect(screen.getByRole('toolbar', { name: /bulk actions/i })).toBeInTheDocument()
-    expect(screen.getByText('5 items selected')).toBeInTheDocument()
-    expect(screen.getByText('Max 100 items')).toBeInTheDocument()
+    expect(screen.getByText('5 selected')).toBeInTheDocument()
+    expect(screen.getByText('(max 100)')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /send reminders/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /clear selection/i })).toBeInTheDocument()
   })
@@ -52,7 +52,7 @@ describe('BulkActionToolbar', () => {
 
     expect(screen.getByRole('button', { name: /send reminders/i })).toBeDisabled()
     expect(screen.getByRole('button', { name: /clear selection/i })).toBeDisabled()
-    expect(screen.getByText('Sending...')).toBeInTheDocument()
+    expect(screen.getByText('Sending reminders...')).toBeInTheDocument()
   })
 
   it('shows the max-selection warning at the cap', () => {
@@ -67,6 +67,6 @@ describe('BulkActionToolbar', () => {
     const toolbar = screen.getByRole('toolbar', { name: /bulk actions/i })
     expect(toolbar).toHaveClass('flex-col', 'gap-2', 'p-4')
     expect(toolbar.className).not.toMatch(/\bml-|\bmr-|\bpl-|\bpr-/)
-    expect(screen.getByText('Clear Selection')).toHaveClass('ms-2')
+    expect(screen.getByText('Clear')).toHaveClass('ms-2')
   })
 })

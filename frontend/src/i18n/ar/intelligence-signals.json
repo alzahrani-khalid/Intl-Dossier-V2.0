@@ -7,11 +7,12 @@
       "heading": "لا توجد إشارات.",
       "body": "سجّل إشارة أو انتظر العناصر المُكتشفة بالذكاء الاصطناعي."
     },
-    "emptyDossier": "لا توجد إشارات لهذا الملف.",
+    "emptyDossier": "لا توجد إشارات لهذا الدوسيه.",
     "emptyDismissed": "لا توجد إشارات مرفوضة.",
     "emptyEscalated": "لا توجد إشارات تم تصعيدها.",
     "errorState": "تعذّر تحميل الإشارات. أعد التحميل للمحاولة مرة أخرى.",
     "loading": "جارٍ تحميل الإشارات…",
+    "count": "{{count}} إشارة",
     "count_one": "إشارة واحدة",
     "count_other": "{{count}} إشارة"
   },
@@ -49,6 +50,12 @@
     "high": "عالية",
     "urgent": "عاجلة"
   },
+  "sourceType": {
+    "human_entered": "إدخال بشري",
+    "ai_generated": "مُولَّد بالذكاء الاصطناعي",
+    "publication": "منشور",
+    "feed": "خلاصة"
+  },
   "toast": {
     "dismissed": "تم رفض الإشارة.",
     "restoreAction": "تم رفض الإشارة. استعادة؟",
@@ -70,7 +77,7 @@
     "severityLabel": "الخطورة",
     "categoryLabel": "الفئة",
     "sensitivityLabel": "مستوى الحساسية",
-    "dossiersLabel": "الملفات المرتبطة",
+    "dossiersLabel": "الدوسيهات المرتبطة",
     "assigneeLabel": "المُكلَّف",
     "assigneePlaceholder": "معرّف المستخدم المُكلَّف",
     "assigneeRequired": "المُكلَّف مطلوب — يُسنَد إليك إن تُرك فارغًا.",

@@ -5,6 +5,9 @@ import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
 import path from 'path'
+import { fileURLToPath } from 'node:url'
+
+const frontendRoot = fileURLToPath(new URL('.', import.meta.url))
 
 // Enable bundle analysis when ANALYZE env var is set
 const isAnalyze = process.env.ANALYZE === 'true'
@@ -66,7 +69,7 @@ export default defineConfig({
   ].filter(Boolean),
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(frontendRoot, './src'),
     },
     // Radix's direction context is a singleton: ui/direction.tsx DirectionProvider
     // publishes it and every Radix portal (dropdown/select/menu/…) consumes it via
@@ -127,10 +130,6 @@ export default defineConfig({
         target: backendProxyTarget,
         changeOrigin: true,
       },
-      '/monitoring': {
-        target: backendProxyTarget,
-        changeOrigin: true,
-      },
     },
     // Add cache-busting headers for HTML in dev mode
     headers: {
@@ -142,7 +141,8 @@ export default defineConfig({
   build: {
     target: 'ES2022',
     outDir: 'dist',
-    sourcemap: true,
+    sourcemap: sentryOrg && sentryProject && sentryAuthToken ? 'hidden' : false,
+    manifest: true,
     // Increase chunk size limit since we're using a simpler chunking strategy
     chunkSizeWarningLimit: 500,
     rollupOptions: {
@@ -150,6 +150,13 @@ export default defineConfig({
         // Strategic chunk splitting for better caching and load performance
         // Split vendor bundles by category to optimize cache invalidation
         manualChunks: (id) => {
+          // Locale catalogs are application code required by the eager i18n bootstrap.
+          // Keep them eagerly imported, but out of the app entry so copy-only changes
+          // do not invalidate or grow the executable entry chunk.
+          if (/[\\/]src[\\/]i18n[\\/](?:ar|en)[\\/]/.test(id)) {
+            return 'translations'
+          }
+
           if (id.includes('/src/components/signature-visuals/')) {
             return 'signature-visuals-static'
           }

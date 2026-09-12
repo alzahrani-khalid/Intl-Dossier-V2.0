@@ -78,6 +78,31 @@ export interface TaskListOptions {
   sort_order?: 'asc' | 'desc'
 }
 
+// P96 COUNT-03: task lifecycle intent is expressed as `workflow_stage`; the DB trigger
+// `trg_sync_task_status` (BEFORE UPDATE on tasks) derives `status` from it. A writer that
+// touches `status` alone leaves the stage stale — the trigger only fires when
+// workflow_stage IS DISTINCT FROM OLD. Every status write below therefore carries the
+// matching stage. This is NOT a client re-derivation of status: the trigger still decides
+// what `status` becomes.
+const STATUS_TO_STAGE: Record<string, NonNullable<UpdateTaskInput['workflow_stage']>> = {
+  pending: 'todo',
+  in_progress: 'in_progress',
+  review: 'review',
+  completed: 'done',
+  cancelled: 'cancelled',
+}
+
+const STAGE_TO_STATUS: Record<
+  NonNullable<CreateTaskInput['workflow_stage']>,
+  NonNullable<TaskInsert['status']>
+> = {
+  todo: 'pending',
+  in_progress: 'in_progress',
+  review: 'review',
+  done: 'completed',
+  cancelled: 'cancelled',
+}
+
 export class TasksService {
   private supabase: SupabaseClient<Database>
 
@@ -117,14 +142,15 @@ export class TasksService {
       }
     }
 
+    const workflowStage = input.workflow_stage || 'todo'
     const taskData: TaskInsert = {
       title: input.title,
       description: input.description || null,
       assignee_id: input.assignee_id,
       engagement_id: input.engagement_id || null,
       priority: input.priority || 'medium',
-      workflow_stage: input.workflow_stage || 'todo',
-      status: 'pending',
+      workflow_stage: workflowStage,
+      status: STAGE_TO_STATUS[workflowStage],
       sla_deadline: input.sla_deadline || null,
       work_item_type: input.work_item_type || null,
       work_item_id: input.work_item_id || null,
@@ -359,6 +385,12 @@ export class TasksService {
       updated_by: input.updated_by,
       last_modified_by: input.updated_by,
       updated_at: new Date().toISOString(),
+    }
+
+    // P96 COUNT-03: a status intent with no stage carries the matching workflow_stage so
+    // the trigger fires and derives the status itself (see STATUS_TO_STAGE above).
+    if (input.status && !input.workflow_stage) {
+      updateData.workflow_stage = STATUS_TO_STAGE[input.status]
     }
 
     // Auto-set completed_at if status changes to completed
@@ -616,6 +648,7 @@ export class TaskCreationService {
       })
     }
 
+    const workflowStage: NonNullable<CreateTaskInput['workflow_stage']> = 'todo'
     const taskData: TaskInsert = {
       title: commitment.description,
       description: `Task created from commitment in after-action record. مهمة تم إنشاؤها من التزام في سجل الإجراءات اللاحقة`,
@@ -627,9 +660,9 @@ export class TaskCreationService {
         typeof commitment.due_date === 'string'
           ? commitment.due_date
           : (commitment.due_date?.toISOString() ?? null),
-      status: 'pending',
+      status: STAGE_TO_STATUS[workflowStage],
       priority: (commitment.priority as 'low' | 'medium' | 'high' | 'urgent') || 'medium',
-      workflow_stage: 'todo',
+      workflow_stage: workflowStage,
       type: 'action_item',
       source: {
         type: 'commitment',
@@ -694,6 +727,10 @@ export class TaskCreationService {
         .from('tasks')
         .update({
           status: newStatus,
+          // P96 COUNT-03: census-found second status-direct writer in this file — it left
+          // workflow_stage stale exactly like updateTask did. Route the intent (see
+          // STATUS_TO_STAGE above); the trigger derives status from the stage.
+          workflow_stage: STATUS_TO_STAGE[newStatus],
           updated_at: new Date().toISOString(),
           completed_at: newStatus === 'completed' ? new Date().toISOString() : null,
         })

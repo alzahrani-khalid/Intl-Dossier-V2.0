@@ -88,5 +88,62 @@
     "review": "Review",
     "done": "Done",
     "cancelled": "Cancelled"
+  },
+  "card": {
+    "created": "Created",
+    "due": "Due"
+  },
+  "detail": {
+    "task_details": "Task Details",
+    "description": "Description",
+    "assignee": "Assignee",
+    "unassigned": "Unassigned",
+    "workflow_stage": "Workflow Stage",
+    "created": "Created",
+    "updated": "Last Updated",
+    "engagement": "Engagement",
+    "type": "Type",
+    "date": "Date",
+    "location": "Location",
+    "related_dossier": "Related Dossier",
+    "contributors": "Contributors",
+    "add_contributor": "Add Contributor",
+    "loading_contributors": "Loading contributors...",
+    "linked_work_items": "Linked Work Items",
+    "deleted": "Deleted",
+    "no_linked_items": "No work items linked to this task",
+    "edit_linked_items": "Edit linked work items (re-link if deleted)"
+  },
+  "contributors": {
+    "addContributor": "Add Contributor",
+    "addContributorDescription": "Add a team member who contributed to this task",
+    "searchUser": "Search User",
+    "searchUserPlaceholder": "Type name or email...",
+    "roleLabel": "Role",
+    "contributorNotes": "Notes",
+    "contributorNotesPlaceholder": "Describe their contribution...",
+    "add": "Add",
+    "noContributors": "No contributors yet",
+    "removeContributor": "Remove contributor",
+    "role": {
+      "helper": "helper",
+      "reviewer": "reviewer",
+      "advisor": "advisor",
+      "observer": "observer",
+      "supervisor": "supervisor"
+    },
+    "roleDescription": {
+      "helper": "Assisted with task execution",
+      "reviewer": "Reviewed task outputs or quality",
+      "advisor": "Provided expert guidance or consultation",
+      "observer": "Monitored progress (e.g., for training/knowledge transfer)",
+      "supervisor": "Provided oversight or approval"
+    }
+  },
+  "page": {
+    "deleted": "Task Deleted",
+    "deletedRedirecting": "Task deleted. Redirecting...",
+    "failed_to_load_task": "Failed to load task. Please try again.",
+    "back_to_tasks": "Back to Tasks"
   }
 }

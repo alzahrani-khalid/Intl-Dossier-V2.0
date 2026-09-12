@@ -48,9 +48,9 @@ import {
   Globe,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { format } from 'date-fns'
 import type { SavedReport, ReportAccessLevel } from '@/types/report-builder.types'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDateTime } from '@/lib/format-date'
 
 interface SavedReportsListProps {
   reports: SavedReport[]
@@ -236,7 +236,7 @@ export function SavedReportsList({
                         </div>
 
                         <p className="text-xs text-muted-foreground mt-2">
-                          {format(new Date(report.updatedAt), 'PPp')}
+                          {formatDateTime(new Date(report.updatedAt))}
                         </p>
                       </div>
 
@@ -250,7 +250,7 @@ export function SavedReportsList({
                           >
                             <MoreVertical className="h-4 w-4" />
                             <span className="sr-only">
-                              {t('common:common.actions.openMenu', { defaultValue: 'Open menu' })}
+                              {t('common:actions.openMenu')}
                             </span>
                           </Button>
                         </DropdownMenuTrigger>

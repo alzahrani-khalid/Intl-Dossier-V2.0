@@ -153,16 +153,16 @@ export function useBriefingBooks(options: UseBriefingBooksOptions = {}): UseBrie
       setProgress({
         stage: 'initializing',
         progress: 0,
-        message_en: 'Starting briefing book generation...',
-        message_ar: 'جاري بدء إنشاء كتاب الإحاطة...',
+        message_en: t('progress.starting', { lng: 'en' }),
+        message_ar: t('progress.starting', { lng: 'ar' }),
       })
     },
     onSuccess: (response) => {
       setProgress({
         stage: 'complete',
         progress: 100,
-        message_en: 'Briefing book generated successfully!',
-        message_ar: 'تم إنشاء كتاب الإحاطة بنجاح!',
+        message_en: t('progress.generated', { lng: 'en' }),
+        message_ar: t('progress.generated', { lng: 'ar' }),
       })
 
       queryClient.invalidateQueries({ queryKey: briefingBooksKeys.lists() })

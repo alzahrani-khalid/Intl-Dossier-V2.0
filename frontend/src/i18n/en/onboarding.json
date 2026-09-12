@@ -24,26 +24,26 @@
     "hideCompleted": "Hide Completed",
     "showCompleted": "Show Completed",
     "nextStep": "Next Step",
-    "allComplete": "All Done!",
-    "allCompleteMessage": "Congratulations! You've completed all onboarding steps."
+    "allComplete": "All Done",
+    "allCompleteMessage": "You've completed all onboarding steps."
   },
   "milestones": {
     "celebration": {
       "25": {
-        "title": "Great Start!",
-        "message": "You're 25% through your onboarding journey. Keep going!"
+        "title": "Great Start",
+        "message": "You're 25% through your onboarding journey. Keep going."
       },
       "50": {
-        "title": "Halfway There!",
-        "message": "You've completed half of your setup. You're doing great!"
+        "title": "Halfway There",
+        "message": "You've completed half of your setup."
       },
       "75": {
-        "title": "Almost Done!",
+        "title": "Almost Done",
         "message": "Just a few more steps to complete your onboarding."
       },
       "100": {
-        "title": "Onboarding Complete!",
-        "message": "Congratulations! You're all set to use the system effectively."
+        "title": "Onboarding Complete",
+        "message": "You're all set to use the system effectively."
       }
     },
     "badge": {
@@ -159,7 +159,7 @@
     }
   },
   "emptyState": {
-    "title": "Welcome! Let's get you started",
+    "title": "Get started",
     "description": "Complete a few quick steps to set up your workspace and learn the essentials.",
     "startButton": "Start Onboarding",
     "laterButton": "Maybe Later",

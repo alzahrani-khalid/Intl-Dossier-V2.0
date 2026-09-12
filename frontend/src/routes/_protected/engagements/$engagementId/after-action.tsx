@@ -3,8 +3,10 @@ import { createFileRoute, useNavigate, Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useEngagement } from '@/hooks/useEngagement'
+import { useAuth } from '@/hooks/useAuth'
 import { useCreateAfterAction } from '@/hooks/useAfterAction'
-import type { ConflictError } from '@/hooks/useAfterAction'
+import { usePublishAfterAction } from '@/hooks/usePublishAfterAction'
+import type { AfterActionRecord, ConflictError } from '@/hooks/useAfterAction'
 import { AfterActionForm } from '@/components/after-action-form/AfterActionForm'
 import { useTranslation } from 'react-i18next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -30,7 +32,15 @@ function AfterActionFormPage(): React.ReactNode {
   useUnsavedChangesGuard(formDirty)
 
   const { data: engagement, isLoading: loadingEngagement } = useEngagement(engagementId)
+  const { user } = useAuth()
   const createAfterAction = useCreateAfterAction()
+  const publishAfterAction = usePublishAfterAction()
+
+  // The SERVER's role set, verbatim: supabase/functions/after-actions-publish/index.ts:60-71
+  // returns 403 for anything outside it. RULING-P94-04 A2 — the server is the enforcement
+  // boundary, so a UI narrower than the server hides a capability the backend grants. If staff
+  // should not publish, that is a server policy change to file, not a button to narrow here.
+  const canPublish = ['staff', 'supervisor', 'admin'].includes(user?.role ?? '')
 
   // B-6: the internal-owner <Select> in CommitmentEditor needs a real user list.
   // Without it the picker is empty, owner_user_id stays undefined and the
@@ -65,7 +75,7 @@ function AfterActionFormPage(): React.ReactNode {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Card className="border-destructive">
           <CardHeader>
-            <CardTitle className="text-destructive">{t('common.error')}</CardTitle>
+            <CardTitle className="text-destructive">{t('common:error.label')}</CardTitle>
             <CardDescription>{t('engagements.notFound')}</CardDescription>
           </CardHeader>
         </Card>
@@ -73,18 +83,24 @@ function AfterActionFormPage(): React.ReactNode {
     )
   }
 
+  // The form nests follow-ups under `follow_ups`; the create edge reads
+  // `follow_up_actions`, so rename to avoid silently dropping them.
+  // NB: after-actions-create/index.ts:134 hardcodes publication_status 'draft'; the
+  // field below is decorative and nothing may rely on it.
+  const createRecord = async (data: any): Promise<AfterActionRecord> => {
+    const { follow_ups, ...rest } = data
+    return createAfterAction.mutateAsync({
+      engagement_id: engagementId,
+      dossier_id: (engagement as any).dossier_id ?? engagement.id,
+      publication_status: 'draft',
+      ...rest,
+      follow_up_actions: follow_ups,
+    })
+  }
+
   const handleSaveDraft = async (data: any): Promise<void> => {
     try {
-      // The form nests follow-ups under `follow_ups`; the create edge reads
-      // `follow_up_actions`, so rename to avoid silently dropping them.
-      const { follow_ups, ...rest } = data
-      const afterAction = await createAfterAction.mutateAsync({
-        engagement_id: engagementId,
-        dossier_id: (engagement as any).dossier_id ?? engagement.id,
-        publication_status: 'draft',
-        ...rest,
-        follow_up_actions: follow_ups,
-      })
+      const afterAction = await createRecord(data)
 
       setFormDirty(false)
       toast.success(t('afterActions.draftSaved'))
@@ -97,10 +113,37 @@ function AfterActionFormPage(): React.ReactNode {
       const maybeConflict = err as Error & { conflict?: ConflictError }
       if (maybeConflict.conflict != null) {
         setConflict(maybeConflict.conflict)
-        toast.error(t('afterActions.conflict.warning', 'This record was modified by another user.'))
+        toast.error(t('afterActions.conflict.warning'))
         return
       }
-      toast.error((err instanceof Error ? err.message : null) ?? t('afterActions.saveFailed'))
+      // D-08/D-10: the user sees the translated key ALONE — a server-originated
+      // message never reaches the DOM. Colon form; the dot form resolves only via
+      // the aliased default namespace and silently leaks the raw key.
+      console.error(err)
+      toast.error(t('common:afterActions.saveFailed'))
+    }
+  }
+
+  // Publish from create mode is TWO steps: after-actions-create always writes a
+  // draft (index.ts:134), so the record must exist before after-actions-publish can
+  // flip it. Both buttons stay disabled meanwhile via the form's `publishing` state.
+  const handlePublish = async (data: any): Promise<void> => {
+    try {
+      const afterAction = await createRecord(data)
+      await publishAfterAction.mutateAsync({
+        afterActionId: afterAction.id,
+        isConfidential: Boolean(data.is_confidential),
+      })
+
+      setFormDirty(false)
+      toast.success(t('common:afterActions.publishSuccess'))
+      navigate({
+        to: '/after-actions/$afterActionId' as any,
+        params: { afterActionId: afterAction.id } as any,
+      })
+    } catch (err: unknown) {
+      console.error(err)
+      toast.error(t('common:afterActions.publishFailed'))
     }
   }
 
@@ -110,7 +153,7 @@ function AfterActionFormPage(): React.ReactNode {
     >
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild aria-label={t('common.goBack', 'Go back')}>
+        <Button variant="ghost" size="icon" asChild aria-label={t('common:goBack')}>
           <Link to={'/engagements/$engagementId' as any} params={{ engagementId } as any}>
             <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
           </Link>
@@ -129,7 +172,6 @@ function AfterActionFormPage(): React.ReactNode {
             <p className="text-sm text-destructive">
               {t(
                 'afterActions.conflict.warning',
-                'This record was modified by another user. Review changes before saving.',
               )}
             </p>
           </div>
@@ -141,7 +183,7 @@ function AfterActionFormPage(): React.ReactNode {
               window.location.reload()
             }}
           >
-            {t('afterActions.conflict.reviewChanges', 'Review Changes')}
+            {t('afterActions.conflict.reviewChanges')}
           </Button>
         </div>
       )}
@@ -158,6 +200,8 @@ function AfterActionFormPage(): React.ReactNode {
             dossierId={(engagement as any).dossier_id ?? engagement.id}
             availableUsers={availableUsers}
             onSave={handleSaveDraft}
+            canPublish={canPublish}
+            onPublish={handlePublish}
             onDirtyChange={setFormDirty}
           />
         </CardContent>

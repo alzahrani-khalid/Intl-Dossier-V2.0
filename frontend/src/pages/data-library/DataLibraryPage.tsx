@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
 import { supabase } from '@/lib/supabase'
-import { format } from 'date-fns'
+import { formatDayMonthYear } from '@/lib/format-date'
 import { useDirection } from '@/hooks/useDirection'
 
 interface DataLibraryItem {
@@ -295,8 +295,8 @@ export function DataLibraryPage() {
                       <span className="text-sm font-medium">{progress.fileName}</span>
                       <span className="text-sm text-muted-foreground">
                         {progress.status === 'uploading' && t('dataLibrary.uploading')}
-                        {progress.status === 'completed' && t('common.completed')}
-                        {progress.status === 'error' && t('common.error')}
+                        {progress.status === 'completed' && t('common:completed')}
+                        {progress.status === 'error' && t('common:error.label')}
                       </span>
                     </div>
                     {progress.status === 'uploading' ? (
@@ -346,7 +346,7 @@ export function DataLibraryPage() {
       {/* Filters */}
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>{t('common.filter')}</CardTitle>
+          <CardTitle>{t('common:filter')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -371,7 +371,7 @@ export function DataLibraryPage() {
                   size="sm"
                   onClick={() => setFilterCategory(cat)}
                 >
-                  {cat === 'all' ? t('common.all') : t(`dataLibrary.categories.${cat}`)}
+                  {cat === 'all' ? t('common:all') : t(`dataLibrary.categories.${cat}`)}
                 </Button>
               ))}
             </div>
@@ -404,7 +404,7 @@ export function DataLibraryPage() {
       {/* Files Grid */}
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
         {isLoading ? (
-          <div className="col-span-full text-center py-8">{t('common.loading')}</div>
+          <div className="col-span-full text-center py-8">{t('common:loading')}</div>
         ) : items && items.length > 0 ? (
           items.map((item) => (
             <Card key={item.id} className="hover:border-accent transition-colors">
@@ -431,7 +431,7 @@ export function DataLibraryPage() {
                 <div className="space-y-1 text-xs text-muted-foreground">
                   <div>{formatFileSize(item.file_size_bytes)}</div>
                   <div>{item.uploaded_by.full_name}</div>
-                  <div>{format(new Date(item.created_at), 'd MMM yyyy')}</div>
+                  <div>{formatDayMonthYear(new Date(item.created_at))}</div>
                   {item.download_count > 0 && (
                     <div>
                       {t('dataLibrary.downloads')}: {item.download_count}
@@ -455,7 +455,7 @@ export function DataLibraryPage() {
           ))
         ) : (
           <div className="col-span-full text-center py-8 text-muted-foreground">
-            {t('common.noData')}
+            {t('common:noData')}
           </div>
         )}
       </div>

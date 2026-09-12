@@ -56,7 +56,7 @@ describe('CommitmentEditor', () => {
       )
 
       expect(screen.getByText('Commitments')).toBeInTheDocument()
-      expect(screen.getByText('Add Commitment')).toBeInTheDocument()
+      expect(screen.getByText('Add commitment')).toBeInTheDocument()
     })
 
     it('shows empty state when no commitments', () => {
@@ -64,7 +64,7 @@ describe('CommitmentEditor', () => {
         <CommitmentEditor commitments={[]} onChange={mockOnChange} availableUsers={mockUsers} />,
       )
 
-      expect(screen.getByText('No commitments yet')).toBeInTheDocument()
+      expect(screen.getByText('No commitments recorded')).toBeInTheDocument()
     })
 
     it('renders all commitments with correct data', () => {
@@ -94,7 +94,7 @@ describe('CommitmentEditor', () => {
       )
 
       const internalCommitmentCard = getCommitmentCard('Commitment 1')
-      const userDropdown = within(internalCommitmentCard).getByText('Assigned To *')
+      const userDropdown = within(internalCommitmentCard).getByText('Assigned to *')
 
       expect(userDropdown).toBeInTheDocument()
       expect(within(internalCommitmentCard).queryByText('Contact Email *')).not.toBeInTheDocument()
@@ -114,7 +114,7 @@ describe('CommitmentEditor', () => {
       expect(within(externalCommitmentCard).getByText('Contact Email *')).toBeInTheDocument()
       expect(within(externalCommitmentCard).getByText('Contact Name *')).toBeInTheDocument()
       expect(within(externalCommitmentCard).getByText('Organization')).toBeInTheDocument()
-      expect(within(externalCommitmentCard).queryByText('Assigned To *')).not.toBeInTheDocument()
+      expect(within(externalCommitmentCard).queryByText('Assigned to *')).not.toBeInTheDocument()
     })
 
     it('switches between internal and external when owner_type changes', async () => {
@@ -292,7 +292,7 @@ describe('CommitmentEditor', () => {
         <CommitmentEditor commitments={[]} onChange={mockOnChange} availableUsers={mockUsers} />,
       )
 
-      await user.click(screen.getByText('Add Commitment'))
+      await user.click(screen.getByText('Add commitment'))
 
       const sevenDaysFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
 
@@ -315,7 +315,7 @@ describe('CommitmentEditor', () => {
         <CommitmentEditor commitments={[]} onChange={mockOnChange} availableUsers={mockUsers} />,
       )
 
-      await user.click(screen.getByText('Add Commitment'))
+      await user.click(screen.getByText('Add commitment'))
 
       expect(mockOnChange).toHaveBeenCalledWith([
         {
@@ -343,7 +343,7 @@ describe('CommitmentEditor', () => {
         />,
       )
 
-      const removeButtons = screen.getAllByRole('button', { name: 'Remove commitment' })
+      const removeButtons = screen.getAllByRole('button', { name: 'Delete commitment' })
       await user.click(removeButtons[0]!)
 
       const dialog = await screen.findByRole('alertdialog')
@@ -365,7 +365,7 @@ describe('CommitmentEditor', () => {
         />,
       )
 
-      expect(screen.queryByText('Add Commitment')).not.toBeInTheDocument()
+      expect(screen.queryByText('Add commitment')).not.toBeInTheDocument()
     })
 
     it('hides delete buttons in read-only mode', () => {
@@ -378,7 +378,7 @@ describe('CommitmentEditor', () => {
         />,
       )
 
-      const deleteButtons = screen.queryAllByRole('button', { name: 'Remove commitment' })
+      const deleteButtons = screen.queryAllByRole('button', { name: 'Delete commitment' })
 
       expect(deleteButtons).toHaveLength(0)
     })

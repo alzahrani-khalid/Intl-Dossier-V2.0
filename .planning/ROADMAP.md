@@ -17,164 +17,8 @@
 - ✅ **v7.0 Intelligence Engine** — Phases 68-74 (shipped 2026-06-24) — [archive](milestones/v7.0-ROADMAP.md)
 - ✅ **v8.0 Linear Design System Migration** — Phases 75-80 (shipped 2026-07-04) — [archive](milestones/v8.0-ROADMAP.md)
 - ✅ **v8.1 Linear Design Refinement** — Phases 81-85 (shipped 2026-07-05) — [archive](milestones/v8.1-ROADMAP.md)
-- 🚧 **v9.0 Platform Completion & Live Verification** — Phases 86-91 (in progress)
-
-## Current Milestone: v9.0 Platform Completion & Live Verification
-
-**Goal:** Close every carried-forward gap between what the platform advertises and what is built, verified, and enforced — the last honest-disabled features become real, the red test suites become green gates, all 272 edge functions leave the deprecated CORS wildcard, and the v7.0 intelligence stack is finally live-verified on real GPU inference.
-
-**Coverage:** 21/21 v1 requirements mapped (FEAT-01..04, AFF-01..04, SEC-01..02, CI-01..05, CORS-01..03, LIVE-01..03).
-
-## Phases
-
-- [ ] **Phase 86: Feature Completion** - The three honest-disabled data-entry features become real or are formally retired: MoU create, user-management routes, ConsistencyPanel
-- [x] **Phase 87: Linear Affordances** - Right-peek panel with paging, filter/display split popovers with live counts, ⌘K command-menu audit, rich empty states (F23–F26)
-- [ ] **Phase 88: Security & Hygiene Tail** - UserPicker PostgREST filter-interpolation fix (IN-04) + credential-hygiene sweep (TEST_USER_PASSWORD-class values externalized)
-- [ ] **Phase 89: CI & Test-Debt Burn-Down** - E2E / integration / a11y / visual-regression suites green or honestly quarantined; test-rtl-smokes promoted to a required branch-protection context
-- [x] **Phase 90: CORS Edge-Function Migration** - All 272 edge functions migrated off the deprecated wildcard corsHeaders in staged A/B/C batches, each deployed and smoke-checked
-- [ ] **Phase 91: v7.0 Live Verification** - GPU/TEI stack stood up and the deploy-gated EVAL-01/02/03 + AGENT/INFRA verification closed (hardware-gated)
-
-## Phase Details
-
-### Phase 86: Feature Completion
-
-**Goal**: No permanently-dead UI remains — the three honest-disabled data-entry features (MoU create, user management, ConsistencyPanel) are either fully working or formally retired
-**Depends on**: Nothing (first phase of milestone; independent frontend/edge track following existing creation-wizard, list-page, and DossierShell patterns)
-**Requirements**: FEAT-01, FEAT-02, FEAT-03, FEAT-04
-**Success Criteria** (what must be TRUE):
-
-1. User can create a MoU from the MoUs page — the "Add MoU" button opens a working form (type, mou_category, dates, parties, lifecycle_state) that writes `mous`, and the new MoU appears in the list (closes C-3)
-2. Admin can create a user at `/users/create` against the L1-hardened user-management edge functions and sees the new user in the users list (closes D-10 create half)
-3. Admin can open `/users/:id` from the users list and view/manage role, status, and profile (closes D-10 detail half)
-4. ConsistencyPanel either runs a real consistency-check query with working modify/accept/escalate/view actions, or is fully deleted (component + i18n keys) with the decision recorded (closes E-8)
-5. All new/changed surfaces work correctly in both EN/LTR and AR/RTL
-   **Plans**: 5 plans
-   **UI hint**: yes
-
-Plans:
-
-**Wave 1**
-
-- [x] 86-01-PLAN.md — MoU create dialog + domains/mous wiring (FEAT-01, wave 1)
-- [x] 86-02-PLAN.md — Users foundation: assign-role verify, invoke methods, layout routes, /users/create (FEAT-02, wave 1)
-- [x] 86-03-PLAN.md — ConsistencyPanel formal retirement + ADR-008 decision record (FEAT-04, wave 1)
-
-**Wave 2** _(blocked on Wave 1 completion)_
-
-- [x] 86-04-PLAN.md — /users/:id detail (role/status/profile) + combined user-management E2E (FEAT-03, wave 2)
-
-**Wave 3** _(blocked on Wave 2 completion)_
-
-- [x] 86-05-PLAN.md — Phase gate battery + consolidated EN/AR render sign-off (wave 3)
-
-### Phase 87: Linear Affordances
-
-**Goal**: List pages and navigation gain the four Linear-grade affordances from DESIGN-REFINEMENT-PLAN-260704 §Phase 6 (F23–F26)
-**Depends on**: Phase 86 (same list-page surfaces — sequenced to avoid churn; no hard dependency)
-**Requirements**: AFF-01, AFF-02, AFF-03, AFF-04
-**Success Criteria** (what must be TRUE):
-
-1. User can open a list row in a right-peek panel and page prev/next through rows without leaving the list (F23)
-2. User can filter and adjust display via split Filter and Display popovers that show live result counts on list pages (F24)
-3. Every command advertised in the ⌘K menu works, high-value missing commands are added, and the menu is correct in both EN and AR (F25)
-4. Empty states across list pages and dossier tabs explain the surface and offer a primary action — no bare "no data" text remains (F26)
-   **Plans**: 10 plans
-   **UI hint**: yes
-
-Plans:
-
-**Wave 1** _(foundations + URL normalization, parallel)_
-
-- [x] 87-01-PLAN.md — F23 peek foundation: peekStore + usePeekPaging + DrawerHead counter/chevrons (AFF-01)
-- [x] 87-02-PLAN.md — F24 foundation: Filter/Display popovers, useListControls, list-controls i18n ns (AFF-02)
-- [x] 87-03-PLAN.md — F25 ⌘K audit: fix/remove 9 findings, 5 new commands, sentence-case pass, MousPage ?action=create (AFF-03)
-- [x] 87-04-PLAN.md — F26 infra: EmptyState reskin, ListEmptyState extension, copy matrix, Pattern-B tab audit (AFF-04)
-- [x] 87-05-PLAN.md — URL-state normalization: persons + engagements + elected-officials (AFF-01, AFF-02 enabler)
-
-**Wave 2** _(per-surface wiring, parallel — blocked on Wave 1)_
-
-- [x] 87-06-PLAN.md — Countries + organizations wiring + DossierTable column visibility (AFF-01/02/04)
-- [x] 87-07-PLAN.md — Forums + topics + working-groups wiring + GenericListPage property toggles (AFF-01/02/04)
-- [x] 87-08-PLAN.md — Persons + engagements + elected-officials wiring + exact engagements total (AFF-01/02/04)
-- [x] 87-09-PLAN.md — Kanban: URL normalization, popover fold-in, commitment peek, board empties (AFF-01/02/04)
-
-**Wave 3** _(gate)_
-
-- [x] 87-10-PLAN.md — Phase gate battery + consolidated EN/AR human render sign-off (all AFF) — operator signed 2026-07-13
-
-### Phase 88: Security & Hygiene Tail
-
-**Goal**: The two carried-forward security items from v8.0 close are shut — no PostgREST filter injection surface in UserPicker and no real secrets in tracked files
-**Depends on**: Nothing (small, independent; sequenced before Phase 89 so the E2E burn-down runs against the final credential pattern)
-**Requirements**: SEC-01, SEC-02
-**Success Criteria** (what must be TRUE):
-
-1. `UserPicker.handleSearch` no longer interpolates user input into PostgREST filter strings — search input containing `,().` characters cannot alter the query, via `.ilike()` builder or sanitization (closes IN-04 / T-79-S2)
-2. No real secrets remain in tracked files — `TEST_USER_PASSWORD`-class values are rotated or externalized and the `.env.test.example` pattern is enforced
-3. Test suites and browser-automation flows still authenticate and pass after credential externalization (no silently broken login paths)
-   **Plans**: 3 plans
-
-Plans:
-
-**Wave 1**
-
-- [ ] 88-01-PLAN.md — SEC-01: quotePostgrestValue helper + UserPicker fix + 5-site sibling sweep
-- [ ] 88-02-PLAN.md — SEC-02: redact leaked credential, rotate staging password, GH-secret checkpoint, login smoke
-- [ ] 88-03-PLAN.md — Hygiene: Express 5 getter-only req.query fix in shared validate() helper (ORCH-BRIEF §0e)
-
-### Phase 89: CI & Test-Debt Burn-Down
-
-**Goal**: The red non-required suites become trustworthy green gates (or honestly quarantined with tracked reasons), and test-rtl-smokes graduates to a required branch-protection context
-**Depends on**: Phase 88 (credential externalization lands first so E2E/global-setup fixes target the final pattern). CI-05 promotion is sequenced last within the phase, after CI-01..04, so promotion never blocks on red suites.
-**Requirements**: CI-01, CI-02, CI-03, CI-04, CI-05
-**Success Criteria** (what must be TRUE):
-
-1. E2E suite is green against the deployed app — stale-login/global-setup debt fixed and genuinely-broken specs repaired, or each remaining spec explicitly quarantined with a tracked reason
-2. Integration test suite is green, including the 2 pre-existing interaction-note backend failures
-3. a11y suites are green — the intake-form `fixme` debt (button-name / aria-prohibited-attr / target-size) fixed and the 8 quarantined a11y specs restored
-4. Visual-regression baselines are regenerated post-flatten on the reference machine and the suite is green
-5. `test-rtl-smokes` is a required branch-protection context on `main`, proven by a smoke PR showing `BLOCKED`
-
-**Status 2026-08-13 — PARTIALLY DELIVERED, phase NOT closed.** Executed via tickmarkr (no GSD plans).
-Landed to `milestone/v9.0-drover` at `46a88500` (T7/T3/T5/T6) and `d8c102df` (T4/T1). See
-`.planning/phases/89-ci-test-debt-burndown/89-SUMMARY.md`.
-
-| SC                      | status                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1 (E2E / CI-01)         | **HELD** — depends on the operator's Phase 88 credential rotation                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| 2 (integration / CI-02) | **NOT MET** — premise wrong: the named file is in the _unit_ job; the integration suite is broadly red because 235 files expect a DB at `localhost:54321` → decision **D-3**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| 3 (a11y / CI-03)        | **MET AS HONEST QUARANTINE** (the goal's second clause: _green OR honestly quarantined with tracked reasons_). ORCH-2 executed the suite 2026-08-13. 23 spec-debt failures annotated `test.fixme` naming their specific cause — 3 root causes: stale `/_protected/` route prefix (a route ID, not a URL), missing `[data-testid="language-switcher"]`, missing `[data-testid="dossier-card"]`. 3 real WCAG violations filed as **A11Y-01/02/03** and annotated `APP DEFECT`, not silenced. intake `fixme` debt remains untouched and is **not** covered by this                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 4 (visual / CI-04)      | **MET AS HONEST QUARANTINE** (the goal's second clause, same basis CI-03 closed on; SC-4's wording was reworded under RUL120 because as written it demanded unqualified green). Executed 2026-08-13 on the macOS reference machine, pinned Node v24.5.0, bracket v24.5.0 → v24.5.0. 18 of 24 baselines regenerated; drift was Phase 87-02's `Filter`/`Display` toolbar plus mutable staging content. Gated suite **26 passed / 2 quarantined / 0 failed** under CI-equivalent `--workers=2 --retries=2` with no retry consumed. The 2 quarantines (`week-ahead`, `vip-visits`) fail at the readiness gate BEFORE their screenshot assertion, so `--update-snapshots` provably cannot repair them; annotated in-spec and tracked as **FIXTURE-01**, seed deliberately not restored. The generalised smell — visual baselines pinned to mutable staging content — is **VISUAL-DEBT-01**. 19 baselines no job executed were resolved per spec: `tasks-tab-visual` **promoted** (+4; only RTL-at-768 visual coverage in CI, fixture-pinned, no re-baseline needed), 6 specs / 15 baselines **deleted**. ⚠ **Landing the 18 regenerated images is still gated on ORCH-3, the operator's visual sign-off** — before/after staged at `.tickmarkr/overseer/CI04-review/` |
-| 5 (rtl-smokes / CI-05)  | **HELD** — sequenced last; touches branch protection on `main`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-
-Routed-in from Phase 90: `sentry.ts` dual-import **FIXED** (T1 `0a373041`); `queue-processor`
-un-deployable **NOT addressed** (surfaced as F-4, a design decision).
-**Plans**: executed via tickmarkr, not GSD plans
-
-### Phase 90: CORS Edge-Function Migration
-
-**Goal**: All 272 edge functions leave the deprecated wildcard `corsHeaders` — origin allow-listing enforced everywhere, with zero functional regression from allowed origins
-**Depends on**: Nothing (independent track; CORS-01 secret verification gates CORS-02/03 within the phase — no batch ships before it). Batches are mechanical but wide; each batch needs deploy + smoke.
-**Requirements**: CORS-01, CORS-02, CORS-03
-**Success Criteria** (what must be TRUE):
-
-1. `ALLOWED_ORIGINS` secret is verified present and correct in both staging and prod before any batch ships
-2. All ~171 handler-scope edge functions (batch A) are migrated off the deprecated wildcard, deployed, and smoke-checked — requests from allowed origins succeed unchanged
-3. All ~101 module-scope edge functions, including the 83 local `const corsHeaders = '*'` copies (batches B/C), are migrated, deployed, and smoke-checked
-4. A repo-wide grep for the deprecated wildcard pattern returns 0 matches
-   **Plans**: 36 — 90-01 CORS-01 secret verify (orchestrator, gates deploys); 90-02..18 Group A (169 import-static handler-scope, deploy-batch A); 90-19..26 Group B (75 local-wildcard handler-scope, deploy-batch B); 90-27..31 Group C (26 module-scope careful, deploy-batch C); 90-35/36 Group D (8 inline hard-coded wildcard, deploy-batch C); 90-32/33/34 deploy+smoke checkpoints (orchestrator, staging-only, 90-34 deploys C+D and runs the final repo-wide grep gate). 278 files migrated total (variable-based A/B/C + inline-wildcard D). Migration plans are code-only (worker-suitable), capped ≤10 files/≤120 lines each for judge parseability; routing floor:frontier on all.
-
-### Phase 91: v7.0 Live Verification
-
-**Goal**: The v7.0 Intelligence Engine's deploy-gated closeout is done — real GPU inference serving, eval thresholds met, and the copilot's clearance ceiling verified end-to-end live
-**Depends on**: Nothing in-repo — **HARDWARE-GATED**: the on-prem GPU hardware decision is pending. The DigitalOcean droplet (4GB, no GPU) cannot host vLLM/TEI. The Mac-local stack (proven in v7.0 Phase 72 bring-up) is the fallback verification target if dedicated hardware does not land. Plan-phase must surface this dependency before committing to a target environment.
-**Requirements**: LIVE-01, LIVE-02, LIVE-03
-**Success Criteria** (what must be TRUE):
-
-1. vLLM (Gemma-4-12B) + TEI (BGE-M3) are serving with passing health checks and are reachable by the agent-runtime (:4100)
-2. The v7.0 eval harness (briefing / correlation / Arabic-quality rubrics) runs against live inference and meets its CI thresholds — EVAL-01/02/03 closed
-3. The copilot reads and HITL-writes under the caller's JWT against the live stack, and the clearance ceiling is verified end-to-end (an L1 caller's results are a strict subset of an L3 caller's, zero above-clearance rows)
-   **Plans**: TBD
+- ⚠️ **v9.0 Platform Completion & Live Verification** — Phases 86-91 (partial: 3/6 phases, closed 2026-08-15) — [archive](milestones/v9.0-ROADMAP.md)
+- 🚧 **v10.0 Trust & Correctness** — Phases 92-104 (in progress, started 2026-08-15)
 
 <details>
 <summary>✅ v2.0 Production Quality (Phases 1-7) — SHIPPED 2026-03-28</summary>
@@ -387,6 +231,450 @@ Full detail: [milestones/v8.1-ROADMAP.md](milestones/v8.1-ROADMAP.md).
 
 </details>
 
+<details>
+<summary>⚠️ v9.0 Platform Completion & Live Verification (Phases 86-91) — PARTIAL 2026-08-15</summary>
+
+- [x] Phase 86: Feature Completion (5/5 plans) — MoU create, user-management routes, ConsistencyPanel retired (ADR-008)
+- [x] Phase 87: Linear Affordances (10/10 plans) — peek panel + paging, Filter/Display popovers, ⌘K audit, empty states (F23–F26)
+- [ ] Phase 88: Security & Hygiene Tail (2/3 plans) — SEC-01 closed; **P88-02 credential rotation carried to v10.0**
+- [ ] Phase 89: CI & Test-Debt Burn-Down (6 tickmarkr tasks) — **CI-01/02/04/05 + ORCH-2 a11y proof carried to v10.0**
+- [x] Phase 90: CORS Edge-Function Migration (36/36 plans) — all edge functions off wildcard CORS, verdict signed
+- [ ] Phase 91: v7.0 Live Verification (0/TBD) — **HARDWARE-GATED, carried to v10.0**
+
+Closed partial: delivered work merged via PR #98 (`e990ed84`); open items carried into v10.0.
+Full detail: [milestones/v9.0-ROADMAP.md](milestones/v9.0-ROADMAP.md)
+
+</details>
+
+## Current Milestone: v10.0 Trust & Correctness
+
+**Goal:** Close the gap between what the app appears to do and what it actually does — every failure admits it failed, every advertised write path works, and every surface tells the truth about its data.
+
+**Scope input:** `.planning/audits/live-audit-2026-08-15/INDEX.md` — a six-lane live-app audit (190 route/tab URLs, EN + AR, 370 screenshots, 144 findings, 19 ship-blockers), plus the v9.0 carry-forward table.
+
+**Coverage:** every v1 requirement is mapped to exactly one phase — AUTH, TRUST, WRITE, DEAD, COUNT, NAV, COPY, AR, DATA, DBSEC, CLIENTSEC, CARRY, LIVE. **The count is not restated here**; derive it from the traceability table at the foot of `.planning/REQUIREMENTS.md`, which carries the command (`RULING-P92-19`).
+
+**Sequencing rationale:** Phase 92 first because edge-function JWT rejection (AUTH-02) is the root cause behind several surfaces that look empty, and because you cannot verify anything as a second user without a working logout. Phase 93 next because TRUST-01 — repositories no longer swallowing rejections — is the seam every later error state renders through. The operator-only credential rotation (CARRY-01) is pulled forward into Phase 92 rather than sitting in the CI phase it gates, so it has eleven phases of slack instead of blocking the milestone tail the way it blocked v9.0. Copy and Arabic follow the surface work because you cannot fix the wording of a page that does not render. Database security lands after the frontend is correct so a query regression is attributable to the view change. Test suites go green only once the app under test is correct.
+
+## Phases
+
+- [x] **Phase 92: Session Integrity & Edge-Function Auth** - A user can sign out, a valid session is accepted by every edge function, and a dead session bounces the tab
+- [x] **Phase 93: Failure Visibility** - No surface renders a confident empty state over a request that failed
+- [ ] **Phase 94: Write Paths** - Every advertised write path — after-actions, intake, kanban, settings, reports — actually writes
+- [x] **Phase 95: Routes That Don't Render** - Every route either renders its page or says why it can't; the route tree has one file per slot
+- [x] **Phase 96: Real Numbers** - Every count, chart and trend comes from real data and agrees with every other surface (completed 2026-08-17)
+- [x] **Phase 97: Reachability** - Nothing built is unreachable and nothing in the route tree is unowned
+- [x] **Phase 98: Copy Truth** - No database values, no i18n keys, no seed instructions, one date format, project voice rules obeyed
+- [x] **Phase 99: Arabic Coverage** - An Arabic session reads as Arabic: one glossary, localized dates, no English leakage
+- [x] **Phase 100: Security Posture — Database & Client** (GREEN 2026-09-10, run 0075, tip 45c3c8167 on the run branch; sign-off under delegation, operator review owed; see 100-CONTEXT §5) - RLS is a real boundary for the 207 frontend files that depend on it, and signing out leaves nothing behind on the machine
+- [ ] **Phase 101: CI Gates Green** - The suites tell the truth about `main`, and the ones that matter block merges
+- [ ] **Phase 102: Staging Data & Debt Tail** - Staging looks like a diplomatic system; the last v9.0 debts are closed
+- [ ] **Phase 103: Audit Re-Sweep** - The 2026-08-15 findings are proven closed by re-running the audit that found them
+- [ ] **Phase 104: v7.0 Live Verification (HARDWARE-GATED)** - The intelligence stack verified against real GPU inference — does not start until an operator names the host
+
+## Phase Details
+
+### Phase 92: Session Integrity & Edge-Function Auth
+
+**Goal**: A user can sign out, a valid session is accepted by every edge function, and an invalidated session visibly ends.
+**Depends on**: Nothing (first phase of v10.0)
+**Requirements**: AUTH-01, AUTH-02, AUTH-03, AUTH-04, AUTH-05, CARRY-01
+**Success Criteria** (what must be TRUE):
+
+1. A signed-in user can sign out — from the sidebar user card and from `/settings` — and lands on `/login` with the session cleared.
+2. A valid session is accepted by every edge function: the 133 `index.ts` files pinning `supabase-js@2.3x` are on `@supabase/supabase-js@2` and pass the caller's token explicitly via `getUser(token)`, and no audited route renders empty because of a 401. Closed by re-deriving the population, never by re-quoting the count — `grep -rlE '@supabase/supabase-js@2\.3[0-9]' supabase/functions --include='index.ts' | wc -l` → `0`.
+3. Invalidating the session bounces the open tab to `/login` instead of decaying into a "Member/Member" ghost shell with the admin nav silently removed.
+4. `/delegations` renders an error state when its `my-delegations` calls are rejected, and renders real delegations when they are not.
+5. The P88-02 credentials are rotated by the operator, with the GitHub Actions secret and `.env.test` updated and a login smoke passing — the gate CARRY-02 and CARRY-05 wait on in Phase 101.
+
+**Plans**: 10 plans
+**UI hint**: yes
+
+Plans:
+
+- [x] 92-01-PLAN.md — Wave 0: probe script + baseline (D-16), AUTH-01 RED measurement (D-26), sign-out + delegations forced-error specs
+- [x] 92-02-PLAN.md — Mount NavUser, SIGNED_OUT seam (cache clear + lazy nav), /settings add + relabel (AUTH-01/03/05, D-25/28/29)
+- [x] 92-03-PLAN.md — /delegations error state distinct from empty (AUTH-04 UI half)
+- [x] 92-04-PLAN.md — AUTH-02 core: 3 confirmed-broken + my-delegations + \_shared/auth.ts, deployed + probe flip
+- [x] 92-05-PLAN.md — AUTH-02 sweep slice A (access-review-detail → document-versions, 33 files, code-only)
+- [x] 92-06-PLAN.md — AUTH-02 sweep slice B (dossier-activity-timeline → inactive-users, 33 files, code-only)
+- [x] 92-07-PLAN.md — AUTH-02 sweep slice C (intake-audit-logs → push-device-register, 33 files, code-only)
+- [x] 92-08-PLAN.md — AUTH-02 sweep slice D (push-notification-send → working-groups, 30 files, code-only)
+- [x] 92-09-PLAN.md — Batch deploy + ledger + two-sided verification (grep → 0 AND live probe)
+- [ ] 92-10-PLAN.md — CARRY-01 operator credential rotation + login smoke (blocks nothing)
+
+> Criterion 5 is an operator act, not code. It is scheduled here — ten phases ahead of the work it gates — precisely because it held v9.0's Phase 88 open. The other four criteria do not depend on it and must not wait for it.
+
+**EXECUTED 2026-08-15 — accepted by `RULING-P92-49`.** 9 of 10 plans executed; `92-10` remains open
+on the operator. Report: `.tickmarkr/overseer/P92-EXEC-REPORT.md`. Gate drill on the real tree:
+21 gates · 21 parsed · **20 exit 0**, the single red being `92-10_g1` (the park).
+
+Read the checkbox as narrowly as the evidence supports:
+
+- **Criteria 1, 2, 3 CLOSED with behavioural evidence** — Playwright specs executed against a running
+  app with a real session (`92-signout.spec.ts` 3/3), and 139 real staging deploys probed live
+  (0×401 across 11 representatives).
+
+- **Criterion 2 carries a named bound: `PIN-2390-01`.** Its closing derivation greps `--include='index.ts'`
+  and truthfully returns 0, but two non-`index.ts` helpers still pin `2.39.0` and are imported by six
+  deployed functions. Not an auth regression (service-role client; all six probe non-401).
+
+- **Criterion 4 is HALF-CLOSED.** Its error half is proven live; its data half is parked — `DELEG-01`
+  (`my-delegations` reads a relation that does not exist) and `SEED-DELEG-01` (both real delegation
+  tables hold 0 rows).
+
+- **Criterion 5 is PARKED**, blocker `E2ECRED-01`. `PARK-EXEC-01` stays open until the operator rotates.
+- **RLS row-scoping was never verified behaviourally.** The injected-client guard proves the migration
+  did not _remove_ scoping; nothing here proves scoping _works_. 128 of the 139 deployed functions have
+  static evidence only. Nothing was verified against production.
+
+- **Unmasked by fixing the 401s, filed rather than fixed:** `DELEG-01`, `DR-42501`, `AUDIT-42703`,
+  `PIN-2390-01` (Phase 93); `SEED-DELEG-01` (Phase 102).
+
+### Phase 93: Failure Visibility
+
+**Goal**: No surface renders a confident empty state over a request that failed.
+**Depends on**: Phase 92 (many "empty" surfaces are 401s; they must stop being auth failures before their error states can be judged)
+**Requirements**: TRUST-01, TRUST-02, TRUST-03, TRUST-04, DELEG-01, DR-42501, AUDIT-42703, PIN-2390-01
+**Success Criteria** (what must be TRUE):
+
+1. A rejected query reaches the caller as a rejection: repositories (e.g. `analytics.repository.ts`) no longer catch-and-return `{ data: null }`, so the `isError` branches already written in the pages stop being dead code.
+2. `/admin/field-permissions` shows the 19 rules the database holds, and shows an error — never "0 Permissions" — when its query fails; the same holds for `/admin/data-retention`, Tag Analytics, and position attachments.
+3. A well-formed but nonexistent record ID renders a page-level not-found state on dossier detail, engagement detail and report builder — not "Check your connection and try again" after 24 skeletons.
+4. An engagement dossier whose extension row is missing renders a named, degraded state rather than a titleless chrome shell.
+5. No user-facing error contains an internal string — `/tasks/queue` no longer prints the raw supabase-js message.
+
+**Plans**: 15 plans
+**UI hint**: yes
+
+Plans:
+
+- [x] 93-01-PLAN.md — Wave 1: phase-93-base tag + shared QueryErrorState + 7 bilingual keys (D-03/D-04; producer for every surface plan)
+- [x] 93-02-PLAN.md — Wave 1: my-delegations bilingual error envelope (DELEG-01 visibility-only, D-13) + data-retention `details` strip + 92-spec natural-visit update
+- [x] 93-03-PLAN.md — Wave 1: PIN-2390-01 — both 2.39.0 helpers bumped, six importers redeployed, derivation widened to `*.ts` (D-16)
+- [x] 93-04-PLAN.md — Wave 2: DR-42501 4-policy migration onto is_platform_admin (D-09/D-10/D-24) + anti-grant gate (D-12/D-23) + probe 200
+- [x] 93-05-PLAN.md — Wave 1: AUDIT-42703 — audit-logs-viewer remapped to real audit_log columns, aggregate promoted (D-26), leak fixed (D-15)
+- [x] 93-06-PLAN.md — Wave 2: TRUST-01 sites 1-3 (analytics repository) + AnalyticsDashboardPage error.message fix, paired per D-21 + spec
+- [x] 93-07-PLAN.md — Wave 2: TRUST-01 sites 4-5 (useDossier counts) + DossierListPage em-dash/error branch, paired per D-21 + spec
+- [x] 93-08-PLAN.md — Wave 2: TRUST-01 site 6 (supabase-js .error throws first) + widgetData aggregation isError + CustomDashboardPage + spec
+- [x] 93-09-PLAN.md — Wave 3: /admin/field-permissions + /admin/data-retention isError wiring; legal-holds residual ASSERTED by design (D-25) + 4-test spec
+- [x] 93-10-PLAN.md — Wave 2: Tag Analytics stub repointed at tag-hierarchy/analytics (D-25) + AttachmentUploader inline error + spec
+- [x] 93-11-PLAN.md — Wave 2: DossierShell — first notFound() thrower (D-06) + error state; one edit covers 7 dossier layouts + spec
+- [x] 93-12-PLAN.md — Wave 2: engagement-dossiers degraded-200 contract (producer) → WorkspaceShell 3-state render (D-06a/D-07) + fixture spec
+- [x] 93-13-PLAN.md — Wave 2: report builder loader + by-id fetch + notFound + route errorComponent (no analog; WRITE-06 42P17 hazard stated) + spec
+- [x] 93-14-PLAN.md — Wave 2: criterion-5 three seams (D-22) — bucket-(a) sweep, router defaultErrorComponent, global mutation onError + /tasks/queue spec
+- [x] 93-15-PLAN.md — Wave 4: closing derivations with populations (D-18), full spec+probe run, gate drill, intended-broken register
+
+### Phase 94: Write Paths
+
+**Goal**: Every advertised write path actually writes, and a failed write says so.
+**Depends on**: Phase 92 (JWT), Phase 93 (a failed write must surface as a failure)
+**Requirements**: WRITE-01, WRITE-02, WRITE-03, WRITE-04, WRITE-05, WRITE-06, AUDIT-DROP-01, AUDIT-ZERO-01, ARMA-01
+
+> The three trailing ids were filed during Phase 93 and assigned to this phase in `REQUIREMENTS.md`
+> (§AUDIT-DROP-01 / §AUDIT-ZERO-01 under WRITE; `ARMA-01` "Owner: Phase 94 — Write Paths, alongside
+> `WRITE-06`"). They were never carried onto this line; added 2026-08-16 during Phase 94 planning so
+> the roadmap and the requirement register agree. `ARMA-01` rides with `WRITE-06` — its arm-(b)
+> deletion belongs in the same plan, ordered after the `42P17` fix.
+
+**Success Criteria** (what must be TRUE):
+
+1. An after-action record can be created, saved and published from the engagement UI — `AfterActionForm.tsx:131`'s `if (!initialData) return` no longer pins `isDirty` false in create mode, and the route passes `canPublish` + `onPublish`.
+2. `/after-actions` lists records and a detail page renders translated copy instead of the raw `afterActions.loadError` key.
+3. `/intake/new` submits: the dossier picker writes to the field the schema reads, so "Linked to: OECD" and "At least one dossier is required" cannot appear together.
+4. A commitment drag persists exactly when the DB's own state machine permits it; a drag the trigger would coerce is refused before the write with the real bilingual reason; the stored value always equals either what was written or what the user was told; never a success signal followed by a snap-back — and never "Operation completed successfully" on a no-op. (Reworded from "persists against the four-value lifecycle" per `RULING-P94-03` order 2 — the live lifecycle is FIVE values incl. `overdue`, and "no error shown" is insufficient to pass; the oracle includes the coercion case.)
+5. Every `/settings` tab saves (population stated: the nine SettingsPage sections through the shared Save; child routes are a named exclusion) and the value survives a reload; report reads, custom-report CRUD and scheduled-report creation work without a `42P17`. (Second half scoped to the REAL surfaces per `RULING-P94-04` §PARK-94-06 — the `reports` POST is a mock, filed as `DEAD-09`; the field rename ships only paired with an honest terminal state.)
+
+**Plans**: 11 plans in 5 waves
+**UI hint**: yes
+
+Plans:
+
+- [x] 94-01-PLAN.md — W1: WRITE-01 after-action create-mode Save + canPublish/onPublish wiring
+- [x] 94-02-PLAN.md — W1: WRITE-03 intake zod relaxation + shouldValidate + register correction
+- [x] 94-03-PLAN.md — W1: WRITE-04 core — commitment-stage guard, mutation reject (2 bilingual keys), no-op fix
+- [x] 94-04-PLAN.md — W1: WRITE-05 settings .update() fix + reload-persistence spec (population stated)
+- [x] 94-05-PLAN.md — W1: WRITE-06 42P17 migration + D-22 two-sided probe + ARMA-01 arm-(b) deletion
+- [x] 94-06-PLAN.md — W1: AUDIT helpers (edge \_shared/audit.ts + backend audit_log/mou repairs + backend test)
+- [x] 94-07-PLAN.md — W2: WRITE-02 list two-query rewrite + deploy + i18n colon-form + degraded row + corrections
+- [x] 94-08-PLAN.md — W2: WRITE-04 droppable predicate (own-column carve-out) + read-back probe + parity oracle
+- [x] 94-09-PLAN.md — W3: WRITE-06 generate surface — template→type paired with terminal state + DEAD-09 filing
+- [x] 94-10-PLAN.md — W4: AUDIT-ZERO fleet — 27 edge writers repaired + redeployed + ledger + register corrections
+- [x] 94-11-PLAN.md — W5: closing derivations with populations, full oracle run, gate drill, intended-broken register
+
+### Phase 95: Routes That Don't Render
+
+**Goal**: Every route either renders its page or says why it can't, and the route tree has one owner per slot.
+**Depends on**: Phase 92, Phase 93
+**Requirements**: DEAD-01, DEAD-02, DEAD-03, DEAD-04, DEAD-08, DEAD-09, NOTFOUND-COMPONENT-01, RETENTION-CAST-01
+**Success Criteria** (what must be TRUE):
+
+1. `/search` returns results for a typed query and for each of its own suggestion chips, with no `Cannot read properties of undefined (reading 'forEach')`.
+2. `/tasks/queue` renders its queue against a deployed `assignments-queue` function.
+3. `/scenario-sandbox` either loads or shows an error — a backend 500 is never pixel-identical to "still loading".
+4. `/monitoring` resolves to the SPA route rather than raw proxy JSON, or the route is removed from the tree with the decision recorded.
+5. `/positions/:id` and the legislation detail page are reachable: one route file per slot (`$id.tsx` vs `$positionId.tsx` resolved), `legislation.tsx` renders an `<Outlet/>`, and the positions `approvals`/`versions` children drive tab state.
+
+**Plans**: 9 plans (planned 2026-08-16; wave 1 = 01-08 file-disjoint, wave 2 = 09 closing)
+
+Plans:
+**Wave 1**
+
+- [x] 95-01-PLAN.md — W1: DEAD-01 search envelope adapter + real related-work + page error branch + e2e (criterion 1)
+- [x] 95-02-PLAN.md — W1: DEAD-02 queue transport fix + assignments-queue deploy with probe evidence + e2e (criterion 2)
+- [x] 95-03-PLAN.md — W1: DEAD-03 sandbox QueryErrorState retrofit + bounded retry + CDP e2e (criterion 3)
+- [x] 95-04-PLAN.md — W1: DEAD-04 keep+narrow per RULING-P95-01 — /api/monitoring move, proxy delete, nginx check, e2e (criterion 4)
+- [x] 95-05-PLAN.md — W1: DEAD-08 slot consolidation ($id survives) + legislation Outlet + URL-driven tabs + e2e (criterion 5)
+- [x] 95-06-PLAN.md — W1: DEAD-09 real report generation (storage + signed url) + truthful states + deploy probe (filed-finding close)
+- [x] 95-07-PLAN.md — W1: NOTFOUND-COMPONENT-01 custom ESLint rule + positive/negative controls (filed-finding close)
+- [x] 95-08-PLAN.md — W1: RETENTION-CAST-01 six validate-or-throw unwraps + asRows reconcile + unit oracle (filed-finding close)
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
+- [x] 95-09-PLAN.md — W2: closing derivations with populations, gate drill, DEAD-04 record for P97, register close-outs
+
+**UI hint**: yes
+
+### Phase 96: Real Numbers
+
+**Goal**: Every count, chart and trend on screen comes from real data and agrees with every other surface.
+**Depends on**: Phase 93, Phase 94 (the kanban mutation seam is where `status`/`workflow_stage` diverge), Phase 95
+**Requirements**: DEAD-05, DEAD-06, DEAD-07, COUNT-01, COUNT-02, COUNT-03, COUNT-04, TRIGSWEEP-01, SANDBOX-500-01
+**Success Criteria** (what must be TRUE):
+
+1. `/analytics` shows real data or is honestly disabled — no fabricated sparklines, donuts or "Insights you'll gain" over a backend endpoint that does not exist.
+2. `/custom-dashboard` queries columns that exist (`calendar_entries.event_date`), renders its chart, and shows trend deltas computed from completed requests rather than "0.0%" from aborted ones.
+3. `/calendar` renders a grid, `/calendar/new` mounts the create form, `/events` pads the month by the real weekday offset with working month navigation, and `/word-assistant`'s status badge reflects a live probe.
+4. The dashboard KPI, the `/my-work` badge, footer and rendered rows, the `/commitments` tabs and the kanban board report the same number for the same work.
+5. A dossier without an extension row appears in both its type list and the hub count (persons 16/16, engagements 5/5), and a completed task leaves the dashboard's Overdue widget and lands in kanban Done.
+
+**Plans**: 11 plans (3 waves)
+
+Plans:
+
+**Wave 1**
+
+- [x] 96-01-PLAN.md — SANDBOX-500-01: break the 42P17 RLS recursion (P94 definer precedent), two-sided proof, working sandbox
+- [x] 96-02-PLAN.md — COUNT-04 DB half: INSERT-gap trigger re-timing + RPC count truth (fulfillment bucket, Done semantics, stored-overdue arm)
+- [x] 96-03-PLAN.md — DEAD-06: calendar_entries.event_date fix + truthful trend deltas + CDP oracle
+- [x] 96-04-PLAN.md — DEAD-07 (calendar): calendar layout Outlet, grid-always, /events offset + month nav
+- [x] 96-10-PLAN.md — COUNT-02: type-list path classification + SC5 no-extension-row fixture oracle
+- [x] 96-11-PLAN.md — TRIGSWEEP-01: behaviour classifier + both-direction control drill artifact
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
+- [x] 96-05-PLAN.md — DEAD-07 (completes): word-assistant three-state live-probe pill + the 4-test family spec
+- [x] 96-06-PLAN.md — DEAD-05 Branch A: analytics repoint to the deployed edge fn, fabrication removal, branch-invariant oracle
+- [x] 96-07-PLAN.md — COUNT-01: dashboard-stats truth migration, /commitments + /my-work reconciliation, same-clock agreement spec
+- [x] 96-08-PLAN.md — COUNT-03 verify-not-build: three-way parity, writer sweep (STATUS_TO_STAGE), divergent-row repair
+
+**Wave 3** _(blocked on Wave 2 completion)_
+
+- [x] 96-09-PLAN.md — COUNT-04 render half: one-signal badge, chip==badges same-clock, phase-close c9b sweep
+
+**UI hint**: yes
+
+### Phase 97: Reachability
+
+**Goal**: Nothing built is unreachable, and nothing in the route tree is unowned.
+**Depends on**: Phase 92 (settings nav), Phase 95 (`/monitoring` keep-or-delete decision)
+**Requirements**: NAV-01, NAV-02, NAV-03, NAV-04
+**Success Criteria** (what must be TRUE):
+
+1. All 8 declared dossier types — Elected Officials included — appear in the sidebar, the dossier hub type cards, `/dossiers/create` and `/compare`.
+2. Every `/settings/*` page renders navigation: the prefix check that hides the global sidebar and the exact-match check that renders the settings nav agree.
+3. The engagement Digests tab appears in the tab bar, and every list page exposes a create affordance (currently 7 of 8 have none).
+4. Every route with no inbound link is resolved — the 9 admin routes and `/monitoring` each get a nav entry or are deleted, with the decision recorded per route.
+
+**Plans**: 12 plans
+
+Plans:
+
+**Wave 1** _(no dependencies — observers, instruments and the type foundation, in parallel)_
+
+- [x] 97-01-PLAN.md — Wave-0 oracles A: the NAV-01 real-count click-through and the NAV-02 viewport matrix
+- [x] 97-02-PLAN.md — Wave-0 oracles B: the Digests tab and the eight-page create affordance, data-present
+- [x] 97-03-PLAN.md — the INBOUND-LINK instrument and both population derivations
+- [x] 97-04-PLAN.md — the canonical dossier-type home: one literal list, one derived card set, a compile-time anti-merge guard
+
+**Wave 2** _(blocked on Wave 1 — the four surfaces, disjoint files)_
+
+- [x] 97-05-PLAN.md — NAV-01 hub: the three fabrication layers, the real EO total, the sidebar row
+- [x] 97-06-PLAN.md — NAV-01 `/compare`: whitelist, selector, icon lookup and the subtype-filtered fetch arm
+- [x] 97-07-PLAN.md — NAV-02: one settings predicate, one nav column, closed across the viewport matrix
+- [x] 97-08-PLAN.md — NAV-03: the Digests tab and one shared actions slot across seven list pages
+
+**Wave 3** _(blocked on the population evidence)_
+
+- [x] 97-09-PLAN.md — NAV-04: the single-writer per-route decision table
+
+**Wave 4** _(blocked on the decision table — entries and deletions, disjoint files)_
+
+- [x] 97-10-PLAN.md — NAV-04 nav entries, the command-palette admin check, the KEEP-row oracle
+- [x] 97-11-PLAN.md — NAV-04 authorised deletions and the regenerated route tree
+
+**Wave 5** _(blocked on everything)_
+
+- [x] 97-12-PLAN.md — closing: coverage re-derived, gate drill consolidated, register updated, weakest point named
+
+**UI hint**: yes
+
+### Phase 98: Copy Truth
+
+**Goal**: The UI speaks to users, not to developers — one vocabulary, one date format, the project's own voice.
+**Depends on**: Phase 95, Phase 96, Phase 97 (copy is judged on surfaces that render)
+**Requirements**: COPY-01, COPY-02, COPY-03, COPY-04, COPY-05, COPY-06, COPY-07, COPY-08
+
+> **DIGEST REPAIR, 2026-08-18 (`RULING-P98A2-01-SCOPE`).** This entry previously named five
+> requirement ids. The register owns the queue: `COPY-06` (filed 2026-08-16 per `RULING-P94-01`
+> order 3) never reached this digest, and Phase 97 assigned three residues to Phase 98 with no
+> register ids at all (`97-CLOSING-DERIVATION.md:227`) — now `COPY-07`, `COPY-08`, and one
+> named instance inside criterion 4. Criteria 1–5 are unchanged; 6 and 7 are added by the same
+> ruling. A plan scoped from the pre-repair text is incomplete by construction. Every count
+> quoted in these criteria except COPY-03's is an UNVERIFIED audit figure (only `COPY-03`
+> carries `[V]` in the register): plans re-derive each population with a stated definition and
+> let the count fall out — never re-quote.
+
+**Success Criteria** (what must be TRUE):
+
+1. No database value renders as user copy — `in_progress`, `action_item`, `follow_up`, `email`, `human_entered`, `WEEK OF 2026-W27` all resolve through display labels.
+   **BOUNDED (`RULING-P98A2-12`, mid-execution, cost stated):** the dynamic-prefix raw-value mask class — `t('prefix.' + value, value)` sites whose keys do not RESOLVE in the bound namespace, so the raw DB value renders behind the `defaultValue` mask — is a KNOWN, MEASURED, UNREPAIRED residue: 24 unresolved dynamic prefixes / 19 masking a raw value at `13d5094ea`, derived by 98-05's bundle-resolving instrument (nothing frozen; re-derive with it). Routed to `AR-04b`/Phase 99 with the instrument-blindness warning in its dated note — **both of P99's committed acceptance commands are blind to variable-second-arg sites by construction**; P98's instrument is the instrument of record. The plan defect that exposed it (TaskCard cited as the correct idiom to mirror; it does not resolve) is recorded in 98-05's SUMMARY. This criterion does NOT read as whole.
+2. No raw i18n key reaches the screen in either locale — `regions.Europe`, `afterActions.loadError`, `common.loading`, the `calendar.recurrence.*` dot-form family in `RecurrencePatternEditor.tsx` against a namespace-less `useTranslation()` (**census DERIVED, never quoted** — at `87b2d040e`: 43 occurrences / 37 distinct key paths, all 37 already resolving in both `calendar.json`s, so the repair is colon-form ROUTING; the ruling's original "16" was a subfamily miscount, corrected per `RULING-P98A2-02` CORRECTION + `P98A2-D22-COUNT-CORRECTION.md` — any gate re-derives the population at execution time), and the `entityLinks.*` namespace — **82 keys across 8 files with ZERO bundle coverage in either locale, not five** (`RULING-P98A2-02` Q2/Q3: register and author all 82 both locales; oracle closes on driveable rendered surfaces, census 82/82 is the backstop; undriveable surfaces close on census + named UNDRIVEN line). Every named instance is a CLASS — the plan sweeps dot-form-vs-namespace misses as a population.
+   **BOUNDED (`RULING-P98A2-10` item 3, mid-execution, cost stated):** this criterion closes on named instances + the ruled class populations (entityLinks 82, `calendar.recurrence`, `calendar.months`, `common.*` ×7) + no raw key on oracle-driven surfaces (locale+role stamped, extended detector) + UNDRIVEN enumerated. The derived unresolved-dot-form long tail (ORDER HUNDREDS — 306/353 by two instruments, gap deliberately unreconciled, nothing frozen) is `AR-04b`'s population (Phase 99), per that row's own text and its dated note; "no raw key ever" is NOT established for that tail and the register says so.
+3. No seed or test instruction ships as user copy: the 4 `dashboard-widgets.json` strings are rewritten in both locales.
+4. Copy obeys the project's voice rules — sentence case, zero exclamation marks (derived: 31 EN / 30 AR — the audit's 46 is superseded per pre-commitment 1), zero first-person plural (8 today, to re-derive), no retired terminology such as the `"Deadline / Due Date"` chip. Named instance: `elected-officials:list.add` `"Add Elected Official"` is Title Case (`RULING-P98A2-01-SCOPE` F2-c). **Sentence-case clause BOUNDED (`RULING-P98A2-02` Q1 Reading B):** closes on the named instance plus every label the phase's oracle set captures on visited surfaces; the ~4.5k-string long tail is `COPY-09` → Phase 102, with the CLAUDE.md carve-outs (UPPERCASE ribbons, mono labels, table-column headers). **Capture defined (`RULING-P98A2-20`):** a capture is a SETTLED render (the pre-fix @case oracle captured only the synchronous nav shell — every prior @case green is scoped to that shell), with per-surface reachability stated: VISITED / REDIRECTED / ERROR-CHROME / NOT-CONSTRUCTED, and locale ASSERTED never inherited.
+   **Voice clauses BOUNDED (`RULING-P98A2-13` B4, RULING-12 template):** the i18n-JSON populations are repaired and PROVEN (exclamation floor 1 EN / 1 AR inside the declared carve-out; zero first-person; zero retired terms IN THE BUNDLE); the three retired-term hardcoded sites + the open-file class-2 members are repaired by the B1 ruled widening of 98-06; `defaultValue`-mask sites are AR-04a's (already routed); the remaining hardcoded-literal voice violations (`HelpPage:166`, `useBriefingBooks:164-165`, `PositionTrackerCard:93`) are named, measured, UNREPAIRED → COPY-09's dated note. **⚠ copy04's `@values` legs gate on `bundleValues.has(text)` and cannot see hardcoded literals BY CONSTRUCTION — its green is a claim about bundle values only.** This criterion does NOT read as whole for hardcoded-literal copy.
+   **Retired-term clause is CASE-INSENSITIVE (`RULING-P98A2-14`):** the population is the TERM in either language, not one casing of it — the case-insensitive members in the 6 undeclared EN files + AR counterparts are repaired by ruled widening of 98-06; `validation.json`'s member(s) survive by that plan's own explicit carve-out (Task-3 gate asserts survival) and are named on COPY-09's note. Standing law: casing sensitivity is a PER-POPULATION property derived from the population's semantics, never a default.
+   **Search space stated (`RULING-P98A2-16`):** every P98 instrument, bundle-grep included, operates on `frontend/src` — greens are claims about that tree. The retired term also ships from FIVE edge functions in both locales (`pdf-generate` writes it into user-kept documents): `EDGECOPY-01` → Phase 102, whose closure requires repair + DEPLOY + verification on a produced artifact. Fourth structural-blindness instance, first in the SEARCH SPACE rather than the matcher.
+5. Every date renders `Tue 28 Apr` and every time `14:30 GST` from the one shared formatter (`frontend/src/lib/format-date.ts`, which already exists — this criterion is ROUTING, not building) — the seven competing formats are gone — and dev affordances like "Fill with Mock Data" are absent from a production build **including the bundle string** (`intake:fillMock` deleted, label inlined in the DEV block, oracle greps the BUILT bundle with a positive control — `RULING-P98A2-02` Q5 Reading B). **Population boundings (`RULING-P98A2-02` Q4):** relative time is sanctioned on feed/timeline recency surfaces ONLY, via one shared localized helper in the formatter module (the plan enumerates the feed surfaces; all other `formatDistanceToNow` sites migrate); `MMMM yyyy` calendar-grid month headers are navigation chrome, OUT of this population (their Arabic rides `AR-02`/Phase 99).
+6. The default mutation success toast (`frontend/src/lib/query-client.ts` `mutations.onSuccess`) is produced via `t()` and renders localized in both locales on a real mutation — `toast.success('Operation completed successfully')` is gone. Generic-but-localized is the accepted end state; per-mutation specific copy is explicitly NOT required (`COPY-06`, `RULING-P98A2-01-SCOPE` F1-b).
+7. The Elected Officials type-guide popover renders header, `typeDescription.elected_official`, and all four `typeGuide.elected_official.*` sections resolved in BOTH locales — no raw key, no empty section — with the `type !== 'elected_official' &&` guard deleted in the SAME change that lands the five keys (`COPY-08`, `RULING-P98A2-01-SCOPE` F3 Reading B, bounded: the seven sibling types' hollow guide bodies are `GUIDE-HOLLOW-01` → Phase 102, not this phase). **Glyph coherence (`RULING-P98A2-03`):** the popover header shows `<Crown/>` with the canonical country/primary fallback colors — `DossierTypeGuide.tsx` `getTypeIcon`/`getTypeColors` gain `elected_official` cases matching the stats card and WR-07's fallback; a green with a Globe or muted popover is a FAIL. EO's own color family is explicitly OUT (seven semantic families are exhausted; design-system decision).
+
+**Plans**: 9 plans
+
+**Wave 1** _(instruments before repairs)_
+
+- [x] 98-01-PLAN.md — the eight criterion oracles, each proven RED at HEAD on its own defect
+- [x] 98-02-PLAN.md — date-guard extension (fixture-drilled, burn-down allowlist) + the one sanctioned relative-time helper
+
+**Wave 2** _(the two contended files, one owner each)_
+
+- [x] 98-03-PLAN.md — COPY-08+COPY-07 atomic: EO popover keys + guard deletion + Crown/colors, stats-card label, dossier.json Deadline
+- [x] 98-04-PLAN.md — common.json lane: entityLinks 82-key census both locales, localized default toast, recurrence colon-routing, regions casing, dot-form class sweep
+
+**Wave 3** _(derived populations, disjoint files)_
+
+- [x] 98-05-PLAN.md — COPY-01: enum display labels (Part A), de-snake sweep (Part B), the localized week header
+- [x] 98-06-PLAN.md — COPY-03 rewrite + retired terms + named Title Case instance + exclamations/first-person on derived populations
+
+**Wave 4** _(blocked on the guard + the enum lanes)_
+
+- [x] 98-07-PLAN.md — COPY-05: six graded feed surfaces onto the helper, fifteen migrations, remaining format classes, fillMock out of the BUILT bundle
+
+**Wave 5** _(blocked on all repairs — captures the FINAL surfaces)_
+
+- [x] 98-08-PLAN.md — the D-20 bounded sentence-case captured-label sweep with verdict record
+
+**Wave 6** _(blocked on everything)_
+
+- [x] 98-09-PLAN.md — closing: coverage re-derived, gate drill consolidated, register updated, weakest point named
+
+**UI hint**: yes
+
+### Phase 99: Arabic Coverage
+
+**Goal**: An Arabic session reads as Arabic — one glossary, localized dates, no English leakage. (RTL layout infrastructure is already verified sound and is out of scope.)
+**Depends on**: Phase 98 (the EN namespaces settle first; `ar` mirrors them)
+**Requirements**: AR-01, AR-02, AR-03, AR-04
+**Success Criteria** (what must be TRUE):
+
+1. Each core object has exactly one Arabic term across every namespace — dossier is one word, not دوسيه / ملف / دوسييه — and a nav label matches the title of the page it opens (agreement = same OBJECT TERM, sense-consistent, per `RULING-P99-05` §3).
+2. Dates and times render in Arabic with no English weekday or month names inside Arabic sentences (Latin digits remain deliberate policy).
+3. No English string renders under `dir="rtl"` on an otherwise-Arabic screen — the 404 page, intake queue header and primary button, position read-only banner and search suggestion chips included.
+4. No `t()` call resolves through a dot-form key with an English default, so a missing Arabic key shows as missing rather than silently rendering English in both languages.
+
+**Plans**: 41 plans (planned 2026-08-18, twice revised, then RE-CUT to the engine's task-unit contract per `RULING-P99-09` — 25 plans breached max-6-acceptance/max-8-files and did not compile; the 41-task graph compiles EXIT 0 with content unchanged. Corrected 2026-08-18: this line read "25 plans", frozen at leg-1 acceptance before the re-cut moved it — my own never-freeze-a-moving-number rule, broken by me. Waves and lane map: `99-PLAN-INDEX.md`)
+**UI hint**: yes
+
+### Phase 100: Security Posture — Database & Client
+
+**Goal**: RLS is a real authorization boundary for the 207 frontend files that rely on it as the only one — **and the browser stops retaining the previous user's data after sign-out.** Two boundaries, one phase: the server-side boundary that decides what a caller may read, and the client-side residue that survives the caller leaving.
+**Depends on**: Phase 94 (the `custom_reports` ↔ `report_shares` recursion is fixed there); otherwise independent — sequenced late so a query regression is attributable to the view change, not the frontend.
+**Requirements**: DBSEC-01, DBSEC-02, DBSEC-03, DBSEC-04, DBSEC-05, CLIENTSEC-01, CLIENTSEC-02
+**Success Criteria** (what must be TRUE):
+
+1. Every client-reachable `SECURITY DEFINER` view is converted to `security_invoker`, restricted, or justified in writing — including `unified_work_items`, whose 10 frontend consumers still return the caller's correct rows afterwards.
+2. No view exposes `auth.users` to `anon` or `authenticated` — `upcoming_milestones` and the frontend-queried `entity_comments_with_details` included.
+3. No materialized view is selectable by `anon` or `authenticated`; the 12 are revoked or moved behind a gated RPC.
+4. `intelligence_email_queue` and `events.idempotency_keys` have policies matching intent instead of RLS-enabled-with-no-policies denying everything.
+5. Leaked-password protection is enabled and the 548 mutable-`search_path` functions are pinned; Supabase advisors report clean on these classes.
+6. **Signing out clears client-side residue.** `localStorage` no longer retains the previous user's state — the six persisted zustand stores [**CORRECTION 2026-09-08: FIVE exist — the sixth, in the dead `services/auth.ts`, was deleted in Phase 97, commit `e6ac817f3`. Verified during Phase 100 planning. The list below is kept verbatim for audit; do not hunt the sixth.**] (`auth-storage`, `entity-history-storage`, `ui-storage`, `pinned-entities-storage`, `dossier-store`, and the duplicate in the dead `services/auth.ts`) and the raw writers (`advanced-search-history`, `quickswitcher_recent_items`) are cleared, so the next user on a shared analyst workstation cannot see which dossiers the previous analyst opened or what they searched for. Phase 92 closed the in-memory query-cache half at the sign-out seam; this is the persisted half it deliberately did not sweep.
+7. **Production builds do not ship verbatim sources without a written decision.** `vite.config.ts:141` `sourcemap: true` puts 305 `.map` files with full `sourcesContent` in `dist/assets` (measured at `87b2d040e`) — strip, restrict to non-public delivery, or justify keeping them in writing (`CLIENTSEC-02`, filed 2026-08-18 from Phase 98 plan-checking).
+
+**Plans**: TBD
+
+### Phase 101: CI Gates Green
+
+**Goal**: The test suites tell the truth about `main`, and the ones that matter block merges.
+**Depends on**: Phase 92 (CARRY-01 rotation gates CARRY-02 and CARRY-05), Phase 100 (the app under test is correct before the suites are made green)
+**Requirements**: CARRY-02, CARRY-03, CARRY-04, CARRY-05, CARRY-09, CARRY-10
+**Success Criteria** (what must be TRUE):
+
+1. The E2E suite runs green against the deployed app, or each failing spec carries an in-spec quarantine with a tracked reason.
+2. The integration suite runs green, with decision D-3 (the missing local Supabase DB at `localhost:54321`) resolved and recorded.
+3. At least one a11y spec is demonstrated PASSING with its run evidence — not skipped, not annotated. No a11y spec has ever been shown green.
+4. `test-rtl-smokes` is a required branch-protection context on `main`, proven by a smoke PR observed `BLOCKED`.
+5. Every currently-red non-required suite on `main` — E2E, integration, Accessibility (RTL + WCAG AA), RTL Portal + Component Smokes, RTL + Responsive, Docker Build — is green or honestly quarantined with a reason.
+6. Both Playwright configurations leave zero attributed dev-stack sessions after normal and interrupted runs; cleanup refusal or unavailable instrumentation makes the invoking command fail. Repeated root and frontend suite probes show no leaked-session or descriptor growth.
+
+**Plans**: TBD
+
+### Phase 102: Staging Data & Debt Tail
+
+**Goal**: Staging reads as a diplomatic system rather than test residue, and the last v9.0 debts are closed.
+**Depends on**: Phase 101 (purge the fixtures after the suites are green, then re-run them — purging first would fight the stabilization)
+**Requirements**: DATA-01, DATA-02, SEED-DELEG-01, CARRY-06, CARRY-07, CARRY-08
+**Success Criteria** (what must be TRUE):
+
+1. `/users` lists real staff: the ~415 `*@example.com` / `*@gastat.test` fixture accounts are gone and the E2E suite deletes the accounts it creates.
+2. No record visible in the UI names an internal artifact — "Phase 70 staging verification digest", "Phase 52 Kanban Fixture Engagement", "E2E MoU 1783364705954", "UAT round-11 commitment".
+3. Dashboard visual snapshots survive a date change: the frozen-clock vs server-`NOW()` divergence is removed. Regenerating baselines is explicitly not a fix.
+4. The entry chunk is back under the 476 KB budget and the budget is lowered to match (raised to 500 KB at v9.0 close; actual 493.71 kB gzipped).
+5. The three data-entry quick tasks `260530-w2/w3/w4` are completed or formally retired, each with a SUMMARY.
+
+**Plans**: TBD
+
+### Phase 103: Audit Re-Sweep
+
+**Goal**: The 2026-08-15 findings are proven closed by re-running the audit that found them, rather than assumed closed by the phases that touched them.
+**Depends on**: Phase 102 (every other v10.0 phase is complete)
+**Requirements**: none new — this phase re-verifies all 55 non-LIVE v10.0 requirements against live observation
+**Success Criteria** (what must be TRUE):
+
+1. `.planning/audits/live-audit-2026-08-15/probe.mjs` has been re-run over the audited route set in EN and AR under `00-BRIEF.md`'s method, and its output sits beside the original audit.
+2. Each of the 19 ship-blockers is re-checked at its cited route and recorded closed, still-open, or deliberately deferred with a named reason.
+3. The re-sweep produces no new P0 finding; any new P0 is filed as a phase or quick task before the milestone closes.
+4. Every v10.0 requirement outside LIVE is marked verified against a named observation from the re-sweep, or carried with a reason — no requirement closes on assertion alone.
+
+**Plans**: TBD
+
+### Phase 104: v7.0 Live Verification (HARDWARE-GATED)
+
+**Goal**: The v7.0 intelligence stack is verified against real GPU inference under the caller's own clearance.
+**Depends on**: an operator-confirmed on-prem GPU host. Depends on no v10.0 phase, and no v10.0 phase depends on it.
+**Requirements**: LIVE-01, LIVE-02, LIVE-03
+**Success Criteria** (what must be TRUE):
+
+1. vLLM (Gemma-4-12B) and TEI (BGE-M3) serve with passing health checks and the agent-runtime on `:4100` reaches both.
+2. The v7.0 eval harness runs against live inference and meets its CI thresholds (EVAL-01/02/03).
+3. The copilot reads and HITL-writes under the caller's JWT against the live stack, with an L1 caller's results demonstrably a strict subset of an L3 caller's.
+
+**Plans**: TBD
+
+> **GATE — read before planning this phase.** These three requirements have no code blocker; they are blocked on hardware that does not exist yet. They blocked v9.0's Phase 91 for 40 days without a single plan being written. `/gsd:plan-phase 104` must not run until an operator has named a target GPU host with a date.
+>
+> **Recommendation: do not hold v10.0 for this.** If the host is still undecided when Phase 103 closes, ship v10.0 with LIVE-01/02/03 carried to v11.0 — every v1 requirement except those three. Nothing else in this milestone depends on them, and every prior milestone that waited on this hardware paid for the wait with a partial close.
+
 ## Progress
 
 <!-- gsd:progress:start -->
@@ -409,15 +697,58 @@ Full detail: [milestones/v8.1-ROADMAP.md](milestones/v8.1-ROADMAP.md).
 | 68-74 | v7.0 | 49/49 | Shipped | 2026-06-24 |
 | 75-80 | v8.0 | 32/32 | Shipped | 2026-07-04 |
 | 81-85 | v8.1 | 22/22 | Shipped | 2026-07-05 |
-| 86. Feature Completion | v9.0 | 5/5 | Complete    | 2026-07-07 |
-| 87. Linear Affordances | v9.0 | 6/10 | In Progress|  |
-| 88. Security & Hygiene Tail | v9.0 | 0/TBD | Not started | — |
-| 89. CI & Test-Debt Burn-Down | v9.0 | 0/TBD | Not started | — |
-| 90. CORS Edge-Function Migration | v9.0 | 36/36 | Complete    | 2026-07-13 |
-| 91. v7.0 Live Verification | v9.0 | 0/TBD | Not started | — |
+| 86-91 | v9.0 | 54/57 | Partial (3/6 phases) | 2026-08-15 |
+| 92-104 | v10.0 | 8/13 phases | In progress | 100-104 remain |
+| 92. Session Integrity & Edge-Function Auth | v10.0 | 10/10 | Complete | 2026-08-15 |
+| 93. Failure Visibility | v10.0 | 15/15 | Complete | 2026-08-16 |
+| 94. Write Paths | v10.0 | 11/11 | Complete | 2026-08-16 |
+| 95. Routes That Don't Render | v10.0 | 9/9 | Complete | 2026-08-17 |
+| 96. Real Numbers | v10.0 | 11/11 | Complete   | 2026-08-17 |
+| 97. Reachability | v10.0 | 12/12 | Complete | 2026-08-17 |
+| 98. Copy Truth | v10.0 | 9/9 | Complete | 2026-08-18 |
+| 99. Arabic Coverage | v10.0 | 62/62 | Complete | 2026-09-02 |
+| 100. Security Posture — Database & Client | v10.0 | 0/TBD | Not started | — |
+| 101. CI Gates Green | v10.0 | 0/TBD | Not started | — |
+| 102. Staging Data & Debt Tail | v10.0 | 0/TBD | Not started | — |
+| 103. Audit Re-Sweep | v10.0 | 0/TBD | Not started | — |
+| 104. v7.0 Live Verification (HARDWARE-GATED) | v10.0 | 0/TBD | Not started | — |
+
+> **RECONCILED 2026-09-08 — the five contradicting rows are now corrected on evidence.**
+> Each of 92, 93, 94, 95, 97 carries a phase directory with 9–15 summaries and a VERIFICATION artifact
+> whose verdict is positive (`pass` / `Verdict: MET` / P94's *"delivered on the five criteria"*), and
+> the counts above are the summaries on disk. **Phase 94 was additionally verified LIVE**, because
+> Phase 100 depends on it: the `custom_reports` ↔ `report_shares` 42P17 recursion is broken on staging
+> — `report_shares`' SELECT policy now references neither table, so the back-edge that closed the cycle
+> is gone (`pg_policies`, project `zkrcjzdemdmwhearhfgg`, checked 2026-09-08).
+>
+> Re-derive rather than trusting this note:
+> ```bash
+> for p in 92 93 94 95 97 99; do echo "P$p $(ls .planning/phases/$p-*/*SUMMARY.md | wc -l)"; done
+> ```
+>
+> **Superseded note, kept because it records why the rows were left wrong for six days:**
+> **⚠ THIS TABLE CONTRADICTED THE REPOSITORY — corrected only where verified (2026-09-02).**
+> Phase 99's row was updated by the overseer that landed it: 62/62, merged at `002bee1cf`, run
+> `run-20260902-182826-0000000000000073` green on all four clauses.
+>
+> **Phases 92, 93, 94, 95 and 97 still read `0/TBD / Not started` while carrying 9–15 phase summaries
+> each on disk.** Those rows were NOT changed here, because this seat verified only Phase 99 and
+> marking a phase Complete on inference is the defect class this milestone exists to remove. Derive
+> the truth rather than trusting either the row or this note:
+>
+> ```bash
+> for p in 92 93 94 95 97; do
+>   echo "P$p summaries=$(ls .planning/phases/$p-*/ | grep -c 'SUMMARY.md')"
+> done
+> ```
+>
+> Whoever next owns the roadmap should reconcile those five rows against their phase artifacts and
+> record the basis. The rows are wrong in the direction that under-reports progress, so nothing
+> downstream is at risk of over-claiming — but a progress table that reads `Not started` for finished
+> work is how a phase gets planned twice.
 
 <!-- gsd:progress:end -->
 
 ---
 
-_Roadmap last updated: 2026-07-06 — v9.0 Platform Completion & Live Verification roadmap created (Phases 86-91; 21/21 v1 requirements mapped)._
+_Roadmap last updated: 2026-08-15 — v10.0 Trust & Correctness roadmapped: 13 phases (92-104), all v1 requirements mapped (count derived in `REQUIREMENTS.md`), scoped from the 2026-08-15 live-app audit (144 findings, 19 ship-blockers) plus the v9.0 carry-forward table._

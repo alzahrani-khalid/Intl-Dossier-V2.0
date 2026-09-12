@@ -130,7 +130,7 @@ describe('BriefGenerationPanel — manual fallback', () => {
     })
 
     // Success Alert + Open Brief affordance wired to onBriefGenerated.
-    expect(await screen.findByText('Brief saved successfully!')).toBeInTheDocument()
+    expect(await screen.findByText('Brief saved successfully')).toBeInTheDocument()
     expect(screen.getByText('Saved manual brief')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Open Brief' }))
@@ -153,6 +153,6 @@ describe('BriefGenerationPanel — manual fallback', () => {
 
     expect(await screen.findByText('Failed to save manual brief')).toBeInTheDocument()
     // Stayed on the manual phase — no success Alert.
-    expect(screen.queryByText('Brief saved successfully!')).not.toBeInTheDocument()
+    expect(screen.queryByText('Brief saved successfully')).not.toBeInTheDocument()
   })
 })

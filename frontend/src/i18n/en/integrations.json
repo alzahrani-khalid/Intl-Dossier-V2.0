@@ -29,13 +29,13 @@
 
   "verification": {
     "verifying": "Verifying your account...",
-    "success": "Account verified successfully!",
+    "success": "Account verified successfully",
     "error": "Failed to verify account. Please try again."
   },
 
   "oauth": {
     "success": {
-      "slack": "Slack workspace connected successfully!"
+      "slack": "Slack workspace connected successfully"
     },
     "error": {
       "missing_config": "Slack integration is not configured.",

@@ -1,18 +1,21 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
 
 /**
  * E2E Test: Analytics Dashboard
  * Feature: analytics-dashboard
  *
  * Validates:
- * - Analytics dashboard page loads successfully
- * - Summary cards display metrics (or loading state)
- * - Time range selector works
- * - Tab navigation works (overview, engagements, relationships, commitments, workload)
+ * - /analytics renders the shared query-error state, not a fabricated success body
+ *   (the first three tests — see the INVERTED block below for why, and when they flip back)
  * - Charts render correctly
  * - Export functionality is available
  * - RTL support works correctly
  */
+
+// The error state settles at ~700ms here (a real 404 carries a numeric `status`, so
+// query-client.ts's 4xx short-circuit skips the retry ladder), but the budget is kept wide
+// because this spec also runs against the deployed app via E2E_BASE_URL.
+const ERROR_STATE_TIMEOUT = 15_000
 
 test.describe('Analytics Dashboard', () => {
   test.beforeEach(async ({ page }) => {
@@ -30,81 +33,96 @@ test.describe('Analytics Dashboard', () => {
     await expect(page).toHaveURL(/\/(dashboard|my-work|dossiers)/, { timeout: 15000 })
   })
 
-  test('should display analytics dashboard with summary cards', async ({ page }) => {
-    // Navigate to analytics dashboard
+  // ───────────────────────────────────────────────────────────────────────────────────────────
+  // FLIPPED BACK 2026-08-17 by plan 96-06 (DEAD-05), exactly as the 93-06 block below instructed.
+  //
+  // The 2026-08-16 inversion (93-06 under RULING-P93-04) was correct FOR ITS TIME: the repository
+  // called `apiGet('/analytics-dashboard…', { baseUrl: 'express' })` and the Express backend
+  // served no such route, so a real 404 propagated and `/analytics` honestly rendered
+  // `QueryErrorState` — no h1, no combobox, no tablist. Its header ended: "FLIP THESE BACK IN
+  // PHASE 96 (DEAD-05) — the phase that makes the analytics endpoints real is the phase whose
+  // landing makes the happy-path assertions true again. Restore then: the h1, the
+  // `[role='combobox']` time-range selector with its options, and the `[role='tablist']` with its
+  // per-tab `data-state='active'` walk." 96-06 dropped the Express base option; the deployed
+  // `analytics-dashboard` edge fn answers all five endpoints from live RPCs, so that restoration
+  // is what the three tests below now assert.
+  //
+  // THE VACUITY FIX IS KEPT. 93-06's real complaint was the `affordance-visible OR
+  // skeleton-visible` disjunct, which the ~300-700ms loading skeleton satisfied on its own — those
+  // tests passed over the swallow AND over the honest error, deciding only on a race. Every test
+  // below therefore still waits for the page to SETTLE (zero skeletons) before asserting, and
+  // asserts positively. No disjunct came back.
+  //
+  // These three are DATA-BRANCH assertions by the 93-06 header's own instruction: they go red if
+  // the analytics endpoints stop answering. That is intended here. The branch-INVARIANT oracle for
+  // the same surface is `tests/e2e/96-analytics-real.spec.ts` (repo root), and the rendering
+  // oracle for the failure path is `tests/e2e/93-analytics-error.spec.ts`, which forces the
+  // failure via CDP and therefore survives both branches.
+  // ───────────────────────────────────────────────────────────────────────────────────────────
+
+  /** Every skeleton in this app is the shared primitive; `animate-pulse` is its only stable mark. */
+  const waitForSettle = async (page: Page): Promise<void> => {
+    const main = page.locator('main').first()
+    await expect(main).toBeVisible({ timeout: ERROR_STATE_TIMEOUT })
+    await expect(main.locator('.animate-pulse')).toHaveCount(0, { timeout: ERROR_STATE_TIMEOUT })
+  }
+
+  test('should render summary cards from real data', async ({ page }) => {
     await page.goto('/analytics')
     await expect(page).toHaveURL(/\/analytics/)
+    await waitForSettle(page)
 
-    // Wait for DOM to load
-    await page.waitForLoadState('domcontentloaded')
+    // The page title is back — it now sits over data the app actually has.
+    await expect(page.getByRole('heading', { level: 1, name: 'Analytics Dashboard' })).toBeVisible()
 
-    // Verify page title is present (either actual title or loading skeleton)
-    const pageTitle = page.getByRole('heading', { level: 1 })
-    const skeleton = page.locator('[class*="skeleton"], [class*="Skeleton"]')
+    // The four summary cards render from the `summary` endpoint. Titles, never values: the values
+    // are live and asserting one would encode today's data as the expectation. `.first()` because
+    // the chart cards below reuse two of these words as their own labels — the summary grid is the
+    // first occurrence in DOM order.
+    for (const title of [
+      'Total Engagements',
+      'Avg. Health Score',
+      'Fulfillment Rate',
+      'Active Work Items',
+    ]) {
+      await expect(page.getByText(title, { exact: true }).first()).toBeVisible()
+    }
 
-    // Either the title or loading state should be visible
-    await expect(async () => {
-      const titleVisible = await pageTitle.isVisible().catch(() => false)
-      const skeletonVisible = await skeleton
-        .first()
-        .isVisible()
-        .catch(() => false)
-      expect(titleVisible || skeletonVisible).toBe(true)
-    }).toPass({ timeout: 15000 })
+    // And the page-level error is NOT what settled.
+    await expect(page.getByTestId('query-error-state')).toHaveCount(0)
   })
 
-  test('should allow time range selection', async ({ page }) => {
+  test('should offer time range selection', async ({ page }) => {
     await page.goto('/analytics')
-    await page.waitForLoadState('domcontentloaded')
+    await waitForSettle(page)
 
-    // Find the time range selector (Select component)
-    const timeRangeSelector = page.locator('[role="combobox"]').first()
+    // The time-range selector belongs to the success body, and the success body is what renders.
+    const combobox = page.locator('[role="combobox"]').first()
+    await expect(combobox).toBeVisible()
 
-    // Wait for either selector or loading state
-    await expect(async () => {
-      const selectorVisible = await timeRangeSelector.isVisible().catch(() => false)
-      const loadingVisible = await page
-        .locator('[class*="skeleton"]')
-        .first()
-        .isVisible()
-        .catch(() => false)
-      expect(selectorVisible || loadingVisible).toBe(true)
-    }).toPass({ timeout: 10000 })
-
-    if (await timeRangeSelector.isVisible()) {
-      await timeRangeSelector.click()
-
-      // Check that time range options are available
-      const options = page.locator('[role="option"]')
-      await expect(options.first()).toBeVisible({ timeout: 5000 })
-
-      // Select a different time range (e.g., Last 7 days)
-      await options.first().click()
+    // Its options are real: opening it lists the shipped TIME_RANGE_OPTIONS.
+    await combobox.click()
+    for (const option of ['Last 7 days', 'Last 30 days', 'Last 90 days', 'Last year']) {
+      await expect(page.getByRole('option', { name: option })).toBeVisible()
     }
   })
 
-  test('should navigate between dashboard tabs', async ({ page }) => {
+  test('should render dashboard tabs', async ({ page }) => {
     await page.goto('/analytics')
-    await page.waitForLoadState('domcontentloaded')
+    await waitForSettle(page)
 
-    // Wait for the tabs to appear (not skeleton)
-    const tabList = page.locator('[role="tablist"]').first()
-    await expect(tabList).toBeVisible({ timeout: 30000 })
+    // The page-level tab set is pinned by NAME: each chart card carries its own inner tablist, so
+    // a bare `[role="tablist"]` matches five elements and resolves nothing.
+    const overview = page.getByRole('tab', { name: 'Overview', exact: true })
+    await expect(overview).toBeVisible()
+    await expect(overview).toHaveAttribute('data-state', 'active')
 
-    // Get all tabs
-    const tabs = tabList.locator('[role="tab"]')
-    const tabCount = await tabs.count()
-
-    // Should have multiple tabs (overview, engagements, relationships, commitments, workload)
-    expect(tabCount).toBeGreaterThanOrEqual(3)
-
-    // Click on each tab and verify it becomes active
-    for (let i = 1; i < Math.min(tabCount, 4); i++) {
-      await tabs.nth(i).click()
-      await page.waitForTimeout(500) // Allow content to update
-
-      // Verify tab is now selected
-      await expect(tabs.nth(i)).toHaveAttribute('data-state', 'active')
+    // The per-tab walk: selecting each tab makes it, and only it, the active one.
+    for (const name of ['Engagements', 'Relationships', 'Commitments', 'Workload']) {
+      const tab = page.getByRole('tab', { name, exact: true })
+      await tab.click()
+      await expect(tab).toHaveAttribute('data-state', 'active')
+      await expect(overview).toHaveAttribute('data-state', 'inactive')
     }
   })
 
@@ -152,35 +170,23 @@ test.describe('Analytics Dashboard', () => {
 
   test('should have refresh button that triggers data reload', async ({ page }) => {
     await page.goto('/analytics')
-    await page.waitForLoadState('domcontentloaded')
+    await waitForSettle(page)
 
-    // Wait for page to render
-    await expect(async () => {
-      const buttonsCount = await page
-        .locator('button')
-        .count()
-        .catch(() => 0)
-      const loadingVisible = await page
-        .locator('[class*="skeleton"]')
-        .first()
-        .isVisible()
-        .catch(() => false)
-      expect(buttonsCount > 0 || loadingVisible).toBe(true)
-    }).toPass({ timeout: 10000 })
+    // REPAIRED 2026-08-17 (plan 96-06). This test used to click
+    // `locator('button').filter({ has: svg }).first()` "(likely refresh)". In DOM order that
+    // resolves to AppShell's topbar hamburger — `aria-label="Open navigation menu"`, class
+    // `lg:hidden` — which is invisible at this project's 1280px viewport, so the click waited out
+    // the test timeout. That target is app chrome present on every protected route in EVERY
+    // branch, so the selector was fragile independently of what /analytics rendered; it is named
+    // properly here rather than guessed by position.
+    const refreshButton = page.getByRole('button', { name: 'Refresh' })
+    await expect(refreshButton).toBeVisible()
+    await refreshButton.click()
 
-    // Find icon buttons
-    const iconButtons = page.locator('button').filter({ has: page.locator('svg') })
-    const count = await iconButtons.count()
-
-    if (count > 0) {
-      // Click on first icon button (likely refresh)
-      const refreshButton = iconButtons.first()
-      await refreshButton.click()
-      await page.waitForTimeout(1000)
-
-      // Page should still be on analytics
-      await expect(page).toHaveURL(/\/analytics/)
-    }
+    // A refetch keeps the user on the route and settles again — it never navigates or blanks.
+    await expect(page).toHaveURL(/\/analytics/)
+    await waitForSettle(page)
+    await expect(page.locator('main').first()).not.toBeEmpty()
   })
 
   test('should persist time range in URL', async ({ page }) => {

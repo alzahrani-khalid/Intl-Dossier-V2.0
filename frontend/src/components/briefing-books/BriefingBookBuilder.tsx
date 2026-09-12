@@ -122,7 +122,7 @@ function SortableSectionItem({
     >
       <button
         type="button"
-        aria-label={t('common:common.reorder')}
+        aria-label={t('common:reorder')}
         {...attributes}
         {...listeners}
         className="cursor-grab touch-none text-muted-foreground hover:text-foreground"
@@ -594,8 +594,8 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
                 {filteredDossiers.length === 0 && (
                   <p className="text-center text-muted-foreground py-8">
                     {searchQuery
-                      ? t('builder.noMatchingEntities', 'No matching entities found')
-                      : t('builder.noEntitiesAvailable', 'No entities available')}
+                      ? t('builder.noMatchingEntities')
+                      : t('builder.noEntitiesAvailable')}
                   </p>
                 )}
               </div>
@@ -997,7 +997,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
                 {/* Entities preview */}
                 <Separator />
                 <div className="space-y-2">
-                  <p className="text-sm font-medium">{t('builder.entitiesLabel', 'Entities:')}</p>
+                  <p className="text-sm font-medium">{t('builder.entitiesLabel')}</p>
                   <div className="flex flex-wrap gap-2">
                     {config.entities?.map((entity) => {
                       const Icon = entityIcons[entity.type] || Globe
@@ -1013,7 +1013,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
 
                 {/* Sections preview */}
                 <div className="space-y-2">
-                  <p className="text-sm font-medium">{t('builder.sectionsLabel', 'Sections:')}</p>
+                  <p className="text-sm font-medium">{t('builder.sectionsLabel')}</p>
                   <ol className="list-decimal list-inside text-sm text-muted-foreground">
                     {enabledSections
                       .sort((a, b) => a.order - b.order)
@@ -1168,22 +1168,13 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
       <AlertDialog open={showDiscardDialog} onOpenChange={setShowDiscardDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              {t('builder.discard.title', { defaultValue: 'Discard changes?' })}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              {t('builder.discard.description', {
-                defaultValue:
-                  'Your briefing book configuration has unsaved changes. Leaving now will discard them.',
-              })}
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t('builder.discard.title')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('builder.discard.description')}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>
-              {t('builder.discard.keepEditing', { defaultValue: 'Keep editing' })}
-            </AlertDialogCancel>
+            <AlertDialogCancel>{t('builder.discard.keepEditing')}</AlertDialogCancel>
             <AlertDialogAction onClick={confirmDiscard}>
-              {t('builder.discard.confirm', { defaultValue: 'Discard' })}
+              {t('builder.discard.confirm')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

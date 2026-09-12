@@ -23,7 +23,7 @@ import {
   useEntitySelection,
   useComparisonFilters,
 } from '@/hooks/useEntityComparison'
-import type { DossierType } from '@/lib/dossier-type-guards'
+import type { DossierCardType } from '@/lib/dossier-type-guards'
 import type { ComparisonViewMode, ComparisonUrlState } from '@/types/entity-comparison.types'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -103,7 +103,7 @@ export const EntityComparisonPage = memo(function EntityComparisonPage({
 
   // Update URL when state changes
   const updateUrl = useCallback(
-    (type: DossierType | null, ids: string[], view: ComparisonViewMode, diff: boolean) => {
+    (type: DossierCardType | null, ids: string[], view: ComparisonViewMode, diff: boolean) => {
       navigate({
         to: '/compare',
         search: {
@@ -171,7 +171,7 @@ export const EntityComparisonPage = memo(function EntityComparisonPage({
                 size="icon"
                 onClick={handleBack}
                 className="flex-shrink-0"
-                aria-label={t('common:common.back')}
+                aria-label={t('common:back')}
               >
                 <ArrowLeft className={cn('h-5 w-5', isRTL && 'rotate-180')} />
               </Button>

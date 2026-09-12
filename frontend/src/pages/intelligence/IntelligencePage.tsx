@@ -17,7 +17,7 @@ import { Input } from '@/components/ui/input'
 import { DataTable } from '@/components/table/DataTable'
 import type { ColumnDef } from '@tanstack/react-table'
 import { supabase } from '@/lib/supabase'
-import { format } from 'date-fns'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { useDirection } from '@/hooks/useDirection'
 import { cn } from '@/lib/utils'
 import { SignalsQueue } from '@/components/signals/SignalsQueue'
@@ -62,7 +62,7 @@ function ClassificationBadge({
     <span
       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.bgColor} ${config.color}`}
     >
-      {t(`intelligence.classification.${classification}`)}
+      {t(`common:intelligence.classifications.${classification}`)}
     </span>
   )
 }
@@ -345,7 +345,7 @@ export function IntelligencePage() {
             </span>
             {report.published_at && (
               <div className="text-xs text-muted-foreground">
-                {format(new Date(report.published_at), 'dd MMM yyyy')}
+                {formatDayFirstYear(new Date(report.published_at))}
               </div>
             )}
           </div>
@@ -416,7 +416,7 @@ export function IntelligencePage() {
             activeTab === 'reports' && 'active',
           )}
         >
-          {t('intelligence.tabs.reports', { defaultValue: 'Reports' })}
+          {t('intelligence.tabs.reports')}
         </button>
         <button
           type="button"
@@ -551,7 +551,7 @@ export function IntelligencePage() {
                       size="sm"
                       onClick={() => setFilterConfidence('all')}
                     >
-                      {t('common.all')}
+                      {t('common:all')}
                     </Button>
                     {confidenceLevels.map((level) => (
                       <Button
@@ -573,7 +573,7 @@ export function IntelligencePage() {
                       size="sm"
                       onClick={() => setFilterClassification('all')}
                     >
-                      {t('common.all')}
+                      {t('common:all')}
                     </Button>
                     {classifications.map((cls) => (
                       <Button
@@ -582,7 +582,7 @@ export function IntelligencePage() {
                         size="sm"
                         onClick={() => setFilterClassification(cls)}
                       >
-                        {t(`intelligence.classifications.${cls}`)}
+                        {t(`common:intelligence.classifications.${cls}`)}
                       </Button>
                     ))}
                   </div>
@@ -594,7 +594,7 @@ export function IntelligencePage() {
           <Card>
             <CardContent className="p-0">
               {isLoading ? (
-                <div className="p-8 text-center">{t('common.loading')}</div>
+                <div className="p-8 text-center">{t('common:loading')}</div>
               ) : reports && reports.length > 0 ? (
                 <DataTable
                   data={reports}
@@ -604,7 +604,7 @@ export function IntelligencePage() {
                   }}
                 />
               ) : (
-                <div className="p-8 text-center text-muted-foreground">{t('common.noData')}</div>
+                <div className="p-8 text-center text-muted-foreground">{t('common:noData')}</div>
               )}
             </CardContent>
           </Card>

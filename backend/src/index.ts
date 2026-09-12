@@ -82,7 +82,11 @@ app.get('/health', (_req, res) => {
 // unaffected.
 if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
   app.use('/auth/mfa', mfaContractRouter)
-  app.use('/monitoring', monitoringContractRouter)
+  // Under /api so the dev proxy's generic /api rule and prod nginx `location /api/`
+  // carry it — the bare /monitoring prefix belongs to the SPA route (RULING-P95-01,
+  // DEAD-04). Registered before `app.use('/api', apiRouter)`, so it wins the path here;
+  // in production this guard is false and /api/monitoring 404s from the real API router.
+  app.use('/api/monitoring', monitoringContractRouter)
   app.use('/export', exportContractRouter)
   app.use('/analytics', analyticsContractRouter)
   app.use('/accessibility', accessibilityContractRouter)

@@ -25,6 +25,23 @@ for (const role of roles) {
     await page.getByLabel(/email/i).fill(role.email)
     await page.locator('#password').fill(role.password)
     await page.getByRole('button', { name: /sign in|login/i }).click()
+
+    // SECURITY (RULING-P99-188): clear the password field before the first assertion that can
+    // FAIL. Playwright's failure artifacts — `error-context.md` and the failure screenshot —
+    // snapshot the input's VALUE, not a mask, so a failed sign-in writes the E2E account password
+    // to disk in cleartext under `test-results/`. Observed once, on 2026-08-25, during a manual
+    // scratch invocation of this project; the value then rendered in the reading terminal too.
+    //
+    // TRIGGER IS NARROW AND IS STATED SO THE FILING SURVIVES A CHECK: gate oracles run
+    // `--no-deps`, which SKIPS this setup project entirely, so no gate worktree has ever produced
+    // such an artifact — measured, zero across the whole repo. It fires only when someone invokes
+    // `--project=setup` directly and the sign-in fails. That is a real defect with a narrow
+    // trigger, not an every-run bleed.
+    //
+    // Clearing here rather than disabling error-context keeps the diagnostic value of the artifact
+    // (the page state, the error) while removing the only secret on it.
+    await page.locator('#password').fill('')
+
     await expect(page).toHaveURL(/dashboard|operations|home/, { timeout: 15_000 })
 
     // Pre-dismiss guided-tour / onboarding overlays so subsequent specs can

@@ -227,6 +227,8 @@ test.describe('Combined RTL + Accessibility Tests for All Dossier Types', () => 
       test(`T074-${dossier.type}-aria: ARIA labels are present and correct`, async ({ page }) => {
         await page.goto(route, { waitUntil: 'networkidle', timeout: NAVIGATION_TIMEOUT })
         await page.waitForLoadState('domcontentloaded')
+        // networkidle is not a render signal (P101-12): wait for the shell before reading the DOM.
+        await expect(page.locator('main, [role="main"]').first()).toBeAttached({ timeout: 15_000 })
 
         // Check for proper ARIA landmarks
         const landmarks = await page.evaluate(() => {
@@ -288,6 +290,8 @@ test.describe('Combined RTL + Accessibility Tests for All Dossier Types', () => 
       test(`T074-${dossier.type}-headings: Heading hierarchy is correct in RTL`, async ({
         page,
       }) => {
+        // prettier-ignore
+        test.fixme(true, 'P101-QUAR 31848669701: h1 count 0 on all six dossier types; DossierShell renders its h1 only once useDossier stops loading, and the CI failure snapshots still show no h1 and no dossier name (data path in the CI environment, not spec drift); log lines 1091, 1295, 1499, 1703, 1907, 2111 of job 94920552794; owner Phase 102')
         await page.goto(route, { waitUntil: 'networkidle', timeout: NAVIGATION_TIMEOUT })
         await page.waitForLoadState('domcontentloaded')
 

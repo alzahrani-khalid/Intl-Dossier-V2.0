@@ -218,7 +218,7 @@ export function SelectableDataTable<T extends BulkSelectableItem>({
               {displayColumns.map((column) => (
                 <div key={column.id} className="space-y-0.5">
                   <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wide">
-                    {t(column.headerKey, { defaultValue: column.headerKey })}
+                    {t(column.headerKey)}
                   </div>
                   <div className="text-xs sm:text-sm font-medium">{renderCell(item, column)}</div>
                 </div>
@@ -248,7 +248,7 @@ export function SelectableDataTable<T extends BulkSelectableItem>({
               size="sm"
               className="h-8 w-8 p-0 min-h-11 min-w-11"
               onClick={() => setViewMode('card')}
-              aria-label={t('accessibility.cardView', { defaultValue: 'Card view' })}
+              aria-label={t('accessibility.cardView')}
             >
               <LayoutGrid className="h-4 w-4" />
             </Button>
@@ -257,7 +257,7 @@ export function SelectableDataTable<T extends BulkSelectableItem>({
               size="sm"
               className="h-8 w-8 p-0 min-h-11 min-w-11"
               onClick={() => setViewMode('table')}
-              aria-label={t('accessibility.tableView', { defaultValue: 'Table view' })}
+              aria-label={t('accessibility.tableView')}
             >
               <TableIcon className="h-4 w-4" />
             </Button>
@@ -308,7 +308,7 @@ export function SelectableDataTable<T extends BulkSelectableItem>({
                       column.align === 'end' && 'text-end',
                     )}
                   >
-                    {t(column.headerKey, { defaultValue: column.headerKey })}
+                    {t(column.headerKey)}
                   </TableHead>
                 ))}
               </TableRow>

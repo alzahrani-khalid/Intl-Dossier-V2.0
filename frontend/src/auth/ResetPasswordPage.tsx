@@ -171,7 +171,7 @@ export function ResetPasswordPage() {
                 {isSubmitting ? (
                   <span className="flex items-center justify-center">
                     <Loader2 className="me-2 size-5 animate-spin" />
-                    {t('common.loading')}
+                    {t('common:loading')}
                   </span>
                 ) : (
                   t('auth.updatePassword')

@@ -17,6 +17,7 @@ import type { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDirection } from '@/hooks/useDirection'
 import { formatDayFirst } from '@/lib/format-date'
+import { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'
 import { GlobeSpinner } from '@/components/signature-visuals/GlobeSpinner'
 
 interface ResultNode {
@@ -75,9 +76,9 @@ export function AnalyticResultView({
         className="flex flex-col items-center justify-center text-center"
         style={{ paddingBlock: 'var(--space-12)', color: 'var(--ink-mute)' }}
       >
-        <GlobeSpinner size={28} aria-label={t('analyze.loading', 'Running analysis…')} />
+        <GlobeSpinner size={28} aria-label={t('analyze.loading')} />
         <p className="t-meta" style={{ marginTop: 'var(--space-4)' }}>
-          {t('analyze.loading', 'Running analysis…')}
+          {t('analyze.loading')}
         </p>
       </div>
     )
@@ -97,7 +98,7 @@ export function AnalyticResultView({
           padding: 'var(--space-4)',
         }}
       >
-        {t('analyze.error', 'Could not run this analysis. Check your selection and try again.')}
+        {t('analyze.error')}
       </div>
     )
   }
@@ -109,16 +110,14 @@ export function AnalyticResultView({
 
   // Empty / reduced — identical neutral chrome. NO tier-revealing messaging (LOCKED).
   if (result == null || isEmpty) {
-    const body = isPath
-      ? t('analyze.empty.path', 'No connection found between these entities.')
-      : t('analyze.empty.body', 'This entity has no matching records for this analysis.')
+    const body = isPath ? t('analyze.empty.path') : t('analyze.empty.body')
     return (
       <div
         className="flex flex-col items-center justify-center text-center"
         style={{ paddingBlock: 'var(--space-12)', color: 'var(--ink-mute)' }}
       >
         <p className="t-card-title" style={{ color: 'var(--ink)' }}>
-          {t('analyze.empty.heading', 'No results')}
+          {t('analyze.empty.heading')}
         </p>
         <p className="t-meta" style={{ marginTop: 'var(--space-2)', maxWidth: '36ch' }}>
           {body}
@@ -139,7 +138,7 @@ export function AnalyticResultView({
       {/* Result-region heading + count line */}
       <div style={{ padding: 'var(--space-4)', borderBottom: '1px solid var(--line)' }}>
         <h3 className="t-card-title text-start" style={{ color: 'var(--ink)' }}>
-          {t('analyze.resultHeading', 'Result')}
+          {t('analyze.resultHeading')}
         </h3>
         <p className="t-meta text-start" style={{ color: 'var(--ink-mute)' }}>
           {renderCountLine(result, t)}
@@ -159,35 +158,20 @@ type TFn = ReturnType<typeof useTranslation>['t']
  * is unavailable (e.g. mocked `t` in unit tests) so the count line never leaks a
  * literal `{{count}}`.
  */
-function countLine(t: TFn, key: string, fallback: string, count: number): string {
-  return t(key, fallback, { count }).replace('{{count}}', String(count))
+function countLine(t: TFn, key: string, count: number): string {
+  return t(key, { count }).replace('{{count}}', String(count))
 }
 
 function renderCountLine(result: AnalyticResult, t: TFn): string {
   switch (result.query_type) {
     case 'forum_membership':
-      return countLine(
-        t,
-        'analyze.count.membership',
-        '{{count}} forums and working groups',
-        result.nodes.length,
-      )
+      return countLine(t, 'analyze.count.membership', result.nodes.length)
     case 'shared_committees':
-      return countLine(
-        t,
-        'analyze.count.intersection',
-        '{{count}} shared committees',
-        result.nodes.length,
-      )
+      return countLine(t, 'analyze.count.intersection', result.nodes.length)
     case 'engagement_chain':
-      return countLine(t, 'analyze.count.chain', '{{count}} engagements', result.nodes.length)
+      return countLine(t, 'analyze.count.chain', result.nodes.length)
     case 'shortest_path':
-      return countLine(
-        t,
-        'analyze.count.path',
-        'Connected in {{count}} hops',
-        result.path_length ?? 0,
-      )
+      return countLine(t, 'analyze.count.path', result.path_length ?? 0)
     default:
       return ''
   }
@@ -235,13 +219,13 @@ function renderBody(
               className="t-label text-start"
               style={{ padding: 'var(--space-2) var(--space-4)', color: 'var(--ink-mute)' }}
             >
-              {t('analyze.col.committee', 'Committee')}
+              {t('analyze.col.committee')}
             </th>
             <th
               className="t-label text-start"
               style={{ padding: 'var(--space-2) var(--space-4)', color: 'var(--ink-mute)' }}
             >
-              {t('analyze.col.type', 'Type')}
+              {t('analyze.col.type')}
             </th>
           </tr>
         </thead>
@@ -258,7 +242,13 @@ function renderBody(
                 className="t-meta text-start"
                 style={{ padding: 'var(--space-2) var(--space-4)', color: 'var(--ink-mute)' }}
               >
-                {node.type != null ? t(`type.${node.type}`, node.type) : '—'}
+                {node.type != null
+                  ? t(
+                      (DOSSIER_CARD_TYPES as readonly string[]).includes(node.type)
+                        ? `type.${node.type}`
+                        : 'type.unknown',
+                    )
+                  : '—'}
               </td>
             </tr>
           ))}
@@ -297,7 +287,11 @@ function renderBody(
           <RowName name={nameOf(node)} nodeId={node.id} onNodeSelect={onNodeSelect} />
           {node.type != null && (
             <span className="t-meta" style={{ color: 'var(--ink-mute)' }}>
-              {t(`type.${node.type}`, node.type)}
+              {t(
+                (DOSSIER_CARD_TYPES as readonly string[]).includes(node.type)
+                  ? `type.${node.type}`
+                  : 'type.unknown',
+              )}
             </span>
           )}
         </li>

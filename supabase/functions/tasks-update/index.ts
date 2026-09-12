@@ -37,6 +37,21 @@ const VALID_PRIORITIES = ['low', 'medium', 'high', 'urgent']
 const VALID_WORKFLOW_STAGES = ['todo', 'in_progress', 'review', 'done', 'cancelled']
 const VALID_STATUSES = ['pending', 'in_progress', 'review', 'completed', 'cancelled']
 
+// P96 COUNT-03: the inverse of the B-3 map below. A status intent that carries no
+// workflow_stage used to leave the stage stale — `trg_sync_task_status` only fires when
+// workflow_stage IS DISTINCT FROM OLD, so /my-work's done-checkbox (which sends
+// `{ status: 'completed' }` alone) produced completed tasks still bucketed Todo (3 such
+// rows on staging, repaired by 20260817500005_p96_task_stage_status_repair.sql).
+// Routing the intent through workflow_stage lets the DB trigger derive status itself —
+// the trigger stays the source of truth; this is not a client re-derivation of it.
+const STATUS_TO_STAGE: Record<string, string> = {
+  pending: 'todo',
+  in_progress: 'in_progress',
+  review: 'review',
+  completed: 'done',
+  cancelled: 'cancelled',
+}
+
 Deno.serve(async (req) => {
   const corsHeaders = getCorsHeaders(req)
 
@@ -198,6 +213,14 @@ Deno.serve(async (req) => {
         cancelled: 'cancelled',
       }
       updateData.status = STAGE_TO_STATUS[body.workflow_stage] ?? 'in_progress'
+    }
+
+    // P96 COUNT-03: the other direction. A status intent with no stage carries the
+    // matching workflow_stage so the trigger fires and derives the status itself.
+    // body.status is already allow-list validated above, so the lookup always hits.
+    if (body.status !== undefined && body.workflow_stage === undefined) {
+      const derivedStage = STATUS_TO_STAGE[body.status]
+      if (derivedStage) updateData.workflow_stage = derivedStage
     }
 
     // Auto-set completion stamps when the resolved status (explicit OR derived

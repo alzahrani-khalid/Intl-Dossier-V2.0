@@ -10,7 +10,8 @@
   "saveDraft": "حفظ المسودة",
   "saving": "جاري الحفظ...",
   "draftSaved": "تم حفظ المسودة",
-  "postUpdateWarning": "تم تحديث الملف، لكن تعذّر حفظ بعض السجلات المرتبطة (مثل المشاركين).",
+  "postCreateWarning": "تم إنشاء الدوسيه، لكن تعذّر حفظ بعض السجلات المرتبطة (مثل المشاركين).",
+  "postUpdateWarning": "تم تحديث الدوسيه، لكن تعذّر حفظ بعض السجلات المرتبطة (مثل المشاركين).",
   "draftRestored": "تمت استعادة المسودة من جلستك السابقة",
   "clearDraft": "مسح المسودة",
   "discardDraft": "تجاهل المسودة",
@@ -32,9 +33,9 @@
   "classificationTitle": "التصنيف",
   "create_type": "إنشاء {{type}}",
   "empty_heading": "ابدأ {{type}} جديد",
-  "empty_body": "املأ التفاصيل أدناه لإنشاء ملف {{type}} جديد.",
+  "empty_body": "املأ التفاصيل أدناه لإنشاء دوسيه {{type}} جديد.",
   "validation_error": "يرجى تصحيح الأخطاء أعلاه قبل المتابعة.",
-  "submission_error": "تعذر إنشاء الملف. يرجى المحاولة مرة أخرى.",
+  "submission_error": "تعذر إنشاء الدوسيه. يرجى المحاولة مرة أخرى.",
   "discard_draft": "حذف المسودة",
   "discard_confirm": "سيؤدي هذا إلى حذف تقدمك المحفوظ نهائيًا. هل تريد المتابعة؟",
   "draft_restored": "تم استعادة المسودة",
@@ -51,7 +52,7 @@
     "forumDetailsDesc": "حدد نوع المنتدى والجهة المنظمة",
     "workingGroupDetails": "تفاصيل فريق العمل",
     "workingGroupDetailsDesc": "الحالة والتفويض والجهة الأم",
-    "engagementDetails": "تفاصيل الارتباط",
+    "engagementDetails": "تفاصيل المشاركة",
     "engagementDetailsDesc": "النوع والفئة والموقع والتواريخ",
     "participants": "المشاركون",
     "participantsDesc": "اربط الدول والمنظمات والأشخاص",
@@ -61,7 +62,7 @@
     "officeTermDesc": "عنوان المنصب والولاية والدائرة والانتماء الحزبي"
   },
   "country": {
-    "page_title": "ملف دولة جديد",
+    "page_title": "دوسيه دولة جديد",
     "back_to_list": "الرجوع للدول",
     "iso_code_2": "رمز الايزو الثنائي",
     "iso_code_2_ph": "SA",
@@ -84,7 +85,7 @@
     "antarctic": "القطب الجنوبي"
   },
   "forum": {
-    "page_title": "ملف منتدى جديد",
+    "page_title": "دوسيه منتدى جديد",
     "back_to_list": "العودة إلى المنتديات",
     "create_button": "إنشاء منتدى",
     "forum_type_label": "نوع المنتدى",
@@ -121,7 +122,7 @@
     "headquarters_ar_ph": "مثال: جنيف، سويسرا",
     "founding_date": "تاريخ التأسيس",
     "founding_date_ph": "اختر تاريخ التأسيس",
-    "engagement_profile": "ملف الارتباط",
+    "engagement_profile": "ملف المشاركة",
     "membership_type": "نوع العضوية",
     "membership_type_ph": "اختر نوع العضوية",
     "membership_types": {
@@ -185,7 +186,7 @@
     "photo_url_ph": "https://example.com/photo.jpg"
   },
   "workingGroup": {
-    "page_title": "ملف فريق عمل جديد",
+    "page_title": "دوسيه فريق عمل جديد",
     "back_to_list": "العودة إلى فرق العمل",
     "create_button": "إنشاء فريق عمل",
     "status_label": "الحالة",
@@ -207,10 +208,10 @@
     "parent_body_help": "اختياري — اربط بالمنظمة التي تملك فريق العمل هذا. يمكن ضبطه لاحقاً."
   },
   "engagement": {
-    "page_title": "ملف ارتباط جديد",
-    "back_to_list": "العودة إلى الارتباطات",
-    "create_button": "إنشاء ارتباط",
-    "type_label": "نوع الارتباط",
+    "page_title": "دوسيه مشاركة جديد",
+    "back_to_list": "العودة إلى المشاركات",
+    "create_button": "إنشاء مشاركة",
+    "type_label": "نوع المشاركة",
     "type_placeholder": "اختر نوعاً",
     "types": {
       "bilateral_meeting": "لقاء ثنائي",
@@ -249,7 +250,7 @@
       "countries_placeholder": "ابحث عن الدول…",
       "organizations_placeholder": "ابحث عن المنظمات…",
       "persons_placeholder": "ابحث عن الأشخاص…",
-      "section_hint": "اختياري — يمكنك الإضافة لاحقاً من صفحة تفاصيل الارتباط."
+      "section_hint": "اختياري — يمكنك الإضافة لاحقاً من صفحة تفاصيل المشاركة."
     }
   },
   "review": {
@@ -261,7 +262,7 @@
     "forum_details": "تفاصيل المنتدى",
     "theme_category": "فئة الموضوع",
     "working_group_details": "تفاصيل فريق العمل",
-    "engagement_details": "تفاصيل الارتباط",
+    "engagement_details": "تفاصيل المشاركة",
     "participants_summary": "المشاركون",
     "office_term": "المنصب والولاية"
   },
@@ -336,7 +337,7 @@
     "office_name_en_ph": "e.g. Minister of Foreign Affairs",
     "office_name_ar_ph": "مثال: وزير الخارجية",
     "country": "البلد",
-    "country_ph": "ابحث عن البلدان…",
+    "country_ph": "ابحث عن الدول…",
     "country_help": "مطلوب — الجهة السياسية التي ينتمي إليها هذا المنصب.",
     "organization": "المنظمة / الجهة",
     "organization_ph": "ابحث عن المنظمات…",

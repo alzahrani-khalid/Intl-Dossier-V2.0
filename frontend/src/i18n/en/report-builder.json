@@ -38,7 +38,8 @@
     "empty": "Drag fields here to add columns",
     "visible": "Visible",
     "hidden": "Hidden",
-    "reorder": "Drag to reorder"
+    "reorder": "Drag to reorder",
+    "toggleVisibility": "Toggle column visibility"
   },
 
   "filters": {
@@ -276,6 +277,13 @@
     "exporting": "Exporting...",
     "success": "Report exported successfully",
     "error": "Failed to export report"
+  },
+
+  "generate": {
+    "pending": "Generating report",
+    "completed": "Open report",
+    "failed": "Report generation failed. Try again.",
+    "unavailable": "Report generation is unavailable"
   },
 
   "actions": {

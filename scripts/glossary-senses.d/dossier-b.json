@@ -1,0 +1,180 @@
+{
+  "schemaVersion": 1,
+  "decision": "D-17 dossier = دوسيه; every surviving ملف occurrence is classified as a file, attachment, profile, or other non-dossier sense.",
+  "slice": [
+    "frontend/src/i18n/ar/empty-states.json",
+    "frontend/src/i18n/ar/engagement-wizard.json",
+    "frontend/src/i18n/ar/engagements.json",
+    "frontend/src/i18n/ar/enhanced-search.json",
+    "frontend/src/i18n/ar/entity-linking.json",
+    "frontend/src/i18n/ar/entity-templates.json",
+    "frontend/src/i18n/ar/export-import.json",
+    "frontend/src/i18n/ar/fab.json",
+    "frontend/src/i18n/ar/field-history.json",
+    "frontend/src/i18n/ar/field-permissions.json",
+    "frontend/src/i18n/ar/form-wizard.json",
+    "frontend/src/i18n/ar/forum-wizard.json",
+    "frontend/src/i18n/ar/geographic-visualization.json",
+    "frontend/src/i18n/ar/graph.json",
+    "frontend/src/i18n/ar/guided-tours.json",
+    "frontend/src/i18n/ar/intake.json",
+    "frontend/src/i18n/ar/intelligence-alerts.json",
+    "frontend/src/i18n/ar/intelligence-digests.json",
+    "frontend/src/i18n/ar/intelligence-signals.json",
+    "frontend/src/i18n/ar/keyboard-shortcuts.json",
+    "frontend/src/i18n/ar/legislation.json",
+    "frontend/src/i18n/ar/loading.json",
+    "frontend/src/i18n/ar/meeting-minutes.json",
+    "frontend/src/i18n/ar/multilingual.json",
+    "frontend/src/i18n/ar/notification-center.json",
+    "frontend/src/i18n/ar/onboarding.json",
+    "frontend/src/i18n/ar/organization-wizard.json",
+    "frontend/src/i18n/ar/organizations.json",
+    "frontend/src/i18n/ar/person-wizard.json",
+    "frontend/src/i18n/ar/persons.json",
+    "frontend/src/i18n/ar/positions.json",
+    "frontend/src/i18n/ar/preview-layouts.json"
+  ],
+  "rows": [
+    {
+      "term": "ملف",
+      "file": "empty-states.json",
+      "keyPath": "list.document.firstDescription",
+      "sense": "computer-file-or-attachment",
+      "reason": "The document empty state describes uploaded computer files, not dossier objects."
+    },
+    {
+      "term": "ملف",
+      "file": "export-import.json",
+      "keyPath": "export.description",
+      "sense": "computer-file-or-attachment",
+      "reason": "The export action downloads an Excel or CSV computer file."
+    },
+    {
+      "term": "ملف",
+      "file": "export-import.json",
+      "keyPath": "import.description",
+      "sense": "computer-file-or-attachment",
+      "reason": "The import action uploads an Excel or CSV computer file."
+    },
+    {
+      "term": "ملف",
+      "file": "export-import.json",
+      "keyPath": "import.validation.validating",
+      "sense": "computer-file-or-attachment",
+      "reason": "Validation is checking the uploaded computer file."
+    },
+    {
+      "term": "ملف",
+      "file": "export-import.json",
+      "keyPath": "import.validation.summary.title",
+      "sense": "computer-file-or-attachment",
+      "reason": "This heading summarizes the uploaded computer file."
+    },
+    {
+      "term": "ملف",
+      "file": "export-import.json",
+      "keyPath": "import.error.parseError",
+      "sense": "computer-file-or-attachment",
+      "reason": "The parse error and its format guidance both refer to the uploaded computer file."
+    },
+    {
+      "term": "ملف",
+      "file": "export-import.json",
+      "keyPath": "import.error.encodingError",
+      "sense": "computer-file-or-attachment",
+      "reason": "The encoding error refers to the uploaded computer file."
+    },
+    {
+      "term": "ملف",
+      "file": "export-import.json",
+      "keyPath": "import.error.invalidFormat",
+      "sense": "computer-file-or-attachment",
+      "reason": "CSV and XLSX identify a computer-file format, not a dossier type."
+    },
+    {
+      "term": "ملف",
+      "file": "export-import.json",
+      "keyPath": "import.error.tooLarge",
+      "sense": "computer-file-or-attachment",
+      "reason": "The size limit applies to the uploaded computer file."
+    },
+    {
+      "term": "ملف",
+      "file": "export-import.json",
+      "keyPath": "template.description",
+      "sense": "computer-file-or-attachment",
+      "reason": "The downloadable template is a computer file with column headers."
+    },
+    {
+      "term": "ملف",
+      "file": "export-import.json",
+      "keyPath": "template.instructions.encoding",
+      "sense": "computer-file-or-attachment",
+      "reason": "UTF-8 encoding instructions apply to a computer file."
+    },
+    {
+      "term": "ملف",
+      "file": "export-import.json",
+      "keyPath": "progress.uploading",
+      "sense": "computer-file-or-attachment",
+      "reason": "The progress state is uploading a computer file."
+    },
+    {
+      "term": "ملف",
+      "file": "export-import.json",
+      "keyPath": "progress.parsing",
+      "sense": "computer-file-or-attachment",
+      "reason": "The progress state is parsing a computer file."
+    },
+    {
+      "term": "ملف",
+      "file": "export-import.json",
+      "keyPath": "progress.generating",
+      "sense": "computer-file-or-attachment",
+      "reason": "The progress state is generating an export computer file."
+    },
+    {
+      "term": "ملف",
+      "file": "guided-tours.json",
+      "keyPath": "tours.document.steps.intro.content",
+      "sense": "computer-file-or-attachment",
+      "reason": "After the dossier reference was corrected, the surviving occurrence names files attached to that dossier."
+    },
+    {
+      "term": "ملف",
+      "file": "guided-tours.json",
+      "keyPath": "tours.document.steps.finish.content",
+      "sense": "computer-file-or-attachment",
+      "reason": "The document tour describes uploaded files that can be previewed, downloaded, or deleted."
+    },
+    {
+      "term": "ملف",
+      "file": "guided-tours.json",
+      "keyPath": "tours.brief.steps.customize.hint",
+      "sense": "computer-file-or-attachment",
+      "reason": "PDF and Word exports are computer files, not dossier objects."
+    },
+    {
+      "term": "ملف",
+      "file": "intake.json",
+      "keyPath": "validation.totalSizeExceeded",
+      "sense": "computer-file-or-attachment",
+      "reason": "The 100 MB total is an attachment-file size limit."
+    },
+    {
+      "term": "ملف",
+      "file": "loading.json",
+      "keyPath": "download.processing",
+      "sense": "computer-file-or-attachment",
+      "reason": "The download status is processing a computer file."
+    },
+    {
+      "term": "ملف",
+      "file": "persons.json",
+      "keyPath": "create.subtitle",
+      "sense": "contact-profile",
+      "reason": "The English counterpart explicitly creates a contact profile, a D-17 sanctioned profile sense."
+    }
+  ]
+}

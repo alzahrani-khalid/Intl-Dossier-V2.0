@@ -89,7 +89,7 @@ export function AttentionItem({ item, onClick }: AttentionItemProps): React.Reac
     item.item_type === 'stalled_engagement'
       ? t('severity.stalled_detail', {
           days: Math.floor(item.days_in_stage ?? 0),
-          stage: t(`stages.${item.lifecycle_stage ?? 'intake'}`),
+          stage: t(`operations-hub:stages.${item.lifecycle_stage ?? 'intake'}`),
         })
       : item.deadline != null
         ? formatDayFirst(item.deadline)

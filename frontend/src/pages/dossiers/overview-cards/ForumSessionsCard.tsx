@@ -9,9 +9,8 @@
 import { useTranslation } from 'react-i18next'
 import { useDossierOverview } from '@/hooks/useDossierOverview'
 import { Skeleton } from '@/components/ui/skeleton'
-import { format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
 import { Layers } from 'lucide-react'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 interface ForumSessionsCardProps {
   dossierId: string
@@ -22,7 +21,6 @@ const MAX_SESSIONS = 5
 export function ForumSessionsCard({ dossierId }: ForumSessionsCardProps): React.ReactElement {
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
-  const dateLocale = isRTL ? ar : enUS
 
   const { data, isLoading, isError } = useDossierOverview(dossierId, {
     includeSections: ['related_dossiers', 'calendar_events'],
@@ -78,19 +76,17 @@ export function ForumSessionsCard({ dossierId }: ForumSessionsCardProps): React.
       <div className="flex items-center gap-2 mb-4">
         <Layers className="h-4 w-4 text-muted-foreground" />
         <h3 className="text-base font-semibold leading-tight text-start">
-          {t('overview.sessions.title', { defaultValue: 'Sessions' })}
+          {t('overview.sessions.title')}
         </h3>
       </div>
 
       {isError && data === null ? (
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('overview.sectionError')}
         </p>
       ) : !hasItems ? (
         <p className="text-muted-foreground text-sm text-center py-8">
-          {t('overview.sessions.empty', { defaultValue: 'No sessions recorded' })}
+          {t('overview.sessions.empty')}
         </p>
       ) : (
         <div className="space-y-2">
@@ -104,7 +100,7 @@ export function ForumSessionsCard({ dossierId }: ForumSessionsCardProps): React.
                   {isRTL ? (session.name_ar ?? session.name_en) : session.name_en}
                 </p>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  {format(new Date(session.created_at), 'PP', { locale: dateLocale })}
+                  {formatDayFirstYear(new Date(session.created_at))}
                 </p>
               </div>
               <span
@@ -124,7 +120,7 @@ export function ForumSessionsCard({ dossierId }: ForumSessionsCardProps): React.
                   {isRTL ? (event.title_ar ?? event.title_en) : event.title_en}
                 </p>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  {format(new Date(event.start_datetime), 'PP', { locale: dateLocale })}
+                  {formatDayFirstYear(new Date(event.start_datetime))}
                 </p>
               </div>
             </div>

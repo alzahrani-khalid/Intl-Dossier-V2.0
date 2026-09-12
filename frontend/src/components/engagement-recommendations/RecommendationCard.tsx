@@ -8,7 +8,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { m } from 'framer-motion'
-import { format } from 'date-fns'
+import { formatDayMonth } from '@/lib/format-date'
 import {
   Send,
   Reply,
@@ -164,7 +164,7 @@ function ConfidenceIndicator({ score }: { score: number }) {
 function OptimalTimingBadge({ startDate, endDate }: { startDate?: string; endDate?: string }) {
   if (!startDate && !endDate) return null
 
-  const formatDate = (date: string): string => format(new Date(date), 'd MMM')
+  const formatDate = (date: string): string => formatDayMonth(new Date(date))
 
   return (
     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">

@@ -70,6 +70,21 @@ interface ExecutionContext {
   };
 }
 
+const STATUS_TO_STAGE: Record<string, string> = {
+  pending: 'todo',
+  in_progress: 'in_progress',
+  review: 'review',
+  completed: 'done',
+  cancelled: 'cancelled',
+};
+
+class UnmappedTaskStatus extends Error {
+  constructor(status: string) {
+    super(`Task status has no workflow stage mapping: ${status}`);
+    this.name = 'UnmappedTaskStatus';
+  }
+}
+
 // =============================================================================
 // Helpers
 // =============================================================================
@@ -544,10 +559,25 @@ async function executeUpdateStatus(
   const { supabase, execution } = context;
   const newStatus = config.status as string;
   const tableName = getTableName(execution.entity_type);
+  const updated_at = new Date().toISOString();
+  let updateData: Record<string, unknown>;
+
+  if (execution.entity_type === 'task') {
+    if (!Object.prototype.hasOwnProperty.call(STATUS_TO_STAGE, newStatus)) {
+      throw new UnmappedTaskStatus(newStatus);
+    }
+
+    updateData = {
+      workflow_stage: STATUS_TO_STAGE[newStatus],
+      updated_at,
+    };
+  } else {
+    updateData = { status: newStatus, updated_at };
+  }
 
   const { error } = await supabase
     .from(tableName)
-    .update({ status: newStatus, updated_at: new Date().toISOString() })
+    .update(updateData)
     .eq('id', execution.entity_id);
 
   if (error) {

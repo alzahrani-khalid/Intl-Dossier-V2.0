@@ -36,6 +36,8 @@ test.describe('RTL component smokes — Popover / Pagination / Sidebar (FOUC-02)
   // the Table filter; opening it yields data-slot="popover-content". A Radix portal
   // inherits the Phase-76 DirectionProvider bridge → the content computes direction: rtl.
   test('Popover portal content is RTL and on-viewport in AR', async ({ page }) => {
+    // prettier-ignore
+    test.fixme(true, 'P101-QUAR 31848669701: environment - requireAdmin denies /audit-logs to the CI account (public.users.role is not admin; CI page snapshot: Admin access required), so no popover trigger mounts; log line 667 of job 94920552761; owner Phase 102')
     await loginForListPages(page, 'ar')
     await page.goto('/audit-logs')
 
@@ -72,6 +74,8 @@ test.describe('RTL component smokes — Popover / Pagination / Sidebar (FOUC-02)
   // render UNCONDITIONALLY (no >1-page branch), and each chevron carries the
   // `rtl:rotate-180` utility, so under AR the chevron is rotated a half-turn.
   test('Pagination chevrons are 180deg-rotated under AR on /users', async ({ page }) => {
+    // prettier-ignore
+    test.fixme(true, 'P101-QUAR 31848669701: environment - requireAdmin denies /users to the CI account (public.users.role is not admin; CI page snapshot: Admin access required), so no pagination control mounts; log line 735 of job 94920552761; owner Phase 102')
     await loginForListPages(page, 'ar')
     await page.goto('/users')
 

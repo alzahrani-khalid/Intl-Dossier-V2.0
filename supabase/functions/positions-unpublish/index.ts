@@ -1,6 +1,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
+import { writeAuditLog } from '../_shared/audit.ts';
 
 /**
  * Edge Function: positions-unpublish
@@ -191,22 +192,38 @@ serve(async (req: Request) => {
       retention_until: new Date(Date.now() + 7 * 365 * 24 * 60 * 60 * 1000).toISOString(),
     });
 
-    // Create audit log entry
-    try {
-      await supabase.from('audit_logs').insert({
-        entity_type: 'position',
-        entity_id: body.position_id,
-        action: 'unpublish',
-        actor_id: user.id,
-        details: {
-          reason: body.reason,
-          previous_status: 'published',
-          new_status: 'draft',
+    // Create audit log entry.
+    // Grade: LOG-LOUDLY-AND-CONTINUE (D-18) — the position is already unpublished.
+    // `user_role` is NOT NULL and the `userProfile` read above can legitimately be
+    // null for a plain author, so resolve the canonical role from `public.users`;
+    // unresolvable = loud skip, never a fabricated role.
+    const { data: auditActor } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    if (!auditActor?.role) {
+      console.error(
+        `AUDIT-ZERO-01: audit write SKIPPED — no user_role resolves for ${user.id} (positions-unpublish:unpublish)`
+      );
+    } else {
+      await writeAuditLog(
+        supabase,
+        {
+          entity_type: 'position',
+          entity_id: body.position_id,
+          action: 'unpublish',
+          user_id: user.id,
+          user_role: auditActor.role,
+          old_values: { status: 'published' },
+          new_values: {
+            status: 'draft',
+            reason: body.reason,
+          },
         },
-      });
-    } catch (auditError) {
-      // Audit logging failure should not fail the operation
-      console.warn('Failed to create audit log:', auditError);
+        'positions-unpublish'
+      );
     }
 
     return new Response(

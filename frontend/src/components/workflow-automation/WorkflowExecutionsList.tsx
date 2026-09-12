@@ -4,8 +4,9 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { formatDistanceToNow, format, type Locale } from 'date-fns'
+import { format, type Locale } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
+import { formatDateTime } from '@/lib/format-date'
 import {
   CheckCircle2,
   XCircle,
@@ -159,10 +160,7 @@ function ExecutionCard({
               <div>
                 <h4 className="font-medium text-sm">{ruleName || execution.rule_id}</h4>
                 <p className="text-xs text-muted-foreground">
-                  {formatDistanceToNow(new Date(execution.created_at), {
-                    addSuffix: true,
-                    locale,
-                  })}
+                  {formatDateTime(execution.created_at)}
                 </p>
               </div>
             </div>
@@ -194,9 +192,7 @@ function ExecutionCard({
                   ) : (
                     <ChevronDown className="h-4 w-4" />
                   )}
-                  <span className="sr-only">
-                    {t('common:common.actions.toggleSection', { defaultValue: 'Toggle section' })}
-                  </span>
+                  <span className="sr-only">{t('common:actions.toggleSection')}</span>
                 </Button>
               </CollapsibleTrigger>
             </div>

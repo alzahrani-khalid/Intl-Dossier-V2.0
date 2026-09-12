@@ -226,7 +226,7 @@ export function BusinessCardScanner({ onExtracted, onCancel }: BusinessCardScann
                   size="icon"
                   onClick={clearFile}
                   className="absolute top-2 end-2 min-h-8 min-w-8"
-                  aria-label={t('common:common.actions.remove')}
+                  aria-label={t('common:actions.remove')}
                 >
                   <X className="h-4 w-4" />
                 </Button>

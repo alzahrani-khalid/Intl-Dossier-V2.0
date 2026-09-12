@@ -187,7 +187,7 @@
   },
 
   "help": {
-    "hmacSignature": "We will sign each request payload using HMAC-SHA256 and include the signature in the X-Webhook-Signature header.",
+    "hmacSignature": "Each request payload is signed using HMAC-SHA256, with the signature in the X-Webhook-Signature header.",
     "bearerToken": "Your secret will be sent as a Bearer token in the Authorization header.",
     "basicAuth": "Standard HTTP Basic Authentication will be used.",
     "retries": "Number of retry attempts for failed deliveries (0-10)",

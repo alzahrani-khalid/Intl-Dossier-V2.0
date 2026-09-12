@@ -1,6 +1,29 @@
 {
   "title": "Submit Support Request",
   "subtitle": "Create a new support ticket for your request",
+  "description": "Review and classify incoming requests",
+  "createNew": "New Request",
+  "filters": {
+    "pendingTriage": "Pending Triage",
+    "active": "Active",
+    "completed": "Completed",
+    "all": "All",
+    "allTickets": "All Tickets",
+    "statusCategory": "Status",
+    "clear": "Clear filters"
+  },
+  "classifySelected": "Classify",
+  "aiSuggestion": "AI Suggestion",
+  "classify": "Classify",
+  "classifyTicket": "Classify Ticket",
+  "classifyDescription": "Review AI suggestions or manually classify this ticket",
+  "common": {
+    "back": "Back to Queue",
+    "cancel": "Cancel",
+    "download": "Download",
+    "loading": "Loading...",
+    "select": "Select..."
+  },
   "form": {
     "requestType": {
       "label": "Request Type",
@@ -13,6 +36,7 @@
       },
       "required": "Please select a request type"
     },
+    "selectType": "Select type",
     "title": {
       "label": "Title",
       "placeholder": "Brief summary of your request",
@@ -20,6 +44,7 @@
       "minLength": "Title must be at least 3 characters",
       "maxLength": "Title must not exceed 200 characters"
     },
+    "titlePlaceholder": "Enter request title",
     "titleAr": {
       "label": "Title (Arabic)",
       "placeholder": "موجز طلبك"
@@ -35,6 +60,7 @@
       "label": "Description (Arabic)",
       "placeholder": "قدم معلومات مفصلة عن طلبك"
     },
+    "descriptionPlaceholder": "Describe your request",
     "urgency": {
       "label": "Urgency Level",
       "placeholder": "Select urgency level",
@@ -46,13 +72,16 @@
       },
       "required": "Please select urgency level"
     },
+    "selectUrgency": "Select urgency",
     "dossier": {
       "label": "Link to Dossier",
       "placeholder": "Search for existing dossier",
       "linkExisting": "Link to Existing Dossier",
       "proposeNew": "Propose New Dossier",
       "search": "Search dossiers...",
-      "noResults": "No dossiers found"
+      "noResults": "No dossiers found",
+      "hint": "Select the dossier this request relates to",
+      "linkedTo": "Linked to"
     },
     "attachments": {
       "label": "Attachments",
@@ -64,10 +93,23 @@
       "unavailable": "Attachment upload is not yet available.",
       "uploading": "Uploading…",
       "maxFilesAllowed": "Maximum {{count}} files allowed",
+      "fileCount": "{{count}} files",
       "fileCount_one": "{{count}} file",
       "fileCount_other": "{{count}} files",
       "totalSize": "Total: {{used}} / {{max}}"
     }
+  },
+  "requestTypes": {
+    "engagement": "Engagement",
+    "position": "Position",
+    "mou_action": "MOU Action",
+    "foresight": "Foresight"
+  },
+  "urgency": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "critical": "Critical"
   },
   "slaPreview": {
     "title": "Expected Response Times",
@@ -80,10 +122,10 @@
   "actions": {
     "submit": "Submit Request",
     "submitRequest": "Submit request",
+    "submitting": "Submitting…",
     "cancel": "Cancel",
     "saveDraft": "Save as Draft",
-    "reset": "Reset Form",
-    "fillMock": "Fill with Mock Data"
+    "reset": "Reset Form"
   },
   "validation": {
     "requiredField": "This field is required",
@@ -109,6 +151,11 @@
     "resolution": "Resolution",
     "paused": "(Paused)",
     "target": "Target",
+    "totalPaused": "Total paused",
+    "resume": "Resume",
+    "pause": "Pause",
+    "pauseReason": "Reason for pausing the SLA",
+    "pauseReasonPlaceholder": "Enter a reason for pausing the SLA",
     "breached_by_hours": "Breached by {{hours}}h {{minutes}}m",
     "breached_by_minutes": "Breached by {{minutes}}m",
     "time_remaining_hours": "{{hours}}h {{minutes}}m remaining",
@@ -116,6 +163,7 @@
   },
   "typeSpecific": {
     "engagement": {
+      "title": "Additional Information",
       "partnerName": {
         "label": "Partner Organization",
         "placeholder": "Enter partner organization name"
@@ -136,6 +184,7 @@
       }
     },
     "position": {
+      "title": "Additional Information",
       "positionTitle": {
         "label": "Position Title",
         "placeholder": "Enter position title"
@@ -150,6 +199,7 @@
       }
     },
     "mou_action": {
+      "title": "Additional Information",
       "mouReference": {
         "label": "MoU Reference",
         "placeholder": "Enter MoU reference number"
@@ -170,6 +220,7 @@
       }
     },
     "foresight": {
+      "title": "Additional Information",
       "topic": {
         "label": "Topic",
         "placeholder": "Enter foresight topic"
@@ -203,6 +254,7 @@
       "clear": "Clear all filters"
     },
     "status": {
+      "draft": "Draft",
       "submitted": "Submitted",
       "triaged": "Triaged",
       "assigned": "Assigned",
@@ -265,6 +317,95 @@
   },
   "triage": {
     "overrideReasonLabel": "Reason for Override *",
-    "overrideReasonRequired": "Please provide a reason for the override"
+    "overrideReasonRequired": "Please provide a reason for the override",
+    "confidence": {
+      "unknown": "Unknown",
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "loadingSuggestions": "Analyzing ticket...",
+    "aiUnavailable": "AI Triage Temporarily Unavailable",
+    "aiUnavailableMessage": "AI triage suggestions are currently unavailable. Please perform manual triage or try again later.",
+    "manualTriage": "Manual Triage",
+    "sensitivity": "Sensitivity Level",
+    "sensitivitySummary": "Sensitivity",
+    "sensitivityLevels": {
+      "public": "Public",
+      "internal": "Internal",
+      "confidential": "Confidential",
+      "secret": "Secret"
+    },
+    "urgency": "Urgency",
+    "assignedUnit": "Assigned Unit",
+    "assignedUnitPlaceholder": "Enter unit name",
+    "reason": "Reason",
+    "reasonPlaceholder": "Explain your triage decision",
+    "applying": "Applying...",
+    "applyManualTriage": "Apply Manual Triage",
+    "aiSuggestions": "AI-Powered Suggestions",
+    "modelInfo": "Model",
+    "requestType": "Request Type",
+    "acceptSuggestions": "Accept AI Suggestions",
+    "override": "Override",
+    "overrideTitle": "Override AI Suggestions",
+    "overrideReasonPlaceholder": "Explain why you are overriding the AI suggestions",
+    "applyOverride": "Apply Override"
+  },
+  "duplicates": {
+    "mergeReasonRequired": "Please provide a reason for merging",
+    "loading": "Checking for duplicates...",
+    "error": "Failed to load duplicate candidates. Please try again.",
+    "noDuplicates": "No potential duplicates detected",
+    "highConfidenceWarning": "High Confidence Duplicates Detected",
+    "highConfidenceMessage": "We found {{count}} ticket(s) with high similarity. Please review and consider merging.",
+    "highConfidence": "High Confidence Duplicates",
+    "mediumConfidence": "Possible Duplicates",
+    "mergeDialog": {
+      "title": "Merge Tickets",
+      "primaryTicket": "Select Primary Ticket",
+      "primaryTicketHelp": "The primary ticket will remain active, and the other will be marked as merged.",
+      "currentTicket": "Current Ticket",
+      "reason": "Reason for Merge",
+      "reasonPlaceholder": "Explain why these tickets should be merged"
+    },
+    "titleSimilarity": "Title",
+    "contentSimilarity": "Content",
+    "metadataSimilarity": "Metadata",
+    "merge": "Merge Tickets",
+    "notDuplicate": "Not a Duplicate"
+  },
+  "ticketDetail": {
+    "error": "Failed to load ticket. Please try again.",
+    "tabsLabel": "Ticket sections",
+    "tabs": {
+      "details": "Details",
+      "triage": "Triage",
+      "duplicates": "Duplicates",
+      "history": "History",
+      "links": "Links"
+    },
+    "requestType": "Request Type",
+    "urgency": "Urgency",
+    "sensitivity": "Sensitivity",
+    "priority": "Priority",
+    "description": "Description",
+    "additionalInfo": "Additional Information",
+    "attachments": "Attachments",
+    "promoteToEngagement": "Promote to Engagement",
+    "convert": "Convert to Artifact",
+    "convertAction": "Convert",
+    "close": "Close Ticket",
+    "convertTitle": "Convert Ticket",
+    "convertDescription": "Select the artifact type to convert this ticket into",
+    "selectType": "Select type...",
+    "convertOptions": {
+      "engagement": "Engagement",
+      "position": "Position"
+    },
+    "closeTitle": "Close Ticket",
+    "closeDescription": "Provide a resolution summary for closing this ticket",
+    "resolutionPlaceholder": "Enter resolution summary...",
+    "historyPlaceholder": "Audit history will be displayed here"
   }
 }

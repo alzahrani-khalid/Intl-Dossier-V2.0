@@ -2,6 +2,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
+import { writeAuditLog } from '../_shared/audit.ts'
 
 interface UpdateStatusRequest {
   status: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'overdue'
@@ -87,15 +88,18 @@ serve(async (req) => {
       )
     }
 
+    // Resolve role from public.users (never trust client-settable user_metadata).
+    // Hoisted out of the external-owner branch below because the audit write needs
+    // it on every path — `audit_logs.user_role` is NOT NULL.
+    const { data: userRecord } = await supabaseClient
+      .from('users')
+      .select('role')
+      .eq('id', user.user.id)
+      .maybeSingle()
+    const userRole = userRecord?.role
+
     // Permission check for external commitments (must be staff/supervisor/admin with dossier access)
     if (commitment.owner_type === 'external') {
-      // Resolve role from public.users (never trust client-settable user_metadata)
-      const { data: userRecord } = await supabaseClient
-        .from('users')
-        .select('role')
-        .eq('id', user.user.id)
-        .single()
-      const userRole = userRecord?.role
       if (!['staff', 'supervisor', 'admin'].includes(userRole)) {
         return new Response(
           JSON.stringify({
@@ -154,23 +158,31 @@ serve(async (req) => {
       })
     }
 
-    // Record audit trail
-    const { error: auditError } = await supabaseClient.from('audit_logs').insert({
-      entity_type: 'commitment',
-      entity_id: commitmentId,
-      action: 'status_update',
-      changed_by: user.user.id,
-      changes: {
-        old_status: commitment.status,
-        new_status: body.status,
-        notes: body.notes,
-        tracking_mode: commitment.tracking_mode,
-      },
-    })
-
-    if (auditError) {
-      console.error('Failed to create audit log:', auditError)
-      // Don't fail the request if audit log fails
+    // Record audit trail.
+    // Grade: LOG-LOUDLY-AND-CONTINUE (D-18) — the status change is already
+    // persisted; the helper console.errors any failure.
+    if (!userRole) {
+      console.error(
+        `AUDIT-ZERO-01: audit write SKIPPED — no user_role resolves for ${user.user.id} (commitments-update-status:status_update)`,
+      )
+    } else {
+      await writeAuditLog(
+        supabaseClient,
+        {
+          entity_type: 'commitment',
+          entity_id: commitmentId,
+          action: 'status_update',
+          user_id: user.user.id,
+          user_role: userRole,
+          old_values: { status: commitment.status },
+          new_values: {
+            status: body.status,
+            notes: body.notes,
+            tracking_mode: commitment.tracking_mode,
+          },
+        },
+        'commitments-update-status',
+      )
     }
 
     return new Response(JSON.stringify(updatedCommitment), {

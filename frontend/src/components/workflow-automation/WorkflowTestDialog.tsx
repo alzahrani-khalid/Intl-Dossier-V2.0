@@ -98,11 +98,7 @@ export function WorkflowTestDialog({ rule, open, onOpenChange }: WorkflowTestDia
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label htmlFor="dry_run">{t('test.dryRun')}</Label>
-                <p className="text-xs text-muted-foreground">
-                  {t('test.dryRunDescription', {
-                    defaultValue: "If enabled, actions won't actually execute",
-                  })}
-                </p>
+                <p className="text-xs text-muted-foreground">{t('test.dryRunDescription')}</p>
               </div>
               <Switch id="dry_run" checked={dryRun} onCheckedChange={setDryRun} />
             </div>
@@ -192,9 +188,7 @@ export function WorkflowTestDialog({ rule, open, onOpenChange }: WorkflowTestDia
           {/* Error */}
           {testMutation.isError && (
             <div className="p-4 bg-destructive/10 rounded-lg">
-              <p className="text-sm text-destructive">
-                {testMutation.error instanceof Error ? testMutation.error.message : 'Test failed'}
-              </p>
+              <p className="text-sm text-destructive">{t('common:errors.queryFailedInline')}</p>
             </div>
           )}
         </div>

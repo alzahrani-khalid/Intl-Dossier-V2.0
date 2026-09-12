@@ -33,7 +33,15 @@ import {
 } from '@/components/delegation'
 import { useMyDelegations, useDelegationsExpiringSoon } from '@/hooks/useDelegation'
 import { supabase } from '@/lib/supabase'
-import { Plus, ArrowDownToLine, ArrowUpFromLine, Clock, Shield, AlertTriangle } from 'lucide-react'
+import {
+  Plus,
+  ArrowDownToLine,
+  ArrowUpFromLine,
+  Clock,
+  Shield,
+  AlertTriangle,
+  RefreshCw,
+} from 'lucide-react'
 import { useDirection } from '@/hooks/useDirection'
 
 type TabValue = 'granted' | 'received'
@@ -46,9 +54,12 @@ export function DelegationManagementPage() {
   const [showActiveOnly, setShowActiveOnly] = useState(true)
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
-  // Fetch delegations
+  // Fetch delegations. `isError` drives an explicit failure state so a rejected query never
+  // renders as "you have no delegations". The rejection object itself is never rendered — its
+  // message is a supabase-js internal string, and user-facing errors carry i18n copy only.
   const {
     data: delegations,
+    isError,
     isLoading,
     refetch,
   } = useMyDelegations({
@@ -98,6 +109,9 @@ export function DelegationManagementPage() {
     }
   }, [delegations, expiringSoon])
 
+  // A failed load knows nothing — the count is unknown, not zero.
+  const statFigure = (value: number): string => (isError ? '—' : String(value))
+
   return (
     <div className="space-y-6">
       {/* Expiring Soon Banner */}
@@ -131,7 +145,7 @@ export function DelegationManagementPage() {
             {isLoading ? (
               <Skeleton className="h-8 w-12" />
             ) : (
-              <p className="text-2xl font-bold">{stats.granted}</p>
+              <p className="text-2xl font-bold">{statFigure(stats.granted)}</p>
             )}
           </CardContent>
         </Card>
@@ -147,15 +161,15 @@ export function DelegationManagementPage() {
             {isLoading ? (
               <Skeleton className="h-8 w-12" />
             ) : (
-              <p className="text-2xl font-bold">{stats.received}</p>
+              <p className="text-2xl font-bold">{statFigure(stats.received)}</p>
             )}
           </CardContent>
         </Card>
 
-        <Card className={stats.expiring > 0 ? 'border-warning/50' : ''}>
+        <Card className={!isError && stats.expiring > 0 ? 'border-warning/50' : ''}>
           <CardHeader className="pb-2">
             <CardDescription className="flex items-center gap-2">
-              {stats.expiring > 0 ? (
+              {!isError && stats.expiring > 0 ? (
                 <AlertTriangle className="h-4 w-4 text-warning" />
               ) : (
                 <Clock className="h-4 w-4" />
@@ -167,8 +181,10 @@ export function DelegationManagementPage() {
             {isLoading ? (
               <Skeleton className="h-8 w-12" />
             ) : (
-              <p className={`text-2xl font-bold ${stats.expiring > 0 ? 'text-warning' : ''}`}>
-                {stats.expiring}
+              <p
+                className={`text-2xl font-bold ${!isError && stats.expiring > 0 ? 'text-warning' : ''}`}
+              >
+                {statFigure(stats.expiring)}
               </p>
             )}
           </CardContent>
@@ -196,58 +212,83 @@ export function DelegationManagementPage() {
         </CardHeader>
 
         <CardContent>
-          <Tabs
-            value={activeTab}
-            onValueChange={(value) => setActiveTab(value as TabValue)}
-            className="w-full"
-          >
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger
-                value="granted"
-                className={`flex items-center gap-2 min-h-10 ${isRTL ? 'flex-row-reverse' : ''}`}
+          {isError ? (
+            <div
+              role="alert"
+              className="flex flex-col items-center justify-center text-center py-10 px-4 sm:py-12 sm:px-6"
+            >
+              <div className="flex items-center justify-center rounded-full bg-danger/10 w-14 h-14 sm:w-16 sm:h-16 mb-4">
+                <AlertTriangle className="text-danger w-7 h-7 sm:w-8 sm:h-8" />
+              </div>
+              <h3 className="text-ink text-base sm:text-lg md:text-xl font-semibold mb-2">
+                {t('list.error.title')}
+              </h3>
+              <p className="text-ink-mute max-w-md text-sm sm:text-base mb-4 sm:mb-6">
+                {t('list.error.description')}
+              </p>
+              <button
+                type="button"
+                onClick={() => void refetch()}
+                className="btn-primary inline-flex items-center justify-center h-10 px-4 sm:px-6 text-sm"
               >
-                <ArrowUpFromLine className="h-4 w-4" />
-                <span className="hidden sm:inline">{t('tabs.granted')}</span>
-                <span className="sm:hidden">{t('tabs.granted')}</span>
-                {stats.granted > 0 && (
-                  <Badge variant="secondary" className="ms-1">
-                    {stats.granted}
-                  </Badge>
-                )}
-              </TabsTrigger>
-              <TabsTrigger
-                value="received"
-                className={`flex items-center gap-2 min-h-10 ${isRTL ? 'flex-row-reverse' : ''}`}
-              >
-                <ArrowDownToLine className="h-4 w-4" />
-                <span className="hidden sm:inline">{t('tabs.received')}</span>
-                <span className="sm:hidden">{t('tabs.received')}</span>
-                {stats.received > 0 && (
-                  <Badge variant="secondary" className="ms-1">
-                    {stats.received}
-                  </Badge>
-                )}
-              </TabsTrigger>
-            </TabsList>
+                <RefreshCw className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                {t('list.error.retry')}
+              </button>
+            </div>
+          ) : (
+            <Tabs
+              value={activeTab}
+              onValueChange={(value) => setActiveTab(value as TabValue)}
+              className="w-full"
+            >
+              <TabsList className="grid w-full grid-cols-2 mb-6">
+                <TabsTrigger
+                  value="granted"
+                  className={`flex items-center gap-2 min-h-10 ${isRTL ? 'flex-row-reverse' : ''}`}
+                >
+                  <ArrowUpFromLine className="h-4 w-4" />
+                  <span className="hidden sm:inline">{t('tabs.granted')}</span>
+                  <span className="sm:hidden">{t('tabs.granted')}</span>
+                  {stats.granted > 0 && (
+                    <Badge variant="secondary" className="ms-1">
+                      {stats.granted}
+                    </Badge>
+                  )}
+                </TabsTrigger>
+                <TabsTrigger
+                  value="received"
+                  className={`flex items-center gap-2 min-h-10 ${isRTL ? 'flex-row-reverse' : ''}`}
+                >
+                  <ArrowDownToLine className="h-4 w-4" />
+                  <span className="hidden sm:inline">{t('tabs.received')}</span>
+                  <span className="sm:hidden">{t('tabs.received')}</span>
+                  {stats.received > 0 && (
+                    <Badge variant="secondary" className="ms-1">
+                      {stats.received}
+                    </Badge>
+                  )}
+                </TabsTrigger>
+              </TabsList>
 
-            <TabsContent value="granted" className="mt-0">
-              <DelegationList
-                delegations={filteredDelegations}
-                type="granted"
-                isLoading={isLoading}
-                onRefresh={refetch}
-              />
-            </TabsContent>
+              <TabsContent value="granted" className="mt-0">
+                <DelegationList
+                  delegations={filteredDelegations}
+                  type="granted"
+                  isLoading={isLoading}
+                  onRefresh={refetch}
+                />
+              </TabsContent>
 
-            <TabsContent value="received" className="mt-0">
-              <DelegationList
-                delegations={filteredDelegations}
-                type="received"
-                isLoading={isLoading}
-                onRefresh={refetch}
-              />
-            </TabsContent>
-          </Tabs>
+              <TabsContent value="received" className="mt-0">
+                <DelegationList
+                  delegations={filteredDelegations}
+                  type="received"
+                  isLoading={isLoading}
+                  onRefresh={refetch}
+                />
+              </TabsContent>
+            </Tabs>
+          )}
         </CardContent>
       </Card>
 

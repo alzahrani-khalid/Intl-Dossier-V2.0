@@ -56,7 +56,7 @@
     "descriptionPlaceholder": "صف المرحلة",
     "type": "النوع",
     "selectType": "اختر النوع",
-    "dueDate": "تاريخ الاستحقاق",
+    "dueDate": "الموعد النهائي",
     "weight": "الوزن",
     "weightDescription": "وزن أعلى = تأثير أكبر على التقدم الإجمالي (1-10)",
     "notes": "ملاحظات",

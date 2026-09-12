@@ -75,8 +75,8 @@
   },
 
   "eventCategories": {
-    "dossier": "الملفات",
-    "engagement": "الارتباطات",
+    "dossier": "الدوسيهات",
+    "engagement": "المشاركات",
     "commitment": "الالتزامات",
     "intake": "تذاكر الاستقبال",
     "document": "المستندات",
@@ -86,12 +86,12 @@
   },
 
   "events": {
-    "dossier.created": "إنشاء ملف",
-    "dossier.updated": "تحديث ملف",
-    "dossier.deleted": "حذف ملف",
-    "engagement.created": "إنشاء ارتباط",
-    "engagement.updated": "تحديث ارتباط",
-    "engagement.completed": "اكتمال ارتباط",
+    "dossier.created": "إنشاء دوسيه",
+    "dossier.updated": "تحديث دوسيه",
+    "dossier.deleted": "حذف دوسيه",
+    "engagement.created": "إنشاء مشاركة",
+    "engagement.updated": "تحديث مشاركة",
+    "engagement.completed": "اكتمال مشاركة",
     "commitment.created": "إنشاء التزام",
     "commitment.updated": "تحديث التزام",
     "commitment.fulfilled": "تنفيذ التزام",
@@ -187,7 +187,7 @@
   },
 
   "help": {
-    "hmacSignature": "سنقوم بتوقيع كل حمولة طلب باستخدام HMAC-SHA256 وتضمين التوقيع في رأس X-Webhook-Signature.",
+    "hmacSignature": "يتم توقيع كل حمولة طلب باستخدام HMAC-SHA256 مع تضمين التوقيع في رأس X-Webhook-Signature.",
     "bearerToken": "سيتم إرسال مفتاحك السري كرمز Bearer في رأس التفويض.",
     "basicAuth": "سيتم استخدام مصادقة HTTP الأساسية القياسية.",
     "retries": "عدد محاولات إعادة المحاولة للتسليمات الفاشلة (0-10)",

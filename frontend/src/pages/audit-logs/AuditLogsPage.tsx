@@ -247,9 +247,7 @@ export function AuditLogsPage() {
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <AlertCircle className="h-12 w-12 text-destructive mb-4" />
               <h3 className="text-lg font-medium mb-2">{t('error.title')}</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                {error.message || t('error.description')}
-              </p>
+              <p className="text-sm text-muted-foreground mb-4">{t('error.description')}</p>
               <Button variant="outline" onClick={() => refetch()}>
                 {t('error.retry')}
               </Button>

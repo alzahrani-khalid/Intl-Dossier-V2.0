@@ -84,24 +84,16 @@ export function CommitmentsList({
   const loadMoreRef = useRef<HTMLDivElement>(null)
 
   // Fetch commitments with infinite scroll pagination
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    refetch,
-  } = useInfiniteCommitments({
-    dossierId,
-    status,
-    priority,
-    ownerId,
-    overdue,
-    dueDateFrom,
-    dueDateTo,
-  })
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } =
+    useInfiniteCommitments({
+      dossierId,
+      status,
+      priority,
+      ownerId,
+      overdue,
+      dueDateFrom,
+      dueDateTo,
+    })
 
   // Flatten pages into single array of commitments
   const allCommitments = data?.pages.flatMap((page) => page.commitments) ?? []
@@ -224,10 +216,7 @@ export function CommitmentsList({
       <div>
         <Alert variant="destructive">
           <AlertCircle className="size-4" />
-          <AlertDescription>
-            {t('errors.loadFailed')}
-            {error?.message && `: ${error.message}`}
-          </AlertDescription>
+          <AlertDescription>{t('errors.loadFailed')}</AlertDescription>
         </Alert>
       </div>
     )

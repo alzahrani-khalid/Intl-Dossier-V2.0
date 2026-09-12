@@ -24,7 +24,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { cn } from '@/lib/utils'
-import { useEntitySearchState, formatEntityType } from '@/hooks/useEntitySearch'
+import { useEntitySearchState } from '@/hooks/useEntitySearch'
 import { useEntityLinks } from '@/hooks/useEntityLinks'
 import { dossierTypeColors } from '@/lib/semantic-colors'
 import type {
@@ -264,7 +264,7 @@ export function EntitySearchDialog({
                     isRTL ? 'start-1' : 'end-1',
                   )}
                   onClick={() => setQuery('')}
-                  aria-label={t('common.clear')}
+                  aria-label={t('common:clear')}
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -290,7 +290,7 @@ export function EntitySearchDialog({
                   className="h-7 px-2 text-xs"
                   onClick={clearFilters}
                 >
-                  {t('common.clearFilters')}
+                  {t('common:clearFilters')}
                 </Button>
               )}
             </div>
@@ -314,10 +314,10 @@ export function EntitySearchDialog({
                         isSelected && '',
                       )}
                       onClick={() => toggleEntityType(type)}
-                      aria-label={t(`entityLinks.entityTypes.${type}`)}
+                      aria-label={t(`common:entityLinks.entityTypes.${type}`)}
                       aria-pressed={isSelected}
                     >
-                      {formatEntityType(type)}
+                      {t(`common:entityLinks.entityTypes.${type}`)}
                     </Button>
                   )
                 })}
@@ -333,7 +333,7 @@ export function EntitySearchDialog({
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="h-8 w-8 animate-spin text-ink-faint" />
                   <span className={cn('text-sm text-ink-mute', isRTL ? 'me-3' : 'ms-3')}>
-                    {t('common.loading')}
+                    {t('common:loading')}
                   </span>
                 </div>
               )}
@@ -353,12 +353,11 @@ export function EntitySearchDialog({
                     <Search className="h-8 w-8 text-info" />
                   </div>
                   <h3 className="text-base font-semibold text-ink mb-2">
-                    {t('entityLinks.searchTitle', 'Find and link entities')}
+                    {t('entityLinks.searchTitle')}
                   </h3>
                   <p className="text-sm text-ink-mute max-w-sm mx-auto">
                     {t(
                       'entityLinks.searchEmptyState',
-                      'Enter at least 2 characters to search for dossiers, positions, countries, and more',
                     )}
                   </p>
                 </div>
@@ -371,18 +370,18 @@ export function EntitySearchDialog({
                     <Search className="h-8 w-8 text-ink-faint" />
                   </div>
                   <h3 className="text-base font-semibold text-ink mb-2">
-                    {t('entityLinks.noResultsTitle', 'No entities found')}
+                    {t('entityLinks.noResultsTitle')}
                   </h3>
                   <p className="text-sm text-ink-mute max-w-sm mx-auto mb-4">
-                    {t('entityLinks.noResults', `No entities match "${query}"`)}
+                    {t('entityLinks.noResults')}
                   </p>
                   <div className="text-xs text-ink-mute space-y-1">
-                    <p>{t('entityLinks.searchTips', 'Try:')}</p>
+                    <p>{t('entityLinks.searchTips')}</p>
                     <ul className="list-disc list-inside space-y-0.5">
-                      <li>{t('entityLinks.tip1', 'Using fewer or different keywords')}</li>
-                      <li>{t('entityLinks.tip2', 'Checking your spelling')}</li>
+                      <li>{t('entityLinks.tip1')}</li>
+                      <li>{t('entityLinks.tip2')}</li>
                       <li>
-                        {t('entityLinks.tip3', 'Clearing filters to search all entity types')}
+                        {t('entityLinks.tip3')}
                       </li>
                     </ul>
                   </div>
@@ -513,7 +512,7 @@ export function EntitySearchDialog({
                                   getEntityTypeBadgeClass(entity.entity_type),
                                 )}
                               >
-                                {formatEntityType(entity.entity_type)}
+                                {t(`common:entityLinks.entityTypes.${entity.entity_type}`)}
                               </Badge>
                               {/* Already linked badge */}
                               {isAlreadyLinked && (
@@ -524,7 +523,7 @@ export function EntitySearchDialog({
                                     'bg-success/10 text-success border-success/30',
                                   )}
                                 >
-                                  {t('entityLinks.alreadyLinked', 'Already linked')}
+                                  {t('entityLinks.alreadyLinked')}
                                 </Badge>
                               )}
                             </div>
@@ -552,7 +551,9 @@ export function EntitySearchDialog({
                               {/* AI confidence score (if available) */}
                               {entity.similarity_score !== undefined && (
                                 <span className="flex items-center gap-1">
-                                  <span className="font-medium">Match:</span>
+                                  <span className="font-medium">
+                                    {t('common:entityLinks.match')}
+                                  </span>
                                   <span
                                     className={cn(
                                       'font-semibold',
@@ -573,7 +574,9 @@ export function EntitySearchDialog({
                               {/* Classification level (if available) */}
                               {entity.classification_level !== undefined && (
                                 <span className="flex items-center gap-1">
-                                  <span className="font-medium">Level:</span>
+                                  <span className="font-medium">
+                                    {t('common:entityLinks.level')}
+                                  </span>
                                   <span>{entity.classification_level}</span>
                                 </span>
                               )}
@@ -581,7 +584,9 @@ export function EntitySearchDialog({
                               {/* Last linked date (if available) */}
                               {entity.last_linked_at && (
                                 <span className="flex items-center gap-1">
-                                  <span className="font-medium">Last used:</span>
+                                  <span className="font-medium">
+                                    {t('common:entityLinks.lastUsed')}
+                                  </span>
                                   <span>{formatDayFirstYear(entity.last_linked_at)}</span>
                                 </span>
                               )}
@@ -617,7 +622,6 @@ export function EntitySearchDialog({
                   <div className="flex-1 min-w-0">
                     <p className={cn('text-xs sm:text-sm text-warning', 'text-start')}>
                       {t('entityLinks.replacePrimaryWarning', {
-                        defaultValue: `This will replace the existing primary link (${(existingPrimaryLink as any).entity_name || existingPrimaryLink.entity_id})`,
                         currentPrimary:
                           (existingPrimaryLink as any).entity_name || existingPrimaryLink.entity_id,
                       })}
@@ -642,7 +646,6 @@ export function EntitySearchDialog({
                 >
                   {t('entityLinks.selectedCount', {
                     count: selectedEntities.length,
-                    defaultValue: `${selectedEntities.length} selected`,
                   })}
                 </span>
                 <Button
@@ -655,7 +658,6 @@ export function EntitySearchDialog({
                 >
                   {t('entityLinks.linkSelected', {
                     count: selectedEntities.length,
-                    defaultValue: `Link ${selectedEntities.length} ${selectedEntities.length === 1 ? 'entity' : 'entities'}`,
                   })}
                 </Button>
               </div>

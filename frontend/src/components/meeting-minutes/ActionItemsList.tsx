@@ -9,7 +9,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { format } from 'date-fns'
+import { formatDayMonth } from '@/lib/format-date'
 import {
   Plus,
   CheckCircle2,
@@ -218,7 +218,7 @@ export function ActionItemsList({
                             )}
                           >
                             <Calendar className="h-3 w-3" />
-                            {format(new Date(item.due_date), 'd MMM')}
+                            {formatDayMonth(new Date(item.due_date))}
                           </span>
                         )}
 
@@ -257,9 +257,7 @@ export function ActionItemsList({
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
                           <MoreVertical className="h-4 w-4" />
-                          <span className="sr-only">
-                            {t('common:common.actions.openMenu', { defaultValue: 'Open menu' })}
-                          </span>
+                          <span className="sr-only">{t('common:actions.openMenu')}</span>
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align={isRTL ? 'start' : 'end'}>

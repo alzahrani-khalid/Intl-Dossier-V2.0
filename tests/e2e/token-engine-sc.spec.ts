@@ -24,7 +24,8 @@
  * `playwright.config.ts` has `testDir: './tests/e2e'`. Matches 33-03's FOUC-
  * spec deviation — both under the same documented reason.
  */
-import { test as base, expect, type Page } from '@playwright/test'
+// `test` alias: the phase grep reads the P101-QUAR marker below as a call on `test`.
+import { test as base, test, expect, type Page } from '@playwright/test'
 
 // ----------------------------------------------------------------------------
 // Type-only augmentation for the DEV/test-only `window.__design` hatch exposed
@@ -67,6 +68,10 @@ base.describe('Phase 33 Success Criteria (SC-1..SC-5)', () => {
   base.use({ storageState: { cookies: [], origins: [] } })
 
   base.beforeEach(async ({ page }) => {
+    // The marker sits in the hook, not in each test body: all five failed here (:83), and
+    // Playwright runs beforeEach before the body, so a body marker would never be reached.
+    // prettier-ignore
+    test.fixme(true, 'P101-QUAR 31848669722: environment + contract - window.__design is set only under import.meta.env.DEV or MODE test (DesignProvider.tsx), the E2E target is a deployed production build, so waitForHatch timed out at :83 for SC-1..SC-5; at HEAD the hatch also has no setHue and Direction is linear-only (Phase 77), which SC-1/2/3/5 call; log lines 587, 627, 667, 707, 872 of job 94920109185; owner Phase 102')
     // Clear persisted design prefs so every test starts from Chancery-light /
     // hue=22 / comfortable — avoids cross-test state bleed.
     await page.addInitScript(() => {

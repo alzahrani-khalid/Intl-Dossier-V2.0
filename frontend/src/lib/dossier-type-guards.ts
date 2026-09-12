@@ -23,21 +23,75 @@
  */
 
 /**
- * Union type of all valid dossier type strings
+ * THE DB-7 — the values the `dossiers.type` column can actually hold.
  *
  * @description
- * These correspond to the `type` column in the `dossiers` database table.
  * Each type has a corresponding extension table with type-specific fields.
- * Note: elected_official is now a person_subtype, not a separate dossier type.
+ * This is the ONE literal dossier-type list in `frontend/src`; every other list
+ * derives from it (`DOSSIER_CARD_TYPES` below is the display set).
+ *
+ * Do NOT add `elected_official` here, and do NOT merge this set with the card set.
+ * `elected_official` is a `PersonSubtype`, not a dossier type: widening this
+ * constant creates a count bucket that no query over `dossiers.type` can ever
+ * fill, so the UI renders a fabricated `0`. This comment is DOCUMENTARY — the
+ * `_EoIsNotADbType` assertion below is what actually enforces it (a comment
+ * enforces nothing; `AppShell.tsx:121-124` is the in-repo precedent for a comment
+ * that was present and false for its entire life).
+ *
+ * ORDER IS LOAD-BEARING: `CreateDossierHub` renders its cards in
+ * `DOSSIER_CARD_TYPES` order and `CreateDossierHub.test.tsx` pins that order
+ * (Phase 31 D-02).
  */
-export type DossierType =
-  | 'country'
-  | 'organization'
-  | 'person'
-  | 'engagement'
-  | 'forum'
-  | 'working_group'
-  | 'topic'
+export const DOSSIER_TYPES = [
+  'country',
+  'organization',
+  'forum',
+  'engagement',
+  'topic',
+  'working_group',
+  'person',
+] as const
+
+/**
+ * Union type of all valid dossier type strings — derived from {@link DOSSIER_TYPES}.
+ */
+export type DossierType = (typeof DOSSIER_TYPES)[number]
+
+/**
+ * THE CARD-8 — every dossier kind the UI DISPLAYS as its own entry.
+ *
+ * @description
+ * The DB-7 plus `elected_official`, which has its own wizard route and its own
+ * hub card while living in the data as `persons.person_subtype`.
+ *
+ * Pick by question, not by convenience: a surface that DISPLAYS dossier kinds
+ * (the create hub, the `?dossierType=` deep-link whitelist, `/compare`) uses this
+ * set; anything that QUERIES `dossiers.type` uses {@link DOSSIER_TYPES}. The two
+ * must never be merged — see the note above for what merging costs.
+ */
+export const DOSSIER_CARD_TYPES = [...DOSSIER_TYPES, 'elected_official'] as const
+
+/**
+ * Union of every dossier kind the UI displays — derived from
+ * {@link DOSSIER_CARD_TYPES}.
+ */
+export type DossierCardType = (typeof DOSSIER_CARD_TYPES)[number]
+
+/**
+ * The anti-merge guard, in the type system rather than in prose.
+ *
+ * `AssertNever` accepts only `never`, so if `elected_official` is ever added to
+ * `DOSSIER_TYPES` the `Extract` yields `'elected_official'`, the constraint
+ * fails, and the BUILD breaks with TS2344. THIS is the enforcement.
+ *
+ * It is `export`ed for one reason only: `frontend/tsconfig.json` sets
+ * `noUnusedLocals: true`, and a compile-time assertion is by definition referenced
+ * nowhere, so the unexported form is TS6196 ("declared but never used") and fails
+ * `pnpm typecheck`. Exporting changes nothing about the guarantee — see
+ * `97-04-SUMMARY.md` §BLOCKED for the measured reproduction.
+ */
+type AssertNever<T extends never> = T
+export type _EoIsNotADbType = AssertNever<Extract<DossierType, 'elected_official'>>
 
 /**
  * Person subtype discriminator

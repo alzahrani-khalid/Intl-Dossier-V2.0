@@ -1,4 +1,4 @@
-import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.39.0";
+import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 interface DashboardAggregationsRequest {
   groupBy: "region" | "org_type"; // region for countries, org_type for organizations

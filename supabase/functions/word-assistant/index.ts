@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.0";
+import { createClient } from "jsr:@supabase/supabase-js@2";
 import { getCorsHeaders, handleCorsPreflightRequest } from "../_shared/cors.ts";
 import { generateText } from "../_shared/onprem-llm.ts";
 
@@ -208,7 +208,8 @@ serve(async (req: Request) => {
       response.model = 'fallback';
     }
 
-    const { data: user } = await supabaseClient.auth.getUser();
+    const token = (req.headers.get('Authorization') ?? '').replace('Bearer ', '');
+    const { data: user } = await supabaseClient.auth.getUser(token);
     if (user?.user?.id) {
       await supabaseClient
         .from('word_assistant_logs')

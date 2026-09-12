@@ -47,6 +47,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { requireAdmin } from '@/lib/auth/require-admin'
 import { PageHeader } from '@/components/layout/PageHeader'
+import { QueryErrorState } from '@/components/error-states/QueryErrorState'
 import {
   Shield,
   Database,
@@ -79,7 +80,12 @@ import {
 import type {
   RetentionPolicy,
   RetentionPolicyInput,
+  LegalHold,
   LegalHoldInput,
+  RetentionStatistics,
+  PendingRetentionAction,
+  ExpiringEntity,
+  RetentionExecutionLog,
   RetentionEntityType,
   DocumentClass,
   RetentionActionType,
@@ -139,20 +145,100 @@ function DataRetentionPage() {
   const [showProcessorDialog, setShowProcessorDialog] = useState(false)
   const [selectedPolicy, setSelectedPolicy] = useState<RetentionPolicy | null>(null)
 
-  // Hooks
-  const { data: policies = [], isLoading: policiesLoading } = useRetentionPolicies({
+  // Hooks.
+  //
+  // TRUST-02: all six of these were `data: x = []` with zero `isError` in the file, so every
+  // rejection below rendered as "No Policies" / "No Legal Holds" / "No pending actions" — six
+  // confident claims of emptiness made by a page that had failed to look. EACH REGION OWNS ITS
+  // OWN QUERY from here on: a failed region renders the shared inline error state and its
+  // siblings render normally. Only the primary (policies) query collapses the whole page.
+  const {
+    data: policiesData,
+    isLoading: policiesLoading,
+    isError: policiesIsError,
+    isFetching: policiesFetching,
+    refetch: refetchPolicies,
+  } = useRetentionPolicies({
     status: 'active',
   })
-  const { data: statistics = [], isLoading: statsLoading } = useRetentionStatistics()
-  const { data: pendingActions = [], isLoading: pendingLoading } = usePendingActions({
+  const {
+    data: statisticsData,
+    isLoading: statsLoading,
+    isError: statsIsError,
+    isFetching: statsFetching,
+    refetch: refetchStats,
+  } = useRetentionStatistics()
+  const {
+    data: pendingActionsData,
+    isLoading: pendingLoading,
+    isError: pendingIsError,
+    isFetching: pendingFetching,
+    refetch: refetchPending,
+  } = usePendingActions({
     limit: 10,
   })
-  const { data: expiringEntities = [], isLoading: expiringLoading } = useExpiringRecords({
+  const {
+    data: expiringEntitiesData,
+    isLoading: expiringLoading,
+    isError: expiringIsError,
+    isFetching: expiringFetching,
+    refetch: refetchExpiring,
+  } = useExpiringRecords({
     days: 30,
     limit: 10,
   })
-  const { data: executionLog = [], isLoading: logLoading } = useExecutionLog()
-  const { data: legalHolds = [], isLoading: holdsLoading } = useLegalHolds({ status: 'active' })
+  const {
+    data: executionLogData,
+    isLoading: logLoading,
+    isError: logIsError,
+    isFetching: logFetching,
+    refetch: refetchLog,
+  } = useExecutionLog()
+  // THE LEGAL-HOLDS REGION IS EXPECTED TO ERROR, AND MUST NOT BE "FIXED" HERE.
+  //
+  // Two independent reasons, both measured against deployed staging on 2026-08-16, and the
+  // outer one fires first:
+  //
+  //  1. PROXIMATE (what you see today). `GET /data-retention/legal-holds` answers
+  //     404 {"error":{"code":"NOT_FOUND","message_en":"Policy not found"}}. The edge function
+  //     resolves its resource from the second-to-last path segment, which is correct for
+  //     `/data-retention/policies/<id>` and wrong for every `/data-retention/<sub>` route — so
+  //     `legal-holds` is read as a POLICY ID and looked up in data_retention_policies. The same
+  //     collapse hits statistics, pending-actions, expiring and execution-log; only `policies`
+  //     survives it, because its sub-path equals the branch's own short-circuit value. That is an
+  //     edge-function defect, outside this plan's files; it is filed in 93-09-SUMMARY.md.
+  //  2. UNDERLYING (what you would hit next). Even once the route reaches the table,
+  //     public.legal_holds still carries a SELECT policy predicated on auth.users
+  //     (raw_user_meta_data->>'role'), which is unreadable by an ordinary caller. legal_holds is
+  //     one of the residual 11 policies of RLS-AUTHUSERS-01, owned by Phase 100 — deliberately
+  //     NOT covered by 93-04's four-policy migration.
+  //
+  // Widening 93-04's migration to cover this would be a REJECT, not a fix. The correct render
+  // here is an honest error, and tests/e2e/93-admin-surfaces-error.spec.ts asserts exactly that.
+  const {
+    data: legalHoldsData,
+    isLoading: holdsLoading,
+    isError: holdsIsError,
+    isFetching: holdsFetching,
+    refetch: refetchHolds,
+  } = useLegalHolds({ status: 'active' })
+
+  // The hooks own the `{ data: [...] }` envelope now (95-08): each queryFn unwraps it and THROWS
+  // on anything else, so a defined payload here is always an array the server actually sent. These
+  // defaults cover only the pending and error states, where TanStack has no body yet — they are
+  // never a coerce over a successful response, and "No policies" can only mean a truthful empty.
+  const policies: RetentionPolicy[] = policiesData ?? []
+  const statistics: RetentionStatistics[] = statisticsData ?? []
+  const pendingActions: PendingRetentionAction[] = pendingActionsData ?? []
+  const expiringEntities: ExpiringEntity[] = expiringEntitiesData ?? []
+  const executionLog: RetentionExecutionLog[] = executionLogData ?? []
+  const legalHolds: LegalHold[] = legalHoldsData ?? []
+
+  // A failed load knows nothing — the count is unknown, not zero. Each summary card reads the
+  // error flag of the query that actually backs it, so one broken region never zeroes the rest.
+  const figure = (isError: boolean, value: number): string => (isError ? '—' : String(value))
+  const countAria = (isError: boolean): string | undefined =>
+    isError ? t('common:errors.countUnavailable') : undefined
 
   // Mutations
   const createPolicy = useCreateRetentionPolicy()
@@ -170,21 +256,21 @@ function DataRetentionPage() {
 
   // Format retention period
   const formatRetentionPeriod = (days: number) => {
-    if (days === 0) return t('period.permanent', 'Permanent')
+    if (days === 0) return t('period.permanent')
     if (days >= 365) {
       const years = Math.floor(days / 365)
-      return `${years} ${years === 1 ? t('period.year', 'Year') : t('period.years', 'Years')}`
+      return `${years} ${years === 1 ? t('period.year') : t('period.years')}`
     }
-    return `${days} ${t('period.days', 'Days')}`
+    return `${days} ${t('period.days')}`
   }
 
   // Format action
   const formatAction = (action: RetentionActionType) => {
     const map: Record<RetentionActionType, string> = {
-      archive: t('action.archive', 'Archive'),
-      soft_delete: t('action.softDelete', 'Soft Delete'),
-      hard_delete: t('action.hardDelete', 'Hard Delete'),
-      anonymize: t('action.anonymize', 'Anonymize'),
+      archive: t('action.archive'),
+      soft_delete: t('action.softDelete'),
+      hard_delete: t('action.hardDelete'),
+      anonymize: t('action.anonymize'),
     }
     return map[action] || action
   }
@@ -209,17 +295,17 @@ function DataRetentionPage() {
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       <PageHeader
         icon={<Database className="h-6 w-6" />}
-        title={t('title', 'Data Retention Policies')}
-        subtitle={t('description', 'Configure data lifecycle, retention periods, and legal holds')}
+        title={t('title')}
+        subtitle={t('description')}
         actions={
           <div className="flex items-center gap-3">
             <Button variant="outline" onClick={() => setShowProcessorDialog(true)}>
               <Play className="h-4 w-4 me-2" />
-              {t('actions.runProcessor', 'Run Processor')}
+              {t('actions.runProcessor')}
             </Button>
             <Button onClick={() => setShowPolicyDialog(true)}>
               <Plus className="h-4 w-4 me-2" />
-              {t('actions.newPolicy', 'New Policy')}
+              {t('actions.newPolicy')}
             </Button>
           </div>
         }
@@ -234,9 +320,11 @@ function DataRetentionPage() {
                 <FileText className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{totalPolicies}</p>
+                <p className="text-2xl font-bold" aria-label={countAria(policiesIsError)}>
+                  {figure(policiesIsError, totalPolicies)}
+                </p>
                 <p className="text-sm text-muted-foreground">
-                  {t('stats.activePolicies', 'Active Policies')}
+                  {t('stats.activePolicies')}
                 </p>
               </div>
             </div>
@@ -250,9 +338,11 @@ function DataRetentionPage() {
                 <Lock className="h-5 w-5 text-danger" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{activeLegalHolds}</p>
+                <p className="text-2xl font-bold" aria-label={countAria(holdsIsError)}>
+                  {figure(holdsIsError, activeLegalHolds)}
+                </p>
                 <p className="text-sm text-muted-foreground">
-                  {t('stats.legalHolds', 'Legal Holds')}
+                  {t('stats.legalHolds')}
                 </p>
               </div>
             </div>
@@ -266,9 +356,11 @@ function DataRetentionPage() {
                 <Clock className="h-5 w-5 text-warning" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{totalPendingActions}</p>
+                <p className="text-2xl font-bold" aria-label={countAria(pendingIsError)}>
+                  {figure(pendingIsError, totalPendingActions)}
+                </p>
                 <p className="text-sm text-muted-foreground">
-                  {t('stats.pendingActions', 'Pending Actions')}
+                  {t('stats.pendingActions')}
                 </p>
               </div>
             </div>
@@ -282,9 +374,11 @@ function DataRetentionPage() {
                 <AlertTriangle className="h-5 w-5 text-warning" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{totalExpiringSoon}</p>
+                <p className="text-2xl font-bold" aria-label={countAria(expiringIsError)}>
+                  {figure(expiringIsError, totalExpiringSoon)}
+                </p>
                 <p className="text-sm text-muted-foreground">
-                  {t('stats.expiringSoon', 'Expiring Soon')}
+                  {t('stats.expiringSoon')}
                 </p>
               </div>
             </div>
@@ -298,9 +392,11 @@ function DataRetentionPage() {
                 <Shield className="h-5 w-5 text-accent" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{entitiesUnderHold}</p>
+                <p className="text-2xl font-bold" aria-label={countAria(statsIsError)}>
+                  {figure(statsIsError, entitiesUnderHold)}
+                </p>
                 <p className="text-sm text-muted-foreground">
-                  {t('stats.underHold', 'Under Hold')}
+                  {t('stats.underHold')}
                 </p>
               </div>
             </div>
@@ -308,544 +404,597 @@ function DataRetentionPage() {
         </Card>
       </div>
 
-      {/* Main Content Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-5 h-auto">
-          <TabsTrigger value="overview" className="gap-2 py-2">
-            <BarChart3 className="h-4 w-4" />
-            <span className="hidden sm:inline">{t('tabs.overview', 'Overview')}</span>
-          </TabsTrigger>
-          <TabsTrigger value="policies" className="gap-2 py-2">
-            <Settings className="h-4 w-4" />
-            <span className="hidden sm:inline">{t('tabs.policies', 'Policies')}</span>
-          </TabsTrigger>
-          <TabsTrigger value="legal-holds" className="gap-2 py-2">
-            <Lock className="h-4 w-4" />
-            <span className="hidden sm:inline">{t('tabs.legalHolds', 'Legal Holds')}</span>
-          </TabsTrigger>
-          <TabsTrigger value="pending" className="gap-2 py-2">
-            <Clock className="h-4 w-4" />
-            <span className="hidden sm:inline">{t('tabs.pending', 'Pending')}</span>
-          </TabsTrigger>
-          <TabsTrigger value="history" className="gap-2 py-2">
-            <History className="h-4 w-4" />
-            <span className="hidden sm:inline">{t('tabs.history', 'History')}</span>
-          </TabsTrigger>
-        </TabsList>
+      {/* Main Content Tabs.
 
-        {/* Overview Tab */}
-        <TabsContent value="overview" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Statistics by Entity Type */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="h-5 w-5" />
-                  {t('overview.byEntityType', 'Statistics by Entity Type')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {statsLoading ? (
-                  <div className="space-y-3">
-                    {[0, 1, 2].map((n) => (
-                      <Skeleton key={n} className="h-12 w-full" />
-                    ))}
-                  </div>
-                ) : statistics.length === 0 ? (
-                  <p className="text-muted-foreground text-center py-8">
-                    {t('overview.noStats', 'No retention tracking data yet')}
-                  </p>
-                ) : (
-                  <div className="space-y-4">
-                    {statistics.slice(0, 6).map((stat) => (
-                      <div key={stat.entity_type} className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium capitalize">
-                            {stat.entity_type.replace(/_/g, ' ')}
-                          </span>
-                          <span className="text-sm text-muted-foreground">
-                            {stat.total_tracked} {t('overview.tracked', 'tracked')}
-                          </span>
-                        </div>
-                        <div className="flex gap-2">
-                          {stat.under_hold > 0 && (
-                            <Badge variant="destructive" className="text-xs">
-                              {stat.under_hold} held
-                            </Badge>
-                          )}
-                          {stat.archived > 0 && (
-                            <Badge variant="secondary" className="text-xs">
-                              {stat.archived} archived
-                            </Badge>
-                          )}
-                          {stat.pending_action > 0 && (
-                            <Badge variant="outline" className="text-xs">
-                              {stat.pending_action} pending
-                            </Badge>
-                          )}
-                          {stat.expiring_soon > 0 && (
-                            <Badge className="text-xs bg-warning/10 text-warning">
-                              {stat.expiring_soon} expiring
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+          The primary query is `policies` — every other region describes what the policies DO, so
+          a rejected policy list makes the whole page meaningless and it collapses to the page-level
+          error state. Any OTHER region failing stays local to that region: the page still shows
+          the policies it can read, and each broken region says so where it stands. */}
+      {policiesIsError ? (
+        <QueryErrorState
+          variant="page"
+          onRetry={() => void refetchPolicies()}
+          isRetrying={policiesFetching}
+        />
+      ) : (
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-5 h-auto">
+            <TabsTrigger value="overview" className="gap-2 py-2">
+              <BarChart3 className="h-4 w-4" />
+              <span className="hidden sm:inline">{t('tabs.overview')}</span>
+            </TabsTrigger>
+            <TabsTrigger value="policies" className="gap-2 py-2">
+              <Settings className="h-4 w-4" />
+              <span className="hidden sm:inline">{t('tabs.policies')}</span>
+            </TabsTrigger>
+            <TabsTrigger value="legal-holds" className="gap-2 py-2">
+              <Lock className="h-4 w-4" />
+              <span className="hidden sm:inline">{t('tabs.legalHolds')}</span>
+            </TabsTrigger>
+            <TabsTrigger value="pending" className="gap-2 py-2">
+              <Clock className="h-4 w-4" />
+              <span className="hidden sm:inline">{t('tabs.pending')}</span>
+            </TabsTrigger>
+            <TabsTrigger value="history" className="gap-2 py-2">
+              <History className="h-4 w-4" />
+              <span className="hidden sm:inline">{t('tabs.history')}</span>
+            </TabsTrigger>
+          </TabsList>
 
-            {/* Recent Execution */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <History className="h-5 w-5" />
-                  {t('overview.recentExecutions', 'Recent Executions')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {logLoading ? (
-                  <div className="space-y-3">
-                    {[0, 1, 2].map((n) => (
-                      <Skeleton key={n} className="h-12 w-full" />
-                    ))}
-                  </div>
-                ) : executionLog.length === 0 ? (
-                  <p className="text-muted-foreground text-center py-8">
-                    {t('overview.noExecutions', 'No processor executions yet')}
-                  </p>
-                ) : (
-                  <div className="space-y-4">
-                    {executionLog.slice(0, 5).map((log) => (
-                      <div
-                        key={log.id}
-                        className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
-                      >
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <Badge
-                              variant={log.execution_type === 'dry_run' ? 'outline' : 'default'}
-                            >
-                              {log.execution_type}
-                            </Badge>
-                            <span className="text-sm text-muted-foreground">
-                              {formatDayFirstYear(log.started_at)}
-                            </span>
-                          </div>
-                          <p className="text-sm mt-1">
-                            {log.items_processed} processed, {log.items_archived} archived,{' '}
-                            {log.items_deleted} deleted
-                          </p>
-                        </div>
-                        {log.completed_at ? (
-                          <CheckCircle2 className="h-5 w-5 text-success" />
-                        ) : (
-                          <RefreshCw className="h-5 w-5 text-warning animate-spin" />
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Expiring Soon Alert */}
-          {totalExpiringSoon > 0 && (
-            <Alert>
-              <AlertTriangle className="h-4 w-4" />
-              <AlertTitle>{t('overview.expiringAlert', 'Entities Expiring Soon')}</AlertTitle>
-              <AlertDescription>
-                {t(
-                  'overview.expiringAlertDesc',
-                  '{{count}} entities will expire within the next 30 days. Review them in the Pending tab.',
-                  { count: totalExpiringSoon },
-                )}
-              </AlertDescription>
-            </Alert>
-          )}
-        </TabsContent>
-
-        {/* Policies Tab */}
-        <TabsContent value="policies">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle>{t('policies.title', 'Retention Policies')}</CardTitle>
-                  <CardDescription>
-                    {t(
-                      'policies.description',
-                      'Configure how long data is retained and what happens when it expires',
-                    )}
-                  </CardDescription>
-                </div>
-                <Button onClick={() => setShowPolicyDialog(true)}>
-                  <Plus className="h-4 w-4 me-2" />
-                  {t('actions.newPolicy', 'New Policy')}
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {policiesLoading ? (
-                <div className="space-y-3">
-                  {[0, 1, 2, 3, 4].map((n) => (
-                    <Skeleton key={n} className="h-16 w-full" />
-                  ))}
-                </div>
-              ) : policies.length === 0 ? (
-                <div className="text-center py-12">
-                  <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-lg font-medium">{t('policies.empty', 'No Policies')}</p>
-                  <p className="text-muted-foreground mb-4">
-                    {t(
-                      'policies.emptyDesc',
-                      'Create your first retention policy to start managing data lifecycle',
-                    )}
-                  </p>
-                  <Button onClick={() => setShowPolicyDialog(true)}>
-                    <Plus className="h-4 w-4 me-2" />
-                    {t('actions.newPolicy', 'Create Policy')}
-                  </Button>
-                </div>
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>{t('policies.name', 'Name')}</TableHead>
-                      <TableHead>{t('policies.entityType', 'Entity Type')}</TableHead>
-                      <TableHead>{t('policies.retention', 'Retention')}</TableHead>
-                      <TableHead>{t('policies.action', 'Action')}</TableHead>
-                      <TableHead>{t('policies.status', 'Status')}</TableHead>
-                      <TableHead className="text-end">{t('policies.actions', 'Actions')}</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {policies.map((policy) => (
-                      <TableRow key={policy.id}>
-                        <TableCell>
-                          <div>
-                            <p className="font-medium">{policy.name_en}</p>
-                            <p className="text-sm text-muted-foreground">{policy.code}</p>
-                          </div>
-                        </TableCell>
-                        <TableCell className="capitalize">
-                          {policy.entity_type.replace(/_/g, ' ')}
-                          {policy.document_class && (
-                            <span className="text-muted-foreground">
-                              {' '}
-                              / {policy.document_class}
-                            </span>
-                          )}
-                        </TableCell>
-                        <TableCell>{formatRetentionPeriod(policy.retention_days)}</TableCell>
-                        <TableCell>
-                          <Badge variant="outline">{formatAction(policy.action)}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Badge className={getStatusColor(policy.status)}>{policy.status}</Badge>
-                        </TableCell>
-                        <TableCell className="text-end">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => {
-                              setSelectedPolicy(policy)
-                              setShowPolicyDialog(true)
-                            }}
-                          >
-                            {t('actions.edit', 'Edit')}
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Legal Holds Tab */}
-        <TabsContent value="legal-holds">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
+          {/* Overview Tab */}
+          <TabsContent value="overview" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Statistics by Entity Type */}
+              <Card>
+                <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Lock className="h-5 w-5" />
-                    {t('legalHolds.title', 'Legal Holds')}
+                    <BarChart3 className="h-5 w-5" />
+                    {t('overview.byEntityType')}
                   </CardTitle>
-                  <CardDescription>
-                    {t(
-                      'legalHolds.description',
-                      'Prevent data from being archived or deleted during legal proceedings',
-                    )}
-                  </CardDescription>
-                </div>
-                <Button onClick={() => setShowLegalHoldDialog(true)}>
-                  <Plus className="h-4 w-4 me-2" />
-                  {t('actions.newLegalHold', 'New Legal Hold')}
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {holdsLoading ? (
-                <div className="space-y-3">
-                  {[0, 1, 2].map((n) => (
-                    <Skeleton key={n} className="h-16 w-full" />
-                  ))}
-                </div>
-              ) : legalHolds.length === 0 ? (
-                <div className="text-center py-12">
-                  <Lock className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-lg font-medium">{t('legalHolds.empty', 'No Legal Holds')}</p>
-                  <p className="text-muted-foreground mb-4">
-                    {t(
-                      'legalHolds.emptyDesc',
-                      'Legal holds prevent data deletion during legal proceedings',
-                    )}
-                  </p>
-                  <Button onClick={() => setShowLegalHoldDialog(true)}>
-                    <Plus className="h-4 w-4 me-2" />
-                    {t('actions.newLegalHold', 'Create Legal Hold')}
-                  </Button>
-                </div>
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>{t('legalHolds.reference', 'Reference')}</TableHead>
-                      <TableHead>{t('legalHolds.name', 'Name')}</TableHead>
-                      <TableHead>{t('legalHolds.matter', 'Legal Matter')}</TableHead>
-                      <TableHead>{t('legalHolds.effectiveDate', 'Effective Date')}</TableHead>
-                      <TableHead>{t('legalHolds.status', 'Status')}</TableHead>
-                      <TableHead className="text-end">
-                        {t('legalHolds.actions', 'Actions')}
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {legalHolds.map((hold) => (
-                      <TableRow key={hold.id}>
-                        <TableCell className="font-mono text-sm">{hold.reference_number}</TableCell>
-                        <TableCell>
-                          <p className="font-medium">{hold.name_en}</p>
-                          {hold.entity_type && (
-                            <p className="text-sm text-muted-foreground capitalize">
-                              {hold.entity_type.replace(/_/g, ' ')}
-                            </p>
-                          )}
-                        </TableCell>
-                        <TableCell>{hold.legal_matter || '-'}</TableCell>
-                        <TableCell>{formatDayFirstYear(hold.effective_date)}</TableCell>
-                        <TableCell>
-                          <Badge className={getStatusColor(hold.status)}>{hold.status}</Badge>
-                        </TableCell>
-                        <TableCell className="text-end">
-                          {hold.status === 'active' && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => releaseLegalHold.mutate({ id: hold.id })}
-                              disabled={releaseLegalHold.isPending}
-                            >
-                              <Unlock className="h-4 w-4 me-2" />
-                              {t('actions.release', 'Release')}
-                            </Button>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Pending Actions Tab */}
-        <TabsContent value="pending" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Pending Retention Actions */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Clock className="h-5 w-5" />
-                  {t('pending.actions', 'Pending Retention Actions')}
-                </CardTitle>
-                <CardDescription>
-                  {t('pending.actionsDesc', 'Entities that have exceeded their retention period')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {pendingLoading ? (
-                  <div className="space-y-3">
-                    {[0, 1, 2].map((n) => (
-                      <Skeleton key={n} className="h-12 w-full" />
-                    ))}
-                  </div>
-                ) : pendingActions.length === 0 ? (
-                  <p className="text-muted-foreground text-center py-8">
-                    {t('pending.noActions', 'No pending actions')}
-                  </p>
-                ) : (
-                  <div className="space-y-3">
-                    {pendingActions.map((action) => (
-                      <div
-                        key={action.entity_id}
-                        className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
-                      >
-                        <div>
-                          <p className="font-medium capitalize">
-                            {action.entity_type.replace(/_/g, ' ')}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {action.policy_name_en} • {formatAction(action.action)}
-                          </p>
+                </CardHeader>
+                <CardContent>
+                  {statsLoading ? (
+                    <div className="space-y-3">
+                      {[0, 1, 2].map((n) => (
+                        <Skeleton key={n} className="h-12 w-full" />
+                      ))}
+                    </div>
+                  ) : statsIsError ? (
+                    <QueryErrorState
+                      variant="inline"
+                      onRetry={() => void refetchStats()}
+                      isRetrying={statsFetching}
+                    />
+                  ) : statistics.length === 0 ? (
+                    <p className="text-muted-foreground text-center py-8">
+                      {t('overview.noStats')}
+                    </p>
+                  ) : (
+                    <div className="space-y-4">
+                      {statistics.slice(0, 6).map((stat) => (
+                        <div key={stat.entity_type} className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium capitalize">
+                              {stat.entity_type.replace(/_/g, ' ')}
+                            </span>
+                            <span className="text-sm text-muted-foreground">
+                              {stat.total_tracked} {t('overview.tracked')}
+                            </span>
+                          </div>
+                          <div className="flex gap-2">
+                            {stat.under_hold > 0 && (
+                              <Badge variant="destructive" className="text-xs">
+                                {stat.under_hold} held
+                              </Badge>
+                            )}
+                            {stat.archived > 0 && (
+                              <Badge variant="secondary" className="text-xs">
+                                {stat.archived} archived
+                              </Badge>
+                            )}
+                            {stat.pending_action > 0 && (
+                              <Badge variant="outline" className="text-xs">
+                                {stat.pending_action} pending
+                              </Badge>
+                            )}
+                            {stat.expiring_soon > 0 && (
+                              <Badge className="text-xs bg-warning/10 text-warning">
+                                {stat.expiring_soon} expiring
+                              </Badge>
+                            )}
+                          </div>
                         </div>
-                        <Badge variant="destructive">
-                          {Math.abs(action.days_until_expiration)} days overdue
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
 
-            {/* Expiring Soon */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5" />
-                  {t('pending.expiring', 'Expiring Soon')}
-                </CardTitle>
-                <CardDescription>
-                  {t('pending.expiringDesc', 'Entities expiring within 30 days')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {expiringLoading ? (
-                  <div className="space-y-3">
-                    {[0, 1, 2].map((n) => (
-                      <Skeleton key={n} className="h-12 w-full" />
-                    ))}
-                  </div>
-                ) : expiringEntities.length === 0 ? (
-                  <p className="text-muted-foreground text-center py-8">
-                    {t('pending.noExpiring', 'No entities expiring soon')}
-                  </p>
-                ) : (
-                  <div className="space-y-3">
-                    {expiringEntities.map((entity) => (
-                      <div
-                        key={entity.entity_id}
-                        className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
-                      >
-                        <div>
-                          <p className="font-medium capitalize">
-                            {entity.entity_type.replace(/_/g, ' ')}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {entity.policy_name_en} • {formatAction(entity.action)}
-                          </p>
-                        </div>
-                        <Badge
-                          variant="outline"
-                          className="bg-warning/5 text-warning dark:bg-warning/30"
+              {/* Recent Execution */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <History className="h-5 w-5" />
+                    {t('overview.recentExecutions')}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {logLoading ? (
+                    <div className="space-y-3">
+                      {[0, 1, 2].map((n) => (
+                        <Skeleton key={n} className="h-12 w-full" />
+                      ))}
+                    </div>
+                  ) : logIsError ? (
+                    <QueryErrorState
+                      variant="inline"
+                      onRetry={() => void refetchLog()}
+                      isRetrying={logFetching}
+                    />
+                  ) : executionLog.length === 0 ? (
+                    <p className="text-muted-foreground text-center py-8">
+                      {t('overview.noExecutions')}
+                    </p>
+                  ) : (
+                    <div className="space-y-4">
+                      {executionLog.slice(0, 5).map((log) => (
+                        <div
+                          key={log.id}
+                          className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
                         >
-                          {entity.days_until_expiration} days left
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        {/* History Tab */}
-        <TabsContent value="history">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <History className="h-5 w-5" />
-                {t('history.title', 'Execution History')}
-              </CardTitle>
-              <CardDescription>
-                {t('history.description', 'Log of all retention processor executions')}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {logLoading ? (
-                <div className="space-y-3">
-                  {[0, 1, 2, 3, 4].map((n) => (
-                    <Skeleton key={n} className="h-16 w-full" />
-                  ))}
-                </div>
-              ) : executionLog.length === 0 ? (
-                <div className="text-center py-12">
-                  <History className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-lg font-medium">
-                    {t('history.empty', 'No Execution History')}
-                  </p>
-                  <p className="text-muted-foreground">
-                    {t('history.emptyDesc', 'Run the retention processor to see execution history')}
-                  </p>
-                </div>
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>{t('history.date', 'Date')}</TableHead>
-                      <TableHead>{t('history.type', 'Type')}</TableHead>
-                      <TableHead>{t('history.processed', 'Processed')}</TableHead>
-                      <TableHead>{t('history.archived', 'Archived')}</TableHead>
-                      <TableHead>{t('history.deleted', 'Deleted')}</TableHead>
-                      <TableHead>{t('history.warned', 'Warned')}</TableHead>
-                      <TableHead>{t('history.errors', 'Errors')}</TableHead>
-                      <TableHead>{t('history.status', 'Status')}</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {executionLog.map((log) => (
-                      <TableRow key={log.id}>
-                        <TableCell>{formatDateTime(log.started_at)}</TableCell>
-                        <TableCell>
-                          <Badge variant={log.execution_type === 'dry_run' ? 'outline' : 'default'}>
-                            {log.execution_type}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{log.items_processed}</TableCell>
-                        <TableCell>{log.items_archived}</TableCell>
-                        <TableCell>{log.items_deleted}</TableCell>
-                        <TableCell>{log.items_warned}</TableCell>
-                        <TableCell>
-                          {log.errors.length > 0 ? (
-                            <Badge variant="destructive">{log.errors.length}</Badge>
-                          ) : (
-                            <span className="text-muted-foreground">0</span>
-                          )}
-                        </TableCell>
-                        <TableCell>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <Badge
+                                variant={log.execution_type === 'dry_run' ? 'outline' : 'default'}
+                              >
+                                {log.execution_type}
+                              </Badge>
+                              <span className="text-sm text-muted-foreground">
+                                {formatDayFirstYear(log.started_at)}
+                              </span>
+                            </div>
+                            <p className="text-sm mt-1">
+                              {log.items_processed} processed, {log.items_archived} archived,{' '}
+                              {log.items_deleted} deleted
+                            </p>
+                          </div>
                           {log.completed_at ? (
                             <CheckCircle2 className="h-5 w-5 text-success" />
                           ) : (
                             <RefreshCw className="h-5 w-5 text-warning animate-spin" />
                           )}
-                        </TableCell>
-                      </TableRow>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Expiring Soon Alert */}
+            {totalExpiringSoon > 0 && (
+              <Alert>
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>{t('overview.expiringAlert')}</AlertTitle>
+                <AlertDescription>
+                  {t(
+                    'overview.expiringAlertDesc',
+                    { count: totalExpiringSoon },
+                  )}
+                </AlertDescription>
+              </Alert>
+            )}
+          </TabsContent>
+
+          {/* Policies Tab */}
+          <TabsContent value="policies">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>{t('policies.title')}</CardTitle>
+                    <CardDescription>
+                      {t(
+                        'policies.description',
+                      )}
+                    </CardDescription>
+                  </div>
+                  <Button onClick={() => setShowPolicyDialog(true)}>
+                    <Plus className="h-4 w-4 me-2" />
+                    {t('actions.newPolicy')}
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {policiesLoading ? (
+                  <div className="space-y-3">
+                    {[0, 1, 2, 3, 4].map((n) => (
+                      <Skeleton key={n} className="h-16 w-full" />
                     ))}
-                  </TableBody>
-                </Table>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+                  </div>
+                ) : policies.length === 0 ? (
+                  <div className="text-center py-12">
+                    <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                    <p className="text-lg font-medium">{t('policies.empty')}</p>
+                    <p className="text-muted-foreground mb-4">
+                      {t(
+                        'policies.emptyDesc',
+                      )}
+                    </p>
+                    <Button onClick={() => setShowPolicyDialog(true)}>
+                      <Plus className="h-4 w-4 me-2" />
+                      {t('actions.newPolicy')}
+                    </Button>
+                  </div>
+                ) : (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>{t('policies.name')}</TableHead>
+                        <TableHead>{t('policies.entityType')}</TableHead>
+                        <TableHead>{t('policies.retention')}</TableHead>
+                        <TableHead>{t('policies.action')}</TableHead>
+                        <TableHead>{t('policies.status')}</TableHead>
+                        <TableHead className="text-end">
+                          {t('policies.actions')}
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {policies.map((policy) => (
+                        <TableRow key={policy.id}>
+                          <TableCell>
+                            <div>
+                              <p className="font-medium">{policy.name_en}</p>
+                              <p className="text-sm text-muted-foreground">{policy.code}</p>
+                            </div>
+                          </TableCell>
+                          <TableCell className="capitalize">
+                            {policy.entity_type.replace(/_/g, ' ')}
+                            {policy.document_class && (
+                              <span className="text-muted-foreground">
+                                {' '}
+                                / {policy.document_class}
+                              </span>
+                            )}
+                          </TableCell>
+                          <TableCell>{formatRetentionPeriod(policy.retention_days)}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline">{formatAction(policy.action)}</Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge className={getStatusColor(policy.status)}>{policy.status}</Badge>
+                          </TableCell>
+                          <TableCell className="text-end">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setSelectedPolicy(policy)
+                                setShowPolicyDialog(true)
+                              }}
+                            >
+                              {t('actions.edit')}
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Legal Holds Tab */}
+          <TabsContent value="legal-holds">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <Lock className="h-5 w-5" />
+                      {t('legalHolds.title')}
+                    </CardTitle>
+                    <CardDescription>
+                      {t(
+                        'legalHolds.description',
+                      )}
+                    </CardDescription>
+                  </div>
+                  <Button onClick={() => setShowLegalHoldDialog(true)}>
+                    <Plus className="h-4 w-4 me-2" />
+                    {t('actions.newLegalHold')}
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {holdsLoading ? (
+                  <div className="space-y-3">
+                    {[0, 1, 2].map((n) => (
+                      <Skeleton key={n} className="h-16 w-full" />
+                    ))}
+                  </div>
+                ) : holdsIsError ? (
+                  /* The expected render until Phase 100 — see the destructure comment above. */
+                  <QueryErrorState
+                    variant="inline"
+                    onRetry={() => void refetchHolds()}
+                    isRetrying={holdsFetching}
+                  />
+                ) : legalHolds.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Lock className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                    <p className="text-lg font-medium">{t('legalHolds.empty')}</p>
+                    <p className="text-muted-foreground mb-4">
+                      {t(
+                        'legalHolds.emptyDesc',
+                      )}
+                    </p>
+                    <Button onClick={() => setShowLegalHoldDialog(true)}>
+                      <Plus className="h-4 w-4 me-2" />
+                      {t('actions.newLegalHold')}
+                    </Button>
+                  </div>
+                ) : (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>{t('legalHolds.reference')}</TableHead>
+                        <TableHead>{t('legalHolds.name')}</TableHead>
+                        <TableHead>{t('legalHolds.matter')}</TableHead>
+                        <TableHead>{t('legalHolds.effectiveDate')}</TableHead>
+                        <TableHead>{t('legalHolds.status')}</TableHead>
+                        <TableHead className="text-end">
+                          {t('legalHolds.actions')}
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {legalHolds.map((hold) => (
+                        <TableRow key={hold.id}>
+                          <TableCell className="font-mono text-sm">
+                            {hold.reference_number}
+                          </TableCell>
+                          <TableCell>
+                            <p className="font-medium">{hold.name_en}</p>
+                            {hold.entity_type && (
+                              <p className="text-sm text-muted-foreground capitalize">
+                                {hold.entity_type.replace(/_/g, ' ')}
+                              </p>
+                            )}
+                          </TableCell>
+                          <TableCell>{hold.legal_matter || '-'}</TableCell>
+                          <TableCell>{formatDayFirstYear(hold.effective_date)}</TableCell>
+                          <TableCell>
+                            <Badge className={getStatusColor(hold.status)}>{hold.status}</Badge>
+                          </TableCell>
+                          <TableCell className="text-end">
+                            {hold.status === 'active' && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => releaseLegalHold.mutate({ id: hold.id })}
+                                disabled={releaseLegalHold.isPending}
+                              >
+                                <Unlock className="h-4 w-4 me-2" />
+                                {t('actions.release')}
+                              </Button>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Pending Actions Tab */}
+          <TabsContent value="pending" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Pending Retention Actions */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Clock className="h-5 w-5" />
+                    {t('pending.actions')}
+                  </CardTitle>
+                  <CardDescription>
+                    {t('pending.actionsDesc')}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {pendingLoading ? (
+                    <div className="space-y-3">
+                      {[0, 1, 2].map((n) => (
+                        <Skeleton key={n} className="h-12 w-full" />
+                      ))}
+                    </div>
+                  ) : pendingIsError ? (
+                    <QueryErrorState
+                      variant="inline"
+                      onRetry={() => void refetchPending()}
+                      isRetrying={pendingFetching}
+                    />
+                  ) : pendingActions.length === 0 ? (
+                    <p className="text-muted-foreground text-center py-8">
+                      {t('pending.noActions')}
+                    </p>
+                  ) : (
+                    <div className="space-y-3">
+                      {pendingActions.map((action) => (
+                        <div
+                          key={action.entity_id}
+                          className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
+                        >
+                          <div>
+                            <p className="font-medium capitalize">
+                              {action.entity_type.replace(/_/g, ' ')}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {action.policy_name_en} • {formatAction(action.action)}
+                            </p>
+                          </div>
+                          <Badge variant="destructive">
+                            {Math.abs(action.days_until_expiration)} days overdue
+                          </Badge>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Expiring Soon */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <AlertTriangle className="h-5 w-5" />
+                    {t('pending.expiring')}
+                  </CardTitle>
+                  <CardDescription>
+                    {t('pending.expiringDesc')}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {expiringLoading ? (
+                    <div className="space-y-3">
+                      {[0, 1, 2].map((n) => (
+                        <Skeleton key={n} className="h-12 w-full" />
+                      ))}
+                    </div>
+                  ) : expiringIsError ? (
+                    <QueryErrorState
+                      variant="inline"
+                      onRetry={() => void refetchExpiring()}
+                      isRetrying={expiringFetching}
+                    />
+                  ) : expiringEntities.length === 0 ? (
+                    <p className="text-muted-foreground text-center py-8">
+                      {t('pending.noExpiring')}
+                    </p>
+                  ) : (
+                    <div className="space-y-3">
+                      {expiringEntities.map((entity) => (
+                        <div
+                          key={entity.entity_id}
+                          className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
+                        >
+                          <div>
+                            <p className="font-medium capitalize">
+                              {entity.entity_type.replace(/_/g, ' ')}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {entity.policy_name_en} • {formatAction(entity.action)}
+                            </p>
+                          </div>
+                          <Badge
+                            variant="outline"
+                            className="bg-warning/5 text-warning dark:bg-warning/30"
+                          >
+                            {entity.days_until_expiration} days left
+                          </Badge>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* History Tab */}
+          <TabsContent value="history">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <History className="h-5 w-5" />
+                  {t('history.title')}
+                </CardTitle>
+                <CardDescription>
+                  {t('history.description')}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {logLoading ? (
+                  <div className="space-y-3">
+                    {[0, 1, 2, 3, 4].map((n) => (
+                      <Skeleton key={n} className="h-16 w-full" />
+                    ))}
+                  </div>
+                ) : logIsError ? (
+                  <QueryErrorState
+                    variant="inline"
+                    onRetry={() => void refetchLog()}
+                    isRetrying={logFetching}
+                  />
+                ) : executionLog.length === 0 ? (
+                  <div className="text-center py-12">
+                    <History className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                    <p className="text-lg font-medium">
+                      {t('history.empty')}
+                    </p>
+                    <p className="text-muted-foreground">
+                      {t(
+                        'history.emptyDesc',
+                      )}
+                    </p>
+                  </div>
+                ) : (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>{t('history.date')}</TableHead>
+                        <TableHead>{t('history.type')}</TableHead>
+                        <TableHead>{t('history.processed')}</TableHead>
+                        <TableHead>{t('history.archived')}</TableHead>
+                        <TableHead>{t('history.deleted')}</TableHead>
+                        <TableHead>{t('history.warned')}</TableHead>
+                        <TableHead>{t('history.errors')}</TableHead>
+                        <TableHead>{t('history.status')}</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {executionLog.map((log) => (
+                        <TableRow key={log.id}>
+                          <TableCell>{formatDateTime(log.started_at)}</TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={log.execution_type === 'dry_run' ? 'outline' : 'default'}
+                            >
+                              {log.execution_type}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>{log.items_processed}</TableCell>
+                          <TableCell>{log.items_archived}</TableCell>
+                          <TableCell>{log.items_deleted}</TableCell>
+                          <TableCell>{log.items_warned}</TableCell>
+                          <TableCell>
+                            {log.errors.length > 0 ? (
+                              <Badge variant="destructive">{log.errors.length}</Badge>
+                            ) : (
+                              <span className="text-muted-foreground">0</span>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {log.completed_at ? (
+                              <CheckCircle2 className="h-5 w-5 text-success" />
+                            ) : (
+                              <RefreshCw className="h-5 w-5 text-warning animate-spin" />
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      )}
 
       {/* Policy Dialog */}
       <PolicyDialog
@@ -941,13 +1090,12 @@ function PolicyDialog({
         <DialogHeader>
           <DialogTitle>
             {policy
-              ? t('dialog.editPolicy', 'Edit Policy')
-              : t('dialog.newPolicy', 'New Retention Policy')}
+              ? t('dialog.editPolicy')
+              : t('dialog.newPolicy')}
           </DialogTitle>
           <DialogDescription>
             {t(
               'dialog.policyDesc',
-              'Configure how long data should be retained and what happens when it expires',
             )}
           </DialogDescription>
         </DialogHeader>
@@ -955,7 +1103,7 @@ function PolicyDialog({
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>{t('dialog.code', 'Policy Code')}</Label>
+              <Label>{t('dialog.code')}</Label>
               <Input
                 placeholder="POL-DOC-3Y"
                 value={formData.code || policy?.code || ''}
@@ -963,7 +1111,7 @@ function PolicyDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label>{t('dialog.priority', 'Priority')}</Label>
+              <Label>{t('dialog.priority')}</Label>
               <Input
                 type="number"
                 placeholder="100"
@@ -975,14 +1123,14 @@ function PolicyDialog({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>{t('dialog.nameEn', 'Name (English)')}</Label>
+              <Label>{t('dialog.nameEn')}</Label>
               <Input
                 value={formData.name_en || policy?.name_en || ''}
                 onChange={(e) => setFormData({ ...formData, name_en: e.target.value })}
               />
             </div>
             <div className="space-y-2">
-              <Label>{t('dialog.nameAr', 'Name (Arabic)')}</Label>
+              <Label>{t('dialog.nameAr')}</Label>
               <Input
                 value={formData.name_ar || policy?.name_ar || ''}
                 onChange={(e) => setFormData({ ...formData, name_ar: e.target.value })}
@@ -993,7 +1141,7 @@ function PolicyDialog({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>{t('dialog.entityType', 'Entity Type')}</Label>
+              <Label>{t('dialog.entityType')}</Label>
               <Select
                 value={formData.entity_type || policy?.entity_type || ''}
                 onValueChange={(v) =>
@@ -1013,7 +1161,7 @@ function PolicyDialog({
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>{t('dialog.documentClass', 'Document Class (Optional)')}</Label>
+              <Label>{t('dialog.documentClass')}</Label>
               <Select
                 value={formData.document_class || policy?.document_class || '__none__'}
                 onValueChange={(v) =>
@@ -1040,7 +1188,7 @@ function PolicyDialog({
 
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label>{t('dialog.retentionDays', 'Retention Days')}</Label>
+              <Label>{t('dialog.retentionDays')}</Label>
               <Input
                 type="number"
                 placeholder="0 = Permanent"
@@ -1052,7 +1200,7 @@ function PolicyDialog({
               <p className="text-xs text-muted-foreground">0 = Permanent</p>
             </div>
             <div className="space-y-2">
-              <Label>{t('dialog.warningDays', 'Warning Days')}</Label>
+              <Label>{t('dialog.warningDays')}</Label>
               <Input
                 type="number"
                 value={formData.warning_days ?? policy?.warning_days ?? 30}
@@ -1062,7 +1210,7 @@ function PolicyDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label>{t('dialog.action', 'Action')}</Label>
+              <Label>{t('dialog.action')}</Label>
               <Select
                 value={formData.action || policy?.action || 'archive'}
                 onValueChange={(v) =>
@@ -1086,7 +1234,7 @@ function PolicyDialog({
           <Separator />
 
           <div className="space-y-2">
-            <Label>{t('dialog.regulatoryReference', 'Regulatory Reference (Optional)')}</Label>
+            <Label>{t('dialog.regulatoryReference')}</Label>
             <Input
               placeholder="ISO 27001, GDPR, etc."
               value={formData.regulatory_reference || policy?.regulatory_reference || ''}
@@ -1095,7 +1243,7 @@ function PolicyDialog({
           </div>
 
           <div className="space-y-2">
-            <Label>{t('dialog.complianceNotes', 'Compliance Notes')}</Label>
+            <Label>{t('dialog.complianceNotes')}</Label>
             <Textarea
               placeholder="Additional compliance information..."
               value={formData.compliance_notes || policy?.compliance_notes || ''}
@@ -1106,10 +1254,10 @@ function PolicyDialog({
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {t('dialog.cancel', 'Cancel')}
+            {t('dialog.cancel')}
           </Button>
           <Button onClick={handleSubmit} disabled={isLoading}>
-            {isLoading ? t('dialog.saving', 'Saving...') : t('dialog.save', 'Save Policy')}
+            {isLoading ? t('dialog.saving') : t('dialog.save')}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -1167,18 +1315,17 @@ function LegalHoldDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{t('dialog.newLegalHold', 'New Legal Hold')}</DialogTitle>
+          <DialogTitle>{t('dialog.newLegalHold')}</DialogTitle>
           <DialogDescription>
             {t(
               'dialog.legalHoldDesc',
-              'Create a legal hold to prevent data from being archived or deleted',
             )}
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
           <div className="space-y-2">
-            <Label>{t('dialog.reference', 'Reference Number')}</Label>
+            <Label>{t('dialog.reference')}</Label>
             <Input
               placeholder="LH-2026-001"
               value={formData.reference_number || ''}
@@ -1188,14 +1335,14 @@ function LegalHoldDialog({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>{t('dialog.nameEn', 'Name (English)')}</Label>
+              <Label>{t('dialog.nameEn')}</Label>
               <Input
                 value={formData.name_en || ''}
                 onChange={(e) => setFormData({ ...formData, name_en: e.target.value })}
               />
             </div>
             <div className="space-y-2">
-              <Label>{t('dialog.nameAr', 'Name (Arabic)')}</Label>
+              <Label>{t('dialog.nameAr')}</Label>
               <Input
                 value={formData.name_ar || ''}
                 onChange={(e) => setFormData({ ...formData, name_ar: e.target.value })}
@@ -1205,7 +1352,7 @@ function LegalHoldDialog({
           </div>
 
           <div className="space-y-2">
-            <Label>{t('dialog.legalMatter', 'Legal Matter')}</Label>
+            <Label>{t('dialog.legalMatter')}</Label>
             <Input
               placeholder="Case name or matter reference"
               value={formData.legal_matter || ''}
@@ -1215,14 +1362,14 @@ function LegalHoldDialog({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>{t('dialog.reasonEn', 'Reason (English)')}</Label>
+              <Label>{t('dialog.reasonEn')}</Label>
               <Textarea
                 value={formData.reason_en || ''}
                 onChange={(e) => setFormData({ ...formData, reason_en: e.target.value })}
               />
             </div>
             <div className="space-y-2">
-              <Label>{t('dialog.reasonAr', 'Reason (Arabic)')}</Label>
+              <Label>{t('dialog.reasonAr')}</Label>
               <Textarea
                 value={formData.reason_ar || ''}
                 onChange={(e) => setFormData({ ...formData, reason_ar: e.target.value })}
@@ -1232,7 +1379,7 @@ function LegalHoldDialog({
           </div>
 
           <div className="space-y-2">
-            <Label>{t('dialog.entityType', 'Entity Type (Optional)')}</Label>
+            <Label>{t('dialog.entityType')}</Label>
             <Select
               value={formData.entity_type || '__all__'}
               onValueChange={(v) =>
@@ -1264,18 +1411,18 @@ function LegalHoldDialog({
                 setFormData({ ...formData, notify_custodians: checked })
               }
             />
-            <Label htmlFor="notify">{t('dialog.notifyCustodians', 'Notify custodians')}</Label>
+            <Label htmlFor="notify">{t('dialog.notifyCustodians')}</Label>
           </div>
         </div>
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {t('dialog.cancel', 'Cancel')}
+            {t('dialog.cancel')}
           </Button>
           <Button onClick={handleSubmit} disabled={isLoading}>
             {isLoading
-              ? t('dialog.creating', 'Creating...')
-              : t('dialog.createHold', 'Create Legal Hold')}
+              ? t('dialog.creating')
+              : t('dialog.createHold')}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -1307,20 +1454,19 @@ function ProcessorDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t('processor.title', 'Run Retention Processor')}</DialogTitle>
+          <DialogTitle>{t('processor.title')}</DialogTitle>
           <DialogDescription>
-            {t('processor.description', 'Execute retention policies on expired entities')}
+            {t('processor.description')}
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
           <Alert>
             <AlertTriangle className="h-4 w-4" />
-            <AlertTitle>{t('processor.warning', 'Warning')}</AlertTitle>
+            <AlertTitle>{t('processor.warning')}</AlertTitle>
             <AlertDescription>
               {t(
                 'processor.warningDesc',
-                'Running the processor will archive or delete expired data. Use dry run first to preview changes.',
               )}
             </AlertDescription>
           </Alert>
@@ -1331,7 +1477,7 @@ function ProcessorDialog({
               checked={config.dry_run}
               onCheckedChange={(checked) => setConfig({ ...config, dry_run: checked })}
             />
-            <Label htmlFor="dry-run">{t('processor.dryRun', 'Dry Run (Preview Only)')}</Label>
+            <Label htmlFor="dry-run">{t('processor.dryRun')}</Label>
           </div>
 
           <div className="flex items-center space-x-2">
@@ -1341,12 +1487,12 @@ function ProcessorDialog({
               onCheckedChange={(checked) => setConfig({ ...config, send_warnings: checked })}
             />
             <Label htmlFor="send-warnings">
-              {t('processor.sendWarnings', 'Send expiration warnings')}
+              {t('processor.sendWarnings')}
             </Label>
           </div>
 
           <div className="space-y-2">
-            <Label>{t('processor.batchSize', 'Batch Size')}</Label>
+            <Label>{t('processor.batchSize')}</Label>
             <Input
               type="number"
               value={config.batch_size}
@@ -1357,7 +1503,7 @@ function ProcessorDialog({
           </div>
 
           <div className="space-y-2">
-            <Label>{t('processor.entityType', 'Entity Type (Optional)')}</Label>
+            <Label>{t('processor.entityType')}</Label>
             <Select
               value={config.entity_type || '__all__'}
               onValueChange={(v) =>
@@ -1384,20 +1530,20 @@ function ProcessorDialog({
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {t('dialog.cancel', 'Cancel')}
+            {t('dialog.cancel')}
           </Button>
           <Button onClick={() => onRun(config)} disabled={isLoading}>
             {isLoading ? (
               <>
                 <RefreshCw className="h-4 w-4 me-2 animate-spin" />
-                {t('processor.running', 'Running...')}
+                {t('processor.running')}
               </>
             ) : (
               <>
                 <Play className="h-4 w-4 me-2" />
                 {config.dry_run
-                  ? t('processor.preview', 'Preview')
-                  : t('processor.run', 'Run Processor')}
+                  ? t('processor.preview')
+                  : t('processor.run')}
               </>
             )}
           </Button>

@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { getDossierDocsPath, getDossierRouteSegment } from '@/lib/dossier-routes'
 import { DossierFirstSearchResults } from '@/components/search/DossierFirstSearchResults'
+import { QueryErrorState } from '@/components/error-states/QueryErrorState'
 import { DossierSearchFilters } from '@/components/search/DossierSearchFilters'
 import { useDossierFirstSearch } from '@/hooks/useDossierFirstSearch'
 import type {
@@ -37,6 +38,11 @@ interface SearchParams {
   status?: 'all' | 'active' | 'archived'
   myDossiers?: string
 }
+
+const SUGGESTION_CHIP_KEYS = ['saudi', 'org', 'g20', 'topic'] as const
+
+type SuggestionChipKey = (typeof SUGGESTION_CHIP_KEYS)[number]
+type SuggestionTranslationKey = `dossier-search:suggestions.${SuggestionChipKey}`
 
 export function DossierSearchPage() {
   const { t } = useTranslation('dossier-search')
@@ -65,12 +71,15 @@ export function DossierSearchPage() {
     typeCounts,
     isLoading,
     isFetching,
+    isError,
+    error,
     tookMs,
     setQuery,
     updateFilters,
     loadMoreDossiers,
     loadMoreWork,
     clearSearch,
+    refetch,
   } = useDossierFirstSearch(searchParams.q || '', initialFilters)
 
   // Sync URL params with search state
@@ -137,6 +146,8 @@ export function DossierSearchPage() {
         // /documents/$id is UNMOUNTED — route to the owning dossier's Docs tab (UI-SPEC A-8).
         // Engagement dossiers have no /dossiers/engagements/$id/docs child; their docs
         // tab is mounted in the engagement workspace at /engagements/$id/docs.
+        // No owning dossier means no destination: suppress rather than invent one.
+        if (!item.dossier_context) return
         navigate({
           to: getDossierDocsPath(item.dossier_context.id, item.dossier_context.type),
         })
@@ -158,7 +169,8 @@ export function DossierSearchPage() {
         navigate({ to: '/mous' })
         break
       default:
-        // Navigate to parent dossier context
+        // Navigate to parent dossier context — when the server sent one.
+        if (!item.dossier_context) return
         navigate({
           to: `/dossiers/${getDossierRouteSegment(item.dossier_context.type)}/${item.dossier_context.id}`,
         })
@@ -168,6 +180,18 @@ export function DossierSearchPage() {
   // Has results
   const hasResults = dossiers.length > 0 || relatedWork.length > 0
   const hasQuery = query.trim().length > 0
+
+  // Checked BEFORE anything renders results, so the zero-results state is unreachable while the
+  // query is failing: an empty result set standing in for a rejected response is the lie this
+  // phase closes. Diagnostics stay in the console; the rendered state is i18n copy only (D-08).
+  if (isError) {
+    console.error('dossier search query failed:', error)
+    return (
+      <div className="container mx-auto p-6">
+        <QueryErrorState variant="page" onRetry={() => void refetch()} isRetrying={isFetching} />
+      </div>
+    )
+  }
 
   return (
     <div className="container mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
@@ -289,16 +313,21 @@ export function DossierSearchPage() {
           </p>
           {/* Quick action suggestions */}
           <div className="mt-6 flex flex-wrap justify-center gap-2">
-            {['Saudi Arabia', 'UN', 'G20', 'climate'].map((suggestion) => (
-              <Button
-                key={suggestion}
-                variant="outline"
-                size="sm"
-                onClick={() => setQuery(suggestion)}
-              >
-                {suggestion}
-              </Button>
-            ))}
+            {SUGGESTION_CHIP_KEYS.map((suggestionKey) => {
+              const suggestion = t(
+                `dossier-search:suggestions.${suggestionKey}` satisfies SuggestionTranslationKey,
+              )
+              return (
+                <Button
+                  key={suggestionKey}
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setQuery(suggestion)}
+                >
+                  {suggestion}
+                </Button>
+              )
+            })}
           </div>
         </div>
       )}

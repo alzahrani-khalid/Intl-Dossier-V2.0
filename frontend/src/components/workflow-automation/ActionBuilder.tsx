@@ -139,18 +139,10 @@ export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) 
                   <SelectValue placeholder={t('placeholders.enter_value')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="low">
-                    {t('priority.low', { ns: 'unified-kanban', defaultValue: 'Low' })}
-                  </SelectItem>
-                  <SelectItem value="medium">
-                    {t('priority.medium', { ns: 'unified-kanban', defaultValue: 'Medium' })}
-                  </SelectItem>
-                  <SelectItem value="high">
-                    {t('priority.high', { ns: 'unified-kanban', defaultValue: 'High' })}
-                  </SelectItem>
-                  <SelectItem value="urgent">
-                    {t('priority.urgent', { ns: 'unified-kanban', defaultValue: 'Urgent' })}
-                  </SelectItem>
+                  <SelectItem value="low">{t('unified-kanban:priority.low')}</SelectItem>
+                  <SelectItem value="medium">{t('unified-kanban:priority.medium')}</SelectItem>
+                  <SelectItem value="high">{t('unified-kanban:priority.high')}</SelectItem>
+                  <SelectItem value="urgent">{t('unified-kanban:priority.urgent')}</SelectItem>
                 </SelectContent>
               </Select>
             ) : field.type === 'status' ? (
@@ -162,21 +154,11 @@ export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) 
                   <SelectValue placeholder={t('placeholders.enter_value')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="pending">
-                    {t('status.pending', { ns: 'unified-kanban', defaultValue: 'Pending' })}
-                  </SelectItem>
-                  <SelectItem value="in_progress">
-                    {t('status.in_progress', { ns: 'unified-kanban', defaultValue: 'In Progress' })}
-                  </SelectItem>
-                  <SelectItem value="review">
-                    {t('status.review', { ns: 'unified-kanban', defaultValue: 'Review' })}
-                  </SelectItem>
-                  <SelectItem value="completed">
-                    {t('status.completed', { ns: 'unified-kanban', defaultValue: 'Completed' })}
-                  </SelectItem>
-                  <SelectItem value="cancelled">
-                    {t('status.cancelled', { ns: 'unified-kanban', defaultValue: 'Cancelled' })}
-                  </SelectItem>
+                  <SelectItem value="pending">{t('tasks-page:status.pending')}</SelectItem>
+                  <SelectItem value="in_progress">{t('tasks-page:status.in_progress')}</SelectItem>
+                  <SelectItem value="review">{t('tasks-page:status.review')}</SelectItem>
+                  <SelectItem value="completed">{t('tasks-page:status.completed')}</SelectItem>
+                  <SelectItem value="cancelled">{t('tasks-page:status.cancelled')}</SelectItem>
                 </SelectContent>
               </Select>
             ) : (
@@ -245,7 +227,7 @@ export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) 
                         variant="ghost"
                         size="icon"
                         onClick={() => moveAction(index, index - 1)}
-                        aria-label={t('common:common.actions.moveUp', { defaultValue: 'Move up' })}
+                        aria-label={t('common:actions.moveUp')}
                         className="h-8 w-8"
                       >
                         <GripVertical className="h-4 w-4 rotate-90" />
@@ -255,7 +237,7 @@ export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) 
                       variant="ghost"
                       size="icon"
                       onClick={() => removeAction(index)}
-                      aria-label={t('common:common.actions.remove')}
+                      aria-label={t('common:actions.remove')}
                       className="h-8 w-8 text-destructive hover:text-destructive"
                     >
                       <Trash2 className="h-4 w-4" />

@@ -8,6 +8,8 @@
  * @see specs/035-dossier-context/data-model.md
  */
 
+import type { DossierType as CanonicalDossierType } from '@/lib/dossier-type-guards'
+
 // =============================================================================
 // Core Types (T001)
 // =============================================================================
@@ -64,18 +66,12 @@ export interface WorkItemDossierLink {
 }
 
 /**
- * Dossier type for categorization
- * All 7 dossier types as defined in CLAUDE.md
- * Note: elected_official is now a person_subtype, not a separate dossier type
+ * Dossier type for categorization — aliased from the canonical home
+ * (`@/lib/dossier-type-guards`) so this module carries no second copy of the list.
+ * `elected_official` is a `person_subtype`, not a dossier type; surfaces that
+ * DISPLAY it use `DossierCardType`.
  */
-export type DossierType =
-  | 'country'
-  | 'organization'
-  | 'forum'
-  | 'engagement'
-  | 'topic'
-  | 'working_group'
-  | 'person'
+export type DossierType = CanonicalDossierType
 
 /**
  * Dossier status

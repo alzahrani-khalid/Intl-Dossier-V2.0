@@ -88,13 +88,13 @@ export function ResponsiveNav({
 
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label={t('navigation.menu', 'Menu')}>
+              <Button variant="ghost" size="icon" aria-label={t('navigation.menu')}>
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[280px] overflow-y-auto">
               <SheetHeader>
-                <SheetTitle>{t('navigation.title', 'Navigation')}</SheetTitle>
+                <SheetTitle>{t('navigation.title')}</SheetTitle>
               </SheetHeader>
               <nav className="mt-6 space-y-1">
                 {visibleItems.map((item) => (

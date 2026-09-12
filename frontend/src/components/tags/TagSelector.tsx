@@ -185,7 +185,7 @@ export function TagSelector({
               {!disabled && (
                 <button
                   type="button"
-                  aria-label={t('common:common.actions.remove')}
+                  aria-label={t('common:actions.remove')}
                   className="ms-1 rounded-full hover:bg-muted/50 p-0.5"
                   onClick={(e) => {
                     e.stopPropagation()
@@ -225,7 +225,7 @@ export function TagSelector({
         {isLoadingTags ? (
           <div className="flex items-center gap-2 text-muted-foreground">
             <Loader2 className="size-4 animate-spin" />
-            <span className="text-sm">{t('common:loading', 'Loading...')}</span>
+            <span className="text-sm">{t('common:loading')}</span>
           </div>
         ) : assignedTags.length === 0 ? (
           <span className="text-sm text-muted-foreground">{t('assignment.noAssigned')}</span>

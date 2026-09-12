@@ -144,7 +144,9 @@ export function ElectedOfficialListTable({
         <h3 className="text-base sm:text-lg font-semibold text-destructive mb-2">
           {t('list.error')}
         </h3>
-        <p className="text-sm sm:text-base text-destructive/90">{error.message}</p>
+        <p className="text-sm sm:text-base text-destructive/90">
+          {t('common:errors.queryFailed.description')}
+        </p>
       </div>
     )
   }
@@ -315,7 +317,7 @@ export function ElectedOfficialListTable({
             onClick={onPrevPage}
             className="min-h-11 min-w-11 w-full sm:w-auto"
           >
-            {t('common.previous', { ns: 'common', defaultValue: 'Previous' })}
+            {t('common:previous')}
           </Button>
           <span className="text-sm text-muted-foreground">
             {currentPage} / {totalPages}
@@ -326,7 +328,7 @@ export function ElectedOfficialListTable({
             onClick={onNextPage}
             className="min-h-11 min-w-11 w-full sm:w-auto"
           >
-            {t('common.next', { ns: 'common', defaultValue: 'Next' })}
+            {t('common:next')}
           </Button>
         </div>
       )}

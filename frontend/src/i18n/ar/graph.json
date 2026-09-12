@@ -1,8 +1,8 @@
 {
   "title": "مخطط العلاقات",
   "description": "استكشف الروابط بين الكيانات",
-  "noDossier": "لم يتم تحديد ملف. الرجاء تحديد ملف لعرض مخطط علاقاته.",
-  "browseDossiers": "تصفح الملفات",
+  "noDossier": "لم يتم تحديد دوسيه. الرجاء تحديد دوسيه لعرض مخطط علاقاته.",
+  "browseDossiers": "تصفح الدوسيهات",
   "maxDegrees": "درجات الفصل",
   "degree": "درجة",
   "degrees": "درجات",
@@ -24,9 +24,9 @@
   "organization": "منظمة",
   "individual": "فرد",
   "forum": "منتدى",
-  "engagement": "ارتباط",
+  "engagement": "مشاركة",
   "mou": "مذكرة تفاهم",
-  "position": "منصب",
+  "position": "موقف",
   "zoomIn": "تكبير",
   "zoomOut": "تصغير",
   "fitView": "ملاءمة العرض",
@@ -74,7 +74,7 @@
     "connections": "اتصالات",
     "noConnections": "لا توجد علاقات",
     "viewFullGraph": "عرض المخطط الكامل",
-    "clickToNavigate": "انقر لعرض الملف",
+    "clickToNavigate": "انقر لعرض الدوسيه",
     "moreConnections": "+{{count}} أخرى",
     "loading": "جاري تحميل العلاقات...",
     "retry": "إعادة المحاولة"
@@ -82,12 +82,15 @@
   "type": {
     "country": "دولة",
     "organization": "منظمة",
+    "individual": "فرد",
     "forum": "منتدى",
     "person": "شخص",
-    "engagement": "ارتباط",
+    "engagement": "مشاركة",
+    "mou": "مذكرة تفاهم",
     "working_group": "مجموعة عمل",
     "topic": "موضوع",
-    "elected_official": "مسؤول منتخب"
+    "elected_official": "مسؤول منتخب",
+    "unknown": "نوع غير معروف"
   },
   "status": {
     "active": "نشط",
@@ -140,6 +143,12 @@
     "speed": "السرعة",
     "reset": "إعادة تعيين"
   },
+  "playback": {
+    "skipToStart": "الانتقال إلى البداية",
+    "pause": "إيقاف مؤقت",
+    "play": "تشغيل",
+    "skipToEnd": "الانتقال إلى النهاية"
+  },
   "influence": {
     "toggle": "خريطة التأثير",
     "title": "درجة التأثير",
@@ -158,7 +167,7 @@
     "entity": "الكيان",
     "entityPrimary": "الكيان الأول",
     "entitySecondary": "الكيان الثاني",
-    "entityPlaceholder": "معرّف الملف",
+    "entityPlaceholder": "معرّف الدوسيه",
     "window": "خلال آخر {{count}} يوماً",
     "run": "تشغيل التحليل",
     "resultHeading": "النتيجة",
@@ -170,13 +179,13 @@
     "template": {
       "forumMembership": "من يشارك في أي منتدى",
       "sharedCommittees": "اللجان المشتركة",
-      "engagementChain": "سلاسل الارتباطات",
+      "engagementChain": "سلاسل المشاركات",
       "shortestPath": "كيف يرتبط هذان الكيانان"
     },
     "count": {
       "membership": "{{count}} منتدى ومجموعة عمل",
       "intersection": "{{count}} لجنة مشتركة",
-      "chain": "{{count}} ارتباطاً",
+      "chain": "{{count}} مشاركة",
       "path": "مرتبطان عبر {{count}} خطوة"
     },
     "col": {

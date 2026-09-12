@@ -73,7 +73,7 @@ test.describe('Dossier Accessibility Scans', () => {
 
       // Log any violations for debugging
       if (criticalViolations.length > 0) {
-        console.log(
+        console.info(
           `${dossierType} accessibility violations:`,
           JSON.stringify(criticalViolations, null, 2),
         )
@@ -93,7 +93,7 @@ test.describe('Dossier Accessibility Scans', () => {
     const criticalViolations = filterViolationsByImpact(results.violations, 'serious')
 
     if (criticalViolations.length > 0) {
-      console.log('Dossiers hub violations:', JSON.stringify(criticalViolations, null, 2))
+      console.info('Dossiers hub violations:', JSON.stringify(criticalViolations, null, 2))
     }
 
     expect(criticalViolations).toHaveLength(0)
@@ -110,37 +110,38 @@ test.describe('Keyboard Navigation Tests', () => {
     await page.goto(route)
     await page.waitForLoadState('networkidle')
 
-    // Find collapsible section headers
-    const sectionButtons = page.locator('button[aria-expanded]')
-    const count = await sectionButtons.count()
+    // Find collapsible section headers in the page content. Menu/popover
+    // triggers also carry aria-expanded, but Enter moves focus into their popup
+    // (the sidebar user menu matched first and the second Enter navigated away).
+    const firstButton = page.locator('main button[aria-expanded]:not([aria-haspopup])').first()
 
-    if (count > 0) {
-      // Focus first collapsible section
-      const firstButton = sectionButtons.first()
-      await firstButton.focus()
+    // A collapsible must exist, or this test proves nothing
+    await expect(firstButton).toBeVisible()
 
-      // Verify it receives focus
-      await expect(firstButton).toBeFocused()
+    // Focus first collapsible section
+    await firstButton.focus()
 
-      // Get initial expanded state
-      const initialExpanded = await firstButton.getAttribute('aria-expanded')
+    // Verify it receives focus
+    await expect(firstButton).toBeFocused()
 
-      // Press Enter to toggle (Enter reliably activates buttons, native
-      // <button>s and Radix collapsible triggers alike).
-      await page.keyboard.press('Enter')
-      await page.waitForTimeout(350)
+    // Get initial expanded state
+    const initialExpanded = await firstButton.getAttribute('aria-expanded')
 
-      // Verify state changed
-      const newExpanded = await firstButton.getAttribute('aria-expanded')
-      expect(newExpanded).not.toBe(initialExpanded)
+    // Press Enter to toggle (Enter reliably activates buttons, native
+    // <button>s and Radix collapsible triggers alike).
+    await page.keyboard.press('Enter')
+    await page.waitForTimeout(350)
 
-      // Press Enter again to toggle back to the initial state.
-      await page.keyboard.press('Enter')
-      await page.waitForTimeout(350)
+    // Verify state changed
+    const newExpanded = await firstButton.getAttribute('aria-expanded')
+    expect(newExpanded).not.toBe(initialExpanded)
 
-      const finalExpanded = await firstButton.getAttribute('aria-expanded')
-      expect(finalExpanded).toBe(initialExpanded)
-    }
+    // Press Enter again to toggle back to the initial state.
+    await page.keyboard.press('Enter')
+    await page.waitForTimeout(350)
+
+    const finalExpanded = await firstButton.getAttribute('aria-expanded')
+    expect(finalExpanded).toBe(initialExpanded)
   })
 
   test('Tab navigation moves through interactive elements in order', async ({ page }) => {
@@ -372,7 +373,7 @@ test.describe('RTL Accessibility Tests', () => {
     const criticalViolations = filterViolationsByImpact(results.violations, 'serious')
 
     if (criticalViolations.length > 0) {
-      console.log('RTL accessibility violations:', JSON.stringify(criticalViolations, null, 2))
+      console.info('RTL accessibility violations:', JSON.stringify(criticalViolations, null, 2))
     }
 
     expect(criticalViolations).toHaveLength(0)

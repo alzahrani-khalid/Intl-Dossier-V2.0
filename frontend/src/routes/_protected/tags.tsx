@@ -19,8 +19,7 @@ import { TagHierarchyManager, TagAnalytics } from '@/components/tags'
 import { useTagMergeHistory, useTagRenameHistory } from '@/hooks/useTagHierarchy'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { formatDistanceToNow } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
+import { formatDateTime } from '@/lib/format-date'
 import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/tags')({
@@ -94,7 +93,6 @@ function TagsPage() {
 function MergeHistoryCard({ isRTL }: { isRTL: boolean }) {
   const { t } = useTranslation('tags')
   const { data: mergeHistory, isLoading } = useTagMergeHistory()
-  const locale = isRTL ? ar : enUS
 
   return (
     <Card>
@@ -125,12 +123,7 @@ function MergeHistoryCard({ isRTL }: { isRTL: boolean }) {
                     })}
                   </p>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span>
-                      {formatDistanceToNow(new Date(entry.merged_at), {
-                        addSuffix: true,
-                        locale,
-                      })}
-                    </span>
+                    <span>{formatDateTime(entry.merged_at)}</span>
                     <Badge variant="secondary" className="text-xs">
                       {t('merge.assignmentsTransferred', {
                         count: entry.assignments_transferred,
@@ -154,7 +147,6 @@ function MergeHistoryCard({ isRTL }: { isRTL: boolean }) {
 function RenameHistoryCard({ isRTL }: { isRTL: boolean }) {
   const { t } = useTranslation('tags')
   const { data: renameHistory, isLoading } = useTagRenameHistory()
-  const locale = isRTL ? ar : enUS
 
   return (
     <Card>
@@ -184,12 +176,7 @@ function RenameHistoryCard({ isRTL }: { isRTL: boolean }) {
                     })}
                   </p>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span>
-                      {formatDistanceToNow(new Date(entry.renamed_at), {
-                        addSuffix: true,
-                        locale,
-                      })}
-                    </span>
+                    <span>{formatDateTime(entry.renamed_at)}</span>
                   </div>
                   {entry.rename_reason && (
                     <p className="text-xs text-muted-foreground italic">"{entry.rename_reason}"</p>

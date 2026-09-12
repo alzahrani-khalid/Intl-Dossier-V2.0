@@ -14,15 +14,21 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import toast from 'react-hot-toast'
 import { supabase } from '@/lib/supabase'
-import { useToast } from '@/hooks/useToast'
 import { mapStatusToColumnKey } from '@/components/unified-kanban/utils/column-definitions'
+import {
+  resolveCommitmentDropDecision,
+  type CommitmentDropRejectReason,
+} from '@/pages/WorkBoard/commitment-stage-guard'
 import type {
   KanbanContextType,
   KanbanColumnMode,
   WorkSource,
   WorkItem,
   WorkItemAssignee,
+  WorkflowStage,
   KanbanData,
 } from '@/types/work-item.types'
 
@@ -294,6 +300,55 @@ interface StatusUpdateParams {
   source: WorkSource
   newStatus: string
   newWorkflowStage?: string
+  /**
+   * Commitment drops only: the card's due date, so the guard can mirror the DB
+   * trigger before anything is enqueued. Commitments carry no workflow_stage,
+   * so `newWorkflowStage` is the target board stage for them.
+   */
+  deadline?: string | null
+}
+
+// ============================================
+// Commitment Drop Refusal (WRITE-04)
+// ============================================
+
+/**
+ * Toast copy for each reject cause. Two DISTINCT causes, two distinct key
+ * pairs — a single generic string is refused, because the past-due copy has to
+ * name the derived state AND the remedy the trigger itself honours (D-08).
+ * COLON form: `unified-kanban` is not the default namespace.
+ */
+const COMMITMENT_REJECT_KEYS: Record<CommitmentDropRejectReason, { title: string; body: string }> =
+  {
+    no_review_counterpart: {
+      title: 'unified-kanban:errors.commitmentNoReviewStage',
+      body: 'unified-kanban:errors.commitmentNoReviewStageDescription',
+    },
+    past_due_coercion: {
+      title: 'unified-kanban:errors.commitmentPastDue',
+      body: 'unified-kanban:errors.commitmentPastDueDescription',
+    },
+  }
+
+/**
+ * Render a refusal. react-hot-toast defaults to `role="status"`, which a
+ * screen reader announces politely and may drop; a refusal is an error the
+ * user must hear, so it renders `role="alert"` (RULING-P94-01 order 1 — an
+ * acceptance criterion, not a preference).
+ *
+ * Exported because the gesture layer (`WorkBoard.tsx` drag-end, and the
+ * droppable predicate in 94-08) refuses before it ever calls `mutate`. One
+ * copy of the copy, one place to change it.
+ */
+export function showCommitmentRejectToast(
+  reason: CommitmentDropRejectReason,
+  t: (key: string) => string,
+): void {
+  const keys = COMMITMENT_REJECT_KEYS[reason]
+  toast.error(`${t(keys.title)}\n${t(keys.body)}`, {
+    duration: 6000,
+    ariaProps: { role: 'alert', 'aria-live': 'assertive' },
+  })
 }
 
 /**
@@ -328,10 +383,16 @@ function mapToValidIntakeStatus(columnKeyOrStatus: string): TicketStatus {
 
 export function useUnifiedKanbanStatusUpdate() {
   const queryClient = useQueryClient()
-  const { toast } = useToast()
+  const { t } = useTranslation('unified-kanban')
 
-  return useMutation({
-    mutationFn: async ({ itemId, source, newStatus, newWorkflowStage }: StatusUpdateParams) => {
+  const mutation = useMutation({
+    mutationFn: async ({
+      itemId,
+      source,
+      newStatus,
+      newWorkflowStage,
+      deadline,
+    }: StatusUpdateParams) => {
       // Update based on source type
       if (source === 'task') {
         const taskUpdate: Record<string, unknown> = {
@@ -369,10 +430,23 @@ export function useUnifiedKanbanStatusUpdate() {
       }
 
       if (source === 'commitment') {
+        // Defence in depth. The refusal is already decided before anything is
+        // enqueued (see the guarded `mutate` below and WorkBoard's drag-end);
+        // reaching here with an invalid target means a caller bypassed both,
+        // so throw in this API's existing style rather than writing a status
+        // the CHECK rejects or the trigger silently rewrites.
+        const decision = resolveCommitmentDropDecision(
+          { deadline: deadline ?? null },
+          (newWorkflowStage ?? newStatus) as WorkflowStage,
+        )
+        if (!decision.ok) {
+          throw new Error(`Commitment status update refused: ${decision.reason}`)
+        }
+
         const { data, error } = await supabase
           .from('aa_commitments')
           .update({
-            status: newStatus,
+            status: decision.status,
             updated_at: new Date().toISOString(),
           })
           .eq('id', itemId)
@@ -478,11 +552,14 @@ export function useUnifiedKanbanStatusUpdate() {
         })
       }
 
-      toast({
-        title: 'Failed to update status',
-        description: error instanceof Error ? error.message : 'Unknown error',
-        variant: 'destructive',
-      })
+      // T-94-04 / D-08: the raw error may carry CHECK-constraint text, column
+      // names or SQL. It goes to the console, never to the DOM.
+      console.error('[useUnifiedKanban] status update failed:', error)
+
+      toast.error(
+        `${t('unified-kanban:errors.updateFailed')}\n${t('unified-kanban:errors.updateFailedDescription')}`,
+        { duration: 6000, ariaProps: { role: 'alert', 'aria-live': 'assertive' } },
+      )
     },
 
     onSettled: () => {
@@ -490,6 +567,33 @@ export function useUnifiedKanbanStatusUpdate() {
       queryClient.invalidateQueries({ queryKey: kanbanKeys.all })
     },
   })
+
+  /**
+   * The mutation-layer enforcement point (D-33). A refusal is decided BEFORE
+   * `mutation.mutate` is called, so no mutation object is created: no
+   * optimistic update, no global onSuccess, no global onError, and therefore
+   * no success signal followed by a snap-back.
+   */
+  const mutate = useCallback(
+    (params: StatusUpdateParams): void => {
+      if (params.source === 'commitment') {
+        const decision = resolveCommitmentDropDecision(
+          { deadline: params.deadline ?? null },
+          (params.newWorkflowStage ?? params.newStatus) as WorkflowStage,
+        )
+        if (!decision.ok) {
+          showCommitmentRejectToast(decision.reason, t)
+          return
+        }
+        mutation.mutate({ ...params, newStatus: decision.status })
+        return
+      }
+      mutation.mutate(params)
+    },
+    [mutation, t],
+  )
+
+  return { ...mutation, mutate }
 }
 
 // ============================================

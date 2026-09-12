@@ -7,6 +7,7 @@ import { OnboardingTourTrigger } from '@/components/guided-tours'
 import { ErrorBoundary } from '@/components/error-boundary'
 import { DossierDrawer } from '@/components/dossier/DossierDrawer'
 import { CommitmentDrawer } from '@/components/commitments/CommitmentDrawer'
+import { DOSSIER_CARD_TYPES, type DossierCardType } from '@/lib/dossier-type-guards'
 
 // Phase 72 (AGENT-01): the reads-only copilot drawer is DYNAMIC-IMPORTED so the
 // assistant-ui + markdown weight stays out of the entry chunk (bundle ceiling,
@@ -17,27 +18,16 @@ const CopilotDrawer = lazy(() => import('@/components/copilot/CopilotDrawer'))
 // Phase 41 (D-02 / 41-RESEARCH §7 Path A): validateSearch whitelists drawer params on
 // the protected layout route so any deep-link to a child route can open the dossier
 // quick-look drawer via ?dossier=<id>&dossierType=<type>.
-const VALID_DOSSIER_TYPES = [
-  'country',
-  'organization',
-  'forum',
-  'engagement',
-  'topic',
-  'working_group',
-  'person',
-  'elected_official',
-] as const
-
-type ValidDossierType = (typeof VALID_DOSSIER_TYPES)[number]
-
-function isValidDrawerDossierType(value: unknown): value is ValidDossierType {
-  return typeof value === 'string' && (VALID_DOSSIER_TYPES as readonly string[]).includes(value)
+// The drawer displays a dossier kind, so the whitelist is the CARD set (DB-7 +
+// elected_official), derived from @/lib/dossier-type-guards rather than restated.
+function isValidDrawerDossierType(value: unknown): value is DossierCardType {
+  return typeof value === 'string' && (DOSSIER_CARD_TYPES as readonly string[]).includes(value)
 }
 
 export const Route = createFileRoute('/_protected')({
   validateSearch: (
     search: Record<string, unknown>,
-  ): { dossier?: string; dossierType?: ValidDossierType } => ({
+  ): { dossier?: string; dossierType?: DossierCardType } => ({
     dossier:
       typeof search.dossier === 'string' && search.dossier.length > 0 ? search.dossier : undefined,
     dossierType: isValidDrawerDossierType(search.dossierType) ? search.dossierType : undefined,

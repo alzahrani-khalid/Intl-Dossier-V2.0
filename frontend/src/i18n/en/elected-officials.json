@@ -2,7 +2,7 @@
   "list": {
     "title": "Elected Officials",
     "empty": "No elected officials have been added yet.",
-    "add": "Add Elected Official",
+    "add": "Add elected official",
     "loading": "Loading elected officials...",
     "error": "Failed to load elected officials"
   },

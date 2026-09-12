@@ -34,22 +34,22 @@ export function SharedSummaryStatsCard({
 
   const stats: StatItem[] = [
     {
-      label: t('overview.stats.linkedDossiers', { defaultValue: 'Linked Dossiers' }),
+      label: t('overview.stats.linkedDossiers'),
       value: data?.stats.related_dossiers_count ?? 0,
       icon: <Users className="h-4 w-4 text-muted-foreground" />,
     },
     {
-      label: t('overview.stats.openWorkItems', { defaultValue: 'Open Work Items' }),
+      label: t('overview.stats.openWorkItems'),
       value: data?.stats.pending_work_items ?? 0,
       icon: <FileText className="h-4 w-4 text-muted-foreground" />,
     },
     {
-      label: t('overview.stats.upcomingEvents', { defaultValue: 'Upcoming Events' }),
+      label: t('overview.stats.upcomingEvents'),
       value: data?.stats.upcoming_events_count ?? 0,
       icon: <CalendarDays className="h-4 w-4 text-muted-foreground" />,
     },
     {
-      label: t('overview.stats.recentActivity', { defaultValue: 'Recent Activity' }),
+      label: t('overview.stats.recentActivity'),
       value: data?.stats.recent_activities_count ?? 0,
       icon: <Activity className="h-4 w-4 text-muted-foreground" />,
     },
@@ -76,12 +76,10 @@ export function SharedSummaryStatsCard({
     return (
       <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
         <h3 className="text-base font-semibold leading-tight text-start mb-4">
-          {t('overview.summary', { defaultValue: 'Summary' })}
+          {t('overview.summary')}
         </h3>
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('overview.sectionError')}
         </p>
       </div>
     )
@@ -90,13 +88,11 @@ export function SharedSummaryStatsCard({
   return (
     <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
       <h3 className="text-base font-semibold leading-tight text-start mb-4">
-        {t('overview.summary', { defaultValue: 'Summary' })}
+        {t('overview.summary')}
       </h3>
 
       {!data || allZero ? (
-        <p className="text-muted-foreground text-sm text-center py-8">
-          {t('overview.noData', { defaultValue: 'No data available' })}
-        </p>
+        <p className="text-muted-foreground text-sm text-center py-8">{t('overview.noData')}</p>
       ) : (
         <div className="grid grid-cols-2 gap-4">
           {stats.map((stat) => (

@@ -5,6 +5,8 @@ export interface ListPageShellProps {
   title: string
   subtitle?: string
   toolbar?: ReactNode
+  /** Header-actions slot — same shape and wrapper as PageHeader.tsx:29 (NAV-03). */
+  actions?: ReactNode
   isLoading?: boolean
   isEmpty?: boolean
   emptyState?: ReactNode
@@ -26,6 +28,7 @@ export function ListPageShell({
   title,
   subtitle,
   toolbar,
+  actions,
   isLoading = false,
   isEmpty = false,
   emptyState,
@@ -52,6 +55,7 @@ export function ListPageShell({
             <p className="page-sub truncate text-start">{subtitle}</p>
           ) : null}
         </div>
+        {actions != null && <div className="dash-hero-actions">{actions}</div>}
       </header>
 
       {toolbar !== undefined ? (

@@ -627,23 +627,62 @@ export class MoUService {
     logInfo(`Scheduling alerts for MoU ${mou.reference_number}`)
   }
 
+  /**
+   * Write the MoU state transition to `public.audit_logs` — PLURAL, the same
+   * table the edge functions write. This is the one backend writer of that
+   * table, so it sits outside both filed audit populations.
+   *
+   * Column names below are the live set, re-derived 2026-08-16 against staging
+   * `zkrcjzdemdmwhearhfgg` (D-17). This insert previously sent a `changes` key,
+   * which is not a column, and omitted `user_role`, which is NOT NULL with no
+   * default — and it was awaited without destructuring `error`, so both
+   * failures were invisible. It has never written a row.
+   *
+   * Grade: LOG-LOUDLY-AND-CONTINUE (D-18). An MoU state transition does not
+   * fail because auditing failed — the status change has already been written
+   * by the caller. But the drop is never silent: every path out of here that
+   * does not write logs at winston ERROR level with a marker.
+   */
   private async logStateTransition(
     mouId: string,
     fromStatus: MoU['status'],
     toStatus: MoU['status'],
     userId: string,
   ): Promise<void> {
-    await supabaseAdmin.from('audit_logs').insert({
+    // `user_role` is NOT NULL with no default and the caller does not carry it,
+    // so it is fetched for the acting user. No fabricated role — an
+    // unresolvable one is a stated skip, not an invented value.
+    const { data: actor } = await supabaseAdmin
+      .from('users')
+      .select('role')
+      .eq('id', userId)
+      .maybeSingle()
+
+    const userRole: string | null = actor?.role ?? null
+
+    if (!userRole) {
+      logError(
+        `AUDIT-ZERO-01: audit_logs insert SKIPPED — no role resolves for user ${userId} (mou ${mouId})`,
+      )
+      return
+    }
+
+    const { error } = await supabaseAdmin.from('audit_logs').insert({
       entity_type: 'mou',
       entity_id: mouId,
       action: 'status_change',
-      changes: {
-        from: fromStatus,
-        to: toStatus,
-      },
+      old_values: { status: fromStatus },
+      new_values: { status: toStatus },
       user_id: userId,
+      user_role: userRole,
       created_at: new Date().toISOString(),
     })
+
+    if (error) {
+      logError(
+        `AUDIT-ZERO-01: audit_logs insert FAILED for mou ${mouId} (${fromStatus} -> ${toStatus}) — ${error.message}`,
+      )
+    }
   }
 
   private async clearMoUCache(): Promise<void> {

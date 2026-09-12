@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import type { KanbanAssignment } from '@/hooks/useEngagementKanban'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -12,6 +13,8 @@ interface KanbanTaskCardProps {
 type SlaStatus = 'overdue' | 'urgent' | 'warning' | 'normal'
 
 export function KanbanTaskCard({ assignment }: KanbanTaskCardProps): ReactElement {
+  const { t } = useTranslation('assignments')
+
   const getSLAStatus = (): SlaStatus | null => {
     if (assignment.current_stage_sla_deadline == null) return null
 
@@ -66,7 +69,7 @@ export function KanbanTaskCard({ assignment }: KanbanTaskCardProps): ReactElemen
           variant={priorityVariants[assignment.priority] ?? 'default'}
           className="text-[10px] capitalize shrink-0 px-1.5 py-0"
         >
-          {assignment.priority}
+          {t(`priority.${assignment.priority}`)}
         </Badge>
         {slaStatus !== null && (
           <div

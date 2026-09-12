@@ -11,6 +11,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
+import { writeAuditLog } from '../_shared/audit.ts';
 
 interface ManualOverrideRequest {
   work_item_id: string;
@@ -234,23 +235,29 @@ serve(async (req) => {
       );
     }
 
-    // Log override in audit trail with capacity warning if applicable
-    await supabaseClient.from('audit_logs').insert({
-      action: 'assignment_manual_override',
-      user_id: user.id,
-      resource_type: 'assignment',
-      resource_id: assignment.id,
-      metadata: {
-        work_item_id: body.work_item_id,
-        assignee_id: body.assignee_id,
-        override_reason: body.override_reason,
-        capacity_warning: capacityWarning,
-        wip_status: assigneeCapacity
-          ? `${assigneeCapacity.current_assignment_count}/${assigneeCapacity.individual_wip_limit}`
-          : 'unknown',
+    // Log override in audit trail with capacity warning if applicable.
+    // Grade: LOG-LOUDLY-AND-CONTINUE (D-18) — the override is already persisted and
+    // the helper console.errors any failure.
+    await writeAuditLog(
+      supabaseClient,
+      {
+        entity_type: 'assignment',
+        entity_id: assignment.id,
+        action: 'assignment_manual_override',
+        user_id: user.id,
+        user_role: userProfile.role,
+        new_values: {
+          work_item_id: body.work_item_id,
+          assignee_id: body.assignee_id,
+          override_reason: body.override_reason,
+          capacity_warning: capacityWarning,
+          wip_status: assigneeCapacity
+            ? `${assigneeCapacity.current_assignment_count}/${assigneeCapacity.individual_wip_limit}`
+            : 'unknown',
+        },
       },
-      created_at: new Date().toISOString(),
-    });
+      'assignments-manual-override',
+    );
 
     const response: ManualOverrideResponse = {
       assignment_id: assignment.id,

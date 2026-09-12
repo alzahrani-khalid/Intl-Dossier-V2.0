@@ -12,8 +12,7 @@
 
 import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { formatDistanceToNow, format } from 'date-fns'
-import { ar } from 'date-fns/locale'
+import { formatDateTime } from '@/lib/format-date'
 import {
   Plus,
   Edit3,
@@ -40,7 +39,6 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { AuditLogEntry, AuditOperation, AuditLogFilters } from '@/types/audit-log.types'
-import { useDirection } from '@/hooks/useDirection'
 
 // =============================================
 // CONFIGURATION
@@ -81,7 +79,6 @@ export function AuditLogTable({
   className,
 }: AuditLogTableProps) {
   const { t } = useTranslation('audit-logs')
-  const { isRTL } = useDirection()
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
 
   const toggleExpand = useCallback((id: string, e: React.MouseEvent) => {
@@ -109,17 +106,9 @@ export function AuditLogTable({
     [filters, onFiltersChange],
   )
 
-  const formatTimestamp = (timestamp: string) => {
-    const date = new Date(timestamp)
-    return format(date, 'PPpp', { locale: isRTL ? ar : undefined })
-  }
+  const formatTimestamp = (timestamp: string) => formatDateTime(timestamp)
 
-  const formatTimeAgo = (timestamp: string) => {
-    return formatDistanceToNow(new Date(timestamp), {
-      addSuffix: true,
-      locale: isRTL ? ar : undefined,
-    })
-  }
+  const formatTimeAgo = (timestamp: string) => formatDateTime(timestamp)
 
   if (isLoading) {
     return (

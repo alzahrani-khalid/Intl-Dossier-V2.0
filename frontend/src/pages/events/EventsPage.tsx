@@ -1,12 +1,23 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
-import { Calendar as CalendarIcon, MapPin, Users, Video, List, Building2, Flag } from 'lucide-react'
+import {
+  Calendar as CalendarIcon,
+  ChevronLeft,
+  ChevronRight,
+  MapPin,
+  Users,
+  Video,
+  List,
+  Building2,
+  Flag,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { quotePostgrestValue } from '@/lib/postgrest-escape'
 import { supabase } from '@/lib/supabase'
+import { formatDayMonthYear, formatMonthYear } from '@/lib/format-date'
 import {
   format,
   startOfMonth,
@@ -14,6 +25,9 @@ import {
   eachDayOfInterval,
   isSameMonth,
   isSameDay,
+  getDay,
+  addMonths,
+  subMonths,
 } from 'date-fns'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -30,61 +44,91 @@ const eventTypeColors: Record<string, string> = {
 
 interface CalendarViewProps {
   events: Event[] | undefined
-  selectedDate: Date
-  setSelectedDate: (date: Date) => void
+  currentMonth: Date
+  setCurrentMonth: (date: Date) => void
   isRTL: boolean
   t: (key: string) => string
 }
 
-function CalendarView({ events, selectedDate, setSelectedDate, isRTL, t }: CalendarViewProps) {
-  const monthStart = startOfMonth(selectedDate)
-  const monthEnd = endOfMonth(selectedDate)
+function CalendarView({ events, currentMonth, setCurrentMonth, isRTL, t }: CalendarViewProps) {
+  const monthStart = startOfMonth(currentMonth)
+  const monthEnd = endOfMonth(currentMonth)
   const days = eachDayOfInterval({ start: monthStart, end: monthEnd })
+  // Phase 96 DEAD-07: the grid used to drop `days` straight into the 7 columns,
+  // so the 1st always landed under Sunday whatever weekday it really was. Pad by
+  // the month's REAL weekday offset. RTL needs no branch here — the grid fills
+  // right-to-left under `dir="rtl"`, so the same leading count lands correctly.
+  const leadingBlanks = getDay(monthStart)
 
   const getEventsForDay = (date: Date) => {
     return events?.filter((event) => isSameDay(new Date(event.start_datetime), date)) || []
   }
 
   return (
-    <div className="grid grid-cols-7 gap-1">
-      {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-        <div key={day} className="p-2 text-center font-semibold text-sm">
-          {t(`calendar.${day.toLowerCase()}`)}
-        </div>
-      ))}
-      {days.map((day, index) => {
-        const dayEvents = getEventsForDay(day)
-        const isCurrentMonth = isSameMonth(day, selectedDate)
+    <div className="space-y-4">
+      <div className="flex items-center justify-between gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+          aria-label={t('common:previous')}
+        >
+          <ChevronLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
+        </Button>
+        <h2 className="text-base sm:text-lg font-semibold">{formatMonthYear(currentMonth)}</h2>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+          aria-label={t('common:next')}
+        >
+          <ChevronRight className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
+        </Button>
+      </div>
 
-        return (
-          <Card
-            key={index}
-            className={`min-h-[100px] p-2 cursor-pointer hover:border-accent transition-colors ${
-              !isCurrentMonth ? 'opacity-50' : ''
-            }`}
-            onClick={() => setSelectedDate(day)}
-          >
-            <div className="font-semibold text-sm mb-1">{format(day, 'd')}</div>
-            <div className="space-y-1">
-              {dayEvents.slice(0, 3).map((event, i) => (
-                <div
-                  key={i}
-                  className={`text-xs p-1 rounded truncate ${
-                    eventTypeColors[event.type] || 'bg-muted text-ink-mute'
-                  }`}
-                >
-                  {isRTL ? event.title_ar : event.title_en}
-                </div>
-              ))}
-              {dayEvents.length > 3 && (
-                <div className="text-xs text-muted-foreground">
-                  +{dayEvents.length - 3} {t('events.more')}
-                </div>
-              )}
-            </div>
-          </Card>
-        )
-      })}
+      <div className="grid grid-cols-7 gap-1">
+        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+          <div key={day} className="p-2 text-center font-semibold text-sm">
+            {t(`calendar.${day.toLowerCase()}`)}
+          </div>
+        ))}
+        {Array.from({ length: leadingBlanks }, (_, i) => (
+          <div key={`pad-${i}`} className="min-h-[100px]" aria-hidden="true" />
+        ))}
+        {days.map((day, index) => {
+          const dayEvents = getEventsForDay(day)
+          const isCurrentMonth = isSameMonth(day, currentMonth)
+
+          return (
+            <Card
+              key={index}
+              className={`min-h-[100px] p-2 cursor-pointer hover:border-accent transition-colors ${
+                !isCurrentMonth ? 'opacity-50' : ''
+              }`}
+              onClick={() => setCurrentMonth(day)}
+            >
+              <div className="font-semibold text-sm mb-1">{format(day, 'd')}</div>
+              <div className="space-y-1">
+                {dayEvents.slice(0, 3).map((event, i) => (
+                  <div
+                    key={i}
+                    className={`text-xs p-1 rounded truncate ${
+                      eventTypeColors[event.type] || 'bg-muted text-ink-mute'
+                    }`}
+                  >
+                    {isRTL ? event.title_ar : event.title_en}
+                  </div>
+                ))}
+                {dayEvents.length > 3 && (
+                  <div className="text-xs text-muted-foreground">
+                    +{dayEvents.length - 3} {t('events.more')}
+                  </div>
+                )}
+              </div>
+            </Card>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -130,7 +174,7 @@ ${event.type === 'other' ? 'bg-muted text-ink-mute' : ''}
       header: t('events.dateTime'),
       cell: (event: Event) => (
         <div className="text-sm">
-          <div>{format(new Date(event.start_datetime), 'd MMM yyyy')}</div>
+          <div>{formatDayMonthYear(new Date(event.start_datetime))}</div>
           <div className="text-muted-foreground">
             {format(new Date(event.start_datetime), 'HH:mm')} -
             {format(new Date(event.end_datetime), 'HH:mm')}
@@ -256,17 +300,17 @@ export function EventsPage() {
   const { t } = useTranslation()
   const [searchTerm, setSearchTerm] = useState('')
   const [viewMode, setViewMode] = useState<'calendar' | 'list'>('calendar')
-  const [selectedDate, setSelectedDate] = useState(new Date())
+  const [currentMonth, setCurrentMonth] = useState(new Date())
   const [filterType, setFilterType] = useState<string>('all')
   const { isRTL } = useDirection()
   const { data: events, isLoading } = useQuery({
-    queryKey: ['events', searchTerm, filterType, selectedDate],
+    queryKey: ['events', searchTerm, filterType, currentMonth],
     queryFn: async () => {
       let query = supabase
         .from('event_details')
         .select('*')
-        .gte('start_datetime', startOfMonth(selectedDate).toISOString())
-        .lte('start_datetime', endOfMonth(selectedDate).toISOString())
+        .gte('start_datetime', startOfMonth(currentMonth).toISOString())
+        .lte('start_datetime', endOfMonth(currentMonth).toISOString())
         .order('start_datetime', { ascending: true })
 
       if (searchTerm) {
@@ -315,12 +359,12 @@ export function EventsPage() {
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>{t('common.filter')}</CardTitle>
+          <CardTitle>{t('common:filter')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4">
             <Input
-              placeholder={t('common.search')}
+              placeholder={t('common:search.label')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="max-w-sm"
@@ -333,7 +377,7 @@ export function EventsPage() {
                   size="sm"
                   onClick={() => setFilterType(type)}
                 >
-                  {type === 'all' ? t('common.all') : t(`events.types.${type}`)}
+                  {type === 'all' ? t('common:all') : t(`events.types.${type}`)}
                 </Button>
               ))}
             </div>
@@ -344,12 +388,12 @@ export function EventsPage() {
       <Card>
         <CardContent className="p-6">
           {isLoading ? (
-            <div className="p-8 text-center">{t('common.loading')}</div>
+            <div className="p-8 text-center">{t('common:loading')}</div>
           ) : viewMode === 'calendar' ? (
             <CalendarView
               events={events}
-              selectedDate={selectedDate}
-              setSelectedDate={setSelectedDate}
+              currentMonth={currentMonth}
+              setCurrentMonth={setCurrentMonth}
               isRTL={isRTL}
               t={t}
             />
@@ -357,7 +401,7 @@ export function EventsPage() {
             <ListView events={events} isRTL={isRTL} t={t} />
           )}
           {!isLoading && (!events || events.length === 0) && (
-            <div className="p-8 text-center text-muted-foreground">{t('common.noData')}</div>
+            <div className="p-8 text-center text-muted-foreground">{t('common:noData')}</div>
           )}
         </CardContent>
       </Card>

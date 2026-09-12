@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAssignmentQueue } from '../hooks/useAssignmentQueue'
-import { Alert, AlertDescription } from '../components/ui/alert'
 import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
@@ -12,7 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../components/ui/select'
-import { AlertCircle, Clock, UserPlus } from 'lucide-react'
+import { Clock, UserPlus } from 'lucide-react'
+import { QueryErrorState } from '@/components/error-states/QueryErrorState'
 import { formatDateTime } from '@/lib/format-date'
 
 export function AssignmentQueuePage() {
@@ -20,7 +20,7 @@ export function AssignmentQueuePage() {
   const [priorityFilter, setPriorityFilter] = useState<string | undefined>()
   const [typeFilter, setTypeFilter] = useState<string | undefined>()
 
-  const { data, isLoading, error } = useAssignmentQueue({
+  const { data, isLoading, error, refetch, isFetching } = useAssignmentQueue({
     priority: priorityFilter,
     work_item_type: typeFilter,
   })
@@ -41,12 +41,11 @@ export function AssignmentQueuePage() {
     data?.items.filter((i) => ['normal', 'low'].includes(i.priority)).length || 0
 
   if (error) {
+    // Diagnostics stay in the console; the rendered state is i18n copy only (D-08).
+    console.error('assignment queue query failed:', error)
     return (
       <div className="container mx-auto p-6">
-        <Alert variant="destructive">
-          <AlertCircle className="size-4" />
-          <AlertDescription>{error.message || t('queue.error')}</AlertDescription>
-        </Alert>
+        <QueryErrorState variant="page" onRetry={() => void refetch()} isRetrying={isFetching} />
       </div>
     )
   }

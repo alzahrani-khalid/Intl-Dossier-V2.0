@@ -21,10 +21,8 @@ import { m, AnimatePresence } from 'framer-motion'
 import { FileText, RotateCcw, Trash2, X, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { formatDistanceToNow } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
+import { formatDateTime } from '@/lib/format-date'
 import type { FormDraftBannerProps } from '@/types/form-auto-save.types'
-import { useDirection } from '@/hooks/useDirection'
 
 export function FormDraftBanner({
   draft,
@@ -35,18 +33,14 @@ export function FormDraftBanner({
   className,
 }: FormDraftBannerProps) {
   const { t } = useTranslation('form-auto-save')
-  const { isRTL } = useDirection()
   // Format the saved time relative to now
   const savedTimeAgo = React.useMemo(() => {
     try {
-      return formatDistanceToNow(new Date(draft.savedAt), {
-        addSuffix: true,
-        locale: isRTL ? ar : enUS,
-      })
+      return formatDateTime(draft.savedAt)
     } catch {
       return t('banner.recently')
     }
-  }, [draft.savedAt, isRTL, t])
+  }, [draft.savedAt, t])
 
   return (
     <AnimatePresence>

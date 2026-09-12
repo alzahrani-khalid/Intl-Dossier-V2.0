@@ -6,7 +6,7 @@
  * Supports: dossier, engagement, after_action, position entity types.
  */
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // Global client for performance (reused across invocations)

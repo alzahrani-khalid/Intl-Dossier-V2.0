@@ -127,8 +127,8 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
                     onConfirm={() => removeRisk(index)}
                     title={t('afterActions.risks.delete')}
                     description={t('afterActions.risks.deleteConfirm')}
-                    confirmLabel={t('common.delete')}
-                    cancelLabel={t('common.cancel')}
+                    confirmLabel={t('common:delete')}
+                    cancelLabel={t('common:cancel')}
                   />
                 )}
               </div>

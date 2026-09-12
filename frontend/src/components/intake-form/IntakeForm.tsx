@@ -49,8 +49,12 @@ const createIntakeSchema = (t: any, tDossier: any) =>
     urgency: z.enum(['low', 'medium', 'high', 'critical'], {
       error: t('form.urgency.required'),
     }),
-    // US4: dossierId is now required
-    dossierId: z.string().uuid({ message: tDossier('validation.dossier_required') }),
+    // US4: dossierId is required — but NOT RFC-shaped. Zod 4's `.uuid()` enforces the
+    // RFC-9562 version/variant bits, and 35 of 44 staging dossiers are seeded with a
+    // version nibble of 0 (OECD is b0000001-0000-0000-0000-000000000005), so it rejected
+    // real ids and rendered "At least one dossier is required" over a linked dossier.
+    // Requiredness is kept; the RFC check is not. Never re-add `.uuid()` to a dossier id.
+    dossierId: z.string().min(1, { message: tDossier('validation.dossier_required') }),
     typeSpecificFields: z.record(z.string(), z.any()).optional(),
     attachmentIds: z.array(z.string().uuid()).optional(),
   })
@@ -79,10 +83,10 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({ initialData, onSuccess }
     setSelectedDossiers(dossiers)
     const firstDossier = dossiers[0]
     if (firstDossier) {
-      setValue('dossierId', firstDossier.id)
+      setValue('dossierId', firstDossier.id, { shouldValidate: true })
       setDossierError('')
     } else {
-      setValue('dossierId', '' as unknown as string)
+      setValue('dossierId', '' as unknown as string, { shouldValidate: true })
     }
   }
 
@@ -366,14 +370,14 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({ initialData, onSuccess }
                   required
                   multiple={false}
                   label={tDossier('selector.title')}
-                  hint={t('form.dossier.hint', 'Select the dossier this request relates to')}
+                  hint={t('form.dossier.hint')}
                   error={dossierError || (errors.dossierId?.message as string)}
                 />
                 {/* Show selected dossier badge */}
                 {selectedDossiers.length > 0 && selectedDossiers[0] && (
                   <div className="mt-2 flex items-center gap-2 rounded-md bg-muted p-2 text-sm">
                     <span className="text-muted-foreground">
-                      {t('form.dossier.linkedTo', 'Linked to')}:
+                      {t('form.dossier.linkedTo')}:
                     </span>
                     <DossierContextBadge
                       dossierId={selectedDossiers[0].id}
@@ -405,7 +409,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({ initialData, onSuccess }
                   Tracked: .planning/todos/260530-followup-intake-attachment-upload.md */}
               <div className="rounded-lg border border-border bg-muted/40 p-4">
                 <p className="text-sm text-muted-foreground">
-                  {t('form.attachments.unavailable', 'Attachment upload is not yet available.')}
+                  {t('form.attachments.unavailable')}
                 </p>
               </div>
 
@@ -473,7 +477,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({ initialData, onSuccess }
                       setValue('urgency', 'high')
                     }}
                   >
-                    {t('actions.fillMock')}
+                    Fill with mock data
                   </Button>
                 )}
                 <Button type="submit" disabled={isSubmitting}>
@@ -483,7 +487,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({ initialData, onSuccess }
                       {t('actions.submitting')}
                     </span>
                   ) : (
-                    t('actions.submitRequest', 'Submit request')
+                    t('actions.submitRequest')
                   )}
                 </Button>
               </div>

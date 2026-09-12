@@ -1,0 +1,542 @@
+{
+  "schemaVersion": 1,
+  "decision": "D-17 dossier object = دوسيه; ملف survives only for explicitly classified file, attachment, profile, or other non-dossier senses.",
+  "slice": [
+    "frontend/src/i18n/ar/advanced-search.json",
+    "frontend/src/i18n/ar/after-actions-page.json",
+    "frontend/src/i18n/ar/agenda.json",
+    "frontend/src/i18n/ar/ai-brief.json",
+    "frontend/src/i18n/ar/ai-chat.json",
+    "frontend/src/i18n/ar/analytics.json",
+    "frontend/src/i18n/ar/assignments.json",
+    "frontend/src/i18n/ar/availability-polling.json",
+    "frontend/src/i18n/ar/briefing-books.json",
+    "frontend/src/i18n/ar/bulk-actions.json",
+    "frontend/src/i18n/ar/calendar.json",
+    "frontend/src/i18n/ar/citations.json",
+    "frontend/src/i18n/ar/collaboration.json",
+    "frontend/src/i18n/ar/commitments.json",
+    "frontend/src/i18n/ar/committees.json",
+    "frontend/src/i18n/ar/common.json",
+    "frontend/src/i18n/ar/contacts.json",
+    "frontend/src/i18n/ar/contextual-help.json",
+    "frontend/src/i18n/ar/contextual-suggestions.json",
+    "frontend/src/i18n/ar/copilot.json",
+    "frontend/src/i18n/ar/countries.json",
+    "frontend/src/i18n/ar/country-wizard.json",
+    "frontend/src/i18n/ar/dashboard-widgets.json",
+    "frontend/src/i18n/ar/dashboard.json",
+    "frontend/src/i18n/ar/delegation.json",
+    "frontend/src/i18n/ar/dossier-context.json",
+    "frontend/src/i18n/ar/dossier-drawer.json",
+    "frontend/src/i18n/ar/dossier-export.json",
+    "frontend/src/i18n/ar/dossier-overview.json",
+    "frontend/src/i18n/ar/dossier-recommendations.json",
+    "frontend/src/i18n/ar/dossier-search.json",
+    "frontend/src/i18n/ar/dossier-shell.json",
+    "frontend/src/i18n/ar/dossier.json",
+    "frontend/src/i18n/ar/dossiers-feature017.json",
+    "frontend/src/i18n/ar/dossiers.json",
+    "frontend/src/i18n/ar/elected-official-wizard.json",
+    "frontend/src/i18n/ar/email-digest.json"
+  ],
+  "rows": [
+    {
+      "term": "ملف",
+      "file": "briefing-books.json",
+      "keyPath": "generation.stages.uploading",
+      "sense": "computer-file-upload",
+      "reason": "The generation stage uploads an output file, not a dossier object."
+    },
+    {
+      "term": "ملف",
+      "file": "commitments.json",
+      "keyPath": "evidence.maxSize",
+      "sense": "computer-file-size",
+      "reason": "The evidence constraint states a computer-file size limit, not a dossier count or size."
+    },
+    {
+      "term": "ملف",
+      "file": "commitments.json",
+      "keyPath": "evidence.invalidType",
+      "sense": "computer-file-type",
+      "reason": "The evidence validation rejects an uploaded computer-file type, not a dossier type."
+    },
+    {
+      "term": "ملف",
+      "file": "commitments.json",
+      "keyPath": "evidence.fileTooLarge",
+      "sense": "computer-file-size",
+      "reason": "The evidence validation reports that an uploaded computer file exceeds its size limit, not that a dossier is too large."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "profile",
+      "sense": "personal-profile",
+      "reason": "The root common label names the user's personal profile, which D-17 explicitly preserves."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "dataLibrary.searchPlaceholder",
+      "sense": "data-library-file",
+      "reason": "The data-library search targets stored computer files, matching the adjacent upload and file-size controls."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "dataLibrary.fileTooLarge",
+      "sense": "computer-file-size",
+      "reason": "The data-library validation reports an uploaded computer file exceeding its size limit."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "reports.templates.organizationProfile",
+      "sense": "profile-page-or-summary",
+      "reason": "The report template is an organization profile, not a dossier object or a computer file."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.ai.modeAutoDesc",
+      "sense": "computer-file-processing",
+      "reason": "The AI processing mode is selected from uploaded computer-file size."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.ai.modeSyncDesc",
+      "sense": "computer-file-processing",
+      "reason": "The synchronous mode description refers to small uploaded computer files."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.ai.modeAsyncDesc",
+      "sense": "computer-file-processing",
+      "reason": "The asynchronous mode description refers to large uploaded computer files."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.ai.fileTooLarge",
+      "sense": "computer-file-size",
+      "reason": "The after-action AI validation reports an uploaded computer file exceeding its size limit."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.ai.uploading",
+      "sense": "computer-file-upload",
+      "reason": "The after-action AI flow is uploading a computer file for processing."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.pdf.completed",
+      "sense": "pdf-file",
+      "reason": "The completed output is a generated PDF file, not a dossier object."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.pdf.download",
+      "sense": "pdf-file",
+      "reason": "The action downloads a generated PDF file."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.pdf.generateButton",
+      "sense": "pdf-file",
+      "reason": "The action generates a PDF file, not a dossier."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.pdf.generationFailed",
+      "sense": "pdf-file",
+      "reason": "The failure concerns generation of a PDF file."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.pdf.info",
+      "sense": "pdf-file",
+      "reason": "The information label describes PDF-file generation."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.pdf.title",
+      "sense": "pdf-file",
+      "reason": "The dialog title describes generation of a PDF file."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "forms.drag_drop_or_click",
+      "sense": "computer-file-dropzone",
+      "reason": "The form instruction asks the user to drag and drop computer files."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "forms.drop_here",
+      "sense": "computer-file-dropzone",
+      "reason": "The form dropzone accepts computer files."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "forms.drop_rejected",
+      "sense": "computer-file-dropzone",
+      "reason": "The rejection message concerns computer files that could not be added."
+    },
+    {
+      "term": "ملف",
+      "file": "contacts.json",
+      "keyPath": "contactDirectory.documentExtraction.description",
+      "sense": "contact-import-file",
+      "reason": "Both occurrences enumerate computer-file formats accepted by contact extraction."
+    },
+    {
+      "term": "ملف",
+      "file": "contacts.json",
+      "keyPath": "contactDirectory.documentExtraction.no_contacts_found",
+      "sense": "contact-import-file",
+      "reason": "The retry guidance asks for a different computer file after extraction finds no contacts."
+    },
+    {
+      "term": "ملف",
+      "file": "contacts.json",
+      "keyPath": "contactDirectory.documentExtraction.start_over",
+      "sense": "contact-import-file",
+      "reason": "The restart action uploads a different computer file for contact extraction."
+    },
+    {
+      "term": "ملف",
+      "file": "dashboard.json",
+      "keyPath": "export.excel",
+      "sense": "exported-computer-file",
+      "reason": "The dashboard export produces an Excel file, not a dossier."
+    },
+    {
+      "term": "ملف",
+      "file": "dashboard.json",
+      "keyPath": "export.pdf",
+      "sense": "exported-computer-file",
+      "reason": "The dashboard export produces a PDF file, not a dossier."
+    },
+    {
+      "term": "ملف",
+      "file": "dashboard.json",
+      "keyPath": "export.csv",
+      "sense": "exported-computer-file",
+      "reason": "The dashboard export produces a CSV file, not a dossier."
+    },
+    {
+      "term": "ملف",
+      "file": "dossier-export.json",
+      "keyPath": "popupBlocked",
+      "sense": "downloaded-html-file",
+      "reason": "The fallback downloads the briefing pack as an HTML computer file."
+    },
+    {
+      "term": "ملف",
+      "file": "dossier.json",
+      "keyPath": "addToDossier.actions.document.description",
+      "sense": "attached-computer-file",
+      "reason": "The surviving occurrence is the file being attached; the dossier-object occurrence in the same leaf was rewritten to دوسيه."
+    },
+    {
+      "term": "ملف",
+      "file": "dossier.json",
+      "keyPath": "sections.organization.institutionalProfile",
+      "sense": "profile-page-or-summary",
+      "reason": "The label names an organization's institutional profile, not a dossier object or a computer file."
+    },
+    {
+      "term": "ملف",
+      "file": "dossier.json",
+      "keyPath": "sections.person.professionalProfile",
+      "sense": "profile-page-or-summary",
+      "reason": "The label names a person's professional profile, not a dossier object or a computer file."
+    },
+    {
+      "term": "ملف",
+      "file": "advanced-search.json",
+      "keyPath": "fields.file_type",
+      "sense": "computer-file-type",
+      "reason": "The advanced-search field labels the type of a computer file, not a dossier type."
+    },
+    {
+      "term": "ملف",
+      "file": "advanced-search.json",
+      "keyPath": "fields.file_size",
+      "sense": "computer-file-size",
+      "reason": "The advanced-search field labels computer-file size, not a dossier size."
+    },
+    {
+      "term": "ملف",
+      "file": "agenda.json",
+      "keyPath": "dropFileHere",
+      "sense": "computer-file-dropzone",
+      "reason": "The agenda dropzone accepts a computer file for upload."
+    },
+    {
+      "term": "ملف",
+      "file": "agenda.json",
+      "keyPath": "maxFileSize",
+      "sense": "computer-file-size",
+      "reason": "The agenda upload constraint states the maximum computer-file size."
+    },
+    {
+      "term": "ملف",
+      "file": "commitments.json",
+      "keyPath": "evidence.dropzone",
+      "sense": "computer-file-dropzone",
+      "reason": "The commitment-evidence dropzone accepts uploaded computer files."
+    },
+    {
+      "term": "ملف",
+      "file": "committees.json",
+      "keyPath": "actions.viewProfile",
+      "sense": "personal-profile",
+      "reason": "The committee action opens a person's profile, which D-17 explicitly preserves."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "navigation.profile",
+      "sense": "personal-profile",
+      "reason": "The navigation label opens the user's personal profile, which D-17 explicitly preserves."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "dataLibrary.dragDropFiles",
+      "sense": "data-library-file-upload",
+      "reason": "The data-library dropzone accepts computer files for upload."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "dataLibrary.browseFiles",
+      "sense": "data-library-file-browse",
+      "reason": "The data-library action browses computer files for upload."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "dataLibrary.maxFileSize",
+      "sense": "computer-file-size",
+      "reason": "The data-library constraint labels the maximum computer-file size."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "dataLibrary.totalFiles",
+      "sense": "data-library-file-count",
+      "reason": "The data-library metric counts stored computer files, not dossier objects."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.ai.uploadFile",
+      "sense": "computer-file-upload",
+      "reason": "The after-action AI control uploads a computer file for processing."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.ai.invalidFileType",
+      "sense": "computer-file-type",
+      "reason": "The after-action AI validation rejects unsupported computer-file types."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.attachments.upload",
+      "sense": "attachment-file-upload",
+      "reason": "The attachment control uploads a computer file to the after-action record."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.attachments.fileName",
+      "sense": "attachment-file-metadata",
+      "reason": "The attachment field labels the uploaded computer file's name."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.attachments.fileSize",
+      "sense": "attachment-file-metadata",
+      "reason": "The attachment field labels the uploaded computer file's size."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.attachments.uploadSuccess",
+      "sense": "attachment-file-upload",
+      "reason": "The success message confirms that an attachment computer file was uploaded."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.attachments.uploadFailed",
+      "sense": "attachment-file-upload",
+      "reason": "The failure message concerns uploading an attachment computer file."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.attachments.maxSize",
+      "sense": "attachment-file-size",
+      "reason": "The attachment constraint states the maximum computer-file size."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "forms.browse_files",
+      "sense": "computer-file-browse",
+      "reason": "The generic form action browses computer files for upload."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "forms.file_constraints",
+      "sense": "computer-file-constraints",
+      "reason": "The generic form label introduces constraints on uploaded computer files."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "forms.files_selected",
+      "sense": "computer-file-selection",
+      "reason": "The generic form status counts computer files selected for upload."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "forms.remove_file",
+      "sense": "computer-file-removal",
+      "reason": "The generic form action removes a selected computer file."
+    },
+    {
+      "term": "ملف",
+      "file": "contacts.json",
+      "keyPath": "contactDirectory.ocr.invalid_file_type",
+      "sense": "ocr-image-file-type",
+      "reason": "The OCR validation rejects an unsupported uploaded image-file type."
+    },
+    {
+      "term": "ملف",
+      "file": "contacts.json",
+      "keyPath": "contactDirectory.ocr.file_too_large",
+      "sense": "ocr-image-file-size",
+      "reason": "The OCR validation reports that an uploaded image file exceeds its size limit."
+    },
+    {
+      "term": "ملف",
+      "file": "contacts.json",
+      "keyPath": "contactDirectory.documentExtraction.invalid_file_type",
+      "sense": "contact-import-file-type",
+      "reason": "The contact-extraction validation enumerates accepted computer-file formats."
+    },
+    {
+      "term": "ملف",
+      "file": "contacts.json",
+      "keyPath": "contactDirectory.documentExtraction.file_too_large",
+      "sense": "contact-import-file-size",
+      "reason": "The contact-extraction validation reports that an import file exceeds its size limit."
+    },
+    {
+      "term": "ملف",
+      "file": "contacts.json",
+      "keyPath": "contactDirectory.interactions.form.upload_files",
+      "sense": "interaction-attachment-upload",
+      "reason": "The contact-interaction form uploads computer files as attachments."
+    },
+    {
+      "term": "ملف",
+      "file": "contacts.json",
+      "keyPath": "contactDirectory.interactions.form.attachments_description",
+      "sense": "interaction-attachment-size",
+      "reason": "The contact-interaction attachment guidance states a per-computer-file size limit."
+    },
+    {
+      "term": "ملف",
+      "file": "dossier.json",
+      "keyPath": "sections.shared.documentsDescription",
+      "sense": "document-file-or-attachment",
+      "reason": "The shared section enumerates computer files, attachments, and references stored as documents."
+    },
+    {
+      "term": "ملف",
+      "file": "dossier.json",
+      "keyPath": "overview.person.title",
+      "sense": "personal-profile",
+      "reason": "The person-overview title names a personal profile, which D-17 explicitly preserves."
+    },
+    {
+      "term": "ملف",
+      "file": "dossiers-feature017.json",
+      "keyPath": "documents.fields.fileName",
+      "sense": "document-file-metadata",
+      "reason": "The document field labels the uploaded computer file's name."
+    },
+    {
+      "term": "ملف",
+      "file": "dossiers-feature017.json",
+      "keyPath": "documents.fields.fileSize",
+      "sense": "document-file-metadata",
+      "reason": "The document field labels the uploaded computer file's size."
+    },
+    {
+      "term": "ملف",
+      "file": "dossiers-feature017.json",
+      "keyPath": "documents.errors.fileTooLarge",
+      "sense": "document-file-size",
+      "reason": "The document validation reports that an uploaded computer file exceeds its size limit."
+    },
+    {
+      "term": "ملف",
+      "file": "dossiers-feature017.json",
+      "keyPath": "documents.errors.infected",
+      "sense": "document-file-security",
+      "reason": "The document validation rejects an uploaded computer file containing malicious software."
+    },
+    {
+      "term": "ملف",
+      "file": "dossiers.json",
+      "keyPath": "documents.fields.fileName",
+      "sense": "document-file-metadata",
+      "reason": "The document field labels the uploaded computer file's name."
+    },
+    {
+      "term": "ملف",
+      "file": "dossiers.json",
+      "keyPath": "documents.fields.fileSize",
+      "sense": "document-file-metadata",
+      "reason": "The document field labels the uploaded computer file's size."
+    },
+    {
+      "term": "ملف",
+      "file": "dossiers.json",
+      "keyPath": "documents.errors.fileTooLarge",
+      "sense": "document-file-size",
+      "reason": "The document validation reports that an uploaded computer file exceeds its size limit."
+    },
+    {
+      "term": "ملف",
+      "file": "dossiers.json",
+      "keyPath": "documents.errors.infected",
+      "sense": "document-file-security",
+      "reason": "The document validation rejects an uploaded computer file containing malicious software."
+    }
+  ]
+}

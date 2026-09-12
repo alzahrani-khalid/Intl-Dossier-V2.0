@@ -47,13 +47,7 @@ export function CommentList({
 }: CommentListProps) {
   const { t } = useTranslation('comments')
 
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useComments(entityType, entityId, {
+  const { data, isLoading, isError, error, refetch } = useComments(entityType, entityId, {
     limit: pageSize,
     enabled: !!entityType && !!entityId,
   })
@@ -69,11 +63,9 @@ export function CommentList({
 
   if (isLoading) {
     return (
-      <div
-        className={cn('flex items-center justify-center py-8', className)}
-      >
+      <div className={cn('flex items-center justify-center py-8', className)}>
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-        <span className="ms-2 text-muted-foreground">{t('loading', 'Loading comments...')}</span>
+        <span className="ms-2 text-muted-foreground">{t('loading')}</span>
       </div>
     )
   }
@@ -83,9 +75,9 @@ export function CommentList({
       <Alert variant="destructive" className={className}>
         <AlertCircle className="h-4 w-4" />
         <AlertDescription className="flex items-center justify-between">
-          <span>{(error as Error | null)?.message || t('error', 'Failed to load comments')}</span>
+          <span>{(error as Error | null)?.message || t('error')}</span>
           <Button variant="outline" size="sm" onClick={() => refetch()}>
-            {t('retry', 'Retry')}
+            {t('retry')}
           </Button>
         </AlertDescription>
       </Alert>
@@ -93,16 +85,13 @@ export function CommentList({
   }
 
   return (
-    <div
-      className={cn('space-y-4', className)}
-      data-testid="comment-list"
-    >
+    <div className={cn('space-y-4', className)} data-testid="comment-list">
       {/* Header */}
       {title !== null && (
         <div className="flex items-center gap-2">
           <MessageSquare className="h-5 w-5" />
           <h3 className="text-lg font-semibold">
-            {title || t('title', 'Comments')}
+            {title || t('title')}
             {totalCount > 0 && (
               <span className="text-sm font-normal text-muted-foreground ms-2">({totalCount})</span>
             )}
@@ -127,9 +116,7 @@ export function CommentList({
       {comments.length === 0 && (
         <div className="flex flex-col items-center justify-center py-8 text-center">
           <MessageSquare className="h-12 w-12 text-muted-foreground/50 mb-3" />
-          <p className="text-muted-foreground">
-            {emptyMessage || t('empty', 'No comments yet. Be the first to comment!')}
-          </p>
+          <p className="text-muted-foreground">{emptyMessage || t('empty')}</p>
         </div>
       )}
 
@@ -146,7 +133,6 @@ export function CommentList({
           ))}
         </div>
       )}
-
     </div>
   )
 }

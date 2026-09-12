@@ -55,7 +55,7 @@ interface QueryErrorFallbackProps {
 function QueryErrorFallback({ onReset, message, error }: QueryErrorFallbackProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-// Determine error type
+  // Determine error type
   const isNetworkError = error?.message.includes('fetch') || error?.message.includes('network')
   const isAuthError = error?.message.includes('401') || error?.message.includes('unauthorized')
   const isServerError = error?.message.includes('500') || error?.message.includes('server')
@@ -64,40 +64,27 @@ function QueryErrorFallback({ onReset, message, error }: QueryErrorFallbackProps
   const ErrorIcon = isNetworkError ? WifiOff : AlertTriangle
 
   // Select appropriate title
-  let title = t('error.query.generic', 'Failed to load data')
+  let title = t('error.query.generic')
   if (isNetworkError) {
-    title = t('error.query.network', 'Connection Error')
+    title = t('error.query.network')
   } else if (isAuthError) {
-    title = t('error.query.auth', 'Authentication Error')
+    title = t('error.query.auth')
   } else if (isServerError) {
-    title = t('error.query.server', 'Server Error')
+    title = t('error.query.server')
   }
 
   // Select appropriate description
-  let description =
-    message ||
-    t('error.query.genericDescription', 'Unable to load the requested data. Please try again.')
+  let description = message || t('error.query.genericDescription')
   if (isNetworkError) {
-    description = t(
-      'error.query.networkDescription',
-      'Unable to connect to the server. Please check your internet connection.',
-    )
+    description = t('error.query.networkDescription')
   } else if (isAuthError) {
-    description = t(
-      'error.query.authDescription',
-      'Your session may have expired. Please sign in again.',
-    )
+    description = t('error.query.authDescription')
   } else if (isServerError) {
-    description = t(
-      'error.query.serverDescription',
-      'The server encountered an error. Please try again later.',
-    )
+    description = t('error.query.serverDescription')
   }
 
   return (
-    <div
-      className="flex min-h-[400px] items-center justify-center p-4 sm:p-6"
-    >
+    <div className="flex min-h-[400px] items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-lg">
         <Alert variant="destructive" className="mb-4">
           <ErrorIcon className="size-5" />
@@ -111,7 +98,7 @@ function QueryErrorFallback({ onReset, message, error }: QueryErrorFallbackProps
         <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
           <Button onClick={onReset} className=" w-full sm: sm:w-auto" variant="default">
             <RefreshCw className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-            {t('error.query.retry', 'Retry')}
+            {t('error.query.retry')}
           </Button>
 
           {isNetworkError && (
@@ -121,7 +108,7 @@ function QueryErrorFallback({ onReset, message, error }: QueryErrorFallbackProps
               variant="outline"
             >
               <Wifi className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-              {t('error.query.reload', 'Reload Page')}
+              {t('error.query.reload')}
             </Button>
           )}
 
@@ -131,7 +118,7 @@ function QueryErrorFallback({ onReset, message, error }: QueryErrorFallbackProps
               className=" w-full sm: sm:w-auto"
               variant="outline"
             >
-              {t('error.query.signIn', 'Sign In')}
+              {t('error.query.signIn')}
             </Button>
           )}
         </div>

@@ -288,10 +288,10 @@ export function LinkCard({
                         'touch-manipulation',
                       )}
                       onClick={handleCancelEdit}
-                      aria-label={t('common.cancel')}
+                      aria-label={t('common:cancel')}
                     >
                       <X className={cn('h-4 w-4', isRTL ? 'ms-1' : 'me-1')} />
-                      <span className="text-xs sm:text-sm">{t('common.cancel')}</span>
+                      <span className="text-xs sm:text-sm">{t('common:cancel')}</span>
                     </Button>
 
                     <Button
@@ -302,10 +302,10 @@ export function LinkCard({
                         'touch-manipulation',
                       )}
                       onClick={handleSaveNotes}
-                      aria-label={t('common.save')}
+                      aria-label={t('common:save')}
                     >
                       <Check className={cn('h-4 w-4', isRTL ? 'ms-1' : 'me-1')} />
-                      <span className="text-xs sm:text-sm">{t('common.save')}</span>
+                      <span className="text-xs sm:text-sm">{t('common:save')}</span>
                     </Button>
                   </div>
                 </div>
@@ -339,13 +339,13 @@ export function LinkCard({
           </AlertDialogHeader>
           <AlertDialogFooter className={cn(isRTL && 'flex-row-reverse')}>
             <AlertDialogCancel className=" touch-manipulation">
-              {t('common.cancel')}
+              {t('common:cancel')}
             </AlertDialogCancel>
             <AlertDialogAction
               className=" touch-manipulation bg-danger hover:bg-danger"
               onClick={handleDelete}
             >
-              {t('common.delete')}
+              {t('common:delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

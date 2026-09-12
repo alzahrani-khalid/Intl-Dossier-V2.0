@@ -18,7 +18,7 @@ interface AfterActionRecord {
     decision_maker: string;
     decision_date: string;
   }>;
-  commitments: Array<{
+  aa_commitments: Array<{
     description: string;
     priority: string;
     status: string;
@@ -127,10 +127,10 @@ ${i + 1}. ${d.description}
 `).join('\n')}
 
 COMMITMENTS:
-${record.commitments.map((c, i) => `
+${record.aa_commitments.map((c, i) => `
 ${i + 1}. ${c.description}
    Priority: ${c.priority.toUpperCase()}
-   Due Date: ${new Date(c.due_date).toLocaleDateString('en-US')}
+   Deadline: ${new Date(c.due_date).toLocaleDateString('en-US')}
    Status: ${c.status.replace('_', ' ').toUpperCase()}
 `).join('\n')}
 
@@ -179,10 +179,10 @@ ${i + 1}. ${d.description}
 `).join('\n')}
 
 الالتزامات:
-${record.commitments.map((c, i) => `
+${record.aa_commitments.map((c, i) => `
 ${i + 1}. ${c.description}
    الأولوية: ${translatePriority(c.priority)}
-   تاريخ الاستحقاق: ${new Date(c.due_date).toLocaleDateString('ar-SA')}
+   الموعد النهائي: ${new Date(c.due_date).toLocaleDateString('ar-SA')}
    الحالة: ${translateStatus(c.status)}
 `).join('\n')}
 
@@ -315,7 +315,7 @@ serve(async (req) => {
       .select(`
         *,
         decisions(*),
-        commitments(*),
+        aa_commitments(*),
         risks(*),
         follow_up_actions(*)
       `)

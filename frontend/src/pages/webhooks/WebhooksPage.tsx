@@ -12,8 +12,7 @@
 
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
-import { formatDayFirstYear } from '@/lib/format-date'
+import { formatDateTime, formatDayFirstYear } from '@/lib/format-date'
 import {
   Plus,
   Search,
@@ -240,7 +239,7 @@ export function WebhooksPage({ initialTab = 'list', initialSearch = '' }: Webhoo
             <Button variant="outline" onClick={() => refetch()} className="min-h-11">
               <RefreshCw className="h-4 w-4" />
               <span className="sr-only">
-                {t('common:common.actions.refresh', { defaultValue: 'Refresh' })}
+                {t('common:actions.refresh')}
               </span>
             </Button>
           </div>
@@ -400,7 +399,7 @@ function WebhookCard({
           <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={onCopyUrl}>
             <Copy className="h-3.5 w-3.5" />
             <span className="sr-only">
-              {t('common:common.actions.copy', { defaultValue: 'Copy URL' })}
+              {t('common:actions.copy')}
             </span>
           </Button>
         </div>
@@ -464,18 +463,18 @@ function WebhookCard({
                 <TestTube className="h-4 w-4" />
               )}
               <span className="sr-only">
-                {t('common:common.actions.test', { defaultValue: 'Test webhook' })}
+                {t('common:actions.test')}
               </span>
             </Button>
             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onViewDetails}>
               <History className="h-4 w-4" />
               <span className="sr-only">
-                {t('common:common.actions.viewDetails', { defaultValue: 'View details' })}
+                {t('common:actions.viewDetails')}
               </span>
             </Button>
             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onEdit}>
               <Settings className="h-4 w-4" />
-              <span className="sr-only">{t('common:common.edit', { defaultValue: 'Edit' })}</span>
+              <span className="sr-only">{t('common:edit')}</span>
             </Button>
             <Button
               variant="ghost"
@@ -484,9 +483,7 @@ function WebhookCard({
               onClick={onDelete}
             >
               <Trash2 className="h-4 w-4" />
-              <span className="sr-only">
-                {t('common:common.delete', { defaultValue: 'Delete' })}
-              </span>
+              <span className="sr-only">{t('common:delete')}</span>
             </Button>
           </div>
         </div>
@@ -908,7 +905,7 @@ interface WebhookDetailsDialogProps {
 }
 
 function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsDialogProps) {
-  const { t, i18n } = useTranslation('webhooks')
+  const { t } = useTranslation('webhooks')
   const { isRTL } = useDirection()
 
   const [page, setPage] = useState(1)
@@ -1011,9 +1008,7 @@ function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsD
                           {t(`events.${delivery.event_type}`)}
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          {new Date(delivery.created_at).toLocaleString(
-                            toFormatLocale(i18n.language),
-                          )}
+                          {formatDateTime(delivery.created_at)}
                         </div>
                       </div>
                     </div>
@@ -1062,7 +1057,7 @@ function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsD
                 <ChevronRight className="h-4 w-4 rotate-180" />
               )}
               <span className="sr-only">
-                {t('common:common.actions.previous', { defaultValue: 'Previous' })}
+                {t('common:actions.previous')}
               </span>
             </Button>
             <span className="text-sm">
@@ -1079,9 +1074,7 @@ function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsD
               ) : (
                 <ChevronRight className="h-4 w-4" />
               )}
-              <span className="sr-only">
-                {t('common:common.actions.next', { defaultValue: 'Next' })}
-              </span>
+              <span className="sr-only">{t('common:actions.next')}</span>
             </Button>
           </div>
         )}

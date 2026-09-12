@@ -96,7 +96,7 @@
     },
 
     "entityTypes": {
-      "dossier": "ملف",
+      "dossier": "دوسيه",
       "relationship": "علاقة",
       "commitment": "التزام",
       "engagement": "مشاركة"

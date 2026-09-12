@@ -2,14 +2,11 @@ import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Save, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { SettingsNavigation } from './SettingsNavigation'
 import type { SettingsSectionId } from '@/types/settings.types'
 
 interface SettingsLayoutProps {
   /** Currently active section */
   activeSection: SettingsSectionId
-  /** Callback when section changes */
-  onSectionChange: (section: SettingsSectionId) => void
   /** Whether settings data is still loading */
   isLoading?: boolean
   /** Whether there are unsaved changes */
@@ -23,24 +20,24 @@ interface SettingsLayoutProps {
 }
 
 /**
- * Phase 42-09 — Settings page layout (handoff 240+1fr two-column chrome).
+ * Phase 42-09 — Settings INDEX content card (handoff chrome).
  *
- * Desktop (≥768px): CSS Grid — 240px nav card + 1fr content card.
- * Mobile  (≤768px): the `@media (max-width: 768px)` block in index.css
- * collapses the grid into a single column with a horizontal pill nav
- * (Plan 03 ported the rule).
+ * NAV-02 (Phase 97) moved the 240px + 1fr grid and the `SettingsNavigation`
+ * column up to `routes/_protected/settings.tsx`, so the whole subtree — index
+ * and all six children — mounts exactly one nav column. What stays here is the
+ * index-only content card: the `card-head` derives its `card-title` /
+ * `card-sub` from `activeSection`, so wrapping a CHILD route in it would print
+ * one section's title above unrelated content. That chrome must not travel.
  *
- * Each section root carries `data-loading` so Playwright fixtures can
+ * The section root carries `data-loading` so Playwright fixtures can
  * await page-readiness without `networkidle`.
  *
  * The `dir` attribute is wired off `i18n.language === 'ar'` (RTL) per
  * the project-wide pattern; the inner card uses logical-property CSS
- * (`text-start`, `inset-inline-start`, `border-block-end`) so the
- * accent bar / pill underline flip correctly.
+ * (`text-start`, `inset-inline-start`) so it flips correctly.
  */
 export function SettingsLayout({
   activeSection,
-  onSectionChange,
   isLoading = false,
   hasChanges = false,
   isSaving = false,
@@ -56,15 +53,9 @@ export function SettingsLayout({
       aria-label={t('pageTitle')}
       dir={isRTL ? 'rtl' : 'ltr'}
       data-loading={isLoading ? 'true' : 'false'}
-      className="page settings-layout"
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '240px 1fr',
-        gap: 'var(--gap)',
-      }}
+      className="settings-content"
     >
       <h1 className="sr-only">{t('pageTitle')}</h1>
-      <SettingsNavigation activeSection={activeSection} onChange={onSectionChange} />
 
       <div className="card">
         <div

@@ -246,8 +246,8 @@ export function AIExtractionButton({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="en">{t('common.english')}</SelectItem>
-                <SelectItem value="ar">{t('common.arabic')}</SelectItem>
+                <SelectItem value="en">{t('common:english')}</SelectItem>
+                <SelectItem value="ar">{t('common:arabic')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -348,7 +348,7 @@ export function AIExtractionButton({
             onClick={() => handleOpenChange(false)}
             disabled={status === 'processing' || status === 'uploading'}
           >
-            {t('common.cancel')}
+            {t('common:cancel')}
           </Button>
         </div>
       </DialogContent>

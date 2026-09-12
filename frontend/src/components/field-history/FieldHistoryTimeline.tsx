@@ -64,7 +64,7 @@ import {
   ENTITY_TYPE_DISPLAY,
 } from '@/types/field-history.types'
 import { useDirection } from '@/hooks/useDirection'
-import { formatDateTime } from '@/lib/format-date'
+import { formatDateTime, formatRelativeTime } from '@/lib/format-date'
 import { toFormatLocale } from '@/lib/format-locale'
 
 // =============================================
@@ -115,31 +115,6 @@ function formatValue(value: unknown, isRTL: boolean): string {
 // =============================================
 // RELATIVE TIME HELPER
 // =============================================
-
-function getRelativeTime(dateString: string, isRTL: boolean): string {
-  const date = new Date(dateString)
-  const now = new Date()
-  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
-
-  const rtf = new Intl.RelativeTimeFormat(toFormatLocale(isRTL ? 'ar' : 'en'), { numeric: 'auto' })
-
-  if (diffInSeconds < 60) {
-    return rtf.format(-diffInSeconds, 'second')
-  }
-  if (diffInSeconds < 3600) {
-    return rtf.format(-Math.floor(diffInSeconds / 60), 'minute')
-  }
-  if (diffInSeconds < 86400) {
-    return rtf.format(-Math.floor(diffInSeconds / 3600), 'hour')
-  }
-  if (diffInSeconds < 604800) {
-    return rtf.format(-Math.floor(diffInSeconds / 86400), 'day')
-  }
-  if (diffInSeconds < 2592000) {
-    return rtf.format(-Math.floor(diffInSeconds / 604800), 'week')
-  }
-  return rtf.format(-Math.floor(diffInSeconds / 2592000), 'month')
-}
 
 // =============================================
 // FIELD HISTORY ENTRY CARD
@@ -212,7 +187,7 @@ const FieldHistoryEntryCard = memo(function FieldHistoryEntryCard({
                       <TooltipTrigger asChild>
                         <span className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
-                          {getRelativeTime(entry.created_at, isRTL)}
+                          {formatRelativeTime(entry.created_at)}
                         </span>
                       </TooltipTrigger>
                       <TooltipContent>{formatDateTime(entry.created_at)}</TooltipContent>
@@ -274,7 +249,7 @@ const FieldHistoryEntryCard = memo(function FieldHistoryEntryCard({
                   <div className="flex items-center gap-1 text-warning">
                     <AlertCircle className="h-3 w-3" />
                     {t('entry.rolledBackAt', {
-                      date: getRelativeTime(entry.rolled_back_at, isRTL),
+                      date: formatRelativeTime(entry.rolled_back_at),
                     })}
                   </div>
                 ) : (
@@ -351,7 +326,7 @@ const GroupedFieldCard = memo(function GroupedFieldCard({
             </span>
             <span className="hidden sm:flex items-center gap-1">
               <Clock className="h-3 w-3" />
-              {getRelativeTime(field.statistics.last_change_at, isRTL)}
+              {formatRelativeTime(field.statistics.last_change_at)}
             </span>
           </div>
         </div>

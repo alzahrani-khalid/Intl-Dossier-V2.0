@@ -133,7 +133,7 @@ describe('SLAIndicator Component', () => {
       const region = screen.getByRole('region')
       expect(region).toHaveAttribute('aria-labelledby', 'sla-info-title')
       expect(screen.getByRole('heading', { name: 'Safe' })).toBeInTheDocument()
-      expect(screen.getByText('Deadline')).toBeInTheDocument()
+      expect(screen.getByText('SLA Deadline')).toBeInTheDocument()
       expect(screen.getByText(/remaining/i)).toBeInTheDocument()
       expect(screen.getByRole('progressbar')).toBeInTheDocument()
     })

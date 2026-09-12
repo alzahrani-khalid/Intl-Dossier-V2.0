@@ -9,9 +9,9 @@
  * @module components/signals/SignalRow
  */
 
-import { format } from 'date-fns'
 import type { TFunction } from 'i18next'
 import type { Signal, SignalSeverity } from '@/domains/signals'
+import { formatDayFirst } from '@/lib/format-date'
 import { SignalStatusBadge } from './SignalStatusBadge'
 
 // Severity → semantic token classes (UI-SPEC Color section). Soft backgrounds that are
@@ -79,9 +79,9 @@ export function SignalRow({ signal, isFocused, t, onClick }: SignalRowProps): Re
 
           {/* Meta line: date · source type, plus AI confidence badge when applicable */}
           <div className="flex flex-wrap items-center gap-2 [font-size:var(--t-meta)] text-ink-faint">
-            <span>{format(new Date(signal.occurred_at), 'EEE dd MMM')}</span>
+            <span>{formatDayFirst(new Date(signal.occurred_at))}</span>
             <span aria-hidden="true">·</span>
-            <span className="font-mono">{signal.source_type}</span>
+            <span className="font-mono">{t(`sourceType.${signal.source_type}`)}</span>
             {showAiConfidence && (
               <span
                 className="font-mono [font-size:var(--t-mono-small)] bg-accent-soft text-accent-ink ps-2 pe-2 rounded"

@@ -6,8 +6,9 @@
 // Do NOT extend or "fix" this function. Undeploy deferred (environment action)
 // — see .planning/phases/65-engagement-positions-tab-legacy-reconciliation/65-03-SUMMARY.md.
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
+import { writeAuditLog } from '../_shared/audit.ts';
 
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req);
@@ -51,7 +52,8 @@ serve(async (req) => {
     );
 
     // Get user ID
-    const { data: { user } } = await supabaseClient.auth.getUser();
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user } } = await supabaseClient.auth.getUser(token);
     if (!user) {
       return new Response(
         JSON.stringify({ error: 'Unauthorized' }),
@@ -101,18 +103,38 @@ serve(async (req) => {
       );
     }
 
-    // Create audit log
-    await supabaseClient.from('audit_logs').insert({
-      user_id: user.id,
-      action: 'position_detached',
-      resource_type: 'engagement_position',
-      resource_id: attachment.id,
-      metadata: {
-        engagement_id: engagementId,
-        position_id: positionId,
-        position_title: attachment.positions?.title,
-      },
-    });
+    // Create audit log.
+    // Grade: LOG-LOUDLY-AND-CONTINUE (D-18) — the detach is already persisted.
+    // `user_role` is NOT NULL and no role is resolved on this path, so derive it
+    // from `public.users`; unresolvable = loud skip, never a fabricated role.
+    const { data: auditActor } = await supabaseClient
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    if (!auditActor?.role) {
+      console.error(
+        `AUDIT-ZERO-01: audit write SKIPPED — no user_role resolves for ${user.id} (engagements-positions-detach:position_detached)`
+      );
+    } else {
+      await writeAuditLog(
+        supabaseClient,
+        {
+          entity_type: 'engagement_position',
+          entity_id: attachment.id,
+          action: 'position_detached',
+          user_id: user.id,
+          user_role: auditActor.role,
+          old_values: {
+            engagement_id: engagementId,
+            position_id: positionId,
+            position_title: attachment.positions?.title,
+          },
+        },
+        'engagements-positions-detach'
+      );
+    }
 
     return new Response(
       null,

@@ -159,8 +159,8 @@ export function VersionComparison({
   }
 
   const renderMetadataValue = (value: any): string => {
-    if (value === null || value === undefined) return t('common.none')
-    if (typeof value === 'boolean') return value ? t('common.yes') : t('common.no')
+    if (value === null || value === undefined) return t('common:none')
+    if (typeof value === 'boolean') return value ? t('common:yes') : t('common:no')
     if (typeof value === 'object') return JSON.stringify(value)
     return String(value)
   }
@@ -271,9 +271,7 @@ export function VersionComparison({
       {error && (
         <Alert variant="destructive">
           <AlertCircle className="size-4" />
-          <AlertDescription>
-            {error instanceof Error ? error.message : t('positions:versionComparison.error')}
-          </AlertDescription>
+          <AlertDescription>{t('positions:versionComparison.error')}</AlertDescription>
         </Alert>
       )}
 

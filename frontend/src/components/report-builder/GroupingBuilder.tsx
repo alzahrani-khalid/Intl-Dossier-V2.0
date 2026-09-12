@@ -126,7 +126,7 @@ export function GroupingBuilder({
                         size="icon"
                         className="h-4 w-4 p-0 hover:bg-transparent"
                         onClick={() => onRemoveGrouping(grouping.id)}
-                        aria-label={t('common:common.actions.remove')}
+                        aria-label={t('common:actions.remove')}
                       >
                         <X className="h-3 w-3" />
                       </Button>
@@ -183,7 +183,7 @@ export function GroupingBuilder({
                           size="icon"
                           className="h-6 w-6"
                           onClick={() => onRemoveAggregation(agg.id)}
-                          aria-label={t('common:common.actions.remove')}
+                          aria-label={t('common:actions.remove')}
                         >
                           <X className="h-3 w-3" />
                         </Button>

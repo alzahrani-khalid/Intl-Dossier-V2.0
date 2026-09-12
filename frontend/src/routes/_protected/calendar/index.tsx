@@ -1,0 +1,104 @@
+/**
+ * Calendar page (index child of the /calendar layout)
+ *
+ * Phase 96 DEAD-07: the page body moved out of `calendar.tsx` so that file could
+ * become a layout with an <Outlet/> and make `calendar/new.tsx` reachable. The
+ * layout declares no search params, so there is nothing to read via getRouteApi.
+ */
+
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { lazy, Suspense } from 'react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { CalendarDays, Plus } from 'lucide-react'
+import { PageHeader } from '@/components/layout/PageHeader'
+import { useDossierDrawer, type DossierDrawerType } from '@/hooks/useDossierDrawer'
+
+const UnifiedCalendar = lazy(() =>
+  import('@/components/calendar/UnifiedCalendar').then((m) => ({
+    default: m.UnifiedCalendar,
+  })),
+)
+
+export const Route = createFileRoute('/_protected/calendar/')({
+  component: CalendarPage,
+})
+
+function CalendarPage() {
+  const { t } = useTranslation('calendar')
+  const [viewMode, setViewMode] = useState<'month' | 'week' | 'day'>('month')
+  const { openDossier } = useDossierDrawer()
+
+  return (
+    <div className="space-y-6">
+      <PageHeader
+        icon={<CalendarDays className="h-6 w-6" />}
+        title={t('page.title')}
+        subtitle={t('page.description')}
+        actions={
+          <Link to="/calendar/new">
+            <Button className="w-full sm:w-auto">
+              <Plus className="h-4 w-4 me-2" />
+              {t('form.create_event')}
+            </Button>
+          </Link>
+        }
+      />
+
+      {/* View Mode Toggle */}
+      <Card className="mb-6">
+        <CardContent className="pt-6">
+          <div className="flex items-center gap-2 justify-center sm:justify-start">
+            <Button
+              variant={viewMode === 'month' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('month')}
+            >
+              {t('view.month')}
+            </Button>
+            <Button
+              variant={viewMode === 'week' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('week')}
+            >
+              {t('view.week')}
+            </Button>
+            <Button
+              variant={viewMode === 'day' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('day')}
+            >
+              {t('view.day')}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Unified Calendar Component - Lazy loaded */}
+      <Suspense
+        fallback={
+          <div className="flex min-h-[40vh] items-center justify-center">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+          </div>
+        }
+      >
+        <UnifiedCalendar
+          viewMode={viewMode}
+          onEventClick={(event) => {
+            // Phase 41 plan 06 — open the dossier drawer when the clicked event
+            // carries a dossier_id. Falls back to 'country' when event.dossier?.type
+            // is missing (RESEARCH §8 + Pitfall 6).
+            if (typeof event.dossier_id === 'string' && event.dossier_id.length > 0) {
+              const fallbackType = 'country' as const
+              const type: DossierDrawerType =
+                (event.dossier?.type as DossierDrawerType | undefined) ?? fallbackType
+              openDossier({ id: event.dossier_id, type })
+            }
+          }}
+        />
+      </Suspense>
+    </div>
+  )
+}

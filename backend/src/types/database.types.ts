@@ -12411,54 +12411,6 @@ export type Database = {
           },
         ]
       }
-      entity_preview_layouts: {
-        Row: {
-          context: Database["public"]["Enums"]["preview_context"]
-          created_at: string
-          created_by: string | null
-          description_ar: string | null
-          description_en: string | null
-          entity_type: Database["public"]["Enums"]["preview_entity_type"]
-          id: string
-          is_default: boolean
-          layout_config: Json
-          name_ar: string
-          name_en: string
-          organization_id: string | null
-          updated_at: string
-        }
-        Insert: {
-          context?: Database["public"]["Enums"]["preview_context"]
-          created_at?: string
-          created_by?: string | null
-          description_ar?: string | null
-          description_en?: string | null
-          entity_type: Database["public"]["Enums"]["preview_entity_type"]
-          id?: string
-          is_default?: boolean
-          layout_config?: Json
-          name_ar: string
-          name_en: string
-          organization_id?: string | null
-          updated_at?: string
-        }
-        Update: {
-          context?: Database["public"]["Enums"]["preview_context"]
-          created_at?: string
-          created_by?: string | null
-          description_ar?: string | null
-          description_en?: string | null
-          entity_type?: Database["public"]["Enums"]["preview_entity_type"]
-          id?: string
-          is_default?: boolean
-          layout_config?: Json
-          name_ar?: string
-          name_en?: string
-          organization_id?: string | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
       entity_retention_status: {
         Row: {
           anonymized_at: string | null
@@ -22647,65 +22599,6 @@ export type Database = {
           },
         ]
       }
-      preview_layout_fields: {
-        Row: {
-          created_at: string
-          display_config: Json
-          field_key: string
-          field_type: Database["public"]["Enums"]["preview_field_type"]
-          id: string
-          is_required: boolean
-          is_visible: boolean
-          label_ar: string
-          label_en: string
-          layout_id: string
-          sort_order: number
-          source_config: Json
-          updated_at: string
-          visibility_rules: Json | null
-        }
-        Insert: {
-          created_at?: string
-          display_config?: Json
-          field_key: string
-          field_type?: Database["public"]["Enums"]["preview_field_type"]
-          id?: string
-          is_required?: boolean
-          is_visible?: boolean
-          label_ar: string
-          label_en: string
-          layout_id: string
-          sort_order?: number
-          source_config?: Json
-          updated_at?: string
-          visibility_rules?: Json | null
-        }
-        Update: {
-          created_at?: string
-          display_config?: Json
-          field_key?: string
-          field_type?: Database["public"]["Enums"]["preview_field_type"]
-          id?: string
-          is_required?: boolean
-          is_visible?: boolean
-          label_ar?: string
-          label_en?: string
-          layout_id?: string
-          sort_order?: number
-          source_config?: Json
-          updated_at?: string
-          visibility_rules?: Json | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "preview_layout_fields_layout_id_fkey"
-            columns: ["layout_id"]
-            isOneToOne: false
-            referencedRelation: "entity_preview_layouts"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       profiles: {
         Row: {
           clearance_level: number
@@ -28291,50 +28184,6 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
-      }
-      user_preview_preferences: {
-        Row: {
-          context: Database["public"]["Enums"]["preview_context"]
-          created_at: string
-          custom_layout_id: string | null
-          entity_type: Database["public"]["Enums"]["preview_entity_type"]
-          field_order: Json | null
-          field_visibility: Json | null
-          id: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          context?: Database["public"]["Enums"]["preview_context"]
-          created_at?: string
-          custom_layout_id?: string | null
-          entity_type: Database["public"]["Enums"]["preview_entity_type"]
-          field_order?: Json | null
-          field_visibility?: Json | null
-          id?: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          context?: Database["public"]["Enums"]["preview_context"]
-          created_at?: string
-          custom_layout_id?: string | null
-          entity_type?: Database["public"]["Enums"]["preview_entity_type"]
-          field_order?: Json | null
-          field_visibility?: Json | null
-          id?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_preview_preferences_custom_layout_id_fkey"
-            columns: ["custom_layout_id"]
-            isOneToOne: false
-            referencedRelation: "entity_preview_layouts"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       user_recent_templates: {
         Row: {
@@ -34995,24 +34844,6 @@ export type Database = {
         Args: { p_entity_id: string }
         Returns: Json
       }
-      get_entity_layouts: {
-        Args: {
-          p_entity_type: Database["public"]["Enums"]["preview_entity_type"]
-        }
-        Returns: {
-          context: Database["public"]["Enums"]["preview_context"]
-          created_at: string
-          description_ar: string
-          description_en: string
-          field_count: number
-          is_default: boolean
-          layout_config: Json
-          layout_id: string
-          name_ar: string
-          name_en: string
-          updated_at: string
-        }[]
-      }
       get_entity_merge_history: {
         Args: { p_entity_id: string }
         Returns: {
@@ -35835,19 +35666,6 @@ export type Database = {
           qual: string
           roles: string[]
           with_check: string
-        }[]
-      }
-      get_preview_layout: {
-        Args: {
-          p_context?: Database["public"]["Enums"]["preview_context"]
-          p_entity_type: Database["public"]["Enums"]["preview_entity_type"]
-        }
-        Returns: {
-          fields: Json
-          layout_config: Json
-          layout_id: string
-          name_ar: string
-          name_en: string
         }[]
       }
       get_recent_dossier_activity: {
@@ -37896,7 +37714,6 @@ export type Database = {
         }
         Returns: Json
       }
-      set_default_layout: { Args: { p_layout_id: string }; Returns: boolean }
       should_show_hint: {
         Args: {
           p_hint_context: Database["public"]["Enums"]["hint_context_type"]
@@ -39060,37 +38877,6 @@ export type Database = {
         | "outdated"
         | "ambiguity"
         | "semantic_conflict"
-      preview_context:
-        | "hover"
-        | "search_result"
-        | "embedded"
-        | "compact"
-        | "expanded"
-      preview_entity_type:
-        | "dossier"
-        | "organization"
-        | "country"
-        | "forum"
-        | "position"
-        | "mou"
-        | "engagement"
-        | "commitment"
-        | "assignment"
-        | "intelligence_signal"
-        | "working_group"
-        | "topic"
-      preview_field_type:
-        | "text"
-        | "date"
-        | "status"
-        | "badge"
-        | "tags"
-        | "avatar"
-        | "relationship"
-        | "activity"
-        | "metric"
-        | "priority"
-        | "custom"
       priority_level:
         | "critical"
         | "urgent"
@@ -40446,40 +40232,6 @@ export const Constants = {
         "outdated",
         "ambiguity",
         "semantic_conflict",
-      ],
-      preview_context: [
-        "hover",
-        "search_result",
-        "embedded",
-        "compact",
-        "expanded",
-      ],
-      preview_entity_type: [
-        "dossier",
-        "organization",
-        "country",
-        "forum",
-        "position",
-        "mou",
-        "engagement",
-        "commitment",
-        "assignment",
-        "intelligence_signal",
-        "working_group",
-        "topic",
-      ],
-      preview_field_type: [
-        "text",
-        "date",
-        "status",
-        "badge",
-        "tags",
-        "avatar",
-        "relationship",
-        "activity",
-        "metric",
-        "priority",
-        "custom",
       ],
       priority_level: ["critical", "urgent", "high", "normal", "medium", "low"],
       recurrence_frequency: ["daily", "weekly", "monthly", "yearly"],

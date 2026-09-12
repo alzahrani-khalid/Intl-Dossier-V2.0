@@ -24,9 +24,7 @@ import {
   Edit,
   History,
 } from 'lucide-react'
-import { format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
-import { formatDayFirst } from '@/lib/format-date'
+import { formatDateTime, formatDayFirst, formatDayFirstYear } from '@/lib/format-date'
 import { toast } from 'sonner'
 import { useAuth } from '@/hooks/useAuth'
 import { useDirection } from '@/hooks/useDirection'
@@ -39,7 +37,6 @@ function AfterActionDetailPage(): React.ReactNode {
   const { afterActionId } = Route.useParams()
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-  const locale = isRTL ? ar : enUS
   const { user } = useAuth()
   const [conflict, setConflict] = useState<ConflictError | null>(null)
 
@@ -56,13 +53,18 @@ function AfterActionDetailPage(): React.ReactNode {
     )
   }
 
+  // D-10 / WRITE-02: the COLON form is the repair. The dot form resolves against the aliased
+  // default namespace, misses, and renders the raw key on screen — which is the defect this
+  // route was filed for. D-11: the route's existing error region is reused rather than replaced
+  // with new markup; `role="alert"` is the P93 error vocabulary and is what a DOM oracle can see
+  // (an RLS denial reads as an empty 200, so "no error shown" is never evidence of a pass).
   if (error) {
     return (
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6" role="alert">
         <Card className="border-destructive">
           <CardHeader>
-            <CardTitle className="text-destructive">{t('common.error')}</CardTitle>
-            <CardDescription>{t('afterActions.loadError')}</CardDescription>
+            <CardTitle className="text-destructive">{t('common:error.label')}</CardTitle>
+            <CardDescription>{t('common:afterActions.loadError')}</CardDescription>
           </CardHeader>
         </Card>
       </div>
@@ -74,8 +76,8 @@ function AfterActionDetailPage(): React.ReactNode {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Card>
           <CardHeader>
-            <CardTitle>{t('afterActions.notFound')}</CardTitle>
-            <CardDescription>{t('afterActions.notFoundDescription')}</CardDescription>
+            <CardTitle>{t('common:afterActions.notFound')}</CardTitle>
+            <CardDescription>{t('common:afterActions.notFoundDescription')}</CardDescription>
           </CardHeader>
         </Card>
       </div>
@@ -103,10 +105,14 @@ function AfterActionDetailPage(): React.ReactNode {
       const maybeConflict = err as Error & { conflict?: ConflictError }
       if (maybeConflict.conflict != null) {
         setConflict(maybeConflict.conflict)
-        toast.error(t('afterActions.conflict.warning', 'This record was modified by another user.'))
+        toast.error(t('afterActions.conflict.warning'))
         return
       }
-      toast.error((err instanceof Error ? err.message : null) ?? t('afterActions.publishFailed'))
+      // D-08: the translated key renders ALONE. The server-originated operand used to win
+      // whenever one existed, which made the fallback key nearly dead and leaked internals into
+      // a toast. Raw failures are diagnostics — they go to the console, never to the screen.
+      console.error('after-action publish failed', err)
+      toast.error(t('common:afterActions.publishFailed'))
     }
   }
 
@@ -133,7 +139,7 @@ function AfterActionDetailPage(): React.ReactNode {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" asChild aria-label={t('common.back')}>
+          <Button variant="ghost" size="icon" asChild aria-label={t('common:back')}>
             <Link to={getDossierDetailPath(afterAction.dossier_id, (afterAction as any).type)}>
               <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
             </Link>
@@ -164,7 +170,6 @@ function AfterActionDetailPage(): React.ReactNode {
             <p className="text-sm text-destructive">
               {t(
                 'afterActions.conflict.warning',
-                'This record was modified by another user. Review changes before saving.',
               )}
             </p>
           </div>
@@ -176,7 +181,7 @@ function AfterActionDetailPage(): React.ReactNode {
               window.location.reload()
             }}
           >
-            {t('afterActions.conflict.reviewChanges', 'Review Changes')}
+            {t('afterActions.conflict.reviewChanges')}
           </Button>
         </div>
       )}
@@ -266,7 +271,7 @@ function AfterActionDetailPage(): React.ReactNode {
                       <span>
                         {t('afterActions.decisionMaker')}: {decision.decision_maker}
                       </span>
-                      <span>{format(new Date(decision.decision_date), 'PP', { locale })}</span>
+                      <span>{formatDayFirstYear(new Date(decision.decision_date))}</span>
                     </div>
                   </div>
                 </div>
@@ -301,7 +306,7 @@ function AfterActionDetailPage(): React.ReactNode {
                           </span>
                           <span>
                             {t('afterActions.dueDate')}:{' '}
-                            {format(new Date(commitment.due_date), 'PP', { locale })}
+                            {formatDayFirstYear(new Date(commitment.due_date))}
                           </span>
                           <Badge variant="outline">{commitment.priority}</Badge>
                           <Badge>{commitment.status}</Badge>
@@ -387,7 +392,7 @@ function AfterActionDetailPage(): React.ReactNode {
                           <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
                             {action.assigned_to && <span>{action.assigned_to}</span>}
                             {action.target_date && (
-                              <span>{format(new Date(action.target_date), 'PP', { locale })}</span>
+                              <span>{formatDayFirstYear(new Date(action.target_date))}</span>
                             )}
                           </div>
                         ) : null}
@@ -423,18 +428,18 @@ function AfterActionDetailPage(): React.ReactNode {
           <CardContent className="space-y-2 text-sm">
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">{t('afterActions.createdAt')}</span>
-              <span>{format(new Date(afterAction.created_at), 'PPp', { locale })}</span>
+              <span>{formatDateTime(new Date(afterAction.created_at))}</span>
             </div>
             {afterAction.updated_at && (
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">{t('afterActions.updatedAt')}</span>
-                <span>{format(new Date(afterAction.updated_at), 'PPp', { locale })}</span>
+                <span>{formatDateTime(new Date(afterAction.updated_at))}</span>
               </div>
             )}
             {afterAction.published_at && (
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">{t('afterActions.publishedAt')}</span>
-                <span>{format(new Date(afterAction.published_at), 'PPp', { locale })}</span>
+                <span>{formatDateTime(new Date(afterAction.published_at))}</span>
               </div>
             )}
             <div className="flex items-center justify-between">

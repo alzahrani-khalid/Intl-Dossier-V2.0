@@ -4,6 +4,11 @@ import type { AuthChangeEvent, Session } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
 import { setSentryUser, clearSentryUser, addBreadcrumb } from '../lib/sentry'
 import { COLUMNS } from '../lib/query-columns'
+// Plain module import — verified acyclic: query-client.ts imports only
+// @tanstack/react-query, sonner and ./query-tiers. It is NOT part of the router
+// cycle described at the SIGNED_OUT branch below.
+import { queryClient } from '../lib/query-client'
+import { clearClientResidue } from './clientResidue'
 
 // Re-export supabase for backward compatibility
 export { supabase }
@@ -209,6 +214,19 @@ export const useAuthStore = create<AuthState>()(
             isLoading: false,
             error: null,
           })
+
+          // This branch is the SINGLE OWNER of post-sign-out teardown and navigation
+          // (D-29). It now clears both the in-memory query cache and every localStorage
+          // entry except the explicit identity-neutral machine-preference allowlist.
+          queryClient.clear()
+          clearClientResidue()
+
+          // The LAZY import is REQUIRED — do NOT simplify it to a module-level
+          // `import { router } from '@/router'`. That would newly introduce the cycle
+          // authStore -> router -> routeTree.gen -> routes/_protected.tsx -> authStore,
+          // and this repo has already shipped a production white-screen from a module
+          // cycle. Plain '/login', no redirectTo (D-12).
+          void import('@/router').then(({ router }) => router.navigate({ to: '/login' }))
         } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           if (session?.user) {
             const { data: profile } = await supabase

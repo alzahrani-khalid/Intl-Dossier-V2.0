@@ -2,7 +2,7 @@
 // Processes pending notification deliveries for Slack and Teams
 // Can be triggered by cron job or webhook
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // Types
@@ -70,7 +70,7 @@ const translations = {
     labels: {
       priority: 'Priority',
       status: 'Status',
-      dueDate: 'Due Date',
+      dueDate: 'Deadline',
       viewMore: 'View More',
     },
   },
@@ -98,7 +98,7 @@ const translations = {
     labels: {
       priority: 'الأولوية',
       status: 'الحالة',
-      dueDate: 'تاريخ الاستحقاق',
+      dueDate: 'الموعد النهائي',
       viewMore: 'عرض المزيد',
     },
   },

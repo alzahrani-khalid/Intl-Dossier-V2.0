@@ -1,6 +1,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
+import { writeAuditLog } from '../_shared/audit.ts';
 
 /**
  * Edge Function: attachments-delete
@@ -159,21 +160,38 @@ serve(async (req: Request) => {
       );
     }
 
-    // Create audit log entry
-    try {
-      await supabase.from('audit_logs').insert({
-        entity_type: 'attachment',
-        entity_id: attachment_id,
-        action: 'delete',
-        actor_id: user.id,
-        details: {
-          file_name: attachment.file_name,
-          position_id: attachment.position_id,
+    // Create audit log entry.
+    // Grade: LOG-LOUDLY-AND-CONTINUE (D-18) — the attachment is already deleted.
+    // `user_role` is NOT NULL, and the `userProfile` read above cannot supply it:
+    // it queries `profiles` by `.eq('id', ...)` and `profiles` has no `id` column,
+    // so it always yields null. Resolve the canonical role from `public.users`;
+    // unresolvable = loud skip, never a fabricated role.
+    const { data: auditActor } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    if (!auditActor?.role) {
+      console.error(
+        `AUDIT-ZERO-01: audit write SKIPPED — no user_role resolves for ${user.id} (attachments-delete:delete)`,
+      );
+    } else {
+      await writeAuditLog(
+        supabase,
+        {
+          entity_type: 'attachment',
+          entity_id: attachment_id,
+          action: 'delete',
+          user_id: user.id,
+          user_role: auditActor.role,
+          old_values: {
+            file_name: attachment.file_name,
+            position_id: attachment.position_id,
+          },
         },
-      });
-    } catch (auditError) {
-      // Audit logging failure should not fail the operation
-      console.warn('Failed to create audit log:', auditError);
+        'attachments-delete',
+      );
     }
 
     return new Response(null, {

@@ -1,5 +1,6 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { getRouteApi } from '@tanstack/react-router'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -29,7 +30,16 @@ import {
 } from '@/components/settings'
 import { EmailDigestSettings } from '@/components/email/EmailDigestSettings'
 import { BotIntegrationsSettings } from '@/components/settings/BotIntegrationsSettings'
-import { SettingsSectionId, defaultUserSettings } from '@/types/settings.types'
+import { defaultUserSettings } from '@/types/settings.types'
+
+/**
+ * NAV-02 (Phase 97): the active section is a validated `?section=` search param
+ * on the settings layout route, not local state — that is what lets the nav
+ * column work identically from a child route and makes sections deep-linkable.
+ * Read through `getRouteApi` rather than importing `Route`, which would close
+ * an import cycle (the route module imports this page).
+ */
+const settingsRoute = getRouteApi('/_protected/settings')
 
 /**
  * Settings form schema
@@ -134,8 +144,9 @@ export function SettingsPage() {
   const { setMode: setColorMode } = useMode()
   const queryClient = useQueryClient()
 
-  // Active section state
-  const [activeSection, setActiveSection] = useState<SettingsSectionId>('profile')
+  // Active section — route-derived, so a section click from a child route lands
+  // here with THAT section rendered rather than the default.
+  const { section: activeSection } = settingsRoute.useSearch()
 
   // Fetch current user settings
   const { data: settings, isLoading } = useQuery({
@@ -203,22 +214,30 @@ export function SettingsPage() {
     mutationFn: async (values: SettingsFormValues) => {
       if (!user?.id) throw new Error('Not authenticated')
 
-      // 1) Persist ONLY real `users` columns (profile + general). The prior
-      //    upsert sent ~23 columns absent from the table, so PostgREST rejected
-      //    the whole write (PGRST204) and every Save silently no-oped.
-      //    `mfa_enabled` is intentionally NOT written here (D-6 — no enablement
-      //    without a verified secret). Appearance is owned by DesignProvider.
-      const { error } = await supabase.from('users').upsert({
-        id: user.id,
-        full_name: values.display_name,
-        job_title_en: values.job_title ?? null,
-        department: values.department ?? null,
-        phone: values.phone ?? null,
-        avatar_url: values.avatar_url ?? null,
-        language_preference: values.language_preference,
-        timezone: values.timezone,
-        updated_at: new Date().toISOString(),
-      })
+      // 1) Persist ONLY real `users` columns (profile + general), as an UPDATE
+      //    scoped to the caller's own row (D-14). This was an upsert, which
+      //    PostgREST issues as INSERT … ON CONFLICT — the NOT NULL check on
+      //    `users.email` fires BEFORE conflict resolution, so the write died on
+      //    23502 on every Save, and steps 2-3 below never ran. That is a second,
+      //    distinct defect from the ~23-phantom-column PGRST204 one a prior
+      //    phase repaired in this same call, which is why the file looked fixed.
+      //    `email` is auth-owned and is deliberately NOT added to the payload —
+      //    the fix is the verb, not the tuple. `mfa_enabled` is intentionally
+      //    NOT written here (D-6 — no enablement without a verified secret).
+      //    Appearance is owned by DesignProvider.
+      const { error } = await supabase
+        .from('users')
+        .update({
+          full_name: values.display_name,
+          job_title_en: values.job_title ?? null,
+          department: values.department ?? null,
+          phone: values.phone ?? null,
+          avatar_url: values.avatar_url ?? null,
+          language_preference: values.language_preference,
+          timezone: values.timezone,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', user.id)
 
       if (error) throw error
 
@@ -312,11 +331,11 @@ export function SettingsPage() {
       toast.success(t('savedSuccessfully'))
     },
     onError: (error: unknown) => {
-      const detail = error instanceof Error ? error.message : null
+      // D-08: a surfaced failure is the specific translated message and nothing
+      // else — the server-originated text (PostgREST codes, column names) stays
+      // out of the DOM and goes to the console for diagnosis.
       console.error(error)
-      toast.error(t('saveError'), {
-        description: detail ?? undefined,
-      })
+      toast.error(t('saveError'))
     },
   })
 
@@ -350,15 +369,9 @@ export function SettingsPage() {
     })()
   }, [form, saveMutation])
 
-  // Handle section change
-  const handleSectionChange = useCallback((section: SettingsSectionId) => {
-    setActiveSection(section)
-  }, [])
-
   return (
     <SettingsLayout
       activeSection={activeSection}
-      onSectionChange={handleSectionChange}
       isLoading={isLoading}
       hasChanges={hasChanges}
       isSaving={saveMutation.isPending}

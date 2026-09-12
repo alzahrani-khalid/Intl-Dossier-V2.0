@@ -205,8 +205,8 @@ function AIUsageDashboard() {
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       <PageHeader
         icon={<BarChart3 className="h-6 w-6" />}
-        title={t('usage.title', 'AI Usage Dashboard')}
-        subtitle={t('usage.description', 'Monitor AI feature usage, costs, and performance')}
+        title={t('usage.title')}
+        subtitle={t('usage.description')}
         actions={
           <div className="flex items-center gap-3">
             <Select value={dateRange} onValueChange={(v) => setDateRange(v as typeof dateRange)}>
@@ -215,9 +215,9 @@ function AIUsageDashboard() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="7d">{t('usage.dateRange.7d', 'Last 7 days')}</SelectItem>
-                <SelectItem value="30d">{t('usage.dateRange.30d', 'Last 30 days')}</SelectItem>
-                <SelectItem value="90d">{t('usage.dateRange.90d', 'Last 90 days')}</SelectItem>
+                <SelectItem value="7d">{t('usage.dateRange.7d')}</SelectItem>
+                <SelectItem value="30d">{t('usage.dateRange.30d')}</SelectItem>
+                <SelectItem value="90d">{t('usage.dateRange.90d')}</SelectItem>
               </SelectContent>
             </Select>
             <Button
@@ -225,7 +225,7 @@ function AIUsageDashboard() {
               size="icon"
               onClick={() => refetch()}
               disabled={isRefetching}
-              aria-label={t('common:common.actions.refresh', { defaultValue: 'Refresh' })}
+              aria-label={t('common:actions.refresh')}
             >
               <RefreshCw className={cn('h-4 w-4', isRefetching && 'animate-spin')} />
             </Button>
@@ -236,26 +236,26 @@ function AIUsageDashboard() {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <MetricCard
-          title={t('usage.metrics.totalRuns', 'Total Runs')}
+          title={t('usage.metrics.totalRuns')}
           value={isLoading ? undefined : formatNumber(metrics?.totalRuns || 0)}
           icon={Zap}
           isLoading={isLoading}
         />
         <MetricCard
-          title={t('usage.metrics.totalTokens', 'Total Tokens')}
+          title={t('usage.metrics.totalTokens')}
           value={isLoading ? undefined : formatNumber(metrics?.totalTokens || 0)}
           icon={BarChart3}
           isLoading={isLoading}
         />
         <MetricCard
-          title={t('usage.metrics.totalCost', 'Total Cost')}
+          title={t('usage.metrics.totalCost')}
           value={isLoading ? undefined : formatCost(metrics?.totalCost || 0)}
           icon={DollarSign}
           trend={metrics?.totalCost && metrics.totalCost > 0 ? 'up' : undefined}
           isLoading={isLoading}
         />
         <MetricCard
-          title={t('usage.metrics.successRate', 'Success Rate')}
+          title={t('usage.metrics.successRate')}
           value={isLoading ? undefined : `${(metrics?.successRate || 0).toFixed(1)}%`}
           icon={TrendingUp}
           trend={(metrics?.successRate || 0) >= 95 ? 'up' : 'down'}
@@ -266,9 +266,9 @@ function AIUsageDashboard() {
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as typeof activeTab)}>
         <TabsList className="mb-4">
-          <TabsTrigger value="overview">{t('usage.tabs.overview', 'Overview')}</TabsTrigger>
-          <TabsTrigger value="users">{t('usage.tabs.users', 'Top Users')}</TabsTrigger>
-          <TabsTrigger value="breakdown">{t('usage.tabs.breakdown', 'Breakdown')}</TabsTrigger>
+          <TabsTrigger value="overview">{t('usage.tabs.overview')}</TabsTrigger>
+          <TabsTrigger value="users">{t('usage.tabs.users')}</TabsTrigger>
+          <TabsTrigger value="breakdown">{t('usage.tabs.breakdown')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview">
@@ -276,7 +276,7 @@ function AIUsageDashboard() {
             {/* Usage by Type */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">{t('usage.byType', 'Usage by Feature')}</CardTitle>
+                <CardTitle className="text-lg">{t('usage.byType')}</CardTitle>
               </CardHeader>
               <CardContent>
                 {isLoading ? (
@@ -310,7 +310,7 @@ function AIUsageDashboard() {
                     })}
                     {Object.keys(metrics?.runsByType || {}).length === 0 && (
                       <p className="text-center text-muted-foreground py-4">
-                        {t('usage.noData', 'No usage data available')}
+                        {t('usage.noData')}
                       </p>
                     )}
                   </div>
@@ -322,7 +322,7 @@ function AIUsageDashboard() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">
-                  {t('usage.byProvider', 'Cost by Provider')}
+                  {t('usage.byProvider')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -350,7 +350,7 @@ function AIUsageDashboard() {
                     })}
                     {Object.keys(metrics?.costByProvider || {}).length === 0 && (
                       <p className="text-center text-muted-foreground py-4">
-                        {t('usage.noData', 'No cost data available')}
+                        {t('usage.noData')}
                       </p>
                     )}
                   </div>
@@ -362,9 +362,9 @@ function AIUsageDashboard() {
           {/* Daily Usage Chart (Simple bar representation) */}
           <Card className="mt-6">
             <CardHeader>
-              <CardTitle className="text-lg">{t('usage.dailyUsage', 'Daily Usage')}</CardTitle>
+              <CardTitle className="text-lg">{t('usage.dailyUsage')}</CardTitle>
               <CardDescription>
-                {t('usage.dailyUsageDesc', 'Number of AI runs per day')}
+                {t('usage.dailyUsageDesc')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -390,7 +390,7 @@ function AIUsageDashboard() {
                   })}
                   {(metrics?.dailyUsage.length || 0) === 0 && (
                     <p className="w-full text-center text-muted-foreground py-8">
-                      {t('usage.noData', 'No usage data available')}
+                      {t('usage.noData')}
                     </p>
                   )}
                 </div>
@@ -404,7 +404,7 @@ function AIUsageDashboard() {
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
                 <Users className="h-5 w-5" />
-                {t('usage.topUsers', 'Top Users by Cost')}
+                {t('usage.topUsers')}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -431,7 +431,7 @@ function AIUsageDashboard() {
                         <div>
                           <p className="font-medium text-sm">{user.email}</p>
                           <p className="text-xs text-muted-foreground">
-                            {formatNumber(user.runs)} {t('usage.runs', 'runs')}
+                            {formatNumber(user.runs)} {t('usage.runs')}
                           </p>
                         </div>
                       </div>
@@ -442,7 +442,7 @@ function AIUsageDashboard() {
                   ))}
                   {(metrics?.topUsers.length || 0) === 0 && (
                     <p className="text-center text-muted-foreground py-8">
-                      {t('usage.noUsers', 'No user data available')}
+                      {t('usage.noUsers')}
                     </p>
                   )}
                 </div>
@@ -455,23 +455,23 @@ function AIUsageDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">{t('usage.performance', 'Performance')}</CardTitle>
+                <CardTitle className="text-lg">{t('usage.performance')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">{t('usage.avgLatency', 'Avg. Latency')}</span>
+                  <span className="text-sm">{t('usage.avgLatency')}</span>
                   <Badge variant="outline">
                     {isLoading ? '...' : `${(metrics?.averageLatency || 0).toFixed(0)}ms`}
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">{t('usage.successRate', 'Success Rate')}</span>
+                  <span className="text-sm">{t('usage.successRate')}</span>
                   <Badge variant={(metrics?.successRate || 0) >= 95 ? 'default' : 'destructive'}>
                     {isLoading ? '...' : `${(metrics?.successRate || 0).toFixed(1)}%`}
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">{t('usage.avgTokensPerRun', 'Avg. Tokens/Run')}</span>
+                  <span className="text-sm">{t('usage.avgTokensPerRun')}</span>
                   <Badge variant="outline">
                     {isLoading
                       ? '...'
@@ -488,18 +488,18 @@ function AIUsageDashboard() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">
-                  {t('usage.costBreakdown', 'Cost Summary')}
+                  {t('usage.costBreakdown')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">{t('usage.totalCost', 'Total Cost')}</span>
+                  <span className="text-sm">{t('usage.totalCost')}</span>
                   <span className="font-bold text-lg">
                     {isLoading ? '...' : formatCost(metrics?.totalCost || 0)}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">{t('usage.avgCostPerRun', 'Avg. Cost/Run')}</span>
+                  <span className="text-sm">{t('usage.avgCostPerRun')}</span>
                   <Badge variant="outline">
                     {isLoading
                       ? '...'
@@ -510,7 +510,7 @@ function AIUsageDashboard() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">
-                    {t('usage.projectedMonthly', 'Projected Monthly')}
+                    {t('usage.projectedMonthly')}
                   </span>
                   <Badge variant="secondary">
                     {isLoading

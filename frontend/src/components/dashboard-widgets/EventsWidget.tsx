@@ -9,8 +9,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Calendar, Clock, Users, FileText, AlertCircle, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { formatDayFirst, formatTime } from '@/lib/format-date'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirst, formatRelativeTime, formatTime } from '@/lib/format-date'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import type { EventsWidgetConfig, EventData, EventType } from '@/types/dashboard-widget.types'
@@ -87,44 +86,35 @@ function getEventColor(type: EventType) {
 }
 
 /**
- * Format relative date for events
+ * Format relative date for events.
+ *
+ * D-25 / RULING-P98A2-17 §1(a): the within-a-week countdown semantic is KEPT —
+ * forced absolutization is refused — but the relative phrase now comes from the
+ * ONE shared localized helper instead of a second `Intl.RelativeTimeFormat`
+ * instance. Same-day still shows a wall-clock time, beyond a week still shows a
+ * day-first date; both already came from the one formatter.
  */
-function formatRelativeDate(dateString: string, locale: string): string {
+function formatEventDate(dateString: string): string {
   const date = new Date(dateString)
   const now = new Date()
   const diffMs = date.getTime() - now.getTime()
   const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24))
 
-  // Use Intl.RelativeTimeFormat for localized relative time
-  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' })
-
-  if (diffDays === 0) {
-    // Same day - show time
-    return formatTime(date)
-  } else if (diffDays === 1) {
-    return rtf.format(1, 'day')
-  } else if (diffDays === -1) {
-    return rtf.format(-1, 'day')
-  } else if (diffDays > 0 && diffDays <= 7) {
-    return rtf.format(diffDays, 'day')
-  } else if (diffDays < 0 && diffDays >= -7) {
-    return rtf.format(diffDays, 'day')
-  } else {
-    // Show date
-    return formatDayFirst(date)
-  }
+  if (diffDays === 0) return formatTime(date)
+  if (diffDays >= -7 && diffDays <= 7) return formatRelativeTime(date)
+  return formatDayFirst(date)
 }
 
 /**
  * Single event item component
  */
-function EventItem({ event, locale, isRTL }: { event: EventData; locale: string; isRTL: boolean }) {
+function EventItem({ event, isRTL }: { event: EventData; isRTL: boolean }) {
   const { t } = useTranslation('dashboard-widgets')
   const Icon = getEventIcon(event.type)
   const colors = getEventColor(event.type)
 
   const isPast = new Date(event.startDate) < new Date()
-  const relativeDate = formatRelativeDate(event.startDate, locale)
+  const relativeDate = formatEventDate(event.startDate)
 
   return (
     <div
@@ -174,9 +164,8 @@ function EventItem({ event, locale, isRTL }: { event: EventData; locale: string;
 }
 
 export function EventsWidget({ config, data, isLoading }: EventsWidgetProps) {
-  const { t, i18n } = useTranslation('dashboard-widgets')
+  const { t } = useTranslation('dashboard-widgets')
   const { isRTL } = useDirection()
-  const locale = toFormatLocale(i18n.language)
 
   const { settings } = config
 
@@ -234,7 +223,7 @@ export function EventsWidget({ config, data, isLoading }: EventsWidgetProps) {
     <ScrollArea className="h-full">
       <div className="space-y-1">
         {filteredEvents.map((event) => (
-          <EventItem key={event.id} event={event} locale={locale} isRTL={isRTL} />
+          <EventItem key={event.id} event={event} isRTL={isRTL} />
         ))}
       </div>
     </ScrollArea>

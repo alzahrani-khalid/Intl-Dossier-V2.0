@@ -130,11 +130,11 @@ describe('SearchableSelect — Phase 75 contract (Wave 0 baseline)', () => {
       <SearchableSelect options={options} label="Assignee" value="u1" error="Required" required />,
     )
 
-    // attr 9 + 10: clear affordance queryable by its (raw-key) accessible name
-    const clear = screen.getByRole('button', { name: 'smart-input:select.clear' })
+    // attr 9 + 10: clear affordance queryable by its accessible name
+    const clear = screen.getByRole('button', { name: 'Clear selection' })
     expect(clear).toBeInTheDocument()
-    // attr 11: required marker's aria-label resolves to the raw key (Pitfall 2)
-    expect(screen.getByText('*')).toHaveAttribute('aria-label', 'common:validation.required')
+    // attr 11: required marker carries the resolved aria-label (Pitfall 2)
+    expect(screen.getByText('*')).toHaveAttribute('aria-label', 'Required field')
     // attr 12: role=alert live region, id linked back from the trigger's describedby
     const alert = screen.getByRole('alert')
     const trigger = getTrigger()

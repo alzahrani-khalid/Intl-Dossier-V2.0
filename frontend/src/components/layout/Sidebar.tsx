@@ -38,6 +38,7 @@ import {
   type NavigationGroup,
   type NavigationItem,
 } from './navigation-config'
+import { NavUser } from './nav-user'
 
 export interface SidebarProps {
   className?: string
@@ -45,30 +46,14 @@ export interface SidebarProps {
 
 const SECTION_BADGE_COUNTS = { tasks: 0, approvals: 0, engagements: 0 }
 
-function getInitials(name: string | undefined, email: string | undefined): string {
-  const source = (name ?? email ?? '').trim()
-  if (source.length === 0) return '·'
-  const parts = source.split(/\s+/).filter(Boolean)
-  if (parts.length >= 2) {
-    return (parts[0]!.charAt(0) + parts[1]!.charAt(0)).toUpperCase()
-  }
-  return source.slice(0, 2).toUpperCase()
-}
-
 export function Sidebar({ className }: SidebarProps = {}): ReactElement {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const { user } = useAuthStore()
   const location = useLocation()
 
   const isAdmin = user?.role === 'admin' || user?.role === 'super_admin'
   const groups: NavigationGroup[] = createNavigationGroups(SECTION_BADGE_COUNTS, isAdmin)
   const pathname = location.pathname
-
-  const isRTL = i18n.language === 'ar'
-  const localizedJobTitle = isRTL ? user?.jobTitleAr : user?.jobTitleEn
-  const roleLabel = localizedJobTitle ?? user?.role ?? t('shell.user.noRole')
-  const displayName = user?.name ?? user?.email ?? t('shell.user.noRole')
-  const initials = getInitials(user?.name, user?.email)
 
   return (
     <aside
@@ -98,19 +83,11 @@ export function Sidebar({ className }: SidebarProps = {}): ReactElement {
         </div>
       </div>
 
-      {/* 2. User card — avatar initials + name + role */}
-      <div className="sb-user mt-3 flex items-center gap-2.5 rounded-[var(--radius-sm)] bg-[color-mix(in_srgb,var(--sidebar-ink)_6%,transparent)] p-2">
-        <div className="flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-full bg-[var(--accent)] text-[var(--accent-fg)] font-body text-[11px] font-semibold">
-          {initials}
-        </div>
-        <div className="flex min-w-0 flex-col">
-          <span className="font-body text-[13px] font-medium leading-[1.4] truncate">
-            {displayName}
-          </span>
-          <span className="font-body text-[10.5px] leading-[1.3] truncate text-[var(--sidebar-ink)]/70">
-            {roleLabel}
-          </span>
-        </div>
+      {/* 2. User card — NavUser owns the markup (Phase 92 / D-01): same accent
+             initials disc, two-line name + role, `--radius-sm` wash, now as the
+             dropdown trigger that carries the app's only sign-out menu. */}
+      <div className="mt-3">
+        <NavUser />
       </div>
 
       {/* 3. Nav — iterate groups; admin gate via createNavigationGroups(isAdmin) */}

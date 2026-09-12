@@ -11,21 +11,21 @@
   },
 
   "rules": {
-    "title": "Compliance Rules",
+    "title": "Compliance rules",
     "subtitle": "Define rules to ensure regulatory compliance",
-    "createRule": "Create Rule",
-    "editRule": "Edit Rule",
-    "deleteRule": "Deactivate Rule",
-    "viewRule": "View Rule Details",
+    "createRule": "Create rule",
+    "editRule": "Edit rule",
+    "deleteRule": "Deactivate rule",
+    "viewRule": "View rule details",
     "noRules": "No compliance rules configured",
     "noRulesDescription": "Create your first compliance rule to start monitoring activities",
     "searchPlaceholder": "Search rules by name or code...",
     "filterByType": "Filter by Type",
     "filterBySeverity": "Filter by Severity",
     "filterByEntity": "Filter by Entity Type",
-    "activeRules": "Active Rules",
-    "inactiveRules": "Inactive Rules",
-    "allRules": "All Rules"
+    "activeRules": "Active rules",
+    "inactiveRules": "Inactive rules",
+    "allRules": "All rules"
   },
 
   "ruleForm": {
@@ -36,38 +36,38 @@
     "nameAr": "Name (Arabic)",
     "descriptionEn": "Description (English)",
     "descriptionAr": "Description (Arabic)",
-    "ruleType": "Rule Type",
-    "severity": "Severity Level",
+    "ruleType": "Rule type",
+    "severity": "Severity level",
     "entityTypes": "Applies to Entity Types",
-    "conditions": "Rule Conditions",
+    "conditions": "Rule conditions",
     "conditionsHelper": "Configure the specific parameters for this rule",
     "notificationTemplateEn": "Notification Template (English)",
     "notificationTemplateAr": "Notification Template (Arabic)",
     "remediationEn": "Remediation Instructions (English)",
     "remediationAr": "Remediation Instructions (Arabic)",
-    "requiresSignoff": "Requires Sign-off",
-    "signoffRoles": "Sign-off Roles",
+    "requiresSignoff": "Requires sign-off",
+    "signoffRoles": "Sign-off roles",
     "signoffDeadline": "Sign-off Deadline (Hours)",
     "autoEscalate": "Auto-escalate After (Hours)",
-    "effectiveFrom": "Effective From",
-    "effectiveTo": "Effective Until",
+    "effectiveFrom": "Effective from",
+    "effectiveTo": "Effective until",
     "appliesToRegions": "Applies to Regions",
     "appliesToCategories": "Applies to Categories",
-    "externalReference": "External Reference",
-    "regulatorySource": "Regulatory Source"
+    "externalReference": "External reference",
+    "regulatorySource": "Regulatory source"
   },
 
   "ruleTypes": {
-    "cooling_off_period": "Cooling-Off Period",
-    "disclosure_requirement": "Disclosure Requirement",
-    "conflict_check": "Conflict Check",
-    "approval_threshold": "Approval Threshold",
-    "frequency_limit": "Frequency Limit",
-    "relationship_restriction": "Relationship Restriction",
-    "documentation_requirement": "Documentation Requirement",
-    "gift_limit": "Gift Limit",
-    "recusal_requirement": "Recusal Requirement",
-    "reporting_requirement": "Reporting Requirement"
+    "cooling_off_period": "Cooling-Off period",
+    "disclosure_requirement": "Disclosure requirement",
+    "conflict_check": "Conflict check",
+    "approval_threshold": "Approval threshold",
+    "frequency_limit": "Frequency limit",
+    "relationship_restriction": "Relationship restriction",
+    "documentation_requirement": "Documentation requirement",
+    "gift_limit": "Gift limit",
+    "recusal_requirement": "Recusal requirement",
+    "reporting_requirement": "Reporting requirement"
   },
 
   "severity": {
@@ -84,32 +84,32 @@
     "person": "Person",
     "organization": "Organization",
     "country": "Country",
-    "all": "All Entities"
+    "all": "All entities"
   },
 
   "violations": {
-    "title": "Compliance Violations",
+    "title": "Compliance violations",
     "subtitle": "Review and resolve flagged compliance issues",
     "noViolations": "No violations found",
     "noViolationsDescription": "All activities are currently in compliance",
-    "pendingViolations": "Pending Violations",
+    "pendingViolations": "Pending violations",
     "acknowledgedViolations": "Acknowledged",
     "resolvedViolations": "Resolved",
-    "allViolations": "All Violations",
-    "viewDetails": "View Details",
+    "allViolations": "All violations",
+    "viewDetails": "View details",
     "acknowledge": "Acknowledge",
-    "signOff": "Sign Off",
-    "requestInfo": "Request Info",
+    "signOff": "Sign off",
+    "requestInfo": "Request info",
     "escalate": "Escalate",
     "waive": "Waive",
     "violationId": "Violation ID",
-    "detectedAt": "Detected At",
-    "detectedBy": "Detected By",
+    "detectedAt": "Detected at",
+    "detectedBy": "Detected by",
     "entity": "Entity",
-    "relatedEntity": "Related Entity",
+    "relatedEntity": "Related entity",
     "status": "Status",
-    "requiresSignoff": "Requires Sign-off",
-    "signoffDeadline": "Sign-off Deadline",
+    "requiresSignoff": "Requires sign-off",
+    "signoffDeadline": "Sign-off deadline",
     "daysRemaining": "{{count}} day remaining",
     "daysRemaining_plural": "{{count}} days remaining",
     "overdue": "Overdue"
@@ -118,7 +118,7 @@
   "violationStatus": {
     "pending": "Pending",
     "acknowledged": "Acknowledged",
-    "signed_off": "Signed Off",
+    "signed_off": "Signed off",
     "waived": "Waived",
     "resolved": "Resolved",
     "escalated": "Escalated",
@@ -134,70 +134,70 @@
     "justificationRequired": "Justification is required",
     "conditions": "Conditions",
     "conditionsPlaceholder": "Add any conditions (one per line)",
-    "waiverValidUntil": "Waiver Valid Until",
-    "waiverScope": "Waiver Scope",
+    "waiverValidUntil": "Waiver valid until",
+    "waiverScope": "Waiver scope",
     "waiverScopeSingle": "This violation only",
     "waiverScopeOngoing": "Ongoing (until date)",
-    "confirm": "Confirm Sign-off",
+    "confirm": "Confirm sign-off",
     "cancel": "Cancel",
-    "history": "Sign-off History",
-    "signedBy": "Signed By",
-    "signedAt": "Signed At",
+    "history": "Sign-off history",
+    "signedBy": "Signed by",
+    "signedAt": "Signed at",
     "signerRole": "Role"
   },
 
   "signoffActions": {
     "approve": "Approve",
     "reject": "Reject",
-    "request_info": "Request Information",
+    "request_info": "Request information",
     "escalate": "Escalate",
     "waive": "Waive"
   },
 
   "exemptions": {
-    "title": "Compliance Exemptions",
+    "title": "Compliance exemptions",
     "subtitle": "Manage exemptions from compliance rules",
-    "createExemption": "Create Exemption",
-    "editExemption": "Edit Exemption",
-    "revokeExemption": "Revoke Exemption",
+    "createExemption": "Create exemption",
+    "editExemption": "Edit exemption",
+    "revokeExemption": "Revoke exemption",
     "noExemptions": "No exemptions configured",
     "noExemptionsDescription": "Exemptions allow specific entities to bypass certain rules",
     "rule": "Rule",
     "entity": "Entity/User",
     "reason": "Reason",
-    "grantedBy": "Granted By",
-    "grantedAt": "Granted At",
-    "validFrom": "Valid From",
-    "validUntil": "Valid Until",
+    "grantedBy": "Granted by",
+    "grantedAt": "Granted at",
+    "validFrom": "Valid from",
+    "validUntil": "Valid until",
     "active": "Active",
     "revoked": "Revoked",
     "expired": "Expired"
   },
 
   "templates": {
-    "title": "Rule Templates",
+    "title": "Rule templates",
     "subtitle": "Pre-defined compliance rule templates",
-    "useTemplate": "Use Template",
+    "useTemplate": "Use template",
     "category": "Category",
-    "regulatoryFramework": "Regulatory Framework",
+    "regulatoryFramework": "Regulatory framework",
     "noTemplates": "No templates available",
     "createFromTemplate": "Create Rule from Template"
   },
 
   "summary": {
-    "title": "Compliance Summary",
-    "totalViolations": "Total Violations",
+    "title": "Compliance summary",
+    "totalViolations": "Total violations",
     "pendingViolations": "Pending",
     "criticalViolations": "Critical",
     "blockingViolations": "Blocking",
-    "requiresSignoff": "Requires Sign-off",
-    "complianceScore": "Compliance Score",
-    "lastCheck": "Last Compliance Check",
-    "recentViolations": "Recent Violations"
+    "requiresSignoff": "Requires sign-off",
+    "complianceScore": "Compliance score",
+    "lastCheck": "Last compliance check",
+    "recentViolations": "Recent violations"
   },
 
   "check": {
-    "title": "Compliance Check",
+    "title": "Compliance check",
     "running": "Running compliance check...",
     "passed": "Compliance check passed",
     "failed": "Compliance issues detected",
@@ -209,17 +209,17 @@
     "blockingFound": "{{count}} blocking violation",
     "blockingFound_plural": "{{count}} blocking violations",
     "requiresSignoffBefore": "Sign-off required before proceeding",
-    "viewViolations": "View Violations"
+    "viewViolations": "View violations"
   },
 
   "alerts": {
-    "newViolation": "New Compliance Violation",
-    "violationResolved": "Violation Resolved",
-    "signoffRequired": "Sign-off Required",
-    "signoffApproved": "Sign-off Approved",
-    "signoffRejected": "Sign-off Rejected",
-    "exemptionExpiring": "Exemption Expiring Soon",
-    "blockingViolation": "Blocking Violation Detected"
+    "newViolation": "New compliance violation",
+    "violationResolved": "Violation resolved",
+    "signoffRequired": "Sign-off required",
+    "signoffApproved": "Sign-off approved",
+    "signoffRejected": "Sign-off rejected",
+    "exemptionExpiring": "Exemption expiring soon",
+    "blockingViolation": "Blocking violation detected"
   },
 
   "conditions": {
@@ -228,38 +228,38 @@
       "appliesTo": "Applies to Events"
     },
     "disclosure": {
-      "fields": "Required Disclosure Fields",
-      "threshold": "Value Threshold",
+      "fields": "Required disclosure fields",
+      "threshold": "Value threshold",
       "currency": "Currency",
-      "checkYears": "Check Previous Years"
+      "checkYears": "Check previous years"
     },
     "conflict": {
-      "checkRelationships": "Check Relationships",
-      "checkFamily": "Check Family Members",
+      "checkRelationships": "Check relationships",
+      "checkFamily": "Check family members",
       "degreesOfSeparation": "Degrees of Separation"
     },
     "approval": {
-      "amount": "Amount Threshold",
+      "amount": "Amount threshold",
       "currency": "Currency",
-      "approvalLevels": "Required Approval Levels"
+      "approvalLevels": "Required approval levels"
     },
     "frequency": {
-      "maxInteractions": "Maximum Interactions",
+      "maxInteractions": "Maximum interactions",
       "periodDays": "Period (Days)"
     },
     "gift": {
-      "maxValue": "Maximum Value",
+      "maxValue": "Maximum value",
       "currency": "Currency",
       "period": "Period",
-      "cumulativeAnnual": "Annual Cumulative Limit"
+      "cumulativeAnnual": "Annual cumulative limit"
     },
     "reporting": {
       "reportWithinDays": "Report Within (Days)",
-      "coveredOfficials": "Covered Officials"
+      "coveredOfficials": "Covered officials"
     },
     "recusal": {
       "recusalPeriodYears": "Recusal Period (Years)",
-      "scope": "Recusal Scope"
+      "scope": "Recusal scope"
     }
   },
 

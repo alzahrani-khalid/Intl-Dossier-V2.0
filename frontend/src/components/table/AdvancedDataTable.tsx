@@ -317,7 +317,7 @@ export function AdvancedDataTable<TData, TValue>({
                 size="sm"
                 className="h-8 w-8 p-0 min-h-11 min-w-11"
                 onClick={() => setViewMode('card')}
-                aria-label={t('common:cardView', { defaultValue: 'Card view' })}
+                aria-label={t('common:cardView')}
               >
                 <LayoutGrid className="h-4 w-4" />
               </Button>
@@ -326,7 +326,7 @@ export function AdvancedDataTable<TData, TValue>({
                 size="sm"
                 className="h-8 w-8 p-0 min-h-11 min-w-11"
                 onClick={() => setViewMode('table')}
-                aria-label={t('common:tableView', { defaultValue: 'Table view' })}
+                aria-label={t('common:tableView')}
               >
                 <TableIcon className="h-4 w-4" />
               </Button>

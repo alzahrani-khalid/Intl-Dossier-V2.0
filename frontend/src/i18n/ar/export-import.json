@@ -177,7 +177,7 @@
     "importing": "جاري استيراد السجلات...",
     "fetching": "جاري جلب البيانات...",
     "generating": "جاري إنشاء الملف...",
-    "complete": "اكتمل!",
+    "complete": "اكتمل",
     "error": "حدث خطأ"
   },
   "errors": {
@@ -197,9 +197,9 @@
     "conflict_detected": "تعارض مع سجل موجود"
   },
   "entities": {
-    "dossier": "الملفات",
+    "dossier": "الدوسيهات",
     "person": "الأشخاص",
-    "engagement": "الارتباطات",
+    "engagement": "المشاركات",
     "working-group": "مجموعات العمل",
     "commitment": "الالتزامات",
     "deliverable": "المخرجات"

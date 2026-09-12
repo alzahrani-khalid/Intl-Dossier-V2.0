@@ -150,7 +150,7 @@ export function LegislationDetail({ id, onEdit, onBack }: LegislationDetailProps
           {onBack && (
             <Button variant="ghost" size="icon" onClick={onBack} className="mt-1">
               <ArrowLeft className={cn('h-5 w-5', isRTL && 'rotate-180')} />
-              <span className="sr-only">{t('common:common.back')}</span>
+              <span className="sr-only">{t('common:back')}</span>
             </Button>
           )}
           <div>
@@ -700,9 +700,7 @@ function DeadlinesTab({
                   {!deadline.is_completed && (
                     <Button variant="outline" size="sm" onClick={() => onComplete(deadline.id)}>
                       <CheckCircle2 className="h-4 w-4" />
-                      <span className="sr-only">
-                        {t('common:common.actions.complete', { defaultValue: 'Mark complete' })}
-                      </span>
+                      <span className="sr-only">{t('common:actions.complete')}</span>
                     </Button>
                   )}
                 </div>

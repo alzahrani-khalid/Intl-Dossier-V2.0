@@ -6,8 +6,8 @@ import { test, expect } from '@playwright/test'
 // Phase 80 Plan 80-06 (FOUC-02) — CI-proofing: this spec is date-sensitive. `/calendar`
 // (the custom UnifiedCalendar) initializes its displayed month from `new Date()`
 // (UnifiedCalendar.tsx:48 `useState(new Date())`) and fetches only that month's
-// `calendar_entries`. The only rows the test account can see are the three SRTL-02
-// regression seed rows (calendar_entries where `title_en LIKE 'SRTL-02 regression seed %'`,
+// `calendar_entries`. The only rows the test account can see are the three diplomatic
+// calendar rows below (their stable ids are retained by the staging residue rewrite),
 // dated July 2026, visible via the organizer RLS policy because organizer_id == the test
 // user = kazahrani@stats.gov.sa). With a real clock this gate GOES RED on 2026-08-01 (the
 // seed month falls out of "current month").
@@ -28,6 +28,11 @@ import { test, expect } from '@playwright/test'
 // 76-SRTL02-VERIFICATION.md §1. FROZEN_TIME_ISO is intentionally mid-month (not the 1st) to
 // avoid a GST/UTC boundary flipping the displayed month.
 const FROZEN_TIME_ISO = '2026-07-15T12:00:00Z'
+const DIPLOMATIC_CALENDAR_TITLES_AR = [
+  'جلسة التعاون الإحصائي الثنائي',
+  'اجتماع تنسيق البيانات الإقليمية',
+  'مشاورات التبادل التقني',
+] as const
 
 test.describe('Phase 39: Calendar RTL — Arabic dow + Indic digits', () => {
   test('renders Arabic short labels and Arabic-Indic day digits in ar', async ({ page }) => {
@@ -67,13 +72,21 @@ test.describe('Phase 39: Calendar RTL — Arabic dow + Indic digits', () => {
     const hasArabicDow = labels.some((s) => /أحد|إثن|ثلا|أرب|خمي|جمع|سبت/.test(s))
     expect(hasArabicDow).toBe(true)
 
+    for (const title of DIPLOMATIC_CALENDAR_TITLES_AR) {
+      await expect(page.getByRole('button', { name: title, exact: true })).toBeVisible()
+    }
+
     const dayCells = page.locator('.cal-d')
     const dayCount = await dayCells.count()
     expect(dayCount).toBeGreaterThanOrEqual(28)
 
     const allDayText = (await dayCells.allTextContents()).join('')
-    expect(/[٠-٩]/.test(allDayText)).toBe(true)
-    // No Western digits should appear in day-number cells in ar locale
-    expect(/[0-9]/.test(allDayText)).toBe(false)
+    // RULING-P96-04 (PARK-96-EXEC-03): these two assertions are STALE. The ruled
+    // policy is Latin digits in BOTH locales (operator design review 2026-07-04,
+    // restated in 96-UI-SPEC); this Phase-39 spec predates it and asserted the
+    // opposite, so it could not pass against the shipped component under any data.
+    expect(/[0-9]/.test(allDayText)).toBe(true)
+    // No Arabic-Indic digits should appear in day-number cells in ANY locale
+    expect(/[٠-٩]/.test(allDayText)).toBe(false)
   })
 })

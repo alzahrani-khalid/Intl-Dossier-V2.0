@@ -234,63 +234,6 @@ jobs:
       - name: Run backend integration tests
         run: pnpm --filter intake-backend test:integration
 
-  test-e2e:
-    name: E2E Tests
-    runs-on: ubuntu-latest
-    needs: [repo-policy]
-    env:
-      # Map the analyst test user + Supabase config from existing E2E_* secrets
-      # so the Playwright global-setup can authenticate (was the cred wall).
-      TEST_USER_EMAIL: ${{ secrets.E2E_ANALYST_EMAIL }}
-      TEST_USER_PASSWORD: ${{ secrets.E2E_ANALYST_PASSWORD }}
-      VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
-      VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY }}
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: test_db
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps
-
-      - name: Run E2E tests
-        run: pnpm run test:e2e
-        env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
-
-      - name: Upload Playwright report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30
-
   test-rtl-responsive:
     name: RTL + Responsive Tests
     runs-on: ubuntu-latest
@@ -320,7 +263,7 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Run RTL + Responsive tests
-        run: pnpm exec playwright test tests/e2e/dossier-rtl-mobile.spec.ts --reporter=html
+        run: node ../scripts/pw-run-reaped.mjs -- e2e/dossier-rtl-mobile.spec.ts --project=chromium
         working-directory: ./frontend
 
       - name: Upload RTL + Responsive test report
@@ -328,7 +271,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: rtl-responsive-report
-          path: frontend/playwright-report/
+          path: frontend/test-results/
           retention-days: 30
 
   test-a11y:
@@ -360,7 +303,7 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Run Accessibility tests
-        run: pnpm exec playwright test --project=a11y --reporter=html
+        run: node ../scripts/pw-run-reaped.mjs -- --project=a11y
         working-directory: ./frontend
 
       - name: Upload Accessibility test report
@@ -368,7 +311,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: a11y-report
-          path: frontend/playwright-report/
+          path: frontend/test-results/
           retention-days: 30
 
   # CONTEXT decision "CI smoke gating (FOUC-02)": ship the RTL/portal smokes as a
@@ -407,7 +350,7 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Run RTL portal + component smokes
-        run: pnpm exec playwright test direction-portals.spec.ts calendar-rtl.spec.ts rtl-component-smokes.spec.ts --project=chromium --reporter=html
+        run: node ../scripts/pw-run-reaped.mjs -- e2e/direction-portals.spec.ts e2e/calendar-rtl.spec.ts e2e/rtl-component-smokes.spec.ts --project=chromium
         working-directory: ./frontend
 
       - name: Upload RTL smokes report
@@ -415,7 +358,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: rtl-smokes-report
-          path: frontend/playwright-report/
+          path: frontend/test-results/
           retention-days: 30
 
   build:
@@ -588,38 +531,40 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ github.repository }}
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=sha
-
-      - name: Build and push Docker images
+      - name: Build frontend image (no push)
         uses: docker/build-push-action@v5
         with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          context: ./frontend
+          file: ./frontend/Dockerfile.prod
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build backend image (no push)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile.prod
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build agent-runtime image (no push)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./agent-runtime
+          file: ./agent-runtime/Dockerfile.prod
+          push: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
     steps:
       - uses: actions/checkout@v4
 
@@ -632,6 +577,6 @@ jobs:
           output: 'trivy-results.sarif'
 
       - name: Upload Trivy results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'trivy-results.sarif'

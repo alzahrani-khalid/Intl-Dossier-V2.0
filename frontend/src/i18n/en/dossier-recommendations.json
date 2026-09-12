@@ -5,7 +5,7 @@
   "relatedDossiers": "Related Dossiers",
 
   "noRecommendations": "No Recommendations",
-  "noRecommendationsDescription": "We haven't found any similar dossiers yet. Try generating recommendations.",
+  "noRecommendationsDescription": "No similar dossiers found yet. Try generating recommendations.",
 
   "loading": "Finding similar dossiers...",
   "errorLoading": "Failed to load recommendations",
@@ -33,6 +33,16 @@
     "strategic_alignment": "Strategic Alignment"
   },
 
+  "types": {
+    "country": "Country",
+    "organization": "Organization",
+    "forum": "Forum",
+    "engagement": "Engagement",
+    "topic": "Topic",
+    "working_group": "Working Group",
+    "person": "Person"
+  },
+
   "status": {
     "pending": "New",
     "viewed": "Viewed",
@@ -50,8 +60,8 @@
   },
 
   "feedback": {
-    "positive": "Thank you for your feedback!",
-    "negative": "Sorry to hear that. We'll improve.",
+    "positive": "Thank you for your feedback.",
+    "negative": "Your feedback helps improve these results.",
     "submit": "Submit Feedback"
   },
 

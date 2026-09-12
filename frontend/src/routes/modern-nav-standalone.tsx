@@ -80,7 +80,7 @@ function StandaloneDemo() {
           {/* Page Header */}
           <header className="mb-6 sm:mb-8 lg:mb-12">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-content-text mb-2">
-              {t('navigation.dashboard', 'Dashboard')}
+              {t('navigation.dashboard')}
             </h1>
             <p className="text-sm sm:text-base text-content-text-muted">
               All Your Workflows And Permissions
@@ -92,10 +92,10 @@ function StandaloneDemo() {
             {/* Large Metric Card */}
             <div className="lg:col-span-2">
               <MetricCard
-                label={t('metrics.executions', 'Executions')}
+                label={t('metrics.executions')}
                 value={340}
                 trend={{ value: 23, direction: 'up' }}
-                linkText={t('common.seeReport', 'See Report')}
+                linkText={t('common:seeReport')}
                 onLinkClick={() => {
                   /* TODO: Navigate to report */
                 }}
@@ -104,20 +104,20 @@ function StandaloneDemo() {
 
             {/* Additional Metrics */}
             <MetricCard
-              label={t('metrics.activeProjects', 'Active Projects')}
+              label={t('metrics.activeProjects')}
               value={12}
               trend={{ value: 8, direction: 'up' }}
-              linkText={t('common.viewAll', 'View All')}
+              linkText={t('common:viewAll')}
               onLinkClick={() => {
                 /* TODO: Navigate to projects */
               }}
             />
 
             <MetricCard
-              label={t('metrics.teamMembers', 'Team Members')}
+              label={t('metrics.teamMembers')}
               value={24}
               trend={{ value: 2, direction: 'neutral' }}
-              linkText={t('common.manage', 'Manage')}
+              linkText={t('common:manage')}
               onLinkClick={() => {
                 /* TODO: Navigate to team */
               }}
@@ -125,7 +125,7 @@ function StandaloneDemo() {
 
             {/* Executions Tabs */}
             <div className="lg:col-span-2">
-              <ExecutionsTabs title={t('navigation.executions', 'Executions')} />
+              <ExecutionsTabs title={t('navigation.executions')} />
             </div>
           </div>
 

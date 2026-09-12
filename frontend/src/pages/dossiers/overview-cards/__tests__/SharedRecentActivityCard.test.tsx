@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import type { TimelineActivity } from '@/hooks/useDossierActivityTimeline'
+import enDossier from '@/i18n/en/dossier.json'
+import arDossier from '@/i18n/ar/dossier.json'
 
 // Mutable holder the hook mock reads on every render. Declared via vi.hoisted so
 // it is initialised before the hoisted vi.mock factory below runs.
@@ -9,14 +11,51 @@ const mockState = vi.hoisted(() => ({
   isError: false,
 }))
 
-// Echo translation keys, honouring defaultValue so the card title resolves to
-// its English fallback ('Recent Activity') without loading i18n resources.
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string, opts?: { defaultValue?: string }) => opts?.defaultValue ?? key,
-    i18n: { language: 'en' },
-  }),
+const { mockLocale } = vi.hoisted(() => ({
+  mockLocale: { current: 'en' as 'en' | 'ar' },
 }))
+
+vi.mock('react-i18next', async () => {
+  const [{ default: enBundle }, { default: arBundle }] = await Promise.all([
+    vi.importActual<typeof import('@/i18n/en/dossier.json')>('@/i18n/en/dossier.json'),
+    vi.importActual<typeof import('@/i18n/ar/dossier.json')>('@/i18n/ar/dossier.json'),
+  ])
+  const bundles = { en: enBundle, ar: arBundle }
+
+  const resolveTranslation = (key: string, options: Record<string, unknown> = {}): string => {
+    const separator = key.indexOf(':')
+    const path = separator === -1 ? key : key.slice(separator + 1)
+    let value: unknown = bundles[mockLocale.current]
+    for (const segment of path.split('.')) {
+      if (value === null || typeof value !== 'object' || !(segment in value)) {
+        throw new Error(`Missing recent-activity test translation: ${key}`)
+      }
+      value = (value as Record<string, unknown>)[segment]
+    }
+    if (typeof value !== 'string') {
+      throw new Error(`Non-string recent-activity test translation: ${key}`)
+    }
+    return value.replace(/\{\{(\w+)\}\}/g, (match, token: string) =>
+      token in options ? String(options[token]) : match,
+    )
+  }
+
+  return {
+    // Phase 98 (D-25): the component now imports `@/lib/format-date`, which imports the
+    // i18n SINGLETON to read the session language at call time. That module calls
+    // `.use(initReactI18next)` at import, so a partial react-i18next mock without this
+    // export fails the whole suite at import time rather than at an assertion.
+    initReactI18next: { type: '3rdParty', init: (): void => undefined },
+    useTranslation: () => ({
+      t: (key: string, options?: Record<string, unknown>) => resolveTranslation(key, options),
+      i18n: {
+        get language(): 'en' | 'ar' {
+          return mockLocale.current
+        },
+      },
+    }),
+  }
+})
 
 // Stub the activity-timeline hook so the card renders against a controlled
 // payload. The barrel '@/hooks/useDossierActivityTimeline' re-exports the
@@ -60,8 +99,27 @@ const makeActivity = (overrides: Partial<TimelineActivity>): TimelineActivity =>
 
 describe('SharedRecentActivityCard', () => {
   beforeEach(() => {
+    mockLocale.current = 'en'
     mockState.activities = []
     mockState.isError = false
+  })
+
+  it('resolves visible copy from the real English and Arabic dossier bundles without rendering keys', () => {
+    mockState.isError = true
+
+    const english = render(<SharedRecentActivityCard dossierId="d1" />)
+    expect(screen.getByRole('heading', { name: enDossier.overview.recentActivity })).toBeTruthy()
+    expect(screen.getByRole('alert').textContent).toBe(enDossier.overview.sectionError)
+    expect(english.container.innerHTML).not.toContain('overview.recentActivity')
+    expect(english.container.innerHTML).not.toContain('overview.sectionError')
+    english.unmount()
+
+    mockLocale.current = 'ar'
+    const arabic = render(<SharedRecentActivityCard dossierId="d1" />)
+    expect(screen.getByRole('heading', { name: arDossier.overview.recentActivity })).toBeTruthy()
+    expect(screen.getByRole('alert').textContent).toBe(arDossier.overview.sectionError)
+    expect(arabic.container.innerHTML).not.toContain('overview.recentActivity')
+    expect(arabic.container.innerHTML).not.toContain('overview.sectionError')
   })
 
   it('renders the real edge-function payload (link_id + activity_timestamp, no created_at) without throwing', () => {
@@ -100,8 +158,8 @@ describe('SharedRecentActivityCard', () => {
 
     render(<SharedRecentActivityCard dossierId="d1" />)
 
-    expect(screen.getByRole('alert').textContent).toMatch(/failed to load this section/i)
-    expect(screen.queryByText('No recent activity')).toBeNull()
+    expect(screen.getByRole('alert').textContent).toBe(enDossier.overview.sectionError)
+    expect(screen.queryByText(enDossier.overview.noRecentActivity)).toBeNull()
   })
 
   it('renders cached activities and no error line on background refetch failure (stale-while-error)', () => {

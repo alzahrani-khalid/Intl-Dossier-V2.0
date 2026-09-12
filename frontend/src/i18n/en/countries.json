@@ -1,11 +1,48 @@
 {
-  "title": "Countries",
-  "subtitle": "All country dossiers",
+  "title": "Countries overview",
+  "subtitle": "Monitor bilateral relationships, workflow status, and compliance posture across every partner state.",
+  "error": {
+    "title": "Failed to load countries"
+  },
+  "actions": {
+    "addCountry": "Add new country"
+  },
+  "metrics": {
+    "totalPartners": "Active partners",
+    "totalPartnersHint": "Includes strategic and operational partnerships",
+    "totalAgreements": "Linked agreements",
+    "totalAgreementsHint": "Contracts and memoranda currently in force",
+    "escalations": "Escalations",
+    "escalationsHint": "Partners pending compliance or data-sovereignty review"
+  },
+  "filters": {
+    "title": "Filters & search",
+    "search": "Search by name or ISO code",
+    "searchPlaceholder": "e.g. AE, France, نيجيريا",
+    "region": "Region",
+    "allRegions": "All regions",
+    "status": "Status",
+    "allStatuses": "All statuses"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "archived": "Archived",
+    "deleted": "Deleted",
+    "suspended": "Suspended"
+  },
   "table": {
     "name": "Country",
     "engagements": "Engagements",
     "lastTouch": "Last updated",
-    "sensitivity": "Sensitivity"
+    "sensitivity": "Sensitivity",
+    "country": "Country",
+    "iso": "ISO codes",
+    "region": "Region",
+    "status": "Status",
+    "agreements": "Agreements",
+    "updated": "Last updated",
+    "empty": "No countries match the current filters"
   },
   "sensitivity": {
     "public": "Public",

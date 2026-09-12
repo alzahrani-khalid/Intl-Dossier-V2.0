@@ -14,18 +14,18 @@
     }
   },
   "kpi": {
-    "activeEngagements": "Active Engagements",
-    "openCommitments": "Open Commitments",
+    "activeEngagements": "Active engagements",
+    "openCommitments": "Open commitments",
     "slaAtRisk": "SLA at Risk",
-    "weekAhead": "Week Ahead",
+    "weekAhead": "Week ahead",
     "strip": "Key metrics"
   },
   "weekAhead": {
     "today": "Today",
     "tomorrow": "Tomorrow",
-    "this_week": "This Week",
-    "next_week": "Next Week",
-    "title": "Week Ahead",
+    "this_week": "This week",
+    "next_week": "Next week",
+    "title": "Week ahead",
     "empty": "No upcoming events",
     "status": {
       "scheduled": "Scheduled",
@@ -43,21 +43,21 @@
     }
   },
   "overdue": {
-    "title": "Overdue Commitments",
+    "title": "Overdue commitments",
     "empty": "No overdue commitments",
     "owner": "Owner",
     "expand": "Show more",
     "collapse": "Show less"
   },
   "digest": {
-    "title": "Intelligence Digest",
+    "title": "Intelligence digest",
     "tag": "Source",
     "refresh": "Refresh digest",
     "empty": {
-      "heading": "Digest is ready for seeded publications.",
-      "body": "Apply the dashboard demo seed, then refresh the digest."
+      "heading": "No publications yet",
+      "body": "New digest publications appear here as they are issued."
     },
-    "error": "Digest could not load. Check the staging seed and try again."
+    "error": "The digest could not load. Try again."
   },
   "sla": {
     "title": "SLA Health",
@@ -69,12 +69,12 @@
     "title": "VIP Visits",
     "empty": {
       "heading": "No VIP visits with country data.",
-      "body": "Add VIP participant data to the dashboard seed, then refresh the widget."
+      "body": "No VIP participants to show yet."
     },
     "error": "VIP visits could not load. Check event data and try again."
   },
   "myTasks": {
-    "title": "My Tasks",
+    "title": "My tasks",
     "empty": "No tasks assigned",
     "due": {
       "today": "Today",
@@ -83,7 +83,7 @@
     }
   },
   "recent": {
-    "title": "Recent Dossiers",
+    "title": "Recent dossiers",
     "empty": "No recent dossiers"
   },
   "forums": {
@@ -102,30 +102,28 @@
     "retry": "Retry"
   },
   "title": "Dashboard",
-  "customDashboard": "Custom Dashboard",
-  "editMode": "Edit Mode",
-  "exitEditMode": "Exit Edit Mode",
-  "addWidget": "Add Widget",
-  "removeWidget": "Remove Widget",
-  "configureWidget": "Configure Widget",
-  "resetLayout": "Reset Layout",
-  "saveLayout": "Save Layout",
+  "customDashboard": "Custom dashboard",
+  "editMode": "Edit mode",
+  "exitEditMode": "Exit edit mode",
+  "addWidget": "Add widget",
+  "removeWidget": "Remove widget",
+  "configureWidget": "Configure widget",
+  "resetLayout": "Reset layout",
+  "saveLayout": "Save layout",
   "layoutSaved": "Layout saved successfully",
   "layoutReset": "Layout reset to default",
-
   "widgetLibrary": {
-    "title": "Widget Library",
+    "title": "Widget library",
     "description": "Drag widgets to add them to your dashboard",
     "search": "Search widgets...",
     "categories": {
-      "all": "All Widgets",
+      "all": "All widgets",
       "metrics": "Metrics & KPIs",
       "data": "Data & Charts",
       "lists": "Lists & Tasks",
       "other": "Other"
     }
   },
-
   "widgetTypes": {
     "kpi-card": {
       "name": "KPI Card",
@@ -136,11 +134,11 @@
       "description": "Visualize data with various chart types"
     },
     "upcoming-events": {
-      "name": "Upcoming Events",
+      "name": "Upcoming events",
       "description": "Show upcoming deadlines and events"
     },
     "task-list": {
-      "name": "Task List",
+      "name": "Task list",
       "description": "Display your tasks and work items"
     },
     "notifications": {
@@ -148,79 +146,71 @@
       "description": "Show recent notifications and alerts"
     },
     "activity-feed": {
-      "name": "Activity Feed",
+      "name": "Activity feed",
       "description": "Track recent activity and changes"
     },
     "quick-actions": {
-      "name": "Quick Actions",
+      "name": "Quick actions",
       "description": "Access frequently used actions"
     },
     "stats-summary": {
-      "name": "Stats Summary",
+      "name": "Stats summary",
       "description": "Overview of key statistics"
     }
   },
-
   "metrics": {
-    "active-dossiers": "Active Dossiers",
-    "pending-tasks": "Pending Tasks",
-    "overdue-items": "Overdue Items",
-    "completed-this-week": "Completed This Week",
-    "response-rate": "Response Rate",
+    "active-dossiers": "Active dossiers",
+    "pending-tasks": "Pending tasks",
+    "overdue-items": "Overdue items",
+    "completed-this-week": "Completed this week",
+    "response-rate": "Response rate",
     "engagement-count": "Engagements",
-    "intake-volume": "Intake Volume",
+    "intake-volume": "Intake volume",
     "sla-compliance": "SLA Compliance",
-    "custom": "Custom Metric"
+    "custom": "Custom metric"
   },
-
   "chartTypes": {
-    "line": "Line Chart",
-    "bar": "Bar Chart",
-    "pie": "Pie Chart",
-    "donut": "Donut Chart",
-    "area": "Area Chart",
+    "line": "Line chart",
+    "bar": "Bar chart",
+    "pie": "Pie chart",
+    "donut": "Donut chart",
+    "area": "Area chart",
     "sparkline": "Sparkline"
   },
-
   "dataSources": {
     "work-items-by-status": "Work Items by Status",
     "work-items-by-source": "Work Items by Source",
-    "completion-trend": "Completion Trend",
-    "intake-volume-trend": "Intake Volume Trend",
-    "engagement-distribution": "Engagement Distribution",
-    "priority-breakdown": "Priority Breakdown",
-    "team-workload": "Team Workload",
-    "custom": "Custom Data Source"
+    "completion-trend": "Completion trend",
+    "intake-volume-trend": "Intake volume trend",
+    "engagement-distribution": "Engagement distribution",
+    "priority-breakdown": "Priority breakdown",
+    "team-workload": "Team workload",
+    "custom": "Custom data source"
   },
-
   "eventTypes": {
     "meeting": "Meeting",
     "deadline": "Deadline",
     "follow-up": "Follow-up",
     "engagement": "Engagement",
     "mou-renewal": "MOU Renewal",
-    "all": "All Events"
+    "all": "All events"
   },
-
   "settings": {
-    "title": "Widget Settings",
+    "title": "Widget settings",
     "general": "General",
     "appearance": "Appearance",
     "data": "Data",
     "refresh": "Refresh",
-
-    "widgetTitle": "Widget Title",
-    "widgetSize": "Widget Size",
-    "refreshInterval": "Refresh Interval",
-    "autoRefresh": "Auto Refresh",
-
+    "widgetTitle": "Widget title",
+    "widgetSize": "Widget size",
+    "refreshInterval": "Refresh interval",
+    "autoRefresh": "Auto refresh",
     "sizes": {
       "small": "Small (1x1)",
       "medium": "Medium (2x1)",
       "large": "Large (3x2)",
       "full": "Full Width (4x2)"
     },
-
     "intervals": {
       "never": "Never",
       "30s": "30 seconds",
@@ -229,51 +219,44 @@
       "10m": "10 minutes",
       "30m": "30 minutes"
     },
-
     "kpi": {
       "metric": "Metric",
-      "showTrend": "Show Trend",
-      "showSparkline": "Show Sparkline",
-      "targetValue": "Target Value",
-      "comparisonPeriod": "Comparison Period"
+      "showTrend": "Show trend",
+      "showSparkline": "Show sparkline",
+      "targetValue": "Target value",
+      "comparisonPeriod": "Comparison period"
     },
-
     "chart": {
-      "chartType": "Chart Type",
-      "dataSource": "Data Source",
-      "showLegend": "Show Legend",
-      "showGrid": "Show Grid Lines",
-      "dateRange": "Date Range"
+      "chartType": "Chart type",
+      "dataSource": "Data source",
+      "showLegend": "Show legend",
+      "showGrid": "Show grid lines",
+      "dateRange": "Date range"
     },
-
     "events": {
-      "maxItems": "Maximum Items",
-      "showPastEvents": "Show Past Events",
-      "eventTypes": "Event Types",
-      "dateRange": "Date Range"
+      "maxItems": "Maximum items",
+      "showPastEvents": "Show past events",
+      "eventTypes": "Event types",
+      "dateRange": "Date range"
     },
-
     "tasks": {
-      "maxItems": "Maximum Items",
-      "showCompleted": "Show Completed",
-      "groupBy": "Group By",
-      "sortBy": "Sort By",
+      "maxItems": "Maximum items",
+      "showCompleted": "Show completed",
+      "groupBy": "Group by",
+      "sortBy": "Sort by",
       "filterSource": "Filter by Source"
     },
-
     "notifications": {
-      "maxItems": "Maximum Items",
-      "showRead": "Show Read",
+      "maxItems": "Maximum items",
+      "showRead": "Show read",
       "categories": "Categories"
     },
-
     "activity": {
-      "maxItems": "Maximum Items",
-      "activityTypes": "Activity Types",
-      "showTimestamps": "Show Timestamps"
+      "maxItems": "Maximum items",
+      "activityTypes": "Activity types",
+      "showTimestamps": "Show timestamps"
     }
   },
-
   "periods": {
     "day": "Day",
     "week": "Week",
@@ -282,55 +265,48 @@
     "year": "Year",
     "today": "Today"
   },
-
   "groupBy": {
     "none": "None",
     "source": "Source",
     "priority": "Priority",
     "status": "Status"
   },
-
   "sortBy": {
     "deadline": "Deadline",
     "priority": "Priority",
-    "created_at": "Created Date"
+    "created_at": "Created date"
   },
-
   "sources": {
     "commitment": "Commitment",
     "task": "Task",
     "intake": "Intake",
-    "all": "All Sources"
+    "all": "All sources"
   },
-
   "notificationCategories": {
-    "task-assigned": "Task Assigned",
-    "deadline-approaching": "Deadline Approaching",
-    "status-change": "Status Change",
+    "task-assigned": "Task assigned",
+    "deadline-approaching": "Deadline approaching",
+    "status-change": "Status change",
     "mention": "Mention",
     "system": "System",
-    "all": "All Categories"
+    "all": "All categories"
   },
-
   "activityTypes": {
     "created": "Created",
     "updated": "Updated",
     "completed": "Completed",
     "commented": "Commented",
     "assigned": "Assigned",
-    "status-change": "Status Changed",
-    "all": "All Activities"
+    "status-change": "Status changed",
+    "all": "All activities"
   },
-
   "quickActions": {
-    "createDossier": "Create Dossier",
-    "createTask": "Create Task",
-    "createIntake": "Create Intake",
+    "createDossier": "Create dossier",
+    "createTask": "Create task",
+    "createIntake": "Create intake",
     "search": "Search",
-    "viewCalendar": "View Calendar",
-    "viewReports": "View Reports"
+    "viewCalendar": "View calendar",
+    "viewReports": "View reports"
   },
-
   "emptyStates": {
     "noWidgets": "No widgets added yet",
     "addWidgetHint": "Click 'Add Widget' to customize your dashboard",
@@ -340,7 +316,6 @@
     "noNotifications": "No notifications",
     "noActivity": "No recent activity"
   },
-
   "trends": {
     "up": "Up",
     "down": "Down",
@@ -349,47 +324,44 @@
     "decrease": "decrease",
     "fromLastPeriod": "from last {{period}}"
   },
-
   "actions": {
     "viewAll": "View all VIP visits",
     "refresh": "Refresh",
     "expand": "Expand",
     "collapse": "Collapse",
     "duplicate": "Duplicate",
-    "delete": "Delete"
+    "delete": "Delete",
+    "added": "Added",
+    "cancel": "Cancel"
   },
-
   "confirmations": {
     "deleteWidget": "Are you sure you want to remove this widget?",
     "resetLayout": "Are you sure you want to reset to the default layout? All customizations will be lost."
   },
-
   "errors": {
     "loadFailed": "Failed to load widget data",
     "saveFailed": "Failed to save layout",
     "configInvalid": "Invalid widget configuration"
   },
-
   "accessibility": {
     "dragHandle": "Drag to reorder widget",
     "removeButton": "Remove {{widget}} widget",
     "settingsButton": "Open {{widget}} settings",
     "widgetRegion": "{{widget}} widget area"
   },
-
   "benchmarks": {
-    "title": "Teams Like Yours",
+    "title": "Teams like yours",
     "description": "Organizations similar to yours typically track {{dossiers}} dossiers, {{relationships}} relationships, and {{briefs}} active briefs.",
     "organizations": "organizations",
     "dismiss": "Dismiss preview",
-    "customize": "Customize Dashboard",
+    "customize": "Customize dashboard",
     "typicalRange": "Typical range: {{min}}-{{max}} dossiers",
     "categories": {
-      "dossiers": "Active Dossiers",
+      "dossiers": "Active dossiers",
       "relationships": "Relationships",
-      "briefs": "Active Briefs",
-      "engagements": "Monthly Engagements",
-      "commitments": "Active Commitments",
+      "briefs": "Active briefs",
+      "engagements": "Monthly engagements",
+      "commitments": "Active commitments",
       "mous": "Active MOUs"
     },
     "descriptions": {

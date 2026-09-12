@@ -147,9 +147,7 @@ export function CommentForm({
         ref={textareaRef}
         value={content}
         onChange={setContent}
-        placeholder={
-          placeholder || t('form.placeholder', 'Write a comment... Use @ to mention someone')
-        }
+        placeholder={placeholder || t('form.placeholder')}
         maxLength={maxLength}
         disabled={isSubmitting}
         autoFocus={autoFocus}
@@ -184,7 +182,7 @@ export function CommentForm({
           {/* Keyboard hint */}
           {!compact && (
             <span className="text-xs text-muted-foreground hidden sm:inline">
-              {t('form.keyboardHint', 'Ctrl+Enter to submit')}
+              {t('form.keyboardHint')}
             </span>
           )}
         </div>
@@ -201,7 +199,7 @@ export function CommentForm({
               data-testid="cancel-comment-button"
             >
               <X className={cn('h-4 w-4', !compact && 'me-1')} />
-              {!compact && t('form.cancel', 'Cancel')}
+              {!compact && t('form.cancel')}
             </Button>
           )}
 
@@ -213,21 +211,13 @@ export function CommentForm({
             data-testid="submit-comment-button"
           >
             <Send className={cn('h-4 w-4', !compact && 'me-1')} />
-            {isSubmitting
-              ? t('form.submitting', 'Posting...')
-              : isEditing
-                ? t('form.update', 'Update')
-                : t('form.submit', 'Post')}
+            {isSubmitting ? t('form.submitting') : isEditing ? t('form.update') : t('form.submit')}
           </Button>
         </div>
       </div>
 
       {/* Markdown hint */}
-      {!compact && (
-        <p className="text-xs text-muted-foreground">
-          {t('form.markdownHint', 'Supports **bold**, *italic*, `code`, and [links](url)')}
-        </p>
-      )}
+      {!compact && <p className="text-xs text-muted-foreground">{t('form.markdownHint')}</p>}
     </div>
   )
 }

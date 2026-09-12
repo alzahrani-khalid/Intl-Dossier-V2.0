@@ -24,13 +24,13 @@
     "call": "مكالمة",
     "travel": "سفر",
     "event": "فعالية",
-    "aria": "تصفية الارتباطات"
+    "aria": "تصفية المشاركات"
   },
   "week": {
     "of": "أسبوع"
   },
   "row": {
-    "openAria": "فتح الارتباط: {{title}}"
+    "openAria": "فتح المشاركة: {{title}}"
   },
   "loadMore": {
     "cta": "تحميل المزيد",
@@ -60,7 +60,7 @@
     "participants": "المشاركون",
     "agenda": "الأجندة",
     "outcomes": "المخرجات",
-    "briefs": "الموجزات"
+    "briefs": "الملخصات"
   },
   "sections": {
     "details": "التفاصيل",
@@ -97,6 +97,7 @@
   },
   "statuses": {
     "planned": "مخطط",
+    "scheduled": "مجدول",
     "confirmed": "مؤكد",
     "in_progress": "جاري",
     "completed": "مكتمل",
@@ -170,7 +171,7 @@
       "organization": "منظمة",
       "country": "دولة",
       "external": "خارجي",
-      "selectDossier": "اختر الملف",
+      "selectDossier": "اختر الدوسيه",
       "externalNameEn": "الاسم (الإنجليزية)",
       "externalNameAr": "الاسم (العربية)",
       "externalTitleEn": "اللقب (الإنجليزية)",

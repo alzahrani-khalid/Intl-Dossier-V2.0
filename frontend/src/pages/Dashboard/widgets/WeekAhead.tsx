@@ -28,7 +28,7 @@ import type {
   TimelineEvent,
   TimelineGroup,
 } from '@/domains/operations-hub/types/operations-hub.types'
-import { formatTime } from '@/lib/format-date'
+import { formatTime, formatWeekday } from '@/lib/format-date'
 import { WidgetSkeleton } from './WidgetSkeleton'
 
 const DAY_GROUP_ORDER: readonly TimelineGroup[] = [
@@ -50,7 +50,7 @@ function formatTimeRange(startIso: string, endIso: string | null): string {
 
 function formatDayDate(iso: string): { weekday: string; day: string } {
   const date = new Date(iso)
-  return { weekday: format(date, 'EEE'), day: format(date, 'dd') }
+  return { weekday: formatWeekday(date), day: format(date, 'dd') }
 }
 
 interface WeekRowProps {

@@ -8,9 +8,8 @@
 
 import { useState, useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { format, parseISO, isAfter } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
-import { formatDayFirst } from '@/lib/format-date'
+import { parseISO, isAfter } from 'date-fns'
+import { formatDateTime, formatDayFirst, formatTime } from '@/lib/format-date'
 import { Check, X, HelpCircle, Clock, MapPin, Calendar, Send } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -39,7 +38,6 @@ interface SlotVote {
 export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPollVoterProps) {
   const { t } = useTranslation('availability-polling')
   const { isRTL } = useDirection()
-  const dateLocale = isRTL ? ar : enUS
 
   const { data: pollData, isLoading, error } = usePollDetails(pollId)
   const submitVotes = useSubmitVotes()
@@ -200,7 +198,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
             <span className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
               {t('voting.deadline', {
-                date: format(parseISO(poll.deadline), 'PPp', { locale: dateLocale }),
+                date: formatDateTime(parseISO(poll.deadline)),
               })}
             </span>
           )}
@@ -284,8 +282,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
                   <div className="flex-1 min-w-0">
                     <div className="font-medium">{formatDayFirst(startDate)}</div>
                     <div className="text-sm text-muted-foreground">
-                      {format(startDate, 'h:mm a', { locale: dateLocale })} -{' '}
-                      {format(endDate, 'h:mm a', { locale: dateLocale })}
+                      {formatTime(startDate)} - {formatTime(endDate)}
                     </div>
                     {(slot.venue_suggestion_en || slot.venue_suggestion_ar) && (
                       <div className="text-sm text-muted-foreground flex items-center gap-1 mt-1">

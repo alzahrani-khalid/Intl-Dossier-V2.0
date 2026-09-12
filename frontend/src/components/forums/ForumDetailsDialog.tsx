@@ -31,7 +31,7 @@ import {
   Edit,
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
-import { format } from 'date-fns'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { useAuth } from '@/contexts/auth.context'
 import { useDirection } from '@/hooks/useDirection'
 import { workItemDossierKeys } from '@/hooks/useCreateWorkItemDossierLinks'
@@ -174,8 +174,8 @@ export function ForumDetailsDialog({
       return { id: forum.id }
     },
     onSuccess: ({ id }) => {
-      toast.success(t('common:common.success', 'Success'), {
-        description: t('editSuccess', 'Forum updated successfully'),
+      toast.success(t('common:success'), {
+        description: t('editSuccess'),
       })
       queryClient.invalidateQueries({ queryKey: ['forums'] })
       queryClient.invalidateQueries({ queryKey: ['forum', id] })
@@ -183,9 +183,9 @@ export function ForumDetailsDialog({
       setEditOpen(false)
     },
     onError: (error) => {
-      toast.error(t('common:common.error', 'Error'), {
+      toast.error(t('common:error.label'), {
         description:
-          error instanceof Error ? error.message : t('editFailed', 'Failed to update forum'),
+          error instanceof Error ? error.message : t('editFailed'),
       })
     },
   })
@@ -229,13 +229,13 @@ export function ForumDetailsDialog({
       return data
     },
     onSuccess: () => {
-      toast.success(t('common:common.success', 'Success'), {
+      toast.success(t('common:success'), {
         description: 'Forum added to calendar successfully',
       })
       queryClient.invalidateQueries({ queryKey: ['calendar-events'] })
     },
     onError: (error) => {
-      toast.error(t('common:common.error', 'Error'), {
+      toast.error(t('common:error.label'), {
         description: error instanceof Error ? error.message : 'Failed to add forum to calendar',
       })
     },
@@ -325,7 +325,7 @@ export function ForumDetailsDialog({
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
-    return !isNaN(date.getTime()) ? format(date, 'dd MMM yyyy') : '-'
+    return !isNaN(date.getTime()) ? formatDayFirstYear(date) : '-'
   }
 
   const getStatusColor = (status: string) => {
@@ -373,13 +373,13 @@ export function ForumDetailsDialog({
                 {canEdit && (
                   <Button variant="outline" size="sm" onClick={handleEdit} className="shrink-0">
                     <Edit className="h-4 w-4 me-2" />
-                    {t('common:common.edit')}
+                    {t('common:edit')}
                   </Button>
                 )}
               </div>
             </div>
             <DialogDescription className="sr-only">
-              {t('common:common.view')} {title}
+              {t('common:view')} {title}
             </DialogDescription>
           </DialogHeader>
 
@@ -392,15 +392,13 @@ export function ForumDetailsDialog({
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base flex items-center gap-2">
                     <Info className="h-4 w-4" />
-                    {t('common:common.about')}
+                    {t('common:about')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {description && (
                     <div>
-                      <p className="text-sm text-muted-foreground mb-1">
-                        {t('common:common.about')}
-                      </p>
+                      <p className="text-sm text-muted-foreground mb-1">{t('common:about')}</p>
                       <p className="text-sm">{description}</p>
                     </div>
                   )}
@@ -470,7 +468,7 @@ export function ForumDetailsDialog({
                     <div className="flex items-start gap-2">
                       <Building2 className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
                       <div>
-                        <p className="text-sm font-medium">{t('organizer', 'Organizer')}</p>
+                        <p className="text-sm font-medium">{t('organizer')}</p>
                         <p className="text-sm text-muted-foreground">{organizerName}</p>
                       </div>
                     </div>
@@ -551,7 +549,7 @@ export function ForumDetailsDialog({
           <DialogHeader>
             <DialogTitle>{t('editForum')}</DialogTitle>
             <DialogDescription>
-              {t('editDescription', 'Update forum dossier details.')}
+              {t('editDescription')}
             </DialogDescription>
           </DialogHeader>
 
@@ -627,8 +625,8 @@ export function ForumDetailsDialog({
               }
             >
               {updateForumMutation.isPending
-                ? t('common:common.saving', 'Saving...')
-                : t('common:common.save', 'Save')}
+                ? t('common:saving')
+                : t('common:save')}
             </Button>
           </DialogFooter>
         </DialogContent>

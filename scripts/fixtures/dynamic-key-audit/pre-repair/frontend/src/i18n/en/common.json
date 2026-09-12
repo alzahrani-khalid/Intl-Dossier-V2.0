@@ -1,0 +1,9 @@
+{
+  "navigation": {
+    "dashboard": "x",
+    "dossiers": "x",
+    "workflow": "x",
+    "calendar": "x",
+    "reports": "x"
+  }
+}

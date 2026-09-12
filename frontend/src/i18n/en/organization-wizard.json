@@ -2,7 +2,7 @@
   "wizard": {
     "steps": {
       "basic": {
-        "guidance": "Tell us about the organization — official names and a short description."
+        "guidance": "Describe the organization — official names and a short description."
       },
       "org-details": {
         "guidance": "Capture the organization's type, code, and website."

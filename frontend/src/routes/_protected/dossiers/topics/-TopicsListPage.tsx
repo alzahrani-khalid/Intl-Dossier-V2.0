@@ -11,11 +11,12 @@
  */
 
 import { useCallback, useMemo, type ReactElement } from 'react'
-import { useNavigate, useSearch } from '@tanstack/react-router'
+import { Link, useNavigate, useSearch } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { formatDayFirstYear } from '@/lib/format-date'
-import { BookOpen } from 'lucide-react'
+import { BookOpen, Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import {
   ListPageShell,
   GenericListPage,
@@ -130,7 +131,7 @@ export function TopicsListPage(): ReactElement {
           id: String(row.id),
           primary,
           secondary: updated,
-          statusLabel: t(`topics:status.${status}`, { defaultValue: status }),
+          statusLabel: t(`topics:status.${status}`),
           statusChipClass,
           icon: <BookOpen className="size-5" aria-hidden="true" />,
         }
@@ -194,7 +195,7 @@ export function TopicsListPage(): ReactElement {
       <ToolbarSearch
         value={search.search ?? ''}
         onChange={onSearchChange}
-        placeholder={t('list-pages:search.placeholder', { defaultValue: 'Search...' })}
+        placeholder={t('list-pages:search.placeholder')}
       />
       <DisplayPopover
         config={topicsListConfig}
@@ -212,9 +213,17 @@ export function TopicsListPage(): ReactElement {
 
   return (
     <ListPageShell
-      title={t('topics:title', { defaultValue: 'Topics' })}
-      subtitle={t('topics:subtitle', { defaultValue: '' })}
+      title={t('topics:title')}
+      subtitle={t('topics:subtitle')}
       toolbar={toolbar}
+      actions={
+        <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">
+          <Link to="/dossiers/topics/create">
+            <Plus className="h-4 w-4 me-2" />
+            {t('empty-states:list.topic.cta')}
+          </Link>
+        </Button>
+      }
       isLoading={query.isLoading}
       isEmpty={!query.isLoading && items.length === 0}
       emptyState={<ListEmptyState entityType="topic" onCreate={onCreate} />}

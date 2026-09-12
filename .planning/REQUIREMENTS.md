@@ -1,195 +1,988 @@
-# Requirements: Intl-Dossier v9.0 Platform Completion & Live Verification
+# Requirements: Intl-Dossier v10.0 Trust & Correctness
 
-**Defined:** 2026-07-06
+**Defined:** 2026-08-15
 **Core Value:** Unified intelligence management for diplomatic operations — every relationship, commitment, and signal tracked in one secure, bilingual platform.
+
+**Scope input:** `.planning/audits/live-audit-2026-08-15/INDEX.md` — a six-lane live-app audit
+(190 route/tab URLs, EN + AR, 370 screenshots, 144 findings, 19 ship-blockers). Findings marked
+**[V]** there were independently re-verified against source or the live database.
+
+**Milestone goal:** Close the gap between what the app appears to do and what it actually does —
+every failure admits it failed, every advertised write path works, and every surface tells the
+truth about its data.
+
+**Out of scope — verified already correct, do not re-open:** dossier overview tabs (all 8 types
+render type-specific sections), demo routes (`/responsive-demo`, `/modern-nav-standalone` are
+correctly `devModeGuard`-gated; `/dashboard/project-management` is an intentional redirect),
+design-token discipline (zero raw hex, zero color literals, zero card shadows, zero gradients),
+and RTL layout infrastructure (`dir="rtl"`, Tajawal, mirroring, zero horizontal overflow all
+verified sound across six lanes).
 
 ## v1 Requirements
 
-Requirements for this milestone. Each maps to roadmap phases.
+### AUTH — Authentication & session integrity
 
-### Feature Completion (honest-disables → real features)
+- [x] **AUTH-01**: A user can sign out from the running app. The sidebar user card (or an equivalent shell control) exposes a working logout; `NavUser` — which already implements it and is imported nowhere — is mounted or its `logout()` path is wired to the live shell. **[V]**
+- [x] **AUTH-02**: Edge functions validate the caller's JWT. The 133 `index.ts` files pinning `supabase-js@2.3x` are migrated to `@supabase/supabase-js@2` and pass the caller's token explicitly — `getUser(token)` — so a valid session is not rejected. Verify by re-deriving the population, never by re-quoting the count: `grep -rlE '@supabase/supabase-js@2\.3[0-9]' supabase/functions --include='index.ts' | wc -l` → `0`. **[V]**
 
-- [x] **FEAT-01**: User can create a MoU from the MoUs page — a create form/route writing `mous` (`type`, `mou_category`, dates, parties, `lifecycle_state`); the disabled "Add MoU" button (`MousPage.tsx`) becomes live (closes C-3)
-- [x] **FEAT-02**: Admin can create a user via a `/users/create` route implemented against the L1-hardened user-management edge functions (closes D-10 create half)
-- [x] **FEAT-03**: Admin can open a user detail/management view at `/users/:id` (role, status, profile) from the users list (closes D-10 detail half)
-- [x] **FEAT-04**: ConsistencyPanel is either wired to a real consistency-check query with working modify/accept/escalate/view actions, or formally retired (component + i18n keys deleted, decision recorded) — no permanently-dead UI remains (closes E-8)
+  > **Wording corrected 2026-08-15** (Phase 92 planning, `RULING-P92-02`). This read "the 133 of 303 functions pinning `supabase-js@2.3x` **with** bare `getUser()`". That conjunction is false: 133 `index.ts` files pin `2.3x`, 163 files call bare `auth.getUser()`, and only **53** are both — no single set satisfied the sentence as written. The 133 came from the audit's own pin-only command (`audits/live-audit-2026-08-15/adminops.md:97`); the `with bare getUser()` clause was introduced when `INDEX.md` consolidated the six lanes. Scope decided by the operator: migrate all 133.
 
-### Linear Affordances (F23–F26, from DESIGN-REFINEMENT-PLAN-260704 §Phase 6)
+- [x] **AUTH-03**: Session invalidation redirects the open tab. An `onAuthStateChange` subscription at the app root forces `/login` on `SIGNED_OUT`, instead of the page decaying into a "Member/Member" ghost state with the admin nav silently removed.
+- [x] **AUTH-04** _(closed 2026-08-15 **PARTIAL**, `RULING-P92-49`: the error half was proven live; the **data half is deferred** (`DELEG-01`→P93, `SEED-DELEG-01`→P102). `92-VERIFICATION.md` records ⚠️ PARTIAL.)_: `/delegations` reports auth failure as failure. The `my-delegations` calls authenticate, and a rejected query renders an error state rather than "You haven't granted any delegations."
+- [x] **AUTH-05** _(closed 2026-08-15 **PARTIAL**, `RULING-P92-49`: the control exists and is human-reachable, but **the e2e was red and the click never executed**. `92-VERIFICATION.md` records ⚠️ PARTIAL. Not a behavioural proof of the action.)_: `/settings` is reachable from navigation and exposes the sign-out control.
 
-- [ ] **AFF-01**: User can open a list row in a right-peek panel with prev/next paging without leaving the list (F23)
-- [ ] **AFF-02**: User can use split Filter and Display popovers with live result counts on list pages (F24)
-- [x] **AFF-03**: ⌘K command menu passes an audit — every advertised command works, missing high-value commands added, EN+AR (F25)
-- [x] **AFF-04**: Empty states across list pages and dossier tabs are rich (explain the surface + primary action), replacing bare "no data" text (F26)
+### TRUST — Failure is visible, never rendered as emptiness
 
-### Security & Hygiene Tail
+- [x] **TRUST-01**: The data layer distinguishes a rejected query from an empty result. Repositories stop catching-and-returning `{ data: null }` (e.g. `analytics.repository.ts`), so the `isError` branches that already exist in the pages stop being dead code.
+- [x] **TRUST-02**: Every audited surface that currently shows a confident empty state over a failed request renders an error instead — at minimum `/admin/field-permissions` (shows "0 Permissions" while the DB holds **19 rules** **[V]**), `/admin/data-retention`, Tag Analytics (renders "Failed to load tags" for a query that _succeeded_), and position attachments (CORS-blocked → "No attachments yet").
+- [x] **TRUST-03** _(closed 2026-08-16, `RULING-P93-07`: dossier and engagement legs behaviourally proven; the **report leg was DEFERRED to Phase 94 as `ARMA-01`**, which closed it (`94-05`, arm-(b) deletion, spec 1/1). The independent verifier recorded ✓ SATISFIED *(report leg deferred → P94)*.)_: A well-formed but nonexistent record ID renders a page-level not-found state, not "Check your connection and try again" after 24 skeletons — covering dossier detail, engagement detail, and report builder.
+- [x] **TRUST-04** _(closed 2026-08-16 **PARTIAL**, `RULING-P93-07`: degraded-200 contract, named degraded render and spec all proven; **the leak half carries the frontmatter gap** and is recorded as SC5-partial by the independent verifier.)_: An engagement dossier whose extension row is missing renders a named, degraded state instead of a full chrome shell with no title. Server errors never leak internals to users (`/tasks/queue` currently shows the raw supabase-js string).
 
-- [ ] **SEC-01**: `UserPicker.handleSearch` no longer interpolates user input into PostgREST filter strings — `.ilike()` builder or sanitized `,().` input (closes IN-04 / T-79-S2)
-- [ ] **SEC-02**: Credential-hygiene sweep complete — no real secrets in tracked files; `TEST_USER_PASSWORD`-class values rotated or externalized; `.env.test.example` pattern enforced
+### UNMASKED — data-layer defects Phase 92 made observable by fixing the 401
 
-### CI & Test-Debt Burn-Down
+> Filed 2026-08-15 during Phase 92 execution (`RULING-P92-46`), each reproduced against staging
+> `zkrcjzdemdmwhearhfgg` by a second seat rather than carried from a worker report. **None was
+> caused by the AUTH-02 migration** — that migration changed only the import specifier and the
+> `getUser` argument, and the header-injected-client count is unchanged from `phase-92-base`. The
+> 401 previously short-circuited every request before the handler ran, so these are pre-existing
+> defects that became visible for the first time. Only `DELEG-01` is the failure-as-emptiness class;
+> the other two fail loudly.
 
-- [ ] **CI-01**: E2E suite green against the deployed app (stale-login/global-setup debt fixed; genuinely-broken specs repaired, not skipped) or explicitly quarantined with a tracked reason per spec
-- [ ] **CI-02**: Integration test suite green (including the 2 pre-existing interaction-note backend failures)
-- [ ] **CI-03**: a11y suites green — the intake-form `fixme` debt (button-name / aria-prohibited-attr / target-size) fixed and the 8 quarantined a11y specs restored
-- [x] **CI-04**: Visual-regression baselines regenerated post-flatten on the reference machine and the
-      suite green **— or honestly quarantined with tracked reasons**. Reworded 2026-08-13 under ruling
-      RUL120 to the phase goal's own second clause, on the same basis CI-03 closed: the criterion as first
-      written demanded unqualified green, which would have forced either a false green or an indefinite
-      hold over two tests that cannot execute their assertion at all. **Closed as honest quarantine**: 18
-      of 24 baselines regenerated on the macOS reference machine (pinned Node v24.5.0); gated suite now
-      **26 passed / 2 quarantined / 0 failed** under CI-equivalent settings (`--workers=2 --retries=2`,
-      no retry consumed), both quarantines annotated in-spec and tracked as FIXTURE-01 + VISUAL-DEBT-01.
-      Also under RUL120: 19 baselines that no job executed were resolved per spec — `tasks-tab-visual`
-      **promoted** into the `visual-regression-phase-46` job (+4, the only RTL-at-768 visual coverage in
-      CI, fixture-pinned, needing no re-baseline), the other 6 specs and their 15 baselines **deleted**.
-      Evidence: `.tickmarkr/overseer/CI-04-FINAL.md`. Landing the 18 regenerated images remains gated on
-      the operator's ORCH-3 visual sign-off.
-- [ ] **CI-05**: `test-rtl-smokes` promoted from advisory to a required branch-protection context on `main` (with a smoke-PR BLOCKED proof)
+- [x] **DELEG-01** _(closed 2026-08-16 **VISIBILITY-ONLY, as scoped**, `RULING-P93-07`: the bilingual envelope and `status: 500` at both former swallow sites were proven live. **`/delegations` still ERRORS by design** until Phase 102 (`DELEG-02` + `SEED-DELEG-01`) — it is an intended-broken register entry, and this closure is not a claim that the surface works.)_: **`my-delegations` reads a relation that does not exist, and renders the failure as emptiness.** `supabase/functions/my-delegations/index.ts:129,150` query `.from("delegations")`; `public.delegations` does not exist (`42P01`). The handler swallows the PostgREST error to `console.error` at `:197`/`:233` and falls through to empty arrays, so deployed staging returns a confident `200` with `{"granted":[],"received":[],"total":0}` — the exact anti-pattern this milestone exists to kill, on an AUTH-04 surface. Repointing requires a product decision between `public.permission_delegations` (14 cols: `grantor_id, grantee_id, resource_type, resource_id, permissions, revoked, …`) and `public.position_delegations` (8 cols: `position_id, delegator_id, delegate_id, …`), then a column-by-column rewrite: the handler filters on `is_active` (**neither table has it** — `permission_delegations` has `revoked`) and selects a `source` column that exists on neither. Phase 92 closed AUTH-04's **error** half only and named this open.
+- [x] **DR-42501**: **`data-retention` is auth-closed but not surface-closed.** Its 401 is gone (migrated + deployed in Phase 92), but `index.ts:112` does `supabase.from('users').select('role')` through the correctly RLS-scoped client, and the `authenticated` role has no grant/policy for that read — Postgres returns `42501 permission denied for table users` before the `data_retention_policies` query at `:233` ever runs, so the function 500s with a well-formed bilingual error body. **The defect is the role-lookup design, not the scoping** — the scoped client is behaving correctly. Refines `TRUST-02`, which already names `/admin/data-retention`: the surface's blocker is now identified rather than assumed. Phase 93 must not inherit "data-retention works".
+- [x] **PIN-2390-01**: **Six deployed functions still bundle a `2.39.0` client, because the AUTH-02 derivation only greps `index.ts`.** Found during Phase 92 execution verification (2026-08-15), not by any gate. Criterion 2's own closing command is `grep -rlE '@supabase/supabase-js@2\.3[0-9]' supabase/functions --include='index.ts'` → `0`, and that is true. But two **non-`index.ts`** files under `supabase/functions` still pin `2.3x`, and both are imported by migrated, deployed `index.ts` files, so the deployed bundles re-fetch the deprecated specifier: (a) `_shared/ai-interaction-logger.ts:12` imports **`createClient` as a value** from `esm.sh/@supabase/supabase-js@2.39.0` and **constructs a client with it at `:149`** — imported by 5 in-population functions (`ai-interaction-logs`, `ai-summary-generate`, `dossier-field-assist`, `positions-consistency-check`, `translate-content`); (b) `dossier-stats/dashboard-aggregations.ts:1` imports `SupabaseClient` from `esm.sh/…@2.39.0`, used as a type annotation only at `:32`, imported by `dossier-stats/index.ts:4`. **Not an auth regression** — (a) builds a _service-role_ client, and every `getUser` auth path runs through the migrated `index.ts` on `@2`, which is why all 6 probe non-401. The gap is that criterion 2's population was defined as `index.ts` files, so a helper carrying the pin is invisible to the closing derivation. Fix: bump both helpers and redeploy the 6 importers; widen the derivation to `--include='*.ts'`.
+- [x] **AUDIT-42703**: **`audit-logs-viewer` queries a column shape and a relation that do not exist.** Two distinct defects: (a) `index.ts:51,192,209,285` select `table_name, operation, row_id, old_data, new_data, changed_fields, user_email, user_role` from `public.audit_log`, whose real columns are `id, tenant_id, entity_type, entity_id, action, user_id, timestamp, old_values, new_values, ip_address, user_agent, session_id, additional_context` — Postgres `42703`. Note `audit_log` **holds 75 rows**, so this is a live table the surface cannot read; the sibling `public.audit_logs` (16 cols, 0 rows) is closer in spirit but still lacks `table_name`, `row_id`, `changed_fields`, `user_email`. (b) `index.ts:277` queries `public.audit_statistics`, which **does not exist at all**. Fails loudly (500 with a diagnostic body), so it is not the `TRUST` emptiness class — but the surface is non-functional.
 
-### Accessibility Defects (filed 2026-08-13 from ORCH-2 execution evidence)
+### WRITE — Advertised write paths actually write
 
-Real WCAG violations found by executing assertions, not by discovery. Each is annotated in its spec as
-`APP DEFECT` with its id so a reader cannot mistake the `fixme` for spec debt. **Fixing them is out of
-scope for Phase 89 (a CI burn-down); they are filed so they stay visible rather than silenced.**
+- [x] **WRITE-01** _(closed 2026-08-16 **FOR PUBLISH SPECIFICALLY**, `RULING-P94-10` order 3: create and save proven by `94-01`; publish repaired by the `94-01A` lane under `RULING-P94-09` — `after-actions-publish` deployed **v13**, proven both directions including the `400` guard's first observed fire. The parse **class** is NOT closed — see `EDGEPATH-01`.)_: An after-action record can be created and published from the UI. `AfterActionForm.tsx:131`'s `if (!initialData) return` no longer pins `isDirty` false in create mode, and the engagement route passes `canPublish` + `onPublish`. **[V]**
+- [x] **WRITE-02**: `/after-actions` lists records and detail pages resolve `afterActions.loadError` through `t()` instead of printing the key.
+  - **Mechanism corrected 2026-08-16 against the live catalog (`RULING-P94-04` §PARK-94-05, cross-cutting order 1).** This entry previously read "(PostgREST embed targets the table that holds the FK)". **No table holds the FK.** Derivation, run against staging `zkrcjzdemdmwhearhfgg`: `select conname, pg_get_constraintdef(oid) from pg_constraint where conrelid = 'public.after_action_records'::regclass and contype = 'f'` returns exactly **5** rows, **all** `REFERENCES auth.users(id)` (`created_by`, `updated_by`, `published_by`, `edit_requested_by`, `edit_approved_by`). There is **no FK on `engagement_id` and none on `dossier_id`** — both are bare `uuid NOT NULL` columns. So there was no table to repoint at, and both embeds in `supabase/functions/after-actions-list-all/index.ts` died at PostgREST relationship resolution: reproduced live as **`PGRST200` — "Could not find a relationship between 'after_action_records' and 'engagements' in the schema cache"**, which the handler turned into a 500 for every caller. `public.engagements` would not have served the embed anyway: its columns are `id, engagement_type, engagement_category, location_en, location_ar, is_seed_data` — it carries no `title_en`, `title_ar` or `engagement_date`.
+  - **Fix: a two-query rewrite inside the function, not a repoint and not a new FK.** Query `after_action_records` alone (child embeds `decisions` / `aa_commitments` / `aa_risks` / `aa_follow_up_actions` resolve — each carries a real `after_action_id` FK), then batch-fetch context with `.in('id', ids)` on `dossiers` (titles: `name_en`/`name_ar`) and on `engagement_dossiers` (date: `start_date`, the engagement extension table keyed by the dossier id), and compose in code. **No schema change** — the `42P17` report-policy migration remains the phase's only one. The batched lookups run on the same JWT-scoped client as the base query, so RLS gates them identically.
+  - **A miss emits `null`, never a dropped row (D-13).** The old embeds were inner joins, so any after-action whose join missed vanished from a list the user is told is complete. The composed rows carry `engagement: null` / `dossier: null` on a miss and the client renders a named degraded state. The narrower live case is already on staging: record `905b6a3a…` has an `engagement_id` present in `dossiers` but **no `engagement_dossiers` row**, so it ships with `engagement_date: null` rather than being hidden.
+- [x] **WRITE-03**: `/intake/new` submits with any live staging dossier, and the form cannot simultaneously show "Linked to: OECD" and "At least one dossier is required".
+  - **Mechanism corrected 2026-08-16 against the installed zod (`RULING-P94-04` cross-cutting order 1).** This entry previously read "the dossier picker writes to the RHF field the schema reads", asserting a field-name mismatch. That mechanism is **measured FALSE**: the picker writes `dossierId` (`IntakeForm.tsx:82`) and the schema reads `dossierId` (`:53`) — the same field on both sides. Nothing was ever misnamed.
+  - **The real cause is `z.string().uuid()` under zod 4.3.6**, which enforces the RFC-9562 version/variant bits. **35 of 44** live staging dossiers carry non-RFC seed ids (version nibble `0`), so the schema rejected the ids the picker legitimately supplies: OECD's `b0000001-0000-0000-0000-000000000005` is proven FAIL against the installed zod, while an RFC-shaped id such as `7c0d830b…` passes. The rejection message is `dossier-context:validation.dossier_required` = "At least one dossier is required", rendered at `IntakeForm.tsx:370`, while the badge at `:373-389` renders from the separate `selectedDossiers` React state — which is exactly the coexistence the audit reported.
+  - **Fix:** `z.string().min(1, …)` — requiredness kept, RFC check removed — plus `{ shouldValidate: true }` on both `setValue('dossierId', …)` sites (`:82`, `:85`), so a stale required-dossier error clears the moment a dossier is picked instead of surviving until the next submit. Server-side validation in `intake-tickets-create` is unchanged; the relaxation is client-side only. Standing project law, restated: **never `.uuid()` a dossier id** (Phase 86).
+- [x] **WRITE-04**: Kanban accepts commitment drags. Board stage is mapped to `aa_commitments`' own lifecycle at the mutation layer; failures surface the real message, never "Operation completed successfully" on a no-op.
+  - **Lifecycle corrected 2026-08-16 by live catalog query (`RULING-P94-01` order 2).** This entry previously read `pending`/`in_progress`/`completed`/`cancelled` — **four** values. The live constraint `aa_commitments_status_check` on staging `zkrcjzdemdmwhearhfgg` is `status IN ('pending','in_progress','completed','cancelled','overdue')` — **five**. `review` is absent either way, so the filed defect stands; `overdue` is a live status no board column maps to. The same four-value understatement is in `CLAUDE.md` §Source-Specific Column Carve-Outs and was corrected there in the same commit.
+  - **The mapping is one cell, not four.** Measured at `WorkBoard.tsx:67,78-84`: `todo`→`pending`, `in_progress`→`in_progress`, `done`→`completed` already write valid commitment statuses today. Only the `review` column writes a value the constraint rejects.
+  - **The reverse mapping is part of the requirement**, not a bonus: WRITE-04's closing derivation must state where every one of the five live statuses renders, or exclude it explicitly with what falls outside. `resolveBoardStage` (`WorkBoard.tsx:92-106`) routes `overdue` through its `default` branch into the **`todo`** column, where a late commitment is indistinguishable from one nobody has started.
+- [x] **WRITE-05**: Every `/settings` tab saves. The `users` write uses `.update().eq('id',…)` rather than an `.upsert()` that omits the NOT NULL `email`, and the notification-bridge step actually runs. **[V]**
+- [x] **WRITE-06**: Report generation works and scheduled reports can be created — the client/function field-name contract agrees (`type` vs `template`), and the mutually recursive `custom_reports` ↔ `report_shares` SELECT policies no longer raise `42P17`. **[V]**
+- [x] **AUDIT-DROP-01**: **Security audit events are silently discarded by the backend.** Filed 2026-08-15 from Phase 93 planning (`RULING-P93-01` D-54 addendum), found while discharging `AUDIT-42703`'s live-relation condition. `backend/src/services/auth.service.ts:847` (`logSecurityEvent`) does `supabaseAdmin.from('audit_log').insert({ user_id, action, resource_type, details, timestamp })`. **`resource_type` and `details` are not columns of `public.audit_log`** — its real columns are `id, tenant_id, entity_type, entity_id, action, user_id, timestamp, old_values, new_values, ip_address, user_agent, session_id, additional_context` — so every such insert fails, and the call is wrapped in a `try/catch` that only calls `logError`. The failure is therefore invisible to the caller and no security event has ever been recorded through this path. Same class as `TRUST-01` (a failure rendered as success), on a security path, and **not** covered by any Phase 93 criterion — which is why it is filed here rather than folded. Fix: map to the real columns (`entity_type: 'security'`, `additional_context: details`), and stop swallowing the insert error. **[V]** — column list and the code site both re-derived against live staging `zkrcjzdemdmwhearhfgg`, 2026-08-15.
+  - **CORRECTED 2026-08-16 (plan 94-10, `RULING-P94-04` cross-cutting order 1): the filed fix above is INCOMPLETE and would still have written zero rows.** Mapping `resource_type→entity_type` and `details→additional_context` leaves the insert failing on **`tenant_id` and `entity_id`**, which are both **NOT NULL with no default**. Derivation, run live against staging `zkrcjzdemdmwhearhfgg` 2026-08-16:
 
-- [ ] **A11Y-01**: `screen-reader-en.spec.ts:11` — axe reports **58 WCAG AA violations** on the
-      after-action route, first being _"Ensure the contrast between foreground and background colors meets
-      WCAG 2 AA minimum contrast ratio thresholds"_. Evidence: ORCH-2 run 2026-08-13, tree `d8c102df`,
-      pinned v24.5.0, bracket 1.90.8 → 1.90.8. See `.tickmarkr/overseer/ORCH-2-RESULT.md`.
-- [ ] **A11Y-02**: `wcag-aa-comprehensive-audit.spec.ts:339` — **a keyboard trap exists**
-      (`expect(trapDetected).toBe(false)` received `true`; WCAG 2.1.2 No Keyboard Trap). Same run/evidence.
-- [ ] **A11Y-03**: `positions-keyboard-nav.spec.ts:8` — Tab from `/positions` leaves focus on `BODY`
-      (expected one of `BUTTON`/`A`/`INPUT`): no reachable first focusable and no skip link, WCAG 2.4.1
-      Bypass Blocks. Independently corroborated by T4's annotation _"the real positions page does not render
-      a skip link targeting #main-content"_. Same run/evidence.
+    ```sql
+    SELECT column_name, is_nullable, column_default FROM information_schema.columns
+    WHERE table_schema='public' AND table_name='audit_log' AND is_nullable='NO';
+    ```
 
-Filed 2026-08-13 from CI-04 execution evidence. The intake debt below was named in CI-03's own text but
-was **not** covered by the honest-quarantine close — it sat as `test.fixme(true, …)` with no tracked
-item, the exact pattern RULING-P89-ORCH2 identified as how the T4 false-green happened.
+    → `id` (default `gen_random_uuid()`), `timestamp` (default `now()`), and `tenant_id`, `entity_type`, `entity_id`, `action`, `user_id` — the last five with **no default**. The only writers that have ever succeeded against this table are the DB triggers (`audit_trigger_function`, attached to 11 tables), which take `NEW.tenant_id` from the audited row. A security event has no audited row, and there is no tenant column anywhere on the user side: `public.users` has only `default_organization_id` and `public.profiles` only `organization_id`.
 
-- [ ] **A11Y-04**: `tests/a11y/intake-accessibility.spec.ts` — intake form/list/queue report
-      serious/critical axe violations: **button-name** (icon / request-type buttons without accessible
-      names), **aria-prohibited-attr**, **target-size**. Quarantined by three `test.fixme(true, …)` at
-      lines 38 (EN), 137 (AR), 146 (forced-colors) — the same debt on all three surfaces, so RTL is not a
-      separate cause. Evidence: verbatim fixme reasons as written at `ba746d78`.
-- [ ] **A11Y-05**: `tests/a11y/intake-accessibility.spec.ts:112` — intake form **skips a heading level
-      (h1 → h3)**, annotated in-spec as _"Real structural bug"_. A **fourth** fixme in that file and a
-      distinct defect from A11Y-04; it is **not** named in CI-03's wording, so closing CI-03 as worded
-      would have left it untracked. Same evidence.
+  - **A3 resolution (`RULING-P94-04`), as implemented by plan 94-06:** tenant is DERIVED, never invented — `COALESCE(profiles.organization_id, users.default_organization_id)`, queried by `profiles.user_id = <uid>` because `profiles` has **no `id` column**. **No sentinel tenant.** If neither resolves, the insert is **SKIPPED** and the skip is logged at ERROR level naming the user — an unwritable audit row is recorded as a loud absence, never as a fabricated one. `entity_id` is honestly the subject user's id (the signature carries one id, who is both actor and subject).
 
-### Test Infrastructure Debt (filed 2026-08-13 from CI-02 / CI-04 execution evidence)
+- [x] **AUDIT-ZERO-01**: **20 edge functions write an audit-log shape that `public.audit_logs` has never had, and drop the failures silently.** Filed 2026-08-15 from Phase 93 planning, same ruling. `audit_logs` holds **0 rows** despite 32 files inserting into it. Cause is **column mismatch, not dead code and not RLS**: 20 of the 32 insert an `event_type` / `resource_type` / `changes` / `metadata` / `target_user_id` shape, and **none of those five is a column** of `audit_logs` (real columns: `id, entity_type, entity_id, action, old_values, new_values, user_id, user_role, ip_address, user_agent, required_mfa, mfa_verified, mfa_method, correlation_id, session_id, created_at`). An `INSERT` naming a nonexistent column cannot succeed (`42703` / PostgREST `PGRST204`), and most sites `await` the insert without destructuring `error`, so the drop is silent. Representative: `supabase/functions/assign-role/index.ts:244`. Several of the remaining 12 also carry non-column keys (`actor_id`, `details`, `metadata`); the genuinely schema-correct writers are the `intake-tickets-*` family (6 files) plus `intake-classification`, whose absence of rows is explained by those flows never having been exercised on staging rather than by any defect. **Population definition:** files under `supabase/functions` containing `from('audit_logs').insert`; top-level payload keys compared against `information_schema.columns`. **Outside it:** nested-object keys were not individually validated, `.upsert()` and RPC-mediated writes were not searched, and the backend Express tree was searched separately (see `AUDIT-DROP-01`). Fix: one audit-write helper with the real column set, error surfaced not swallowed. **[V]**
+  - **POPULATION CORRECTED 2026-08-16 (plan 94-10, D-20 / `RULING-P94-04` cross-cutting order 1). The filed "20 of 32" is WRONG, and it is wrong because of a live instrument bias, not a miscount: the filed derivation matched only the SINGLE-quote form `from('audit_logs')`.** The corrected population rule matches **both quote styles** — files under `supabase/functions` whose source matches `from('audit_logs')` **OR** `from("audit_logs")`, with an `.insert(` / `.upsert(` chained within 900 characters, top-level object-literal keys diffed against the live column set. Re-derived under that rule: **38 files** match, of which **36 are writers — 27 broken, 9 clean — and 2 are read-only** (`dossier-export-pack` timeline select, `intake-audit-logs`). The 9 clean are `auth-verify-step-up`, `delegate-permissions`, `intake-classification`, `intake-tickets-assign`, `intake-tickets-create`, `intake-tickets-get`, `intake-tickets-triage`, `intake-tickets-update`, `revoke-delegation`. Bad-key classes across the 27: the filed `event_type`/`resource_type`/`resource_id`/`target_user_id`/`metadata`/`changes`/`after` class, plus `details` (5 files), `actor_id` (2), `changed_by`, and `assignee_id`/`override_reason`/`wip_status`/`capacity_warning` (`assignments-manual-override`).
+  - **A writer OUTSIDE BOTH filed populations**, found by the 94-RESEARCH sweep and repaired by plan 94-06: **`backend/src/services/mou.service.ts:636`** (`logStateTransition`) writes `audit_logs` (plural) **from the backend**, with the non-column key `changes` and no `user_role` (NOT NULL), awaited without destructuring `error` — the same silent-drop class. It fell between the two entries because `AUDIT-ZERO-01` searched only `supabase/functions` and `AUDIT-DROP-01` searched the backend only for the singular `audit_log`.
+  - **Blind spots CARRIED FORWARD, not closed** (stating them is part of the requirement — an unstated population boundary is how "20 of 32" survived): (i) payloads assembled as variables and spread (`.insert(payload)` with the keys built elsewhere) are **outside** the literal-object scan and remain unmeasured; (ii) RPC-mediated audit writes were **searched** this time (`rpc(…audit`) — **none found**; (iii) `.upsert()` was **included** in the scan — **zero** upsert sites found; (iv) nested-key validation remains moot, since the nested targets are `jsonb` columns.
 
-- [ ] **TEST-INFRA-01**: Provision a database for the integration suite — **235 test files expect a
-      DB at `localhost:54321`** and there is none, which is why CI-02 is broadly red. This is decision
-      **D-3**, referenced at `ROADMAP.md:145` and `STATE.md:23/29` but never filed as an item until now.
-      Blocks CI-02; not fixable by any per-spec repair.
-- [ ] **FIXTURE-01**: Dashboard seed data absent for two visual widgets, so their specs cannot reach
-      their screenshot assertion (they fail at the readiness gate, `dashboard-widgets-visual.spec.ts:87`).
-      Not baseline drift — regeneration provably cannot fix them (survived `--update-snapshots`
-      unchanged). (a) **week-ahead**: renders _"No upcoming events"_; KPI strip reads `WEEK AHEAD 0` at the
-      spec's frozen clock `2026-07-03T12:00:00Z`. (b) **vip-visits**: renders _"No VIP visits with country
-      data. Add VIP participant data to the dashboard seed, then refresh the widget."_ — the empty state
-      names its own fix. Their committed baselines (`week-ahead.png`, `vip-visits.png`, captured
-      2026-07-05 at `f2dc476a` when the seed existed) are now **stale and unreachable**. Evidence:
-      `.tickmarkr/overseer/CI-04-RESULT.md`, pinned Node v24.5.0, bracket v24.5.0 → v24.5.0.
-      **Ruled 2026-08-13 (RUL120): annotate-and-track, seed deliberately NOT restored** — reseeding
-      deepens the dependency tracked as VISUAL-DEBT-01 rather than removing it. Both specs are annotated
-      `test.fixme` at `dashboard-widgets-visual.spec.ts` naming the absent widget data and citing this id.
-- [ ] **VISUAL-DEBT-01**: **Design smell — visual baselines are pinned to mutable staging content, so
-      they rot regardless of who reseeds.** This is the generalisation of FIXTURE-01 and is why RUL120
-      declined the reseed. Two independent mechanisms, both observed on 2026-08-13:
-      (a) **Mutable row content.** `list-pages-visual` baselines capture live staging rows; the
-      `countries-en` re-baseline changed row _order_ because UAE and UK acquired a `Mon 06 Jul` last-touch
-      after the previous capture. The list sorts on a mutable column, so any staging write re-reds the
-      suite with no UI change at all.
-      (b) **Double-clock divergence.** `dashboard-widgets-visual.spec.ts` freezes the _browser_ clock to a
-      hard-coded `FROZEN_TIME` while `get_upcoming_events` filters _server_-side by real `NOW()`. The file's
-      own header comment states they "only overlap when the frozen clock is today", so the `week-ahead`
-      baseline is correct only on/near its capture date and decays by construction — `FROZEN_TIME` has
-      already been re-pinned once (`2026-05-08` → `2026-07-03`).
-      Fixing this means decoupling visual baselines from live data (deterministic fixture/seeded
-      route-level mocking, or masking the data regions), not repointing them at fresher data. Until then
-      every visual green is a snapshot of one moment in staging.
+### DEAD — No dead or lying surfaces
 
-### CORS Edge-Function Migration
+- [ ] **DEAD-01**: `/search` returns results for every query, including its own suggestion chips (no `Cannot read properties of undefined (reading 'forEach')`).
+- [ ] **DEAD-02**: `/tasks/queue` renders its page; `assignments-queue` is deployed.
+- [ ] **DEAD-03**: `/scenario-sandbox` either loads or shows an error — a backend 500 is never pixel-identical to "still loading".
+- [ ] **DEAD-04**: `/monitoring` renders the SPA route (the Vite proxy no longer claims the whole prefix) or the route is deleted.
+  - **RESOLVED 2026-08-16 (Phase 95): branch (a) KEEP + narrow proxy per `RULING-P95-01-PARK-MONITORING.md`; mechanism and evidence at `.planning/phases/95-routes-that-don-t-render/95-DEAD-04-DECISION.md`.** The API moved to `/api/monitoring` (backend remount inside the surviving dev/test guard), the Vite `/monitoring` proxy entry was deleted, and the Dashboard's two enumerated callers are authenticated via `apiGet` — enumeration 2/2 resolving; prod nginx carries no mirroring claim. **Phase 97 inherits a nav-entry decision** (`navigationData.ts:262` still links `/monitoring`, deliberately untouched here).
+- [ ] **DEAD-05**: `/analytics` shows real data or is honestly disabled — no fabricated sparklines, donuts, or "Insights you'll gain" over a backend endpoint that does not exist.
+- [ ] **DEAD-06**: `/custom-dashboard` queries columns that exist (`calendar_entries.event_date`, not `start_datetime` **[V]**), renders its chart, and computes real trend deltas instead of "0.0%" from aborted requests.
+- [ ] **DEAD-07**: `/calendar` renders a grid (empty or not), `/calendar/new` mounts the create form, `/events` pads the month by the real weekday offset with month navigation, and `/word-assistant`'s status badge reflects a real probe.
+- [ ] **DEAD-08**: Route-tree conflicts resolved — `positions/$id.tsx` vs `$positionId.tsx`, and `legislation.tsx` renders an `<Outlet/>` so its detail page is reachable. Positions `approvals`/`versions` child routes drive tab state.
+- [ ] **DEAD-09**: **The `reports` edge function's POST handler is a MOCK — no report is ever generated.** `supabase/functions/reports/index.ts:266-285` mints a `job_id`, schedules a `setTimeout` whose body only `console.log`s `Processing report job ${jobId}`, and answers `202 { job_id, status: 'pending', message, check_status_url }`. **No `url` is ever returned and no work is ever done.** Filed 2026-08-16 from Phase 94 execution (plan `94-09`). Phase 94 renamed the client's body field (`template` → `type`, the name the server's own guard at `:258` requires) **PAIRED with an explicit unavailable terminal state**, per `RULING-P94-04` §`PARK-94-06` — the rename never ships alone, because converting a visible 400 into an invisible fabricated success is the forbidden shape. The surface is therefore now **honest but DEAD**: the client can no longer render a `completed` entry whose url was never returned (`frontend/src/pages/reports/generate-entry.ts`, pinned by `frontend/src/pages/reports/__tests__/generate-entry.test.ts`), and it says so in both locales (`report-builder:generate.unavailable`). What remains is the generation itself — a real execution path. Candidates found during Phase 94 research: the custom-reports function flow, or the Express `/report-builder/generate` path at `backend/src/.../misc.repository.ts:125`. **Owner: Phase 95 — Routes That Don't Render**, whose goal is that every surface either works or says why it can't; this one now says why it can't, and Phase 95 owns making it work. Flagged **approve-as-placed** (the D-73 pattern).
+  - **CANDIDATE CLAUSE SUPERSEDED 2026-08-16 (Phase 95 planning, `95-RESEARCH.md` §DEAD-09 — the same-edit rot-sweep law).** The second candidate above — "the Express `/report-builder/generate` path at `backend/src/.../misc.repository.ts:125`" — **does not exist**. The real file is `frontend/src/domains/misc/repositories/misc.repository.ts:125`, FRONTEND code whose `generateReport` posts to `/report-builder/generate`, a path no Express router serves and no edge function answers (probed 404). It is a caller of the missing capability, not a candidate implementation of it. The surviving candidate set: make the `reports` POST real, following the deployed `pdf-generate` function's storage precedent (`upload` + `createSignedUrl`, bucket `private`). The original sentence is preserved above as filed; this clause supersedes it.
+  - **Scope note, so the filing is not read wider than it is:** `WRITE-06`'s REAL surfaces — custom-reports CRUD and scheduled-report creation — are closed by plan `94-05` (the `42P17` migration and its probe). Only the mock generate path is dead.
+- [ ] **SANDBOX-500-01**: **The deployed `scenario-sandbox` function answers 500 on every request — the sandbox has no working state on staging.** Filed 2026-08-17 from Phase 95 independent verification (concern (d), ordered to the register by the overseer — a named omission in a verification file reaches nobody). Phase 95/`DEAD-03` closed the HONEST-ERROR half: the 500 now renders the shared bilingual `query-error-state` with bounded retry, DOM-distinct from loading (`tests/e2e/95-sandbox-error.spec.ts`, natural + CDP-forced arms). **The WORKING sandbox is not closed, and until this entry no phase owned it.** Cause not yet derived: `95-RESEARCH` Open Question 2 (explicitly optional for criterion 3) recorded the server error as a masked `FETCH_FAILED` and offered a Supabase-MCP `to_regclass` derivation as the starting point. **Owner: Phase 96 — Real Numbers** (overseer ruling 2026-08-17: the surface renders data scenarios; its working state is a real-numbers deliverable). Note for the fixer: the 95-03 CDP oracle's natural arm changes meaning the day this works — its `requestfailed` instrument guard already anticipates that (95-03-SUMMARY deviation 2).
 
-- [ ] **CORS-01**: `ALLOWED_ORIGINS` secret verified present and correct in staging + prod before any batch ships
-- [ ] **CORS-02**: All ~171 handler-scope edge functions migrated off deprecated wildcard `corsHeaders` (batch A), deployed and smoke-checked
-- [ ] **CORS-03**: All ~101 module-scope edge functions (including the 83 local `const corsHeaders = '*'`) migrated (batches B/C), deployed and smoke-checked; repo-wide grep for the deprecated pattern returns 0
+### COUNT — Every surface counts the same work the same way
 
-### v7.0 Live Verification (deploy-gated closeout)
+- [ ] **COUNT-01**: One source of truth for work-item counts. The dashboard KPI, `/my-work` badge/footer/rows, `/commitments` tabs, and the kanban board agree — no screen shows badge 18 / footer 21 / 11 rendered rows.
+- [ ] **COUNT-02**: Type-list queries left-join their extension tables (or the counters use the same join), so a dossier without an extension row is never dropped from the list while the hub still counts it (persons 16 vs 15 **[V]**, engagements 5 vs 3).
+- [ ] **COUNT-03**: Completion is consistent — `status` and `workflow_stage` stay in sync, so completed tasks leave the dashboard's "Overdue" widget and the kanban Done column can fill.
+  - **VERIFY, do not build — for `tasks`, the database already enforces this.** Found by the `RULING-P94-03` order-4 trigger sweep during Phase 94 planning (`.tickmarkr/overseer/P94-TRIGGER-SWEEP.md`, filed in `a28a7114c`; the `CASE` was independently reproduced by catalog query by the overseer). `trg_sync_task_status` → `sync_task_status_from_workflow_stage` is a `BEFORE UPDATE` trigger on `tasks` that derives `status` from `workflow_stage` whenever the stage changes: `todo→pending`, `in_progress→in_progress`, `review→review`, `done→completed`, `cancelled→cancelled`. **Its `done` branch also stamps `completed_at := NOW()` when that column is null — a side effect the client-side map has no equivalent for**, so the two halves are not interchangeable even where their status mappings agree. Phase 96's work here is to confirm the invariant holds and to find the surfaces that break it, not to write a sync that exists.
+  - **The drift seam this exposes is Phase 94's to state and Phase 96's to inherit.** `frontend/src/pages/WorkBoard/WorkBoard.tsx:78-84`'s `STAGE_TO_STATUS` is a second, independent copy of that same `CASE`, in TypeScript. **They agree today cell for cell — by authorship, not by construction.** Nothing fails if one changes; there is no test, type, or generator binding them. Phase 94 carries a parity oracle for the seam (client map vs the live `CASE`) per overseer decision `D-82`; Phase 96 owns whatever the oracle reveals about the surfaces downstream.
+  - **`commitment_status_history` is not evidence of user intent, and no oracle here may treat it as such.** `BEFORE` row triggers on one table fire in alphabetical name order, so on `aa_commitments` the `commitment_overdue_check` rewrite lands before `commitment_status_audit` reads `NEW.status`. The history row therefore records what the database decided, not what the user asked for.
 
-- [ ] **LIVE-01**: On-prem GPU/TEI stack stood up — vLLM (Gemma-4-12B) + TEI (BGE-M3) serving with health checks, reachable by the agent-runtime
-- [ ] **LIVE-02**: EVAL-01/02/03 closed — the v7.0 eval harness runs against live inference and meets its CI thresholds
-- [ ] **LIVE-03**: AGENT/INFRA live verification complete — copilot reads/HITL-writes under caller JWT against the live stack, clearance ceiling verified end-to-end
+- [ ] **COUNT-04**: **The board holds two notions of "overdue" for one fact, and they can disagree.** Filed 2026-08-16 from Phase 94 planning (`RULING-P94-02` order 1; `PARK-94-03` ruled state-only there, handling filed here). Two signals:
+  - `aa_commitments.status = 'overdue'` — a **stored** status, maintained by the `BEFORE UPDATE` trigger `commitment_overdue_check` (`check_commitment_overdue()`: `IF NEW.due_date < CURRENT_DATE AND NEW.status IN ('pending','in_progress') THEN NEW.status := 'overdue'`).
+  - `it.is_overdue` — a **computed** flag the board counts for its overdue chip at `frontend/src/pages/WorkBoard/WorkBoard.tsx:232-235`.
 
-## v2 Requirements
+  They are derived from the same underlying fact by different mechanisms at different times, so they can disagree — and the stored one is stale by construction, because the trigger is `BEFORE UPDATE` **only** and never fires on `INSERT`. **The open question `RULING-P94-02` raised is CLOSED, and it did not shrink the stake:** the value is written by a live trigger, and on staging `zkrcjzdemdmwhearhfgg` (2026-08-16) **8 of 10 commitments already carry `status = 'overdue'`** while the remaining 2 are past-due `pending` rows the trigger has never touched. The disagreement is the dominant state, not a corner case.
 
-Deferred to future milestones. Tracked but not in current roadmap.
+  **The behavioural stake, so this phase inherits the mechanism and not just the symptom:** `resolveBoardStage` (`WorkBoard.tsx:92-106`) has no `overdue` branch, so every one of those 8 rows renders in the **Todo** column, indistinguishable from work nobody has started. And a drag of a past-due card to In-progress writes `in_progress`, the trigger rewrites it to `overdue`, and the card **snaps back to Todo after a success toast** — proven by a rolled-back transaction against live staging, recorded in `.tickmarkr/overseer/PARK-P94.md` §`PARK-94-04`. **Whether the trigger or the board is the wrong one is a separate open park (`PARK-94-04`) that blocks Phase 94's `WRITE-04` criterion wording**; this entry owns the _count_ half — one fact, one signal, agreeing across the board chip, the card, and the column it sits in.
 
-### Intelligence Feed Ingestion
+  **Owner: Phase 96 — Real Numbers**, whose goal sentence is exactly this: every count and trend comes from real data and agrees with every other surface. Id `COUNT-04` chosen per the register's section-prefix convention; flagged approve-as-placed.
 
-- **FEED-01**: Automated feed ingestion into `intelligence_event` (v7.1)
-- **FEED-02**: Quarantine posture for untrusted feed content (v7.1)
+- [ ] **TRIGSWEEP-01**: **Phase 94's `BEFORE`-trigger sweep matched only `:=` assignment and therefore saw 15% of its class; what Phase 96 inherits is the instrument, not just its finding.** Filed 2026-08-16 from Phase 94 execution — measured by the **independent `gsd-verifier`** (`94-VERIFICATION-INDEPENDENT.md` §6.1), which ran the negative control the sweep itself never had. Authorized by overseer order, ledgered **`D-123`** (a pane order; there is no `RULING-P94-14` file — the original citation here invented one and is corrected).
+  - **The mechanism.** `P94-TRIGGER-SWEEP.md` (D-34) matched trigger bodies with `prosrc ~* 'NEW\.[a-z_]+\s*:='`. **Plain `=` assignment is legal PL/pgSQL** and is structurally invisible to that pattern.
+  - **The measurement, both directions.** The sweep's own regex reproduces **exactly 29 triggers / 25 tables** — _its number is honest for its rule_. Plain-`=` assignment at statement position matches **164 further `BEFORE` triggers across 157 tables**. True class ≈ **193**; the sweep saw **15%**.
+  - **HARMLESS FOR PHASE 94 — derived, not assumed.** On Phase 94's write-path tables the missed set is **8 triggers, every one a bare `NEW.updated_at = now()`**. **No Phase 94 criterion is affected**, and the sweep's "clean" list is right in substance while wrong as worded: _"no rewriting `BEFORE` trigger"_ should read _"no **semantically meaningful** rewriting"_.
+  - **NOT harmless schema-wide.** The missed set includes meaningful rewrites: `staff_profiles.version`, `assignments._version`, `entity_comments.is_edited` / `edit_count`, `organization_leadership.is_current`, `legislations.version`, `intelligence_sources.next_scan_at`.
+  - **OPEN-ENDED BY CONSTRUCTION — do not inherit 193 as a total.** Two syntactic forms are now known (`:=` and plain `=`); a third would be invisible to both. **Derive the population from BEHAVIOUR — every `BEFORE` trigger that writes a `NEW.` column, however expressed — with an instrument tested in both directions. 193 is a FLOOR.**
+  - **Lineage, recorded because the pattern is the point.** This is the **ninth** instance in Phase 94's execution leg of a population defined by _syntactic form_ under-counting a _behaviour-defined_ class — and it is **the plan leg's own instrument**, found only because an independent seat ran the control the instrument's author had explicitly flagged as never run. `RULING-P94-10`'s logic (_a confirmed single-site miss is a class_) applies to instruments as well as to defects.
+  - **Owner: Phase 96 — Real Numbers**, alongside `COUNT-03` / `COUNT-04`, because the sweep is a Phase 96 planning input rather than a defect of its own.
 
-### Intelligence UI Gaps
+  **The split, per `RULING-P94-03` (`PARK-94-04` ruled (a), SPLIT) — Phase 96 inherits the mechanism AND the boundary, not just the symptom.** The trigger is correct and stays: `overdue` is genuinely derived state, the trigger is bidirectional (its `ELSIF` reverts `overdue → in_progress` when the due date is extended), and the client already treats it as auto-applied. **Phase 94 owns** the criterion wording and the honest interaction only — its droppable predicate and mutation-layer guard refuse a drag the trigger would coerce, _before_ the write, with a bilingual `role="alert"` reason; the predicate mirrors the trigger's own condition so client and DB cannot drift. **Phase 96 owns** everything left: rendering `overdue` expressively (badge or column), unifying the two signals, **the INSERT gap** — the trigger is `BEFORE UPDATE` only and never fires on `INSERT`, which is why two past-due rows sit at `pending` — and revisiting whether refusal is still the right interaction once `overdue` is renderable, which `RULING-P94-03` explicitly leaves open. Related, from the `RULING-P94-03` order-4 sweep (`.tickmarkr/overseer/P94-TRIGGER-SWEEP.md`): `COUNT-03`'s "`status` and `workflow_stage` stay in sync" is **already enforced for `tasks`** by the `trg_sync_task_status` BEFORE UPDATE trigger, which derives `status` from `workflow_stage` — Phase 96 should verify that rather than build it. Note also that `commitment_status_history` records the **coerced** status, not the requested one (trigger firing order is alphabetical, so the overdue rewrite lands before the audit reads it), so it cannot serve as evidence of user intent.
 
-- **GAP-2**: Graph/digest generative card renderers
-- **GAP-3**: Retire legacy `dossiers-briefs-generate` path
+### NAV — Nothing built is unreachable
 
-### Design Ops
+- [ ] **NAV-01**: Elected Officials is reachable — sidebar, dossier hub type cards, `/dossiers/create`, and `/compare` expose all 8 declared dossier types, not 7.
+  - **Dated note, 2026-08-18 (P98 close-out, `RULING-P98A2-21`):** the BOUNDED withheld-popover
+    handoff is COMPLETE — Phase 98 landed the five `dossier:` keys, deleted the render guard, and
+    criterion 7 closed GREEN on the rendered EO popover in both locales (one atomic commit
+    `e354c8c94`, re-derived by the closing plan from rendered evidence). NAV-01's bound is
+    discharged; the P102 residues named in its status cell are unchanged.
+- [ ] **NAV-02**: The `/settings/*` subtree renders navigation. The prefix check that hides the global sidebar and the exact-match check that renders the settings nav no longer disagree.
+- [ ] **NAV-03**: The engagement Digests tab appears in the tab bar; list pages expose a create affordance (7 of 8 currently have none).
+- [ ] **NAV-04**: Every route with no inbound link is resolved — 9 admin routes plus `/monitoring` are each given a nav entry or deleted, with the decision recorded.
+  > **Unreachable _module_ filed here during Phase 92 planning, 2026-08-15** (`RULING-P92-06`), since
+  > this is the requirement that resolves things nothing can reach. `frontend/src/services/auth.ts`
+  > is imported by **zero files** (`grep -rn "services/auth'" frontend/src | grep -v '^frontend/src/services/auth.ts'`).
+  > It is not merely dead: at `:624` it persists a **second zustand store under the same
+  > `'auth-storage'` key** as the live `store/authStore.ts:253`, and it registers its own
+  > module-level `onAuthStateChange` at `:635`. Both are inert only because nothing imports it —
+  > any future import silently gives the app two stores fighting over one persist key. Resolve it
+  > the way this requirement resolves a dead route: delete it, or give it an owner and record why.
+  > **Phase 92 deliberately did not touch it** — it verified the module is dead (which is why
+  > AUTH-03 fixes `authStore` instead) and filed it rather than widening its own scope.
 
-- **DESIGNOPS-01**: Figma/token sync tooling
-- **DESIGNOPS-02**: Storybook visual diffing
+### COPY — The UI speaks to users, not to developers
 
-## Out of Scope
+- [ ] **COPY-01**: No database value is shown as user copy — `in_progress`, `action_item`, `follow_up`, `email`, `human_entered`, `WEEK OF 2026-W27` are mapped through display labels.
+  - **Dated note, 2026-08-18 (P98 close-out, `RULING-P98A2-21`):** the 39 text-position members
+    (22 Part A + 17 Part B) triaged by READING with no instrument able to see a prop-receiver
+    render now have an OWNER: **Phase 103's re-sweep**, whose criterion 4 already demands every
+    requirement be verified against a named observation — the 39 are named input to its probe
+    route set, and P98's status cell stops reading "handed off to NO OWNER".
+- [ ] **COPY-02**: No raw i18n key reaches the screen — `regions.Europe`, `afterActions.loadError`, `CALENDAR.RECURRENCE.TITLE`, `common.loading`, and the five `entityLinks.*` keys resolve.
+- [ ] **COPY-03**: No seed or test instruction ships as user copy — the 4 strings in `dashboard-widgets.json` (both locales) that tell users to apply the dashboard seed or check the test data are rewritten. **[V]**
+- [ ] **COPY-04**: Copy obeys the project's own voice rules — sentence case (Title Case is currently de-facto), no exclamation marks (46 strings), no first-person plural (8 strings), no `"Deadline / Due Date"` chip shipping a retired term.
+- [ ] **COPY-05**: One date formatter. All surfaces render `Tue 28 Apr` / `14:30 GST`; the seven competing formats (`Jul 4, 2026`, `4/30/2026, 12:37:38 PM`, `9 months ago`, …) are gone, and dev-facing affordances like "Fill with Mock Data" are gated out of production builds.
+- [x] **COPY-06**: **The global mutation success toast is a hardcoded English literal that fires for every mutation in the application.** `frontend/src/lib/query-client.ts:71` — `toast.success('Operation completed successfully')`, with no `t()` and no per-mutation specificity, as the TanStack Query `mutations.onSuccess` default. Every successful write in the app announces itself in English with copy that names neither what was saved nor where. Filed 2026-08-16 from Phase 94 planning: `WRITE-04`'s text names this exact string, and `RULING-P94-01` decided the narrow reading — Phase 94 fixes only the no-op that makes it fire spuriously, and does **not** edit an app-wide handler no Phase 94 oracle watches. **Owner: Phase 98 — Copy Truth**, whose criterion 4 (project voice: sentence case, no dev-facing copy) and criterion 2 (no raw key / no untranslated copy) both cover it; its blast radius is every mutation, so it wants a phase whose oracles span the app rather than five write paths.
+  - **Filed per `RULING-P94-01` order 3, which suggested the id `TOAST-01`.** Placed as `COPY-06` because every id in this register is section-prefixed and the owner phase is 98 — flagged for approve-as-placed (D-73 pattern). The suggested id is recorded here so the ruling stays traceable.
+  - **Why tracked rather than noted:** it was first written down as a CONTEXT "deferred idea", and an audit line is not a queue. Nothing fails if a deferred idea is never read.
+- [x] **COPY-07**: **The dossier-type stats card ships a hardcoded English label.** `"% of total
 
-Explicitly excluded. Documented to prevent scope creep.
+active dossiers"`at`frontend/src/components/dossier/DossierTypeStatsCard.tsx`(line 228 at
+     `c94d7debe`; the string is the anchor, not the line number) renders untranslated in both
+      locales — no `t()`. Named by Phase 97 as a deliberately-not-covered residue with owner
+      Phase 98 (`97-CLOSING-DERIVATION.md:227`, `97-05-SUMMARY.md:110-112`); it carried no register
+      row until now. Filed 2026-08-18 by `RULING-P98A2-01-SCOPE` (F2-a), register-first so the plan
+neither silently absorbs nor silently drops it. **Owner: Phase 98 — Copy Truth**, roadmap
+criterion 1's class (English literal where a display label belongs); closes on the rendered
+card in both locales.
 
-| Feature                                                      | Reason                                                                          |
-| ------------------------------------------------------------ | ------------------------------------------------------------------------------- |
-| `EMAIL_WEBHOOK_SECRET` provisioning + `email-inbound` deploy | Ops task requiring provider-side HMAC alignment — user/ops-only, not code       |
-| Dossier edit surface (A-1/A-2)                               | Shipped via PRs #77/#78 (2026-06-28) including transactional RPC                |
-| MFA secret at-rest encryption (D-19)                         | Shipped via PRs #79/#81 (2026-06-29), live on prod                              |
-| Avatars bucket (D-9)                                         | Shipped via PR #74                                                              |
-| AA nested-edit persistence (B-18)                            | Trimmed by decision — edit mode not wired anywhere; hardening shipped in PR #75 |
-| Mobile native app / OAuth / real-time chat / video           | Standing exclusions from PROJECT.md                                             |
+- [x] **COPY-08**: **The Elected Officials type-guide popover: five missing `dossier:` keys AND the
+      render guard, atomic.** `typeDescription.elected_official` plus the four
+      `typeGuide.elected_official.{whenToUse,examples,commonLinks,notFor}` entries are absent from
+      BOTH locales (verified `i18n/{en,ar}/dossier.json` at `c94d7debe`), and
+      `DossierTypeStatsCard.tsx` withholds the popover behind a `type !== 'elected_official' &&`
+      guard placed by Phase 97 expressly pending these keys (`97-05-SUMMARY.md:105-108`: "When
+      those five keys land in both locales, deleting the guard is the whole repair").
+      **The keys and the guard deletion land in the SAME change or not at all** — guard-without-keys
+      prints the raw key on screen (observed live 2026-08-17, recorded at
+      `DossierTypeStatsCard.tsx:161-164`; `DossierTypeGuide.tsx:175,208` call `t()` with no
+      default), and keys-without-guard are dead bytes with no rendered surface. Filed 2026-08-18 by
+      `RULING-P98A2-01-SCOPE` (F2-b + F3 Reading B). **Owner: Phase 98 — Copy Truth**, roadmap
+      criterion 7; closes on the rendered EO popover in both locales. NAV-01 (Phase 97, Complete
+      BOUNDED on exactly this handoff) is NOT edited by the plan; its status cell gets a dated note
+      at close-out if criterion 7 goes green. Glyph coherence rides this row per
+      `RULING-P98A2-03`: `getTypeIcon`/`getTypeColors` gain `elected_official` cases (Crown +
+      WR-07 country-fallback colors) in the same atomic change.
+
+- [ ] **COPY-09** _(OPEN: instrument reports 128 namespaces after the planned preview-layouts deletion, but its immutable oracle expects 129; re-run 2026-09-12)_: **The sentence-case long tail: ~4.5k Title Case strings across the EN bundle.**
+      Two independently-written instruments measured 4,471 / 4,562 Title-Case candidates among
+      16,045 EN i18n string values (129 namespace files) — ~28% of all EN copy. Phase 98's
+      criterion 4 closes its sentence-case clause BOUNDED (named instance + labels its oracle set
+      captures on visited surfaces, `RULING-P98A2-02` Q1 Reading B); this row is the remainder.
+      **Not mechanical:** CLAUDE.md carves out UPPERCASE classification ribbons, mono labels, and
+      table-column headers, and domain proper-noun-like terms ("Working Group", "Intake Ticket")
+      need per-string judgment. **Owner: Phase 102 — Staging Data & Debt Tail.** Interaction note:
+      Phase 99 mirrors `ar` off settled EN — when this tail lands AFTER Phase 99, the pass MUST
+      re-check `ar` mirroring for every string it edits. Filed 2026-08-18 by `RULING-P98A2-02`.
+      **Dated note, 2026-08-18 (`RULING-P98A2-13` B4):** this row also carries the residual
+      hardcoded-literal voice-violation sites Phase 98 named, measured and did NOT repair —
+      `HelpPage.tsx:166`, `useBriefingBooks.ts:164-165` (`message_en`/`message_ar`),
+      `PositionTrackerCard.tsx:93` (line numbers at `b5eb84314`; the class definition and full
+      derivation live in `98-06-SUMMARY.md`). Same class as this row's tail: user-readable copy
+      outside the i18n bundles. **⚠ copy04's `@values` acceptance legs gate on
+      `bundleValues.has(text)` and CANNOT see hardcoded literals by construction** — use the
+      bundle-grep / manual-read instruments recorded in the P98 exec report, not copy04's green.
+      **Addendum (`RULING-P98A2-14`):** also carries the retired-term member(s) inside
+      `validation.json` (both locales where present) — EXCLUDED from P98's ruled case-insensitive
+      sweep because that file is `98-06-PLAN.md:206`'s explicit carve-out and the plan's Task-3
+      gate (`:253`) asserts its content SURVIVES; the residue exists by deliberate carve-out, not
+      by miss. Repair rides whichever phase lifts the carve-out.
+
+### GUIDE-HOLLOW — a popover whose four labelled sections have never had content
+
+- [x] **GUIDE-HOLLOW-01** _(CLOSED 2026-09-12; P102-19: `PASS guide`)_: **The dossier type-guide body is hollow for ALL EIGHT dossier types, in
+      both locales, and it fails silently.** `DossierTypeGuide.tsx:162-165` looks up
+      `typeGuide.${type}.{whenToUse,examples,commonLinks,notFor}` with silent defaults (`t(key, '')`
+      and `returnObjects` guarded by `Array.isArray`/`length > 0` at `:213,224,241,259`), and NO
+      type has a `typeGuide.{type}` subtree in either locale — `typeGuide` holds only the five flat
+      section LABELS (`whenToUse`, `examples`, `commonLinks`, `notFor`, `createDossier`). Every
+      popover renders header + description only; a raw-key detector returns clean over it because
+      the render guards swallow every miss. Derived 2026-08-18 from the committed tree by
+      `RULING-P98A2-01-SCOPE` (F3 bound). **Not Phase 98's scope:** filling it is net-new domain
+      content authoring (7 remaining types × 4 sections × 2 locales after `COPY-08` lands EO), not
+      copy-truth repair. **Owner: Phase 102 — Staging Data & Debt Tail.** After Phase 98, EO will be
+      the only type with a full guide body — that asymmetry is this row's tracked state, not a
+      defect. Note: Phase 99's `AR-04a` (remove `t()` English-default masks) will interact with the
+      silent defaults at `:162,165`; whoever executes either row re-checks the other. Also queued
+      here per `RULING-P98A2-03` §4: `DossierTypeGuide.tsx` `getTypeColors` duplicates the
+      canonical `dossierTypeColors` map and already drifts from it (muted default vs WR-07's
+      country fallback) — align it to the canonical map when touching this component.
+
+### EDGECOPY — retired terminology shipped from edge functions, outside every frontend instrument
+
+- [x] **EDGECOPY-01** _(CLOSED 2026-09-12; produced-PDF and deploy re-runs passed)_: **The retired term (`Due Date` / `تاريخ الاستحقاق`) ships from FIVE edge
+      functions in both locales** — including `pdf-generate`, which writes it into a document the
+      user KEEPS. Filed 2026-08-18 by `RULING-P98A2-16` (Phase 98 execution, blocker 6). The
+      5-count is display-copy only: a sixth candidate (`mou-notifications`) was read in context and
+      is JSDoc/console/internal-payload, not display copy. **Why Phase 98 did not repair it, stated
+      so the residue reads as reasoned:** `supabase/functions` is OUTSIDE the search space of every
+      P98 instrument (bundle-grep included) — fourth structural-blindness instance, first in the
+      SEARCH SPACE rather than the matcher; no P98 oracle reads that tree, so a repair would close
+      on source structure alone; and edge functions ship by DEPLOYMENT, not the frontend build, so
+      a repaired line is not repaired product until a deploy this phase does not own. **Closure =
+      repair + DEPLOY + verification on a produced artifact (a generated PDF), both locales.**
+      Candidate instrument: the 98-06 seat's offered probe, preserved at
+      `.tickmarkr/overseer/INSTRUMENTS-P98/` (sha `373743c14020c1c2`) — deliberately NOT adopted
+      as a ninth P98 spec (RED-BASELINE counts eight and Law 1 binds negative-scope lines to the
+      eight); the owning phase adopts and commits it. **Owner: Phase 102 — Staging Data & Debt
+      Tail** (owns staging state and deploy-adjacent work; P99 is namespace-scoped and owns no
+      deploys).
+  - **Amendment, 2026-08-18 (`RULING-P98A2-17` Option C):** the class also covers bilingual
+    NOW-RELATIVE copy shipped from edge functions — `contextual-suggestions/index.ts:605-606`
+    (`was due N days ago` / `متأخر منذ N يوم`) and `:616-617` (`Nd overdue` badge, both
+    locales), and `relationship-health/index.ts:226-227` (`No engagement … for N days` /
+    `منذ N يومًا`). TWO functions, display-copy only — a loose pattern returned five; three
+    were comments read in context. Same closure: repair + deploy + verification on a produced
+    artifact, both locales.
+
+### AR — Arabic translation coverage (layout infrastructure is already sound)
+
+- [ ] **AR-01**: One Arabic glossary for core objects, applied across all namespaces — dossier is one term (not دوسيه / ملف / دوسييه), and a nav label always matches the title of the page it opens (currently الارتباطات → المشاركات, البلدان → الدول).
+- [ ] **AR-02**: Dates and times localize in Arabic — no English weekday/month names inside Arabic sentences. (Latin digits remain the deliberate project policy.)
+- [ ] **AR-03**: No English string renders under `dir="rtl"` on an otherwise-Arabic screen — including the 404 page, the intake queue header and its primary button, the position read-only banner, and search suggestion chips.
+- [ ] **AR-04**: A missing Arabic key cannot silently render English in both languages. **This is two
+      independent fixes with separate acceptance — neither implies the other, and they must not be
+      collapsed back into one clause.**
+  - [ ] **AR-04a — remove the MASK, without creating a visible regression.** No `t()` call passes an
+        English default as its second argument. The second argument is what makes the gap invisible:
+        when a key is missing, `t('some.key', 'English default')` renders plausible English instead of
+        leaking a raw key, so nothing looks broken in either locale and no one notices. **This is the
+        clause that closes Phase 99's criterion 4.**
+
+        **Acceptance is a CONJUNCTION — both, never the first alone:**
+
+        ```bash
+        # (a) no masks remain
+        grep -rhoE "t\(\s*'[^']+'\s*,\s*'[^']*'" frontend/src --include='*.ts' --include='*.tsx' | wc -l   # -> 0
+        # (b) AND every referenced key resolves in BOTH locales (en and ar), namespace-aware
+        #     — see the audit script referenced in the note below; must report 0 unresolved
+        ```
+
+        **Required ORDER — authoring first, deletion last:**
+
+        1. Author the missing keys in `en` **and** `ar`.
+        2. Verify every referenced key resolves in both locales.
+        3. **Only then** drop the second arguments.
+
+        > **This clause is a translation-authoring task, not a mechanical sweep.** Scoping Phase 99
+        > as a find-and-replace will under-resource it by the size of the authoring work.
+
+  - [ ] **AR-04b — fix namespace RESOLUTION.** Keys resolve through explicit colon namespaces rather
+        than dot form, so a key lands in the namespace it names. Acceptance:
+
+        ```bash
+        grep -rhoE "t\(\s*'[^']*\.[^']*'" frontend/src --include='*.ts' --include='*.tsx' | wc -l  # dot-form
+        grep -rhoE "t\(\s*'[^']*:[^']*'" frontend/src --include='*.ts' --include='*.tsx' | wc -l   # colon-form
+        ```
+
+        **Dated note, 2026-08-18 (`RULING-P98A2-10` item 3):** Phase 98 derived this row's
+        unresolved-dot-form population at ORDER HUNDREDS — 306 unresolved SITES by one
+        instrument (309 sites − 3 FPs; 280 distinct keys — units corrected 2026-08-18
+        `RULING-P99-03`, this note previously compared a site-count to a key-count without saying
+        so), 353 distinct keys across 42 files by another; the gap is population definition,
+        deliberately unreconciled, and neither number is frozen (re-derive with the commands above plus the
+        phase's `98-copy02` detector). Phase 98's criterion 2 closed BOUNDED: named instances +
+        ruled class populations (entityLinks 82, `calendar.recurrence`, `calendar.months`,
+        `common.*` ×7) + no raw key on oracle-driven surfaces. **The long tail is THIS row's
+        population, and Phase 99 consumes Phase 98's instrument and derivation rather than
+        re-discovering it** — the copy02 DOM detector (extended for the `common.*` shape) and the
+        census tooling are the instruments of record — COMMITTED PATHS (P98 close-out,
+        `RULING-P98A2-15` c5): `scripts/partA_maskfinder.py` (the mask/dynamic-prefix census),
+        `scripts/resolve-check.mjs` (real-i18next resolution harness, `fallbackLng` OFF on `ar`),
+        `scripts/neg-taskcard.mjs` (its negative control — run it or the harness is
+        unfalsifiable), plus `tests/e2e/98-copy02-rawkeys.spec.ts` (the extended DOM
+        detector; path corrected 2026-08-18 `RULING-P99-01` — was miscited under `frontend/`,
+        the file has always lived at the repo-root test root with all eight `98-copy0N` specs).
+
+        **⚠ INVERSION AMENDMENT, 2026-08-18 (`RULING-P98A2-11`) — READ BEFORE ANY CONVERSION
+        RUNS.** `common.json` carries a nested duplicate subtree literally named `common` (38
+        top-level keys, ZERO top-level scalars, both locales) — so FOR THIS NAMESPACE the
+        project-wide rule is INVERTED: dot-form (`t('common.all')`) RESOLVES via the nested
+        duplicate and colon-form (`t('common:all')`) MISSES. **A mechanical dot→colon conversion
+        over `common` breaks currently-working copy; encode this exception FIRST.** The
+        flatten-or-keep structural call is THIS row's decision, and Phase 98's 37 colon-form
+        miss sites (rendering bare undotted tokens) ride it — their correct repair form is
+        undecidable until that call. Also named: a colon-form miss renders a BARE token (`all`,
+        `cancel`) that reads as plausible copy — dotted-token detectors are blind BY MECHANISM;
+        only resolution-checking sees this class. Derivations on record: 185 sites / 94 distinct
+        colon-form (all sites) vs 37 / 27 (misses) — different populations, deliberately
+        unreconciled.
+
+        **MASK-CLASS ROUTING, 2026-08-18 (`RULING-P98A2-12`):** the dynamic-prefix raw-value mask
+        class also lands here — `t('prefix.' + value, value)` sites whose keys do not RESOLVE in
+        the bound namespace, so the raw DB value renders behind the mask. 24 unresolved dynamic
+        prefixes / 19 masking a raw value at `13d5094ea` (P98's bundle-resolving instrument;
+        re-derive, never quote). **⚠ INSTRUMENT BLINDNESS, proven by direct test:** AR-04a's
+        two-arg grep matches only LITERAL second arguments and AR-04b's grep only dot-form
+        literals — BOTH are blind to variable-second-arg dynamic-prefix sites BY CONSTRUCTION.
+        P98's bundle-resolving instrument is the instrument of record for this class; consume it.
+        The broken exemplar (TaskCard cited by a P98 plan as the correct idiom; it does not
+        resolve) is recorded in `98-05-SUMMARY.md`. Every NEW routing P98 made was
+        RESOLUTION-checked through the bound namespace, both locales — existence-in-JSON is not
+        resolution, which is exactly what made the exemplar read as correct.
+
+  > **AR-04a is destructively satisfiable if you only run check (a) — measured, 2026-08-15,
+  > `RULING-P92-08`.** A large fraction of mask sites reference keys that **do not resolve in the EN
+  > locale at all**; they render today _only_ because of the English default. Running
+  > "two-arg grep -> 0" naively converts those sites from plausible-English into **raw key strings in
+  > EN and AR alike** — trading an invisible defect for a visible regression, while passing the
+  > acceptance command. That is why acceptance is a conjunction and why the order is fixed.
+  >
+  > ⚠ **THE NAMED REPRODUCER WAS DEFECTIVE — dated correction 2026-08-18 (`RULING-P99-21`).**
+  > `scripts/i18n-mask-audit.mjs:66`'s `USE_NS` regex captured only the FIRST namespace of an
+  > array binding and could not match a bare `useTranslation()` (whose defaultNS `translation` IS
+  > registered at `i18n/index.ts:274/410`), mis-binding **158 of 666 files** — 47 array, 111 bare.
+  > **Every "unresolved" figure below, and every population descended from this instrument, is a
+  > SUPERSET of the truth** (the defect shrinks declared namespaces, so it can only over-report):
+  > treat them as upper bounds, never as targets, and re-derive under the canonical resolver.
+  > Phase 98's closures that cite them were BOUNDED with their residues routed to Phase 99, which
+  > is where the re-derivation happens; P98 is not reopened. Phase 99 (`P99-04`) repairs this file
+  > and every instrument then imports one shared binding model — copies are what propagated it
+  > through three generations.
+  >
+  > Reproduce with `node scripts/i18n-mask-audit.mjs` (committed for Phase 99; **read the
+  > correction above before quoting any number from it**). Two independent
+  > derivations, 2026-08-15:
+  >
+  > | derivation                                | total 2-arg sites | unresolved in EN | distinct keys |     share |
+  > | ----------------------------------------- | ----------------: | ---------------: | ------------: | --------: |
+  > | first pass, namespace-unaware (corrected) |              1800 |              472 |           407 |     26.2% |
+  > | **namespace-aware** (operative)           |              1800 |          **516** |       **444** | **28.7%** |
+  >
+  > **Two independent instruments agree on the denominator to the site: 1800.** The first pass
+  > initially reported 1826; that +26 was a regex artefact — `t\(` without a word boundary also
+  > matches the tail of any identifier ending in `t`, e.g. `formatDayFirst('2026-04-28T12:00:00')`
+  > in `lib/__tests__/format-date.test.ts`. Corrected, the two totals coincide exactly. Recorded so
+  > it is not rediscovered: **there is no date-string-passed-as-a-translation-key bug** in this
+  > codebase — that finding was the same artefact.
+  >
+  > The namespace-aware derivation models what the first did not — the per-file default namespace
+  > from `useTranslation('ns')` and colon-form explicit namespaces — and the figure went **up**, not
+  > down. (Ignoring namespaces entirely reports 1611 / 89.5%, so the modelling matters a great deal;
+  > it just does not rescue the finding.) Roughly **440+ distinct keys must be authored in two
+  > locales** before a single default is dropped.
+  >
+  > **Why the split (Phase 92 planning, 2026-08-15, `RULING-P92-07`).** This requirement previously
+  > read "dot-form `t()` keys with English defaults are eliminated in favour of colon namespaces" —
+  > one sentence fusing two orthogonal fixes. **Masking and resolution are independent:**
+  > `t('common:logout', 'Logout')` is fully colon-form and **still renders "Logout"** when the key
+  > misses. As written, a planner could convert every key to colon form, pass AR-04, and leave every
+  > mask standing — closing the requirement without closing the defect.
+  >
+  > **The populations differ, so the two clauses cannot share a check.** Derived 2026-08-15 with the
+  > commands above: **1716 mask sites across 179 files**; dot-form **8003** vs colon-form **992**.
+  > Do not quote these as the target — they move as the codebase moves; re-derive. (An earlier
+  > cross-check reported 1683 / 3587 / 391 from a narrower regex containing a bad backreference;
+  > those figures are superseded, not an equally-valid second reading.)
+  >
+  > **Known instance already fixed:** Phase 92 repoints `navigation.logout` -> `common.logout` at
+  > `nav-user.tsx:94` **and drops the second argument** — AUTH-01's sign-out label, which rendered
+  > English under `dir="rtl"`. It deliberately keeps the **dot** form to match surrounding code, so it
+  > satisfies AR-04a while remaining inside AR-04b's population; Phase 99 sweeps that line with the
+  > rest rather than treating it as an exception.
+
+### DATA — Staging data is plausible, not test residue
+
+- [ ] **DATA-01** _(OPEN: account/data censuses are clean, but both teardown Playwright oracles could not launch because process census is sandbox-denied; re-run 2026-09-12)_: `/users` shows real staff — the ~415 fixture accounts (`*@example.com`, `*@gastat.test`) are purged and the E2E suite cleans up after itself.
+- [x] **DATA-02** _(CLOSED 2026-09-12; `PASS sweep`, `PASS rename`)_: No record visible in the UI names an internal artifact — "Phase 70 staging verification digest", "Phase 52 Kanban Fixture Engagement", "E2E MoU 1783364705954", "UAT round-11 commitment" are removed or replaced with plausible diplomatic data.
+- [x] **SEED-DELEG-01** _(CLOSED 2026-09-12; `PASS seed`)_: **`/delegations` has no rows to render anywhere this project deploys.** Filed 2026-08-15 (Phase 92 execution, `RULING-P92-46`); measured on staging `zkrcjzdemdmwhearhfgg`: `permission_delegations` = **0 rows**, `position_delegations` = **0 rows**. Even after `DELEG-01` repoints the handler at the correct table, the happy path renders the empty state — so AUTH-04 criterion 4's second half ("renders real delegations when they are not rejected") is not demonstrable by code alone and additionally needs seed data. Phase 92's e2e oracle deliberately accepts either real cards **or** the legitimate empty state, so it does not go red on this; it also does not prove the happy path.
+- [x] **DELEG-02** _(CLOSED 2026-09-12; HTTP, active-only, and four deploy-version checks passed)_: **Decide which relation `my-delegations` reads, and repoint it.** Filed 2026-08-15 from Phase 93 planning (`RULING-P93-01` §02). Phase 93 closes `DELEG-01` as **visibility only** — the handler stops swallowing the `42P01` on the nonexistent `public.delegations` and `/delegations` renders an honest error state — and deliberately does **not** choose a table, because the choice is a product decision and both candidates hold 0 rows, so a repoint would buy an identical empty screen. This requirement lands here rather than in Phase 93 because **seeding forces the choice**: the phase that seeds is the phase that decides, and that is this one (see `SEED-DELEG-01`). Candidates, columns re-derived 2026-08-15: `permission_delegations` (14 cols — `id, grantor_id, grantee_id, resource_type, resource_id, permissions, reason, valid_from, valid_until, revoked, revoked_at, revoked_by, created_at, updated_at`) vs `position_delegations` (8 cols — `id, position_id, delegator_id, delegate_id, reason, expires_at, status, created_at`). The handler filters on `is_active` and selects `source`; **neither column exists on either table** (`permission_delegations` expresses the idea as `revoked`, `position_delegations` as `status`), so whichever is chosen needs a column-by-column rewrite of the select, the filter, and the `grantor:auth.users!…` embeds. **Until this lands, `/delegations` visibly errors — that is Phase 93's intended outcome, not a regression.** Full evidence: `.tickmarkr/overseer/PARK-P93.md` §PARK-P93-02.
+- [x] **WRITER-ROUTE-01** _(CLOSED 2026-09-12; trigger, born-state, and deploy checks passed)_: **`workflow-executor` writes task `status` outside the routed writer set — rows can re-diverge after Phase 96's repair.** Filed 2026-08-17 from Phase 96 execution (`96-08-SUMMARY.md` §BLOCKED-3, ordered by `RULING-P96-05` condition 1). `supabase/functions/workflow-executor/index.ts:550` (`executeUpdateStatus`) writes `{ status, updated_at }` on `getTableName(execution.entity_type)`; when the entity type is `task`, that is a status-direct write with no matching `workflow_stage` — the exact divergence shape Phase 96 attributed and repaired for the `tasks-update` branch. The fix needs a table-conditional map because the generic writer also serves 7 non-task entity types. **Owner: Phase 102 — Staging Data & Debt Tail.** Owner evidence (recorded per the ruling's P102-vs-P104 fork): the entity map spans 8 general types (`intake_ticket`, `engagement`, `commitment`, `task`, `dossier`, `position`, `document`, `calendar_entry` — `index.ts:99-108`) and the function is consumed by the general `frontend/src/domains/work-items/repositories/work-items.repository.ts` — it is NOT v7-agent-runtime-only, so P104 (hardware-gated) is the wrong home.
+- [x] **INSERT-SYNC-01** _(CLOSED 2026-09-12; `PASS trigger-insert`, `PASS born-consistent`)_: **A task row can be BORN divergent — `trg_sync_task_status` fires on UPDATE only, and both create paths hardcode `status:'pending'` while accepting a caller-supplied `workflow_stage`.** Filed 2026-08-17 from Phase 96 execution (`96-08-SUMMARY.md` §BLOCKED-3, ordered by `RULING-P96-05` condition 1). Sites: `backend/src/services/tasks.service.ts:127` and `supabase/functions/tasks-create/index.ts:195`; tasks have no INSERT-time sync trigger (only `set_task_sla_deadline` fires BEFORE INSERT). Distinct mechanism from Phase 96's repaired class — NOT demonstrated on staging (all 3 divergent rows attributed to the update-branch writer; today no caller supplies a non-`todo` stage at create), but the hole is structural. A migration to fix it inside Phase 96 was explicitly NOT authorized (`RULING-P96-05`: out of demonstrated need; the exactly-six migration count stands). **Owner: Phase 102 — Staging Data & Debt Tail**, beside `WRITER-ROUTE-01` — one seat, both halves of the same lifecycle seam.
+
+### DBSEC — Database security posture
+
+- [ ] **DBSEC-01**: The `SECURITY DEFINER` views reachable from the client are resolved. 207 frontend files query Supabase directly with RLS as the only authorization boundary; 33 views bypass it, including `unified_work_items` (queried from 10 frontend files). Each is converted to `security_invoker`, restricted, or explicitly justified in writing.
+- [ ] **DBSEC-02**: No view exposes `auth.users` to `anon`/`authenticated` — `upcoming_milestones` and `entity_comments_with_details` (the latter queried from the frontend).
+- [ ] **DBSEC-03**: The 12 materialized views selectable by `anon`/`authenticated` are revoked or moved behind a gated RPC.
+- [ ] **DBSEC-04**: Tables with RLS enabled and no policies are resolved — `intelligence_email_queue` and `events.idempotency_keys` currently deny everything.
+- [ ] **DBSEC-05**: Leaked-password protection is enabled and the 548 functions with mutable `search_path` are pinned.
+- [ ] **RLS-AUTHUSERS-01**: **11 RLS policies gate access on a subquery against `auth.users`, which no client role may read — so they raise `42501` instead of deciding.** Filed 2026-08-15 from Phase 93 planning (`RULING-P93-01` order 2/3), which fixes the 4 policies its own criteria exercise and leaves these. **Population definition:** every `pg_policy` on a table in schema `public` whose `USING` or `WITH CHECK` expression text matches `auth\.users`, derived from the live catalog on staging `zkrcjzdemdmwhearhfgg` — **15 policies across 13 tables**, of which Phase 93 fixes 4 (`data_retention_policies` ×1, `tag_categories` ×2, `entity_tag_assignments` ×1) and **11 remain**: `content_expiration_rules`, `duplicate_detection_settings`, `entity_content_translations`, `entity_retention_status`, `invitation_message_templates`, `legal_holds`, `position_consistency`, `position_consistency_checks` (×3), `retention_execution_log`. **Outside the population, unsearched:** policies that reach `auth.users` indirectly through a `SECURITY DEFINER` function or a view, and non-`public` schemas — **15 is a lower bound, not a total.** Fix each by replacing the predicate with the project's unified authz read (`public.users.role` keyed on `auth.uid()`), deleting the `raw_*_meta_data` reads rather than keeping them alongside.
+
+  > **Count correction, 2026-08-16 — the TABLE number is one too high; the POLICY numbers are exact.** Measured at Phase 93 close by `93-15` against the live catalog: **11 residual policies over 9 distinct tables**, plus the 4 fixed over 3 tables = **15 policies over 12 distinct tables**, not 13. Policies reconcile exactly (11 + 4 = 15 ✓); only "13 tables" is wrong. Root cause: the source enumeration in the planning park renders **13 markdown rows over 12 distinct tables** — `tag_categories` carries two policies and therefore appears twice. **The header counted rows in a document, not tables in a database** — the phase's own class, in its own filing. Both sets themselves are exactly right and no remediation scope changes. The sentence above is left as filed pending the overseer's ruling on the wording, per the `AUTH-02` precedent that a requirement's text is corrected by ruling, not silently.
+
+  > **DO NOT `GRANT SELECT ON auth.users TO authenticated` — and the database will tell you to.** Every one of these failures ends with `HINT: Grant the required privileges to the current role with: GRANT SELECT ON auth.users TO authenticated;`. Taking that hint makes the `42501` vanish and, in the same statement, converts **8 fail-closed policies into a live self-service privilege escalation**: they gate admin access on `raw_user_meta_data->>'role'`, which any session can set on itself via `auth.updateUser({ data })`. Six of the 8 are `ALL` (read + write) and one (`duplicate_detection_settings`) is granted to `public`, i.e. reachable by `anon`. **Measured 2026-08-15: they are latent, not live** — `SELECT` on `auth.users` is granted to exactly one grantee (`postgres`, which owns the tables and is not subject to their RLS; `relforcerowsecurity = false` on all 8), so no role is simultaneously subject to these policies and able to evaluate them. The safety is the bug. Verify with `select grantee from information_schema.table_privileges where table_schema='auth' and table_name='users' and privilege_type='SELECT';` — expect exactly one row, `postgres`. Full derivation and both fail-closed probes: `.tickmarkr/overseer/PARK-P93.md` §PARK-P93-01.
+
+### CLIENTSEC — Client-side security posture
+
+> Distinct from DBSEC on purpose: DBSEC is the database boundary, this is what the _browser_
+> retains. Filing client-side findings under DBSEC hides them inside a database-shaped scope.
+
+- [ ] **CLIENTSEC-01**: **Sign-out clears client-side residue.** Signing out leaves the previous user's
+      data on the machine: `localStorage` is never wiped, so on a shared analyst workstation the next
+      user inherits it — in a product whose access model is `sensitivity_level <= clearance`.
+      Verified 2026-08-15 (Phase 92 planning); **nothing wipes any of this on logout**:
+      persisted zustand stores `auth-storage` (`store/authStore.ts:253`), a duplicate `auth-storage` in
+      the dead module (`services/auth.ts:624`, see NAV-04), `entity-history-storage`
+      (`store/entityHistoryStore.ts:114`), `ui-storage` (`store/uiStore.ts:139`),
+      `pinned-entities-storage` (`store/pinnedEntitiesStore.ts:132`), `dossier-store`
+      (`store/dossierStore.ts:501`); raw writers `advanced-search-history`
+      (`domains/search/hooks/useAdvancedSearch.ts:67`) and `quickswitcher_recent_items`
+      (`domains/dossiers/hooks/useQuickSwitcherSearch.ts:19`).
+      **The sensitive part is not settings — it is history.** Entity history, recent items and search
+      history record _which dossiers the previous analyst opened and what they searched for_;
+      `entityHistoryStore`'s own docstring states it "persists the last 10 entities viewed", so the
+      retention is the store's **stated purpose**, not an accident.
+      **Lead:** `utils/storage/preference-storage.ts:15` already defines `WIPE_GUARD_KEY`
+      (`id.legacy-wipe.v1`, used `:24`/`:28`) — check its semantics before writing a new wipe.
+      **Relationship to Phase 92:** that phase adds `queryClient.clear()` at the single sign-out seam
+      because it would otherwise _introduce_ an in-memory cache regression on three new soft-navigating
+      paths. This requirement is the **pre-existing, persisted** half and was deliberately not swept
+      there. Phase 92's "query cache empty after sign-out" criterion establishes the in-memory cache and
+      says nothing about `localStorage`.
+
+- [ ] **CLIENTSEC-02**: **Production builds ship verbatim application sources.** `vite.config.ts:141`
+      sets `sourcemap: true` for production; at `87b2d040e` the built `dist/assets` holds **305
+      `.map` files whose `sourcesContent` embeds source files verbatim** — every component, hook,
+      guard condition, and inline literal is downloadable by anyone who can fetch the assets.
+      Found 2026-08-18 during Phase 98 plan-checking (the N1 sourcemap blocker's sibling fact:
+      P98's copy oracles legitimately exclude `.map` because `sourcesContent` is outside the render
+      path — but the disclosure itself is a security posture question, not a copy question).
+      **Owner: Phase 100 — Security Posture**, whose subject is exactly this boundary: decide
+      strip / restrict (server-side, non-public) / keep-with-written-justification. Filed per
+      `RULING-P98A2` round-3 direction so the exclusion's sibling fact is queued, not shrugged.
+
+### E2ESTALE — shipped specs failing before Phase 93 touched anything
+
+- [ ] **E2ESTALE-01**: **Six shipped e2e assertions were already red before Phase 93, and were isolated (not fixed) during it.** Filed 2026-08-16 from Phase 93 execution (`RULING-P93-04` — "isolation is not a disposition"). Each was measured in BOTH directions — at `phase-93-base` and at the post-change HEAD — so the attribution is evidence, not inference.
+  - **`frontend/tests/e2e/pull-to-refresh.spec.ts` — 5 tests** (`:92` sync status bar, `:140` pull-to-refresh components, `:170` RTL layout, `:193` mobile viewport, `:250` TanStack Query). Identical result at `phase-93-base` and at HEAD: **5 failed / 8 passed both runs**, so plan `93-07` caused none of them. Root cause is a **loose locator**, not a product defect: `expect(locator('h1')).toBeVisible()` raises `strict mode violation: resolved to 44 elements` because the dossiers list renders an `h1` per card. The page loads correctly with real data. Fix is to scope the locator (e.g. `getByRole('heading', { name: 'All Dossiers' })`), not to change the page.
+  - **`frontend/tests/e2e/analytics-dashboard.spec.ts:153`** (`should have refresh button that triggers data reload`) — failed in both the swallow-present and swallow-deleted runs recorded by `93-06`. Distinct from the 3 tests that plan legitimately inverted.
+  - **Population definition:** shipped specs under any of this repo's **four** test roots (`./tests`, `./frontend/tests`, `./backend/tests`, `./e2e/tests`) that are coupled to a file Phase 93 modified, per the corrected `GATE-STANDARD.md` C9b derivation (11 coupled files). **Outside it:** specs coupled by DOM shape alone rather than by identifier — no grep can see those; the residual defence is running the shipped suite. And specs unrelated to Phase 93's 40 changed files were never run, so this is **not** a claim about total suite health.
+  - **Owner: Phase 101 — CI Gates Green**, alongside the other CI-green work. Phase 93 deliberately did not fix them: they are outside its criteria, and repairing unrelated red tests mid-phase is how a phase's own evidence stops being interpretable.
+
+  - **Two MORE stale specs added 2026-08-16 from Phase 94 planning (`RULING-P94-06` B6), and this pair is a different failure than the original six.** `frontend/tests/e2e/after-action-create.spec.ts` navigates to **`/after-action/create`** (`:249`) and awaits a 201 on the same path (`:181`). **That route does not exist.** The tree carries `/after-actions/` (plural — list at `index.tsx`, detail at `$afterActionId.tsx`) and `/engagements/$engagementId/after-action`; verified by listing `frontend/src/routes/**/*after-action*`. `ai-extraction.spec.ts` shares the same nominated flow and inherits the doubt (not individually re-derived — stated).
+  - **Why it matters beyond one red:** `94-VALIDATION.md` nominated that spec as `WRITE-01`'s behavioural oracle, and Phase 94's plan set nominated it too. A spec pointed at a nonexistent route cannot fail _for its subject_ — it yields an uninformative red — so criterion 1's publish half would have been "covered" by an oracle incapable of covering it. Phase 94 replaced it with a read-back probe (`scripts/probe-after-action-publish.mjs`). **Phase 101 inherits the spec itself:** repoint it at the real route or retire it, but do not leave it nominated anywhere.
+
+### LEAK — the independent verifier's SC5 gap
+
+- [x] **LEAK-ATTACH-01** — **RESOLVED-IN-PHASE (`283f9eff`, `RULING-P93-06` order 1). Kept, not deleted: the record of the miss is the valuable part.**: **`frontend/src/components/positions/AttachmentUploader.tsx` renders raw `error.message` to the user in two places, on a criterion-2 named surface that Phase 93 touched.** Found 2026-08-16 by `gsd-verifier` (`93-VERIFICATION-INDEPENDENT.md`, `status: gaps_found`, SC5 partial) and **reproduced independently by the orchestrator before filing**.
+  - **The two sites:** `:117` sets `error: error.message || t('common:errors.generic')` in the upload catch, rendered verbatim at `:462-465` as `{attachmentFile.error}`; `:198` `alert(error.message || t('common:errors.generic'))` in the delete catch. Both are present at `phase-93-base` (`:108`/`:189`) — **pre-existing, not introduced** — but the file **is** in `git diff --name-only phase-93-base..HEAD` (touched by `93-10`) and **is** one of criterion 2's four named surfaces.
+  - **The `||` fallback does not save it.** A `FunctionsHttpError` message ("Failed to send a request to the Edge Function" — the exact string `93-14_g3` observed in its own RED snapshot) is non-empty, so the generic fallback never fires and the internal string reaches the user.
+  - **Why every Phase 93 instrument missed it:** both sites are **mutation-origin** (upload / delete), so they fell outside `D-22`'s bucket-(a) read enumeration; and the closing register classified the 71-line/44-file superset they live in as "an upper bound on remaining **READS**, emphatically not a residual bucket-(a) count" — a classification that is **wrong for this file**, because both sites are **renders**. They appear in no plan population, no exclusion list, no SUMMARY, and no filed requirement. The gap was reachable only by a seat whose derivations shared no ancestry with the work.
+  - **The repair is the one-line treatment `93-14` Task 2 already applied to 22 files:** drop the `error.message` operand and keep the translated message.
+  - ~~**Owner: Phase 94 — Write Paths**~~ — **superseded.** `RULING-P93-06` order 1 ruled the repair IN-PHASE: mechanical, already-proven treatment, owned file, no product guess, and condition 7 is one of this acceptance's own pre-committed conditions, so the honest state is TRUE rather than disclosed-false.
+  - **Resolution, verified by the orchestrator in both directions:** the verifier's own filter chain over the file returns **2 at `phase-93-base`** and **0 at HEAD**. `:117` → `error: t('common:errors.generic')`, `:198` → `alert(t('common:errors.generic'))`; both `catch (error: any)` bindings dropped to bare `catch {` (the `TS6133` trap `93-14` paid for six times). `pnpm type-check` clean; `93-10_g1`, `93-10_g2`, `93-14_g2` re-run verbatim and green **as regression guards, not as a manufactured red**. Recorded by addendum in `93-10-SUMMARY.md` (`80feaaa0`).
+  - **The lesson outlives the fix:** a population partitioned by **origin** (query vs mutation) leaks at the seams, and every in-phase instrument inherited that partition — so their agreement was not evidence. Only a seat with no shared ancestry found it.
+
+### CLOSEOUT — findings the closing plan raised that had no owner
+
+> Filed 2026-08-16 by the Phase 93 orchestrator at close-out, from `93-15-SUMMARY.md` §"Findings
+> raised" and from this seat's review of `93-VERIFICATION.md` §9. Each is on the tracked surface
+> because a finding that lives only in a SUMMARY or a code comment helps the phase that found it and
+> ships the defect to everyone after.
+
+- [ ] **NOTFOUND-COMPONENT-01**: **A bare `notFound()` thrown from a COMPONENT never reaches the root 404 page in `@tanstack/react-router@1.170.8`** — it reaches the router's `defaultErrorComponent` ("Something went wrong"), because the throw is attributed to the nearest route and no `notFoundComponent` exists there. Traced and worked around by `93-12`; raised to the orchestrator, and — until now — filed nowhere.
+  - **State at Phase 93 close, re-derived: 0 `notFound()` throw sites at `phase-93-base`, 3 at HEAD.** Two are component throws and both carry the required `{ routeId: rootRouteId }` (`DossierShell.tsx:144`, `WorkspaceShell.tsx`), each behaviourally proven. The third is a bare `notFound()` in a route **loader** (`reports/$reportId.tsx:54`), where the mechanism does not apply and the bare form is correct. **No live instance remains.**
+  - **Why it is still open:** nothing enforces it. The next component-thrown `notFound()` written without `routeId` regresses silently, and its symptom — a generic error page instead of a 404 — reads as a product bug rather than a router-API misuse. The knowledge exists only in call-site comments.
+  - **Owner: Phase 95 — Routes That Don't Render**, whose goal ("every route either renders its page or says why it can't") is exactly this. **Retire it explicitly if that phase decides a lint/gate is not worth it** — a silent drop is what this entry exists to prevent.
+- [x] **ARMA-01**: **`TRUST-03`'s report-builder 404 path has no persisting test, and the only instruction that would give it one lives in a code comment.** `tests/e2e/93-report-notfound.spec.ts` asserts `404 OR query-error-state`; its arm A (404) has **never fired in any natural run**, because `custom_reports`/`report_shares` carry mutually recursive SELECT policies (`42P17`) and the by-id read rejects for every id. Every observed run took arm B.
+  - **The mechanism HAS been observed once**: `93-13` drove the real loader in a real browser with the network stubbed to `[]` and saw the root 404 (`93-13-SUMMARY.md:105-116`). **That control spec was deleted and never committed**, so the evidence is prose in a SUMMARY, not coverage in the tree.
+  - **The action:** when `WRITE-06` fixes the policy recursion, **delete arm (b)** and assert the 404 arm alone — the spec's own header says so. Leaving the disjunction in place after `WRITE-06` converts a rejection into a pass and makes the green permanent and false. **Nothing currently fails if this is ignored.**
+  - **Owner: Phase 94 — Write Paths**, alongside `WRITE-06`, which is the event that unblocks it.
+- [ ] **ORACLECAP-01**: **Phase 93's oracle set has an unquantified capacity limit and reds at the auth wall on re-run.** The 18 tests each perform an inline sign-in (forced by `E2ECRED-01`: no shared `storageState` is usable). Two full runs inside the provider's rate-limit window red the suite with `Request rate limit reached` — measured by `93-15`, page snapshot on the record.
+  - **Per `GATE-STANDARD.md` C2 that outcome is `UNABLE TO MEASURE`, not a valid red.** Anyone re-running this phase's evidence back-to-back will see what looks like a Phase 93 regression and is not one. Space the runs, or fix the root cause.
+  - **Owner: Phase 101 — CI Gates Green**, with `E2ECRED-01` — a shared `storageState` removes the 18 sign-ins and the limit with them.
+  - **FAMILY MEMBER filed 2026-08-17 by `RULING-P95-03` condition 2 (Phase 95 execution):** staging's `ALLOWED_ORIGINS` admits exactly ONE origin (`http://localhost:5173`) — matrix-probed across 7 alternate ports during 95-05, all `access-control-allow-origin: null`, with `:5173` green as the positive control. This forces SINGLE-INSTANCE behavioural testing: a second app instance cannot authenticate, so a pre-fix/post-fix A–B across two ports is impossible without mutating the shared secret mid-run (out of bounds — every edge function consumes it). 95-05's oracle tests 1–2 pre-fix red is `UNABLE TO MEASURE` for exactly this reason. Whether a second allowed origin (or the shared `storageState`) is worth it is P101's/the operator's call, not any lane's.
+  - **SAME FAMILY, second member (Phase 95 independent verification):** the 95-01 chip e2e red ONCE in the independent verifier's hands and passed 3× after, with zero code change between runs — a staging-coupled oracle red without a code cause. Filed here rather than as a spec defect: the family's signature is oracle reds produced by shared-staging coupling (rate limits, single-origin walls, transient data), and the remedy is the same infrastructure decision this entry owns.
+  - **NOTE ADDED 2026-08-17 (Phase 97 execution, overseer-directed) — not a scope change, not a new row. THE SYMPTOM DIFFERS FROM THE ONE FILED ABOVE, and that difference is the point:** Phase 97 hit this same capacity wall after many repeated drill runs, but it presented as a **SILENT REDIRECT TO `/login` with NO rate-limit message at all**, not as `Request rate limit reached`. Measured in `97-settings-nav.spec.ts`: **8 of 8 mobile and 1 of 7 desktop** tests died at `signInInline` (`:99`, `expect(page).not.toHaveURL(/\/login/)` — received `http://localhost:5173/login`) **before reaching their subject**, so under C2 every one of those is `UNABLE TO MEASURE`, never a red about NAV-02. **Decisive control:** a single fresh run of one test passed in **3.1s, exit 0**, which separates _"the auth path is broken"_ from _"the auth path is EXHAUSTED"_ — without that control a load-induced red is indistinguishable from a subject red.
+    **Why this note matters to P101:** searching for the filed string `Request rate limit reached` will NOT find this presentation. The same root cause surfaces at least two ways, and the silent-redirect form is the one that looks like a product bug.
+
+### RETENTION — two defects `93-09` measured but could not repair inside its files
+
+> Both filed 2026-08-16 from Phase 93 execution, plan `93-09`, which raised them in its BLOCKED
+> section for the orchestrator to assign owners. Each was **measured**, not inferred, and each is
+> worked around or asserted rather than left silent — so neither blocked that plan's close.
+
+- [ ] **RETENTION-CAST-01**: **`frontend/src/domains/audit/hooks/useRetentionPolicies.ts` casts a `{data:[...]}` envelope as if it were a bare array — six times.** The route crashes outright on the real payload; `93-09` repaired it at the **consumption point** in `data-retention.tsx` (`asRows`, commit `b71ad62b`) because the hook file was outside its `files_modified`. **The six false casts remain.**
+  - **Do not "fix" it as `Array.isArray(x) ? x : []`.** That fallback renders "No Policies" over rows the server did send — precisely the confident-lie class this milestone exists to kill. `93-09` recorded that as a pattern decision.
+  - **Owner: Phase 95 — Routes That Don't Render.** Placed there because the observed symptom is a route that does not render at all; move it if a later seat reads the class differently.
+- [ ] **DR-SUBPATH-01**: **`supabase/functions/data-retention/index.ts:120-123` derives `resource` from the second-to-last path segment, so every `/data-retention/<sub>` route except `policies` is mis-read.** `legal-holds` is parsed as a POLICY ID and looked up in `data_retention_policies`, answering `404 "Policy not found"`. Probed against deployed staging 2026-08-16 (`scripts/probe-edge-auth.sh` plus a throwaway body probe; no credential echoed).
+  - **Population, measured not inferred: FIVE of the surface's SIX regions 404 — only `policies` survives.** The single-region framing this was first reported under understates it; the parse is wrong for every `/data-retention/<sub>` shape and right only for `/data-retention/policies/<id>`.
+  - **This is the OUTER of two stacked causes on `/admin/data-retention`'s legal-holds region** — the inner is `RLS-AUTHUSERS-01`'s residual `legal_holds` policy (Phase 100). **Fixing the RLS alone will not close that surface**; this parse fires first. Whoever closes `RLS-AUTHUSERS-01` must close this too or the region stays red for a new reason.
+  - **MEMBER OF THE `EDGEPATH-01` CLASS, annotated here in the same commit that filed the class.** This entry was written as a single-function defect; it is now the **one PROVEN member of the length-offset subset** of a class spanning at least 61 edge functions. Read it as an instance, not an isolate — the fix must be the class's, not a one-off, or the next `/x/<sub>` surface fails the same way.
+  - **Owner: Phase 100 — Security Posture (database + client)**, alongside `RLS-AUTHUSERS-01`, for that coupling rather than for any security property of its own.
+
+- [ ] **EDGEPATH-01**: **Edge functions derive record ids from the request URL's path structure, but `functions.invoke('<slug>')` produces `/functions/v1/<slug>` — a path carrying none of the segments the code looks for. Where the read is unguarded the function does not fail; it fails OPEN.** Filed 2026-08-16 from Phase 94 execution (`PARK-EXEC-03`, `RULING-P94-10`, `D-113`), after `PARK-EXEC-01` / `RULING-P94-09` repaired one instance — `after-actions-publish`, deployed **v13**, proven both directions including the `400` guard's first observed fire in that function's history.
+  - **The mechanism, proven on the repaired instance:** `pathSegments[pathSegments.indexOf('after-actions') + 1]`. When the segment is absent `indexOf` returns `-1`, so the expression yields `pathSegments[0]` = `'functions'` — **truthy** — so the "id required" guard is bypassed and a bogus id reaches the query, surfacing as a misleading `404 "record not found"` instead of an honest `400`.
+  - **The discriminator is GUARDED vs UNGUARDED, not which literal is searched.** Unguarded reads fail OPEN. Reads behind `if (… && pathSegments.includes(X))` fail CLOSED — the branch is skipped. Guarded functions are cleared **of this defect only**; whether their branches are reachable at all is a separate, unopened question.
+  - **Three-subset structure — 61 is a SCOPE, never a defect count:**
+    - **7 — mechanism proven, unguarded**: `after-actions-request-edit` (live caller `useEditWorkflow.ts:20`), `after-actions-versions` (live caller `useAfterAction.ts:380`), `after-actions-approve-edit`, `after-actions-reject-edit`, `after-actions-list`, `commitments-update-status`, `engagements`. The first two are **strongly suspected live**; the other five have no `invoke(` caller located — unreachable-or-unproven, **not safe**.
+    - **2 — cleared of THIS defect only, fail closed**: `attachments`, `compliance`.
+    - **52 — ENTIRELY UNASSESSED**: the length-offset form `pathParts[pathParts.length - n]`, invisible to the sweep that found the other nine. `DR-SUBPATH-01` is its **one proven-defective member**, which establishes that the subset contains real defects and establishes **nothing** about the other 51. A `[len - 1]` read always resolves to _something_, so it cannot be judged without its caller.
+  - **NOTHING WAS PROBED AT RUNTIME.** No function in any subset except the repaired one was invoked — invoking them mutates staging records and was outside Phase 94's authorization. Every row is a source-and-caller derivation.
+  - **THE POPULATION IS OPEN-ENDED BY CONSTRUCTION — do not inherit 61 as a total.** Three successive enumerations were each scoped by _syntactic form_ and each under-counted: (1) a literal-vs-slug test returned a uniform 9/9 and was discarded as a crude discriminator; (2) an `indexOf`/`findIndex` sweep missed the guarded/unguarded distinction; (3) the corrected sweep still could not see the length-offset form, and therefore scored `DR-SUBPATH-01` — an already-filed member of this very class — as **zero**. **The owner phase must derive the population from BEHAVIOUR — every id or resource derived from a request URL, however expressed — with its own instrument, instrument-tested both directions. The 61 here is a FLOOR.**
+  - **The durable lesson:** _a form-scoped population silently under-counts a behaviour-defined class._ And the meta-lesson, recorded because it is the uncomfortable one: **the lesson did not transfer between passes even while it was being written down.** Form-scoping is a reflex that survives its own diagnosis; only a behavioural instrument removes it, not vigilance.
+  - **Not a Phase 94 regression, and not in the intended-broken register.** Phase 94's criterion 1 closes **for publish specifically** (`RULING-P94-10`). `94-10` was firewalled from `commitments-update-status`'s parse — its scope there is the audit write only.
+  - **Owner: Phase 100 — Security Posture (database + client)**, co-located with `DR-SUBPATH-01` so one owner holds one class, beside `RLS-AUTHUSERS-01` with which `DR-SUBPATH-01` is already stacked. Placed on that coupling, not on any security property of the parse itself; move it if a later seat reads the class differently.
+
+- [ ] **FUNC-GRANT-01**: **`SECURITY DEFINER` functions in schema `public` ship with PostgreSQL's default `PUBLIC EXECUTE` grant, so `anon` can call them via `/rest/v1/rpc/<name>`.** Filed 2026-08-16 from Phase 94 execution (`PARK-EXEC-02`, `RULING-P94-09`). Raised by the `94-05` executor against the function that phase added, `public.is_report_owner(p_report_id uuid)`, and **deliberately not repaired there** — a second schema change is a park, not a file.
+  - **Population: 334 functions** — the new `is_report_owner` plus the **333** already carrying Supabase's identical advisor WARN (`is_platform_admin`, `auth_has_role`, …). Repairing 1 of 334 is cosmetic surgery on a class, which is why it is filed rather than patched.
+  - **Impact, measured not asserted:** for `anon`, `auth.uid()` is NULL, so the function returns NULL whether or not the row exists — **no information leaks**. For an authenticated caller it distinguishes `false` (row exists, not yours) from `null` (no such row) — **an existence oracle on a 122-bit random id**. That is the residual, accepted knowingly.
+  - **Outside the population, unmeasured:** functions in non-`public` schemas, and any whose grants were already tightened by hand. **The 334 is the ADVISOR's WARN set, not a `pg_proc` / `pg_default_acl` derivation** — do not inherit it as catalog truth.
+  - **Owner: Phase 100 — Security Posture (database + client).**
+
+### GATESTD — a defect in the shipped gate standard itself
+
+- [x] **GATESTD-01** _(CLOSED 2026-09-12; `PASS c9b`)_: **`GATE-STANDARD.md`'s C9b escape step has never executed successfully on this machine.** Filed 2026-08-16 from Phase 93 execution. The line `id=$(printf '%s' "$id" | sed -E 's/[][.*+?^${}()|\\]/\\&/g')` is rejected outright by BSD/macOS sed: `sed: 1: "s/[][.*+?^${}()|\\]/\\&/g": unbalanced brackets ([])`.
+  - **Why it is worse than a broken line:** sed writes the error to **stderr** and exits non-zero, but the command substitution still assigns — so `id` becomes **empty**, the pattern becomes `\b\b`, and **every changed file reports as coupled to every spec**. Observed: 1.8 MB of output claiming ~49 changed files couple to the whole corpus. It fails **open**, in the exact "implausibly total" shape the clause's own amendment note warns about — in prose, with nothing in the code enforcing it.
+  - **Provenance — this is the corrective artifact failing, not the original clause.** The line was introduced by `57aaf1cc` ("C9b — escape regex metachars in the derived identifier"), the fix for C9b defect #2. The fix was never observed to run. That makes this the **third** defect inside C9b's own derivation and the second that makes it measure the wrong set.
+  - **Suggested repair (verified locally, not applied to the standard):** drop the escape entirely and **reject** an unsafe id instead — `case "$id" in *[^A-Za-z0-9_-]*) echo "UNSAFE ID (triage by hand): $f -> '$id'"; continue;; esac`. Fails closed and loud, needs no escaping, and on Phase 93's changed set it surfaced four ids the broken form silently mangled: `QueryErrorState.test`, `analytics.repository`, `common.json` ×2. Phase 93 used this form locally to derive its own C9b register and recorded the deviation rather than editing the standard.
+  - **Population: the one derivation script in `GATE-STANDARD.md` §C9b.** **Outside it:** every other command in that document was not audited for portability — this was found by running C9b, not by a sweep of the standard. A portability pass over the whole file is not claimed.
+  - **Owner: Phase 102 — Staging Data & Debt Tail.** **Note for the ruling seat:** both prior C9b defects (`1f0ac741`, `57aaf1cc`) were repaired by a direct same-day commit to the standard rather than carried forward. Carrying this one to P102 leaves every phase between here and there deriving consumer sets with an instrument that fails open.
+
+- [x] **GATESTD-02** _(CLOSED 2026-09-12; `PASS csa`)_: **A config-enabled workflow step was skipped in Phase 93 and its own STOP did not fire — the failure mode was silence.** Filed 2026-08-16 from Phase 94 planning. `.planning/config.json` sets `workflow.nyquist_validation: true`. `plan-phase.md` §5.5 greps `*-RESEARCH.md` for `## Validation Architecture`, and **on a hit** must write `{PHASE}-VALIDATION.md`, then: "If `VALIDATION_CREATED=false`: STOP — do not proceed to Step 6."
+  - **Measured:** `93-RESEARCH.md` contains that heading (`grep -c` → 1). `92-RESEARCH.md` also contains it and `92-VALIDATION.md` exists. **`93-VALIDATION.md` does not exist.** So Phase 93's precondition was met, the artifact was never created, the STOP never fired, and the phase planned, executed and closed with a configured step silently absent. Nothing failed. Nothing said anything.
+  - **Why this is filed next to `GATESTD-01` rather than as its own class.** `GATESTD-01` is a broken instrument whose breakage is invisible because `sed` writes to stderr and the assignment still happens. This is a skipped step whose absence is invisible because nothing asserts the artifact exists. **Same failure mode — silence — at a different layer**, which is why the section is the right neighbourhood even though its header names the gate standard specifically. Placement is `approve-as-placed`.
+  - **Population: workflow steps gated on a `workflow.*` config flag that produce a named artifact.** Derived from `.planning/config.json`, which currently enables `research`, `plan_check`, `verifier`, `nyquist_validation`, `node_repair`, `ui_phase`, `ui_safety_gate`. **Outside it:** steps with no artifact (banners, prompts), steps not gated on config, and every phase before 92 — I checked 92 and 93 only, so the true incidence across the milestone is unmeasured.
+  - **The generalized fix, which is the durable part:** a config-enabled step must leave **an artifact on disk or an explicit waiver**, and the check must enumerate the expected set **from `config.json`**, never from memory. **Enumerating from the file is necessary but NOT sufficient — the enumeration must read each key's POLARITY.** Demonstrated live while filing this entry: a first derivation selected "keys whose value is `true`" and reported 7 enabled steps. The true count is **8** — `skip_discuss: false` enables discuss, so a negative-sense key is invisible to a truth-value filter. A correct command over the wrong set, in the very script written to prove the set was derived rather than remembered. Handle `skip_*` inversion explicitly, and segregate non-boolean keys (`node_repair_budget: 2`, `discuss_mode: "discuss"`) instead of letting them fall through a boolean test. Cross-check where two fields encode one fact: `discuss_mode: "discuss"` and `skip_discuss: false` agree, which is the only reason either is trustworthy. Phase 94 adopts this as practice immediately (it creates `94-VALIDATION.md` and verifies existence before continuing rather than trusting the step ran); `ACCEPTANCE-P94-EXEC` generalizes it to every config-enabled step.
+  - **Owner: Phase 102 — Staging Data & Debt Tail**, with `GATESTD-01`. Same class, same owner, one seat repairing the instruments rather than two phases each fixing half.
+
+- [x] **GATESTD-03** _(CLOSED 2026-09-12; `PASS dcov`)_: **The decision-coverage gate silently DROPS any sub-lettered decision id — it is not merely miscounted, it is never extracted.** Filed 2026-08-16 from Phase 94 planning. `scripts/decision-coverage.mjs:43` extracts decisions with `line.match(/\*\*(D-\d{2})[:*]/)` — exactly two digits, immediately followed by `:` or `*`. A `**D-03a:` line matches `D-03` and then requires `[:*]`, finds `a`, and fails. The decision therefore never enters the tracked set, is never reported uncovered, and **no plan is ever required to cite it**.
+  - **Measured, not read:** with five sub-lettered decisions present, the extractor reported `total: 29` and an id list of `D-01`…`D-29` with `D-03a`–`D-03e` absent. Five decisions — including the phase's most load-bearing one, a ruled trigger split — sat outside the gate while it reported green.
+  - **Why this is the more dangerous half of a known defect.** Phase 93 recorded that the _coverage_ matcher `\bD-NN\b` reads `D-06a` as `D-06` (so `D-06a` "cannot appear as a distinct id"). That is a miscount with a visible symptom: the total is one lower than the author expects. **This is the extraction end of the same regex family, and it has no symptom at all** — the author sees green, the id simply does not exist to the instrument. Same class, two instruments, and the silent one went unfiled for a phase.
+  - **Population: decision ids in a phase `*-CONTEXT.md` `<decisions>` block.** Derived by running the extractor and diffing its id list against the `**D-` lines actually present. **Outside it:** the `[informational]` exclusion and the `### Claude's Discretion` cut-off (both deliberate), the real GSD gate's 6-word soft-phrase match (this script implements the stricter token match only, by its own header), and every phase before 94 — I checked 94's own context file, so prior phases' true tracked counts are **unmeasured**.
+  - **Workaround adopted, not a fix:** Phase 94 relabelled its five ids by **appending** (`D-30`–`D-34`), never renumbering, so ids already cited elsewhere stayed valid. `GATESTD-01`'s standing note applies — work around the shipped instrument, do not repair it mid-phase without a ruling.
+  - **Owner: Phase 102 — Staging Data & Debt Tail**, with `GATESTD-01` and `GATESTD-02`. Three instrument defects, one seat, one pass.
+
+- [x] **GATESTD-04** _(CLOSED 2026-09-12; judge re-check confirms the presence-shaped-only third direction in `102-01-SUMMARY.md`)_: **The two-direction drill cannot distinguish a RIGHT implementation from a WRONG one — only a done one from an undone one.** Filed 2026-08-17 from Phase 97 planning. `GATE-STANDARD-P92.md` C1 requires RED on the undone tree and GREEN on a constructed work-done state. **The work-done state is constructed by the gate's own author**, who builds the implementation they had in mind — so nothing in the procedure ever asks whether the gate would ALSO pass against a _different_, wrong implementation. A gate can be red-on-undone ✓, green-on-done ✓, **and green-on-WRONG** ✗ simultaneously, and the standard has no step that would notice.
+  - **The phase's own canonical instance:** a criterion asserting _"the Elected Officials card appears"_ is **fully satisfied by a card rendering a fabricated `0`** — the exact defect Phase 97 exists to remove. Red before the work (no card), green after (card present), green on the wrong implementation (card present, number fabricated). Passes C1 both directions and still ships the defect.
+  - **Not hypothetical.** Phase 97 fought this shape in three separate places: the fabricated `0`, a desktop-only settings green that would read as closed, and a comment-presence pin that could not assert the comment's truth (`AppShell.tsx:121-124` was present _and false_).
+  - **First probe aimed at it:** a scoped cross-model spot-check over the three highest-risk plans, asking only _"find a gate that stays GREEN if the work is done WRONG rather than merely undone."_ **Its result lands in the file, not in this row** — see below.
+  - **Full statement, candidate remedy, and the probe's outcome:** `.planning/phases/97-reachability/97-GATE-STANDARD-THIRD-DIRECTION.md`. **This row is filed with that file's result slot still PENDING**, deliberately: the spot-check outcome updates the FILE, so this row does not need re-editing when it lands. A clean result is recorded there too — a clean first-of-its-kind probe still bounds how common the shape is, and it was run on a plan set authored under heightened attention to exactly this failure, which is the most favourable possible reading.
+  - **Candidate remedy is NOT adopted here.** A third C1 direction (construct a plausible WRONG state, observe the gate go red; else record `WRONG-STATE NOT CONSTRUCTED: <what and why>`) roughly **doubles per-gate drill cost**, so scoping it — probably to presence-shaped criteria, where the shape concentrates — is P102's decision. `GATESTD-01`'s standing note governs: work around a shipped instrument, do not repair it mid-phase without a ruling.
+  - **Owner: Phase 102 — Staging Data & Debt Tail**, with `GATESTD-01`, `-02` and `-03`. Four instrument defects, one seat, one pass. **This one differs in kind from its neighbours** — those three are broken instruments; this is a _sound instrument with an unstated limit_, which is why it was filed rather than fixed.
+
+- [x] **GATESTD-05** _(CLOSED 2026-09-12; `PASS gdrill`)_: **`scripts/gate-drill.mjs` can be made to FORK-BOMB by a LEGAL input, because it has no re-entrancy guard.** Filed 2026-08-17 from Phase 97 execution (`RULING-P97-19`), found by the independent verifier.
+  - **Mechanism:** the drill runs every `<automated>` gate it finds in a phase directory. If any gate in that directory invokes the drill **on that same directory** — a completely legal thing for a consolidating gate to want — the drill re-enters itself, unbounded. Measured: **16 nested processes in 17 minutes**, no completion at a 900s bound.
+  - **The caller was also wrong** (Phase 97's `97-12` g1 pointed the drill at its own phase dir; fixed in-phase by scoping the drill to a copy that excludes the calling plan). **But a tool that a legal input can turn into a fork bomb is a defect of the TOOL, not only of the caller.**
+  - **Why it hid:** the per-gate timeout was the only thing containing it. Runs looked like `exit: null` / "slow gate", which reads as _raise the bound_ — **and raising the bound is exactly the wrong move**; both the orchestrator and the overseer had independently planned to do it. There are no stray processes today only because the bound killed them.
+  - **Consequence for the standard:** a self-referential gate **can never be observed green** (C1 clause 2 is unsatisfiable for it), and nothing in the harness says so.
+  - **Suggested fix:** an env-var re-entrancy guard (refuse to run nested, exit with a named code), or refuse a phase dir whose own plans invoke the drill over that dir.
+  - **Owner: Phase 102 — Staging Data & Debt Tail**, with `GATESTD-01`..`-04`. Five instrument defects, one seat, one pass.
+
+### ROOTALIAS — the root vitest project cannot resolve the app it tests
+
+- [ ] **ROOTALIAS-01**: **Root `vitest.config.ts:37` aliases `@` → `<repo-root>/src`, a directory that does not exist.** Filed 2026-08-16 from Phase 93 execution while building the C9b mock-vs-real register (`D-71`). The app's source is `frontend/src`, so any spec under `./tests` that pulls in a `frontend/src` module fails at import-analysis the moment that module uses `@/…` internally.
+  - **Observed:** `pnpm exec vitest run tests/unit/components/ErrorBoundary.test.tsx` → `Failed to resolve import "@/lib/sentry" from "frontend/src/components/error-boundary/ErrorBoundary.tsx"`, `Test Files 1 failed (1) · Tests no tests`. The target `frontend/src/lib/sentry.ts` exists; only the alias is wrong.
+  - **Pre-existing, not Phase 93:** the `@/lib/sentry` import is present at `phase-93-base`, and `git diff --name-only phase-93-base..HEAD` matches no vite/vitest/tsconfig file.
+  - **Population: 15 specs under `./tests` import `frontend/src` by relative path** and are exposed to this. **Outside it:** the other 114 of `./tests`' 129 spec files, which do not reach into the app; and `frontend/tests` (217 specs), which runs under the frontend project's own correct alias.
+  - **Why it matters beyond a red:** it silently converts real oracles into non-oracles. `tests/unit/components/ErrorBoundary.test.tsx` is the only **non-mocking** vitest consumer of any file Phase 93 changed, and it cannot run — so a verdict a reader would take as coverage is simply unavailable.
+  - **Owner: Phase 101 — CI Gates Green.**
+  - **NOTE ADDED 2026-08-17 (Phase 97 execution, `RULING-P97-16` §4) — not a scope change, not a
+    new row.** Phase 97's authorised deletion of `frontend/src/services/auth.ts` added a **second**
+    dangling reference to four already-non-running specs in this population:
+    `tests/unit/components/{Header,MFASetup,MFAVerification,Sidebar}.test.tsx`. They were **already
+    broken before Phase 97** by the alias defect above (measured during P97: 4 files failed, **zero
+    tests ran**) and **no script or CI job invokes them**, so nothing regressed and no verdict was
+    lost. **P101 still owns the fix**; the note exists so that whoever repairs the alias is not
+    surprised by an import that no longer resolves for a second, unrelated reason.
+
+### SEEDFIX — a broken seed row that only became visible once the app stopped hiding it
+
+- [x] **P52FIXTURE-01** _(CLOSED 2026-09-12; `PASS p52`)_: **Seed the missing `engagement_dossiers` row for `00000000-0000-0052-0000-000000000001`.** Filed 2026-08-16 from Phase 93 execution (plan `93-12`, raised in its BLOCKED section to the orchestrator). That id is an engagement dossier with **no extension row** — a broken seed. Before Phase 93 the app painted a titleless shell over it; `93-12` made the surface render the degraded state instead, which is the correct behaviour and the phase's entire point.
+  - **Consequence, measured in both directions on one command** (`cd frontend && pnpm exec playwright test tests/e2e/_phase52-mid-drag-capture.spec.ts --project=chromium --reporter=list`): **before** `1 passed` (TasksTab mid-drag) `· 1 failed` (EngagementKanbanDialog, already red); **after** `1 failed` — the Tasks tab click times out because the degraded state suppresses that region by contract (UI-SPEC §3). So the flip is attributable and expected, not an unexplained red.
+  - **The fix is DATA, not code.** Repair the seed row. **Do not** weaken the degraded state to keep a screenshot-capture harness green — that spec is self-labelled "NOT a regression spec", and its second test was already red before Phase 93 touched anything.
+  - **Why no grep found it:** the coupling is by **data**, not by filename or symbol — the spec's `FIXTURE_ID` merely defaults to that uuid. `GATE-STANDARD.md` C9b is an identifier sweep and is structurally blind to this class; it surfaced only because `93-12` ran the shipped suite.
+  - **Owner: Phase 102 — Staging Data & Debt Tail**, with the other seed work (`SEED-DELEG-01`).
+
+### CARRY — v9.0 carry-forward (see `.planning/STATE.md` → "v9.0 Carried Forward")
+
+- [ ] **CARRY-01** _(deliberately NOT flipped at Phase 92's close-out: `92-VERIFICATION.md` records **✗ BLOCKED (operator)** — the `E2ECRED-01` credential rotation is an operator act that has not been performed. `RULING-P92-49` accepted the phase **with this park open**. Phase 101 consumes it.)_: P88-02 — credential rotation completed (operator-only act; gates CARRY-02 and CARRY-05).
+- [ ] **CARRY-02**: CI-01 — E2E suite green against the deployed app, or honestly quarantined with a tracked reason per spec.
+- [ ] **CARRY-03**: CI-02 — integration suite green; decision D-3 resolved.
+- [ ] **CARRY-04**: ORCH-2 — at least one a11y spec **proven to PASS**. No a11y spec has ever been shown green; the debt was closed as annotated skips.
+- [ ] **CARRY-05**: CI-05 — `test-rtl-smokes` promoted to a required branch-protection context.
+- [ ] **CARRY-06** _(OPEN: staging window passed, but the two-clock Playwright oracle could not launch because process census is sandbox-denied; re-run 2026-09-12)_: VISUAL-DEBT-01 — the frozen-clock vs server-`NOW()` divergence removed so dashboard snapshots stop rotting daily. Regenerating baselines is explicitly _not_ a fix.
+- [x] **CARRY-07** _(CLOSED 2026-09-12; fresh runner build followed by `PASS budget`, 120.68 kB against 124 KB)_: Entry-chunk budget lowered back toward 476 KB (raised to 500 KB at v9.0 close; actual 493.71 kB gzipped). The growth is app code, not vendor.
+- [x] **CARRY-08** _(CLOSED 2026-09-12; `PASS quick-summaries`)_: The 3 data-entry quick tasks (`260530-w2/w3/w4`) are completed or formally retired with SUMMARYs.
+- [ ] **CARRY-09**: `main` is green on the currently-red non-required suites — E2E, integration, Accessibility (RTL + WCAG AA), RTL Portal + Component Smokes, RTL + Responsive, Docker Build — or each is honestly quarantined.
+- [ ] **CARRY-10**: Both Playwright configurations (`playwright.config.ts` and `frontend/playwright.config.ts`) leave zero attributed dev-stack sessions after normal, interrupted, and cleanup-refusal paths. Repeated root and frontend suite probes show no leaked session or descriptor growth; unavailable cleanup instrumentation fails the invoking command rather than reporting an empty success. Phase 99 owns the root-config slice needed by its rendered gates; Phase 101 owns the frontend-config remainder and the cross-config regression proof.
+
+### ENGREAD — the top-level /engagements read path fails with rows present
+
+> Filed 2026-08-17 from Phase 97 execution (`RULING-P97-13`), after DISAMBIGUATING the two defects
+> that hide under one "data precondition unmet" label. This is **(b) rows exist but the list does
+> not render them**, NOT (a) an empty fixture — the two have opposite remedies and the wrong one
+> would have seeded data over a real bug.
+
+- [ ] **ENGREAD-01** _(NOT-REPRODUCED 2026-09-12; preserves 102-05's `NOT-REPRODUCED-AT-RENDER` verdict; closing rerun infrastructure-blocked)_: **`/engagements` renders the shared query-ERROR state while engagement rows
+      exist.** Derived, not inferred:
+  - **Rows exist.** Live staging (`zkrcjzdemdmwhearhfgg`), 2026-08-17:
+    `dossiers WHERE type='engagement'` = **5**, none deleted; `engagement_dossiers` = **3**.
+    Independently predicted from P96's COUNT-02 measurement (5 vs 3) BEFORE querying — the numbers
+    match exactly.
+
+  - **The UI shows an ERROR, not an empty state.** The rendered string "Unable to load data" is
+    the shared P93 error title at `frontend/src/i18n/en/common.json:246`, used by
+    `QueryErrorBoundary`/`DossierErrorBoundary` — the empty state is a different component.
+
+  - **RLS is EXCLUDED as the cause by the project's own discriminator:** an RLS denial returns
+    empty 200s here, which renders the EMPTY state. An error state means the request actually
+    failed.
+
+  - **Bounded consequence, stated not hidden:** three Phase 97 observations close **UNABLE TO
+    MEASURE with this cause named**, never as passes — both `97-digests-tab.spec.ts` tests
+    (they enter through `openFirstEngagementWorkspace`) and the `engagements` row of
+    `97-list-create-affordances.spec.ts`. **Criterion 3 therefore closes as behaviourally proven
+    on 7 of the 8 list pages plus its positive control** — a 7-of-8 STATED is worth more than an
+    8-of-8 IMPLIED.
+
+  - **NOT repaired in Phase 97**: the read path is outside every P97 plan's `files_modified`, and
+    repairing an unowned read path requires a further ruling.
+
+  - **Owner: Phase 102 — Staging Data & Debt Tail.** Placed there rather than with P100's RLS work
+    because the RLS branch is excluded above; if execution finds the cause IS authorization after
+    all, the row moves to P100 and says so.
+
+  - **Dated note, 2026-08-18 (`RULING-P98A2-05` E2):** Phase 98's criterion-1 ISO-week leg is
+    ALSO blocked behind this row — `WEEK OF 2026-W27` has no rendered surface while `/engagements`
+    errors. P98 lands the localized week-header REPAIR (98-05, source + unit oracle) and closes
+    the rendered leg UNDRIVEN, scoped and stated. **Phase 102 re-verifies the rendered week header
+    when the read path is repaired** — that re-verification is part of this row's closure, not
+    optional.
+
+### SPINNER-A11Y — text-free loading states are invisible to screen readers and to probes
+
+- [ ] **SPINNER-A11Y-01**: **Two settings panes render a spinner with NO accessible text while
+      loading.** `frontend/src/components/settings/NotificationPreferences.tsx:149-155` returns a
+      bare `<Loader2 className="animate-spin"/>` wrapper; `EmailDigestSettings.tsx:245` does the
+      same. `CalendarSyncSettings` renders text-bearing chrome around its spinner and is the
+      contrast case.
+  - **Measured on the live stack** (Phase 97, polling every 50 ms): first non-empty content at
+    `/settings/notifications` **968 ms**, `/settings/email-digest` **648 ms**, versus the passing
+    sibling `/settings/calendar-sync` **344 ms**.
+
+  - **Why it is a real defect and not just a test nuisance:** a spinner with no accessible text is
+    invisible to a screen reader exactly as it was invisible to the oracle's `innerText` probe.
+    The test failure was the symptom that surfaced it.
+
+  - **Phase 97 did NOT fix it** — the oracle was corrected instead (`RULING-P97-13`: the criterion
+    was TRUE and the oracle was sampling load timing while claiming to measure rendering).
+
+  - **Owner: Phase 99 — Arabic & Accessibility** (a11y backlog).
+
+### PARALLEL-TRUTH — copies of a truth that already has a canonical home
+
+> Filed 2026-08-17 by Phase 97's closing plan, as `97-NAV04-DECISIONS.md` §6 routes it ("filed by
+> `97-12`"). Phase 97 collapsed the dossier-type list to ONE literal set plus ONE spread-derived
+> card set behind a compile-time anti-merge guard (`RULING-P97-04` + `-05`). The residue below is
+> what `97-04`'s re-derivation found OUTSIDE its own seven-site table — **so the class was six
+> copies, not nine, and `97-PARALLEL-TRUTH-CLASS.md`'s register of six undercounts by three.**
+
+- [ ] **PARALLEL-TRUTH-01** _(OPEN: exact vitest leaf could not start because Vite attempted to write through the harness-owned `node_modules` symlink; re-run 2026-09-12)_: **Three same-class copies of the dossier-type list remain, each in a
+      file no Phase 97 plan owned.** Re-point each to the canonical `DOSSIER_TYPES` /
+      `DOSSIER_CARD_TYPES` in `frontend/src/lib/dossier-type-guards.ts`:
+  - `frontend/src/components/dossier/DossierTypeGuide.tsx:380` — `const types: DossierType[] = [ …7… ]`,
+    the DB-7 **in a FOURTH distinct order**.
+
+  - `frontend/src/components/dossier/wizard/hooks/useDraftMigration.ts:14` —
+    `VALID_TYPES: readonly string[] = [ …7… ]`, the DB-7.
+
+  - `frontend/src/components/keyboard-shortcuts/CommandPalette.tsx:305` —
+    `DOSSIER_TYPE_ORDER: string[] = [ …8… ]`, the CARD-8; its own comment says "all 8 dossier types".
+    Explicitly NOT folded into `97-10` Task 2, whose action forbids unrelated palette edits.
+
+  - **Deliberately NOT filed:** `pages/dossiers/DossierListPage.tsx:904`
+    `entityTypes={['dossier', …the 7]}` is a search-entity vocabulary carrying a member the dossier
+    type set does not have — legitimately its own set, not a copy.
+
+  - **Why they do not disagree today, and why that is not reassurance:** they agree by AUTHORSHIP,
+    not by construction. Nothing prevents the next edit from making them disagree and nothing
+    announces it when they do.
+
+  - **Owner: Phase 102 — Staging Data & Debt Tail.** The phase assignment is the closing plan's
+    judgement — `97-NAV04-DECISIONS.md` §6 named the filer, not an owning phase — placed beside the
+    other class-residue rows (`GATESTD-*`, `WRITER-ROUTE-01`, `INSERT-SYNC-01`).
+
+### ROUTE-ORPHAN — 14 routes with no inbound link, no decision and no owner
+
+- [x] **ROUTE-ORPHAN-01** _(CLOSED 2026-09-12; `PASS dispositions`)_: **Fourteen routes have ZERO inbound links, no decision row anywhere, and no owning phase.** Filed 2026-08-17 from Phase 97 execution (`RULING-P97-20`), after the independent verifier forced the derivation the phase had not run.
+  - **The full population, derived not inherited:** `scripts/inbound-link-classify.mjs` run **UNRESTRICTED** reports **186 routes, 95 with zero inbound links**. Phase 97 had only ever run it with `--paths` pinned to its 9 inherited candidates. The 95 reproduces the independent verifier's own count exactly — two seats, same population, same number.
+  - **76 of the 95 dissolve with a derived reason**, not an assumption: **68** are param routes or their children reached by COMPUTED paths — the instrument's own declared blind spot, verified by mechanism at `DossierShell.tsx:250`, `DossierTabNav.tsx:75`, `ProgressiveEmptyState.tsx:272` (template-literal targets built from `getDossierRouteSegment`); **3** settings children reachable through the callback-driven settings nav (NAV-02's own subjects); **2** deliberately-kept demos; `/admin` index redirect; `/reset-password` (external email entry); `/admin/preview-layouts` (`PREVIEW-HOLLOW-01`).
+  - **5 more already have a disposition elsewhere** — `/events` and `/word-assistant` (`DEAD-07`), `/custom-dashboard` (`DEAD-06`), `/tasks/queue` (`TRUST-04`/`DEAD-02`), and `/dashboard/project-management` (recorded at `REQUIREMENTS.md:16` as **an intentional redirect**, out of scope). Each was checked for a REAL OWNING ROW, not a mention — a mention is not an owner.
+  - **THE 14 THAT REMAIN, every one named:** `/contacts`, `/countries`, `/organizations`, `/persons`, `/working-groups`, `/data-library`, `/geographic-visualization`, `/stakeholder-influence`, `/workflow-automation`, `/tasks/escalations`, `/my-work/waiting`, `/reports/scheduled`, `/help/commitments`, `/intake/queue`.
+  - **NOT decided in Phase 97, deliberately.** Fourteen product decisions about what a route is for are not an orchestrator's to invent, and guessing fourteen dispositions would have been worse than reporting fourteen unknowns. **A zero-inbound route is NOT thereby unreachable** — the instrument's count is a FLOOR for absence, and several of these are plausibly reached by forms it cannot see.
+  - **Owner: Phase 102 — Staging Data & Debt Tail**, on evidence rather than convenience: this is a debt-tail accounting task (classify, then decide or delete), the same shape as the other rows P102 already holds, and it needs no RLS work (P100), no copy work (P98) and no CI work (P101).
+
+### MONITORING-GUARD — an unguarded route presented as an Administration peer
+
+- [ ] **MONITORING-GUARD-01**: **`/monitoring` sits in the `isAdmin`-gated Administration nav
+      group beside two siblings that BOTH carry route-level guards, and has none.** Found
+      2026-08-17 by a cross-model probe during Phase 97 execution; filed by `RULING-P97-18`.
+  - **Measured, with a control:** `routes/_protected/admin/approvals.tsx` → `requireAdmin` 2 /
+    `beforeLoad` 1; `routes/_protected/admin/ai-usage.tsx` → 2 / 2;
+    `routes/_protected/monitoring.tsx` → **0 / 0**. Control: **9** route files under
+    `routes/_protected/` do use `requireAdmin`, so the zero is a measurement, not a failed sweep.
+
+  - **THE FINDING IS NOT THAT PHASE 97 OPENED A DOOR.** The route was unguarded before and
+    reachable by URL. **Phase 97 changed its CONTEXT**: it placed an unguarded route into an
+    admin-gated group, so **group membership now implies a guarantee the route does not honour.**
+
+  - **Why nobody caught it in-phase:** the decision table exercised that destination **only as an
+    admin** (row 8, "same role as row 5"), so the property whose absence this describes was never
+    tested. Every P97 sweep hunted for things UNREACHABLE; none asked what became MORE reachable.
+
+  - **RESOLVABLE IN EITHER DIRECTION — both are named so P100 does not inherit the assumption
+    that guarding is the only answer:**
+    1. **Guard the route** (`beforeLoad: requireAdmin`, matching its two siblings), or
+    2. **Stop presenting it as an Administration peer** (move or ungroup the nav entry).
+       Which is correct is a **product question about who `/monitoring` is for**, not a technical one.
+
+  - **NOT fixed in Phase 97** — outside every plan's `files_modified`, and the choice above is not
+    an orchestrator's to make.
+
+  - **Owner: Phase 100 — RLS & Residue.**
+
+### PREVIEW-HOLLOW — an admin route nobody can reach, configuring a table nobody reads
+
+- [x] **PREVIEW-HOLLOW-01** _(CLOSED 2026-09-12; `PASS preview-dropped`)_: **`/admin/preview-layouts` is BOTH unreachable AND hollow — two
+      findings, one route.** Filed 2026-08-17 from Phase 97 execution by `RULING-P97-14`, which
+      ASSIGNED this owner because none existed: `preview` appears **0 times** in `ROADMAP.md` and
+      **0 times** in this register (control: `delegations` returns 6 and 4 on the same instrument),
+      and no phase, row or backlog item claimed the route.
+  - **Finding 1 — unreachable.** Zero inbound links in the live nav; Phase 97 recorded it
+    `OWNED-ELSEWHERE-UNTOUCHED` in `97-NAV04-DECISIONS.md` rather than adding a nav entry.
+
+  - **Finding 2 — hollow.** `entity_preview_layouts` is read and written **only** by
+    `usePreviewLayouts.ts`, whose **sole importer is the admin route itself** (verified: one
+    importer). Its declared consumers — hover previews, search results, embedded references —
+    never read it. The feature configures nothing.
+
+  - **NOT DELETED IN PHASE 97, and the reason is inherited rather than re-derived:** a route-only
+    deletion would leave an **ORPHAN TABLE with no code trace of its purpose**, which is strictly
+    worse than today. The finishing migration was out of Phase 97 scope, so the route stands.
+
+  - **Owner: Phase 102 — Staging Data & Debt Tail**, with the other debt-tail rows.
+
+### LIVE — v7.0 live verification (HARDWARE-GATED, unchanged from v9.0)
+
+- [ ] **LIVE-01**: vLLM (Gemma-4-12B) + TEI (BGE-M3) serving with passing health checks, reachable by the agent-runtime (:4100).
+- [ ] **LIVE-02**: The v7.0 eval harness runs against live inference and meets its CI thresholds (EVAL-01/02/03).
+- [ ] **LIVE-03**: The copilot reads and HITL-writes under the caller's JWT against the live stack, with the clearance ceiling verified end-to-end (an L1 caller's results a strict subset of an L3 caller's).
+
+> **LIVE is gated on an undecided on-prem GPU host.** It blocked v9.0 for 40 days without starting.
+> Plan-phase must confirm a target environment before committing, or the group should be parked.
+
+### E2ECRED — E2E credential provisioning
+
+> Filed separately from CARRY-01/CARRY-05 on purpose: those rotate credentials that EXIST. This is
+> six keys that are **absent**, which is why rotating the two that exist would not fix it.
+
+- [ ] **E2ECRED-01**: **The Playwright `setup` project cannot authenticate, so every dependent E2E
+      project is blocked — not just Phase 92's specs.** `tests/e2e/support/auth.setup.ts:17-22` throws
+      unless all six of `E2E_ADMIN_EMAIL`, `E2E_ADMIN_PASSWORD`, `E2E_ANALYST_EMAIL`,
+      `E2E_ANALYST_PASSWORD`, `E2E_INTAKE_EMAIL`, `E2E_INTAKE_PASSWORD` are set. Verified 2026-08-15
+      (Phase 92 planning): `.env.test` carries **none** of them — it has only
+      `PHASE_52_FIXTURE_ENGAGEMENT_ID`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`,
+      `SUPABASE_URL`, `TEST_USER_EMAIL`, `TEST_USER_PASSWORD` (key names only; no value was read).
+      `playwright.config.ts:36` gives `chromium-en` `dependencies: ['setup']`, and `--grep` does not
+      exempt a dependency project, so **any** non-`--no-deps` run of a `chromium-en` spec fails at
+      setup with `3 failed / N did not run` before reaching its subject.
+      The `--no-deps` escape is **degraded, and possibly also closed — this is measured only in
+      part.** The saved state at `tests/e2e/support/storage/admin.json` holds an ACCESS token with
+      `expires_at: 1780606280` = **2026-06-04**, 72 days stale. What was NOT measured: the same file
+      holds a `refresh_token`, and Supabase refresh tokens carry no absolute expiry by default, so a
+      refresh at app load may still mint a valid session. **The accurate claim is "the access token
+      is 72 days stale", not "the stored session is dead"** — the latter was an overclaim, corrected
+      2026-08-15 per `RULING-P92-39`, and no plan or requirement should be built on it. Settling it
+      takes one run of a `--no-deps` spec against staging.
+      Either way the recovery the specs themselves prescribe ("re-run the `setup` project first")
+      is circular, because that is the route the six missing keys close.
+      **Suspected contributor to `main` being chronically red on E2E** — the condition has held since
+      at least June, which predates every Phase 92 change.
+      Phase 92 does NOT fix this. It routes around it for one spec only (92-01 T2 authenticates
+      inline from `TEST_USER_EMAIL`/`TEST_USER_PASSWORD`, preserving D-15 so the phase's before/after
+      evidence does not wait on an operator act — `RULING-P92-36`). Routing around it is not fixing
+      it: the other ~40 specs and all three roles remain blocked.
+      Scope if taken up: provision the three staging accounts (admin / analyst / intake), populate
+      the six keys in `.env.test` **and** the GitHub Actions secret store, then regenerate the
+      storage state and confirm a login smoke passes. Evidence trail:
+      `.tickmarkr/overseer/PARK-P92-R3.md`, `.tickmarkr/overseer/P92-PLAN-CHECK-4.md` (F2, F3).
+
+## Deferred / Not in v1
+
+### Filed from Phase 92 planning, 2026-08-15
+
+- **Session eviction (`scope: 'others'`) does not exist in this product — and a control has been
+  claiming it does.** `DataPrivacySettingsSection.tsx` shipped a button labelled en
+  "Sign Out All Other Sessions" / ar "تسجيل الخروج من جميع الجلسات الأخرى" whose handler
+  (`:164-178`) calls `supabase.auth.signOut({ scope: 'global' })` — which ends **every** session
+  including the caller's. Phase 92 relabels it to match the behaviour (`RULING-P92-11`), which is
+  correct and removes nothing: **the advertised capability never worked.**
+  But the label implies a real user need — _evict a session I believe is compromised while keeping
+  my own_ — and after the relabel the product will have **no** way to do that. Implementing it is
+  **new work**, not a correctness fix, so it is out of scope for v10.0 and is filed here rather than
+  left as a sentence inside a phase decision nobody reads again.
+  Scope if taken up: `supabase.auth.signOut({ scope: 'others' })`, a session list so the user can see
+  what they are evicting, and copy that distinguishes the three scopes (`local` / `others` /
+  `global`). Evidence trail: `.tickmarkr/overseer/PARK-P92-R2.md` → PARK-R2-1 (a).
+
+- Entry-bundle _diagnosis_ beyond the diet (which specific commits added 17.71 kB) — CARRY-07 covers the outcome, not the archaeology.
+- Non-audited surfaces: nothing outside the 190 routes the audit covered is in scope.
 
 ## Traceability
 
-Which phases cover which requirements. Updated during roadmap creation.
+Every v1 requirement maps to exactly one phase. **This table is the single source of truth for the
+requirement count — derive it, do not restate it elsewhere.**
 
-| Requirement | Phase    | Status   |
-| ----------- | -------- | -------- |
-| FEAT-01     | Phase 86 | Complete |
-| FEAT-02     | Phase 86 | Complete |
-| FEAT-03     | Phase 86 | Complete |
-| FEAT-04     | Phase 86 | Complete |
-| AFF-01      | Phase 87 | Pending  |
-| AFF-02      | Phase 87 | Pending  |
-| AFF-03      | Phase 87 | Complete |
-| AFF-04      | Phase 87 | Complete |
-| SEC-01      | Phase 88 | Pending  |
-| SEC-02      | Phase 88 | Pending  |
-| CI-01       | Phase 89 | Pending  |
-| CI-02       | Phase 89 | Pending  |
-| CI-03       | Phase 89 | Pending  |
-| CI-04       | Phase 89 | Pending  |
-| CI-05       | Phase 89 | Pending  |
-| CORS-01     | Phase 90 | Pending  |
-| CORS-02     | Phase 90 | Pending  |
-| CORS-03     | Phase 90 | Pending  |
-| LIVE-01     | Phase 91 | Pending  |
-| LIVE-02     | Phase 91 | Pending  |
-| LIVE-03     | Phase 91 | Pending  |
+```bash
 
-**Coverage:**
+# total v1 requirements (both derivations agree)
 
-- v1 requirements: 21 total
-- Mapped to phases: 21 ✓
-- Unmapped: 0
+grep -cE '^- \[[ x]\] \*\*[A-Z]+-[0-9]+\*\*' .planning/REQUIREMENTS.md   # requirement bullets
+grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # traceability rows
+```
 
----
+0 orphaned, 0 duplicated.
 
-_Requirements defined: 2026-07-06_
-_Last updated: 2026-07-06 — roadmap created; all 21 v1 requirements mapped to Phases 86-91_
+> **Why a command and not a number** (`RULING-P92-19`, 2026-08-15): the count was previously written
+> out in three live documents and went stale the moment `CLIENTSEC-01` was added — it read 58 when the
+> file held 59. This is the third instance of that class in one session: `ROADMAP.md:285`'s "133",
+> `AR-04`'s 1683-vs-1716, and this. Copies of a number are the defect; the fix is one place plus a
+> derivation, not three careful edits.
+
+<!-- prettier-ignore -->
+| Requirement | Phase | Status |
+| ----------- | ----- | ------ |
+| AUTH-01 | Phase 92 — Session Integrity & Edge-Function Auth | Complete |
+| AUTH-02 | Phase 92 — Session Integrity & Edge-Function Auth | Complete |
+| AUTH-03 | Phase 92 — Session Integrity & Edge-Function Auth | Complete |
+| AUTH-04 | Phase 92 — Session Integrity & Edge-Function Auth | Complete (PARTIAL — error half only) |
+| AUTH-05 | Phase 92 — Session Integrity & Edge-Function Auth | Complete (PARTIAL — click never executed) |
+| TRUST-01 | Phase 93 — Failure Visibility | Complete |
+| TRUST-02 | Phase 93 — Failure Visibility | Complete |
+| TRUST-03 | Phase 93 — Failure Visibility | Complete (report leg was deferred → closed by P94 `ARMA-01`) |
+| TRUST-04 | Phase 93 — Failure Visibility | Complete (PARTIAL — leak half = SC5 partial) |
+| WRITE-01 | Phase 94 — Write Paths | Complete (FOR PUBLISH — the parse class `EDGEPATH-01` is NOT closed) |
+| WRITE-02 | Phase 94 — Write Paths | Complete |
+| WRITE-03 | Phase 94 — Write Paths | Complete |
+| WRITE-04 | Phase 94 — Write Paths | Complete |
+| AUDIT-DROP-01 | Phase 94 — Write Paths | Complete |
+| AUDIT-ZERO-01 | Phase 94 — Write Paths | Complete |
+| WRITE-05 | Phase 94 — Write Paths | Complete |
+| WRITE-06 | Phase 94 — Write Paths | Complete |
+| DEAD-01 | Phase 95 — Routes That Don't Render | Complete |
+| DEAD-02 | Phase 95 — Routes That Don't Render | Complete |
+| DEAD-03 | Phase 95 — Routes That Don't Render | Complete |
+| DEAD-04 | Phase 95 — Routes That Don't Render | Complete |
+| DEAD-05 | Phase 96 — Real Numbers | Complete |
+| DEAD-06 | Phase 96 — Real Numbers | Complete |
+| DEAD-07 | Phase 96 — Real Numbers | Complete (a11y/digit remedies ruled `RULING-P96-04`; /calendar visual baseline = OPERATOR park) |
+| DEAD-08 | Phase 95 — Routes That Don't Render | Complete |
+| DEAD-09 | Phase 95 — Routes That Don't Render | Complete |
+| COUNT-01 | Phase 96 — Real Numbers | Complete (SC4 measured incl. kanban leg, seams stated) |
+| COUNT-02 | Phase 96 — Real Numbers | Complete (incl. `RULING-P96-03` sixth-migration addendum) |
+| COUNT-03 | Phase 96 — Real Numbers | Complete (BOUNDED — `WRITER-ROUTE-01` + `INSERT-SYNC-01` residues → P102, `RULING-P96-05`) |
+| COUNT-04 | Phase 96 — Real Numbers | Complete (refusal kept per `RULING-P96-01`; winning-notion table in 96-02) |
+| TRIGSWEEP-01 | Phase 96 — Real Numbers | Complete (behaviour-derived instrument, both-direction controls; count is a FLOOR) |
+| SANDBOX-500-01 | Phase 96 — Real Numbers | Complete (42P17 recursion fixed; sandbox answers 200) |
+| NAV-01 | Phase 97 — Reachability | Complete (BOUNDED — EO type-guide popover deliberately WITHHELD pending 5 `dossier:typeDescription`/`typeGuide` keys → P98; `PARALLEL-TRUTH-01` residue 3 sites → P102; `tests/e2e/93-dossier-list-counts-error.spec.ts` left RED at `Expected: 7 / Received: 8` by the authorized CARD-8 widening, UNOWNED at close; observed ADMIN-only. `97-CLOSING-DERIVATION.md` §1, §4 B2/B10, §5) |
+| NAV-02 | Phase 97 — Reachability | Complete (BOUNDED — ONE shared predicate, both viewports observed 8/8; two settings panes still render a text-free spinner for 0.6–1.0 s → `SPINNER-A11Y-01`/P99, `RULING-P97-13` §1; observed ADMIN-only. `97-CLOSING-DERIVATION.md` §4 B7, §5) |
+| NAV-03 | Phase 97 — Reachability | Complete (BOUNDED — create affordance behaviourally proven on 7 of 8 list pages plus its positive control, a 7-of-8 STATED not an 8-of-8 implied; the Digests-tab oracle is UNABLE TO MEASURE on `ENGREAD-01`/P102 and the tab entry is proven only by a supplementary probe, `RULING-P97-13` §2. `97-CLOSING-DERIVATION.md` §4 B1, §4c) |
+| NAV-04 | Phase 97 — Reachability | Complete (BOUNDED — 9 decisions recorded, 3 nav entries added, ZERO routes deleted as both conditional triggers were REFUTED, 2 dead modules deleted with the zero-importer derivation re-run against a live control; `RULING-P97-14` resolved the two parks. Residues: 2 `NOT-CHECKED` render rows, `/admin/` index has no true term in the closed vocabulary, the hidden-from-non-admins negative is UNABLE TO MEASURE → `E2ECRED-01`/P101, `PREVIEW-HOLLOW-01` → P102 UNFILED at close, `ROOTALIAS-01` note → P101 per `RULING-P97-16` §4. `97-CLOSING-DERIVATION.md` §3, §4 B3/B5/B6/B8/B14) |
+| COPY-01 | Phase 98 — Copy Truth | Complete (BOUNDED — criterion 1 does NOT read as whole. The dynamic-prefix mask class is a KNOWN, MEASURED, UNREPAIRED residue — 24 unresolved prefixes / 19 masking a raw value at `13d5094ea`, re-derived unchanged at close → `AR-04b`/P99, and the instrument of record is now COMMITTED at `scripts/partA_maskfinder.py` because BOTH of P99’s acceptance greps are blind to variable-second-arg sites BY CONSTRUCTION (`RULING-P98A2-12`, `-15`). The RENDERED ISO-week leg is NOT CONSTRUCTED — `/engagements` mounts no week-grouped list → `ENGREAD-01`/P102; it closes at source+unit only. 39 text-position members (22 Part A + 17 Part B) were triaged by READING, handed off, and handed off to NO OWNER — **the phase weakest point**; 24 prop-position matches were ruled OUT on a correct rule with only 5 receivers opened. Rendered-verified: `SignalRow` source types and `WaitingQueue` status+priority (en+ar). NOT rendered-verified, resolution-only: `KanbanTaskCard`, `ActivityTimelineSection`, `AssignmentDetailsModal`, all 6 Part-B sites. Observed ADMIN-only. `98-CLOSING-DERIVATION.md` §3, §4c, §5) |
+| COPY-02 | Phase 98 — Copy Truth | Complete (BOUNDED — closes on the named instances + the four RULED class populations (`entityLinks` 97 leaves × 2 locales with parity asserted exact, `calendar.recurrence` 43 sites routed with conservation proven against the TRUE pre-fix blob, `calendar.months` 1, `common.*` ×7) + no raw key on oracle-driven surfaces with the EXTENDED detector. THREE surfaces are UNDRIVEN and close on census + a named scope line per D-24: intake-ticket detail (staging holds ZERO tickets, instrument-controlled), AI-suggestion accept/reject (needs the AnythingLLM backend), `RecurrencePatternEditor` (no spec drives it). The dot-form long tail is ORDER HUNDREDS — 306/353 by two instruments, deliberately unreconciled, nothing frozen → `AR-04b`/P99, and "no raw key ever" is NOT established for it. The nested-`common` inversion renders BARE UNDOTTED tokens that every dotted-token detector in this phase is blind to BY MECHANISM (37 sites / 27 distinct) → `AR-04b` with MANDATORY SEQUENCING, exception encoded BEFORE any dot→colon conversion (`RULING-P98A2-10`, `-11`). Every copy02 green before `78c5ccefe` was produced by a detector that could not see the `common.` shape. Observed ADMIN-only, en+ar. `98-CLOSING-DERIVATION.md` §3, §4c, §6) |
+| COPY-03 | Phase 98 — Copy Truth | Complete (the phase’s one `[V]` item, and it closes IN FULL on rendered state — CDP-forced digest-empty, CDP-forced digest-error and route-fulfilled VIP-empty, en+ar, 3/3. `RULING-P98A2-13` B2’s stability conditions were NOT recorded as discharged by 98-06 and are DISCHARGED HERE: two consecutive full-file runs RC 0 plus one isolated run RC 0, with the `ar` leg proven to reach the forced-error state. Population note carried: the AR defect-term pattern matches 3 of the 4 pairs — `vip.empty.body` carried the seed instruction SEMANTICALLY, not lexically, and was repaired on key parity, so a "4 AR hits" claim would have been a correct instrument returning a wrong number. Observed ADMIN-only. `98-CLOSING-DERIVATION.md` §3) |
+| COPY-04 | Phase 98 — Copy Truth | Complete (BOUNDED — the i18n-JSON value clauses close IN FULL and PROVEN: exclamation floor exactly **1 EN / 1 AR** with the survivor proven to be the `validation:password.addSpecial` charset carve-out (a deliberately NON-ZERO floor, asserted together with its carve-out so an over-eager sweep reds); first person 3 remaining candidates, every one verdicted (2 USER-speaker OUT, 1 domain term → P99), zero product-speaker; retired term 1 EN, which IS the RULED `validation.json` carve-out whose own gate asserts its SURVIVAL — **the reason is cited, not implied**: repairing it would have manufactured a deliberate ruling collision, and the cost is stated (one sentence now reads `Deadline is required` through `commitments:` and the retired form through `validation:`). Sentence case closes at the D-20 bound as amended by `RULING-P98A2-20`: a capture is a SETTLED render — 389 raw over 8 surfaces → 95 matched → 3 flagged → 3 repaired, 0 KEEP — with per-surface reachability stated (6 VISITED / 1 REDIRECTED / 1 ERROR-CHROME / 0 NOT-CONSTRUCTED) and locale ASSERTED, never inherited. Every prior `@case` green in this phase is SCOPED to the synchronous nav shell, not wholesale-invalidated. **PARTIAL REPAIR OF ONE COMPONENT:** the admin-only oracle mounts `IntakeRoleEmptyState`’s `reviewer` variant and leaves its `requester`/`assignee`/`viewer` siblings Title Case — the sibling count is UNDER-DETERMINED and the PREDICATE is what is recorded (12 under the oracle’s own predicate, 23 under a visibly over-inclusive one) → `COPY-09`/P102. The `@values` legs gate on `bundleValues.has(text)` and cannot see hardcoded literals BY CONSTRUCTION — their greens are claims about bundle values only. Out and named: the ~4.5k tail, the 41 DECLARED non-flags, the class-2 literals (`HelpPage:166`, `useBriefingBooks:164-165`, `PositionTrackerCard:93`) → `COPY-09`/P102; the retired term also ships from FIVE edge functions, `pdf-generate` writing it into a document the user KEEPS → `EDGECOPY-01`/P102 whose closure requires repair + DEPLOY + artifact verification. `@case` and the exclamation leg are `en`-ONLY, stated. Observed ADMIN-only. `98-CLOSING-DERIVATION.md` §3, §4a, §4c, §4f) |
+| COPY-05 | Phase 98 — Copy Truth | Complete (BOUNDED — 4/4 on the rendered oracle, en+ar: `/activity?lng=ar` renders `منذ 4 أشهر` read out of the feed’s OWN cells while the `en` leg finds no Arabic token anywhere in `main`, which is what makes the `ar` green discriminating rather than ambient chrome; `intake:fillMock` is absent from the EMITTED bundle with negative, positive and in-block-DCE controls all in ONE post-build run; the lint guard now runs STRICT at 0 burn-down rows / 0 sites, having started at 60 rows excusing 97 sites. Bounds: `MMMM yyyy` month-nav headers OUT by D-25 (their Arabic rides `AR-02`/P99); SLA `T±N` tokens and labelled counters OUT by `RULING-P98A2-17` §1(b)/(c); SIX named permanent guard exemptions, one of them a DEAD-CODE exemption carrying a stated VOID CONDITION — re-verified at close, still zero importers against a live control of 9 — which is NOT a correctness claim; hardcoded full-word relative phrases in code are covered by NOTHING and two live members are named (`NotificationList.tsx:125-126`, `NotificationPreviewTimeline.tsx:306`); 2 edge functions ship now-relative bilingual copy → `EDGECOPY-01`/P102; `.map` files are excluded from the bundle oracle with the exclusion STATED → `CLIENTSEC-02`/P100. Observed ADMIN-only. `98-CLOSING-DERIVATION.md` §3, §4c, §6) |
+| COPY-06 | Phase 98 — Copy Truth | Complete (closes IN FULL on a REAL mutation in BOTH locales — a kanban TASK stage move raises `Changes saved` / `تم حفظ التغييرات`, the `ar` leg being the designated negative control; 2/2 observed by 98-09 ITSELF at close, not inherited. Generic-but-localized is the RULED end state and per-mutation copy is explicitly NOT required. **This row was PRE-FLIPPED by `c71f42515` — the lane that performed the repair — before any closing derivation ran; it is re-derived here from rendered evidence exactly as if it read Open** (`98-CLOSING-DERIVATION.md` §0). Named, not repaired: the same English sentence survives as a LATENT bundle value at `loading:statusMessage.completed`, localized in both locales with ZERO consumers against a control of 1 — no P98 instrument searches the BUNDLE for the string, only the CALL SITE for the literal. Observed ADMIN-only. `98-CLOSING-DERIVATION.md` §0, §3, §4g) |
+| COPY-07 | Phase 98 — Copy Truth | Complete (closes on the RENDERED stats card in BOTH locales — `النسبة من إجمالي الملفات النشطة` under `?lng=ar` with NO English residue; 2/2 observed by 98-09 ITSELF at close. The `en` leg PASSES and the spec LABELS it a NON-DISCRIMINATOR — the EN value is byte-identical before and after the repair — so it is never counted as evidence. **This row was PRE-FLIPPED by `116f0fdfb` — the lane that performed the repair — before any closing derivation ran; it is re-derived here from rendered evidence exactly as if it read Open** (`98-CLOSING-DERIVATION.md` §0). Observed ADMIN-only. `98-CLOSING-DERIVATION.md` §0, §3) |
+| COPY-08 | Phase 98 — Copy Truth | Complete (closes on the RENDERED popover in BOTH locales — header, `typeDescription.elected_official` and all four `typeGuide.elected_official.*` sections resolved, exactly 1 `lucide-crown`, 0 `lucide-globe`, `text-primary`; 3/3 observed by 98-09 ITSELF at close. Atomicity is a property of the HISTORY, not a claim: the five keys × 2 locales, the guard deletion and both `elected_official` switch arms landed in ONE commit `e354c8c94`, so no intermediate state printed a raw key or wore the country glyph. **This row was PRE-FLIPPED by `116f0fdfb` — the lane that performed the repair — before any closing derivation ran; it is re-derived here from rendered evidence exactly as if it read Open** (`98-CLOSING-DERIVATION.md` §0). Tracked asymmetry, not a defect: EO is now the ONLY dossier type with a full four-section guide body and the seven siblings stay hollow → `GUIDE-HOLLOW-01`/P102. The `typeGuide.learnMore` silent English default that deleting the guard newly exposes on the EO card is `AR-04a`/P99 — named, not pre-empted. Observed ADMIN-only. `98-CLOSING-DERIVATION.md` §0, §3) |
+| GUIDE-HOLLOW-01 | Phase 102 — Staging Data & Debt Tail | Pending |
+| EDGECOPY-01 | Phase 102 — Staging Data & Debt Tail | Pending |
+| COPY-09 | Phase 102 — Staging Data & Debt Tail | Pending |
+| AR-01 | Phase 99 — Arabic Coverage | Pending |
+| AR-02 | Phase 99 — Arabic Coverage | Pending |
+| AR-03 | Phase 99 — Arabic Coverage | Pending |
+| AR-04 | Phase 99 — Arabic Coverage | Pending |
+| DELEG-01 | Phase 93 — Failure Visibility | Complete (VISIBILITY-ONLY, as scoped) |
+| PIN-2390-01 | Phase 93 — Failure Visibility | Complete |
+| DR-42501 | Phase 93 — Failure Visibility | Complete |
+| AUDIT-42703 | Phase 93 — Failure Visibility | Complete |
+| DATA-01 | Phase 102 — Staging Data & Debt Tail | Pending |
+| DATA-02 | Phase 102 — Staging Data & Debt Tail | Pending |
+| SEED-DELEG-01 | Phase 102 — Staging Data & Debt Tail | Pending |
+| WRITER-ROUTE-01 | Phase 102 — Staging Data & Debt Tail | Pending |
+| INSERT-SYNC-01 | Phase 102 — Staging Data & Debt Tail | Pending |
+| P52FIXTURE-01 | Phase 102 — Staging Data & Debt Tail | Pending |
+| DELEG-02 | Phase 102 — Staging Data & Debt Tail | Pending |
+| DBSEC-01 | Phase 100 — Security Posture (database + client) | Pending |
+| DBSEC-02 | Phase 100 — Security Posture (database + client) | Pending |
+| DBSEC-03 | Phase 100 — Security Posture (database + client) | Pending |
+| DBSEC-04 | Phase 100 — Security Posture (database + client) | Pending |
+| DBSEC-05 | Phase 100 — Security Posture (database + client) | Pending |
+| RLS-AUTHUSERS-01 | Phase 100 — Security Posture (database + client) | Pending |
+| CLIENTSEC-01 | Phase 100 — Security Posture (database + client) | Pending |
+| CLIENTSEC-02 | Phase 100 — Security Posture (database + client) | Pending |
+| E2ECRED-01 | Phase 101 — CI Gates Green | Pending |
+| E2ESTALE-01 | Phase 101 — CI Gates Green | Pending |
+| NOTFOUND-COMPONENT-01 | Phase 95 — Routes That Don't Render | Complete |
+| LEAK-ATTACH-01 | Phase 93 — Failure Visibility | **RESOLVED-IN-PHASE** (`283f9eff`) |
+| ARMA-01 | Phase 94 — Write Paths | Complete |
+| ORACLECAP-01 | Phase 101 — CI Gates Green | Pending |
+| RETENTION-CAST-01 | Phase 95 — Routes That Don't Render | Complete |
+| DR-SUBPATH-01 | Phase 100 — Security Posture (database + client) | Pending |
+| EDGEPATH-01 | Phase 100 — Security Posture (database + client) | Pending |
+| FUNC-GRANT-01 | Phase 100 — Security Posture (database + client) | Pending |
+| GATESTD-01 | Phase 102 — Staging Data & Debt Tail | Pending |
+| GATESTD-02 | Phase 102 — Staging Data & Debt Tail | Pending |
+| GATESTD-03 | Phase 102 — Staging Data & Debt Tail | Pending |
+| GATESTD-04 | Phase 102 — Staging Data & Debt Tail | Pending |
+| GATESTD-05 | Phase 102 — Staging Data & Debt Tail | Pending |
+| ENGREAD-01 | Phase 102 — Staging Data & Debt Tail | Pending |
+| SPINNER-A11Y-01 | Phase 99 — Arabic & Accessibility | Pending |
+| PREVIEW-HOLLOW-01 | Phase 102 — Staging Data & Debt Tail | Pending |
+| MONITORING-GUARD-01 | Phase 100 — RLS & Residue | Pending |
+| ROUTE-ORPHAN-01 | Phase 102 — Staging Data & Debt Tail | Pending |
+| PARALLEL-TRUTH-01 | Phase 102 — Staging Data & Debt Tail | Pending |
+| ROOTALIAS-01 | Phase 101 — CI Gates Green | Pending |
+| CARRY-01 | Phase 92 — Session Integrity & Edge-Function Auth | Pending |
+| CARRY-02 | Phase 101 — CI Gates Green | Pending |
+| CARRY-03 | Phase 101 — CI Gates Green | Pending |
+| CARRY-04 | Phase 101 — CI Gates Green | Pending |
+| CARRY-05 | Phase 101 — CI Gates Green | Pending |
+| CARRY-06 | Phase 102 — Staging Data & Debt Tail | Pending |
+| CARRY-07 | Phase 102 — Staging Data & Debt Tail | Pending |
+| CARRY-08 | Phase 102 — Staging Data & Debt Tail | Pending |
+| CARRY-09 | Phase 101 — CI Gates Green | Pending |
+| CARRY-10 | Phase 101 — CI Gates Green | Pending |
+| LIVE-01 | Phase 104 — v7.0 Live Verification (HARDWARE-GATED) | Pending |
+| LIVE-02 | Phase 104 — v7.0 Live Verification (HARDWARE-GATED) | Pending |
+| LIVE-03 | Phase 104 — v7.0 Live Verification (HARDWARE-GATED) | Pending |
+
+> **LIVE-01/02/03 (Phase 104) are hardware-gated** on an on-prem GPU host that has not been chosen. Phase 104 is terminal and depends on no other phase; the recommendation recorded in the roadmap is to ship v10.0 with **LIVE-01/02/03 carried to v11.0** — i.e. every v1 requirement except those three — if the host is still undecided when Phase 103 closes.

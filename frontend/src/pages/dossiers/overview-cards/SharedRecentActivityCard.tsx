@@ -9,8 +9,7 @@
 import { useTranslation } from 'react-i18next'
 import { useDossierActivityTimeline } from '@/hooks/useDossierActivityTimeline'
 import { Skeleton } from '@/components/ui/skeleton'
-import { formatDistanceToNow } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
+import { formatRelativeTime } from '@/lib/format-date'
 import { CheckCircle2, Clock, AlertCircle, FileText, GitPullRequest } from 'lucide-react'
 
 interface SharedRecentActivityCardProps {
@@ -18,14 +17,11 @@ interface SharedRecentActivityCardProps {
   maxItems?: number
 }
 
-// Defensive relative-time formatter. The edge function emits `activity_timestamp`;
-// guard nullish / invalid values before date-fns so a malformed timestamp renders
-// a neutral em-dash placeholder instead of throwing RangeError: Invalid time value.
-function formatActivityTime(timestamp: string | null | undefined, isRTL: boolean): string {
-  if (timestamp === undefined || timestamp === null || timestamp === '') return '—'
-  const d = new Date(timestamp)
-  if (Number.isNaN(d.getTime())) return '—'
-  return formatDistanceToNow(d, { addSuffix: true, locale: isRTL ? ar : enUS })
+// D-25: the ONE sanctioned relative-time path. `formatRelativeTime` already
+// returns the em-dash placeholder for the nullish / invalid `activity_timestamp`
+// values the edge function can emit, so the former local guard is subsumed.
+function formatActivityTime(timestamp: string | null | undefined): string {
+  return formatRelativeTime(timestamp)
 }
 
 function getActivityIcon(status: string): React.ReactNode {
@@ -76,12 +72,10 @@ export function SharedRecentActivityCard({
     return (
       <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
         <h3 className="text-base font-semibold leading-tight text-start mb-4">
-          {t('overview.recentActivity', { defaultValue: 'Recent Activity' })}
+          {t('overview.recentActivity')}
         </h3>
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('overview.sectionError')}
         </p>
       </div>
     )
@@ -90,12 +84,12 @@ export function SharedRecentActivityCard({
   return (
     <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
       <h3 className="text-base font-semibold leading-tight text-start mb-4">
-        {t('overview.recentActivity', { defaultValue: 'Recent Activity' })}
+        {t('overview.recentActivity')}
       </h3>
 
       {recentActivities.length === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">
-          {t('overview.noRecentActivity', { defaultValue: 'No recent activity' })}
+          {t('overview.noRecentActivity')}
         </p>
       ) : (
         <div className="space-y-2">
@@ -112,7 +106,7 @@ export function SharedRecentActivityCard({
                     : activity.activity_title}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {formatActivityTime(activity.activity_timestamp, isRTL)}
+                  {formatActivityTime(activity.activity_timestamp)}
                 </p>
               </div>
             </div>

@@ -29,6 +29,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
+import { formatRelativeTime } from '@/lib/format-date'
 import type { NotificationCategory, CategoryPreference } from '@/hooks/useNotificationCenter'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -39,7 +40,7 @@ export interface PreviewNotification {
   titleKey: string
   messageKey: string
   priority: 'urgent' | 'high' | 'normal' | 'low'
-  timeAgo: string
+  ageMinutes: number
   isExample: true
 }
 
@@ -85,7 +86,7 @@ const SAMPLE_NOTIFICATIONS: PreviewNotification[] = [
     titleKey: 'preview.examples.mention.title',
     messageKey: 'preview.examples.mention.message',
     priority: 'high',
-    timeAgo: '2m',
+    ageMinutes: 2,
     isExample: true,
   },
   {
@@ -94,7 +95,7 @@ const SAMPLE_NOTIFICATIONS: PreviewNotification[] = [
     titleKey: 'preview.examples.assignment.title',
     messageKey: 'preview.examples.assignment.message',
     priority: 'normal',
-    timeAgo: '15m',
+    ageMinutes: 15,
     isExample: true,
   },
   {
@@ -103,7 +104,7 @@ const SAMPLE_NOTIFICATIONS: PreviewNotification[] = [
     titleKey: 'preview.examples.calendar.title',
     messageKey: 'preview.examples.calendar.message',
     priority: 'normal',
-    timeAgo: '1h',
+    ageMinutes: 60,
     isExample: true,
   },
   {
@@ -112,7 +113,7 @@ const SAMPLE_NOTIFICATIONS: PreviewNotification[] = [
     titleKey: 'preview.examples.deadline.title',
     messageKey: 'preview.examples.deadline.message',
     priority: 'urgent',
-    timeAgo: '2h',
+    ageMinutes: 120,
     isExample: true,
   },
   {
@@ -121,7 +122,7 @@ const SAMPLE_NOTIFICATIONS: PreviewNotification[] = [
     titleKey: 'preview.examples.workflow.title',
     messageKey: 'preview.examples.workflow.message',
     priority: 'normal',
-    timeAgo: '3h',
+    ageMinutes: 180,
     isExample: true,
   },
   {
@@ -130,7 +131,7 @@ const SAMPLE_NOTIFICATIONS: PreviewNotification[] = [
     titleKey: 'preview.examples.signal.title',
     messageKey: 'preview.examples.signal.message',
     priority: 'high',
-    timeAgo: '4h',
+    ageMinutes: 240,
     isExample: true,
   },
 ]
@@ -303,7 +304,7 @@ export function NotificationPreviewTimeline({
           </p>
           <div className="flex items-center gap-2 mt-2">
             <span className="text-xs text-muted-foreground">
-              {notification.timeAgo} {t('preview.ago')}
+              {formatRelativeTime(new Date(Date.now() - notification.ageMinutes * 60_000))}
             </span>
             {notification.priority === 'urgent' && (
               <Badge variant="destructive" className="text-xs">

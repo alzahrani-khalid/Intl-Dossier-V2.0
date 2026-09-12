@@ -9,7 +9,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { formatDayFirstYear } from '@/lib/format-date'
+import { formatDayFirstYear, formatRelativeTime } from '@/lib/format-date'
 import { useNavigate } from '@tanstack/react-router'
 import {
   CheckSquare,
@@ -96,26 +96,9 @@ export function ActivityTimelineItem({
     return formatDayFirstYear(dateStr)
   }
 
-  // Format relative time
-  const formatRelativeTime = (dateStr: string) => {
-    const date = new Date(dateStr)
-    const now = new Date()
-    const diffMs = now.getTime() - date.getTime()
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
-    const diffMinutes = Math.floor(diffMs / (1000 * 60))
-
-    if (diffMinutes < 60) {
-      return t('timeline.minutesAgo', '{{count}} min ago', { count: diffMinutes })
-    }
-    if (diffHours < 24) {
-      return t('timeline.hoursAgo', '{{count}}h ago', { count: diffHours })
-    }
-    if (diffDays < 7) {
-      return t('timeline.daysAgo', '{{count}}d ago', { count: diffDays })
-    }
-    return formatDate(dateStr)
-  }
+  // D-25 / RULING-P98A2-06: relative time comes from the ONE shared localized
+  // helper. The former local ladder produced en-only phrases from raw-value
+  // defaultValues, which rendered English under `ar` whenever the key missed.
 
   // Navigate to detail
   const handleClick = () => {
@@ -187,7 +170,7 @@ export function ActivityTimelineItem({
             <h4 className="font-medium text-sm leading-tight truncate">
               {(isRTL && activity.activity_title_ar
                 ? activity.activity_title_ar
-                : activity.activity_title) || t('timeline.noTitle', 'Untitled')}
+                : activity.activity_title) || t('timeline.noTitle')}
             </h4>
             <ChevronRight
               className={cn('size-4 shrink-0 text-muted-foreground', isRTL && 'rotate-180')}
@@ -221,7 +204,7 @@ export function ActivityTimelineItem({
             {isOverdue && (
               <span className="flex items-center gap-1 text-destructive">
                 <AlertTriangle className="size-3" />
-                {t('timeline.overdue', 'Overdue')}
+                {t('timeline.overdue')}
               </span>
             )}
 
@@ -242,7 +225,7 @@ export function ActivityTimelineItem({
           {/* Inheritance Info */}
           {activity.inheritance_source !== 'direct' && (
             <p className="text-xs text-muted-foreground italic">
-              {t('timeline.inheritedVia', 'via')}{' '}
+              {t('timeline.inheritedVia')}{' '}
               {t(
                 `timeline.inheritanceSource.${activity.inheritance_source}`,
                 activity.inheritance_source,

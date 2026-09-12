@@ -110,7 +110,7 @@ export function CommitmentDetailDrawer({
         <SheetContent
           side="right"
           className="w-full sm:max-w-lg overflow-y-auto"
-          accessibleTitle={t('detail.title', 'Commitment Details')}
+          accessibleTitle={t('detail.title')}
         >
           {/* Loading State */}
           {isLoading && (

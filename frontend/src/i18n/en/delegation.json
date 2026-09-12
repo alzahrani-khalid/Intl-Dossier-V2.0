@@ -26,6 +26,11 @@
       "received": "Delegations you receive will appear here",
       "all": "No delegation records to display"
     },
+    "error": {
+      "title": "Couldn't load delegations",
+      "description": "Your delegations couldn't be retrieved. Try again — if the problem continues, sign in again.",
+      "retry": "Try again"
+    },
     "showActiveOnly": "Show active only",
     "showExpiring": "Expiring within 7 days"
   },

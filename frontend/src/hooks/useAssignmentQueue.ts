@@ -8,9 +8,7 @@
  */
 
 import { useQuery } from '@tanstack/react-query'
-import { createClient } from '@/lib/supabase-client'
-
-const supabase = createClient()
+import { apiGet } from '@/lib/api-client'
 
 export interface QueueItem {
   id: string
@@ -53,16 +51,9 @@ export function useAssignmentQueue(options: UseAssignmentQueueOptions = {}) {
       if (options.page) params.append('page', String(options.page))
       if (options.page_size) params.append('page_size', String(options.page_size))
 
-      const { data, error } = await supabase.functions.invoke('assignments-queue', {
-        method: 'GET',
-        ...(params.toString() && { body: Object.fromEntries(params) }),
-      })
-
-      if (error) {
-        throw new Error(error.message || 'Failed to fetch assignment queue')
-      }
-
-      return data as QueueListResponse
+      // The function reads url.searchParams, so filters must ride a real query
+      // string; apiGet attaches the session JWT and resolves the edge base.
+      return apiGet<QueueListResponse>(`/assignments-queue?${params.toString()}`)
     },
     enabled: true,
     refetchInterval: 15000, // Refetch every 15s for queue updates

@@ -19,8 +19,8 @@
     "retry": "إعادة المحاولة"
   },
   "entityTypes": {
-    "dossier": "ملف",
-    "position": "منصب",
+    "dossier": "دوسيه",
+    "position": "موقف",
     "person": "شخص",
     "engagement": "لقاء",
     "commitment": "التزام"
@@ -41,5 +41,6 @@
     "rejected": "تم رفض الاقتراح",
     "deleted": "تم إزالة الرابط",
     "generated": "تم توليد الاقتراحات"
-  }
+  },
+  "retry": "إعادة المحاولة"
 }

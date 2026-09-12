@@ -1,6 +1,15 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Lock, Smartphone, Key, Clock, AlertCircle, Loader2, CheckCircle2 } from 'lucide-react'
+import {
+  Lock,
+  Smartphone,
+  Key,
+  Clock,
+  AlertCircle,
+  Loader2,
+  CheckCircle2,
+  LogOut,
+} from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -20,6 +29,7 @@ import { SettingsSectionCard, SettingsItem, SettingsGroup } from '../SettingsSec
 import { SESSION_TIMEOUT_OPTIONS } from '@/types/settings.types'
 import { cn } from '@/lib/utils'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/hooks/useAuth'
 import { toast } from 'sonner'
 
 interface SecuritySettingsSectionProps {
@@ -32,6 +42,7 @@ interface SecuritySettingsSectionProps {
  */
 export function SecuritySettingsSection({ form }: SecuritySettingsSectionProps) {
   const { t } = useTranslation('settings')
+  const { logout } = useAuth()
   const [isChangingPassword, setIsChangingPassword] = useState(false)
   const [passwordError, setPasswordError] = useState<string | null>(null)
   const [passwordSuccess, setPasswordSuccess] = useState(false)
@@ -185,6 +196,31 @@ export function SecuritySettingsSection({ form }: SecuritySettingsSectionProps) 
               </SelectContent>
             </Select>
           </div>
+        </SettingsGroup>
+
+        {/* Session — the second, INDEPENDENT sign-out surface (AUTH-05 / D-02). It
+            lives in Security because that is the account/session context (it already
+            owns the session-timeout copy); Data & Privacy would be the burial D-28
+            names. One click, no confirmation, plain ghost button — signing out ends a
+            session, it does not destroy data, so it is neither primary nor danger.
+            This calls logout() and nothing else: navigation and query-cache teardown
+            are owned centrally by authStore's SIGNED_OUT handler (D-29). */}
+        <SettingsGroup title={t('security.session')}>
+          <SettingsItem
+            label={t('security.signOut')}
+            description={t('security.signOutDesc')}
+            icon={LogOut}
+          >
+            <button
+              type="button"
+              data-testid="settings-signout"
+              onClick={() => void logout()}
+              className="btn-ghost inline-flex min-h-11 items-center gap-2 px-3 text-start"
+            >
+              <LogOut className="h-4 w-4 shrink-0" aria-hidden="true" />
+              {t('security.signOut')}
+            </button>
+          </SettingsItem>
         </SettingsGroup>
 
         <Separator />

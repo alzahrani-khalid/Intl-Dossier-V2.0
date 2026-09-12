@@ -11,10 +11,12 @@
  * - F23 peek + F26 empty states ship in full.
  */
 
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { useCallback, useMemo, type ReactNode } from 'react'
+import { Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import {
   ListPageShell,
   GenericListPage,
@@ -144,7 +146,7 @@ function WorkingGroupsListPage(): ReactNode {
         id: String(wg.id),
         primary,
         secondary,
-        statusLabel: t(`working-groups:status.${statusKey}`, { defaultValue: statusKey }),
+        statusLabel: t(`working-groups:status.${statusKey}`),
         statusChipClass: chipClass,
         icon: <DossierGlyph type="working_group" name={primary} size={32} />,
       }
@@ -207,7 +209,7 @@ function WorkingGroupsListPage(): ReactNode {
       <ToolbarSearch
         value={search.search ?? ''}
         onChange={onSearchChange}
-        placeholder={t('list-pages:search.placeholder', { defaultValue: 'Search' })}
+        placeholder={t('list-pages:search.placeholder')}
       />
       <FilterPopover
         config={workingGroupsListConfig}
@@ -232,9 +234,17 @@ function WorkingGroupsListPage(): ReactNode {
 
   return (
     <ListPageShell
-      title={t('working-groups:title', { defaultValue: 'Working Groups' })}
-      subtitle={t('working-groups:subtitle', { defaultValue: 'Committees and task forces' })}
+      title={t('working-groups:title')}
+      subtitle={t('working-groups:subtitle')}
       toolbar={toolbar}
+      actions={
+        <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">
+          <Link to="/dossiers/working_groups/create">
+            <Plus className="h-4 w-4 me-2" />
+            {t('empty-states:list.working_group.cta')}
+          </Link>
+        </Button>
+      }
       isEmpty={!query.isLoading && items.length === 0}
       emptyState={
         <div data-testid="working-groups-empty">

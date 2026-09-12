@@ -67,9 +67,9 @@ export function TeamWorkloadPanel({
       <CardHeader className="pb-2 px-4 sm:px-6">
         <CardTitle className="text-base sm:text-lg flex items-center gap-2 text-start">
           <Users className="h-5 w-5" />
-          {t('team.title', 'Team Workload')}
+          {t('team.title')}
           <Badge variant="secondary" className="ms-2">
-            {nf.format(teamMembers.length)} {t('team.members', 'members')}
+            {nf.format(teamMembers.length)} {t('team.members')}
           </Badge>
         </CardTitle>
       </CardHeader>
@@ -106,7 +106,7 @@ export function TeamWorkloadPanel({
                           <div className="flex items-center gap-1 text-xs text-danger">
                             <AlertTriangle className="h-3 w-3" />
                             <span>
-                              {nf.format(member.overdue_count)} {t('team.overdue', 'overdue')}
+                              {nf.format(member.overdue_count)} {t('team.overdue')}
                             </span>
                           </div>
                         )}
@@ -117,9 +117,7 @@ export function TeamWorkloadPanel({
                     <div className="space-y-2">
                       {/* Total Active */}
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-muted-foreground text-start">
-                          {t('team.active', 'Active')}
-                        </span>
+                        <span className="text-muted-foreground text-start">{t('team.active')}</span>
                         <span className="font-medium">{nf.format(member.total_active)}</span>
                       </div>
 
@@ -130,7 +128,7 @@ export function TeamWorkloadPanel({
                       <div className="flex items-center justify-between text-xs pt-1">
                         <span className="text-muted-foreground flex items-center gap-1 text-start">
                           <TrendingUp className="h-3 w-3" />
-                          {t('team.onTime', 'On-time')}
+                          {t('team.onTime')}
                         </span>
                         <span
                           className={cn(

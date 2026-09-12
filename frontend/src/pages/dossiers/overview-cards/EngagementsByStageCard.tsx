@@ -58,12 +58,10 @@ export function EngagementsByStageCard({
     return (
       <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
         <h3 className="text-base font-semibold leading-tight text-start mb-4">
-          {t('overview.engagements.title', { defaultValue: 'Engagements by Stage' })}
+          {t('overview.engagements.title')}
         </h3>
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('overview.sectionError')}
         </p>
       </div>
     )
@@ -87,12 +85,12 @@ export function EngagementsByStageCard({
   return (
     <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
       <h3 className="text-base font-semibold leading-tight text-start mb-4">
-        {t('overview.engagements.title', { defaultValue: 'Engagements by Stage' })}
+        {t('overview.engagements.title')}
       </h3>
 
       {totalEngagements === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">
-          {t('overview.engagements.empty', { defaultValue: 'No engagements linked' })}
+          {t('overview.engagements.empty')}
         </p>
       ) : (
         <div className="space-y-3">
@@ -108,7 +106,7 @@ export function EngagementsByStageCard({
                   key={stage}
                   className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${colorClass}`}
                 >
-                  {t(`overview.engagements.stage.${stage}`, { defaultValue: stage })}
+                  {t(`overview.engagements.stage.${stage}`)}
                   <span className="font-semibold">{count}</span>
                 </span>
               )
@@ -118,7 +116,6 @@ export function EngagementsByStageCard({
           <p className="text-xs text-muted-foreground">
             {t('overview.engagements.total', {
               count: totalEngagements,
-              defaultValue: '{{count}} total engagements',
             })}
           </p>
         </div>

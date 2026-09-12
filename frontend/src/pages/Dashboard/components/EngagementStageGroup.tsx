@@ -120,9 +120,7 @@ export function EngagementStageGroup({
               className="text-sm font-semibold px-0 mt-1"
               onClick={(): void => setShowAll((prev) => !prev)}
             >
-              {showAll
-                ? t('zones.engagements.show_less', { defaultValue: 'Show less' })
-                : t('zones.engagements.show_all')}
+              {showAll ? t('zones.engagements.show_less') : t('zones.engagements.show_all')}
             </Button>
           )}
         </div>

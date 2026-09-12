@@ -4,6 +4,7 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { ApiError } from '@/lib/api-client'
 import {
   getScenarios as getScenariosApi,
   createScenario as createScenarioApi,
@@ -34,6 +35,16 @@ export function useScenarios(params?: Record<string, unknown>) {
     queryKey: scenarioKeys.list(params),
     queryFn: () => getScenariosApi(searchParams) as Promise<PaginatedResponse<Scenario>>,
     staleTime: 5 * 60 * 1000,
+    // Bounded retry (95-UI-SPEC §1, the transition contract inherited from 93). A 4xx is final;
+    // anything else gets at most 2 retries, so a backend 500 settles into the error state after
+    // ~3s of backoff instead of the ~7s the global 3-retry ladder produces. That window is the
+    // defect: while it runs, a failing page is pixel-identical to one that is still loading.
+    retry: (failureCount, error) => {
+      if (error instanceof ApiError && error.status >= 400 && error.status < 500) {
+        return false
+      }
+      return failureCount < 2
+    },
   })
 }
 

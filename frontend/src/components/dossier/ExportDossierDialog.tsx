@@ -115,7 +115,7 @@ export function ExportDossierDialog({
   const failedSectionNames = useCallback(
     (keys: string[]): string =>
       keys
-        .map((key) => t(`sections.${key}`, { defaultValue: key }))
+        .map((key) => t(`sections.${key}`))
         .filter(Boolean)
         .join(', '),
     [t],
@@ -204,20 +204,16 @@ export function ExportDossierDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-[var(--accent)]" />
-            {t('title', { defaultValue: 'Export Briefing Pack' })}
+            {t('title')}
           </DialogTitle>
-          <DialogDescription>
-            {t('description', {
-              defaultValue: 'Export all dossier information as a formatted briefing packet.',
-            })}
-          </DialogDescription>
+          <DialogDescription>{t('description')}</DialogDescription>
         </DialogHeader>
 
         {/* Dossier Info */}
         <div className="rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--line-soft)] p-3 sm:p-4">
           <p className="font-medium text-sm sm:text-base line-clamp-1">{dossierName}</p>
           <p className="text-xs capitalize text-[var(--ink-mute)] sm:text-sm">
-            {t(`type.${dossierType}`, { defaultValue: dossierType })}
+            {t(`type.${dossierType}`)}
           </p>
         </div>
 
@@ -242,14 +238,7 @@ export function ExportDossierDialog({
           >
             <CheckCircle2 className="h-5 w-5 shrink-0 text-[var(--ok)]" />
             <span className="text-sm text-[var(--ok)]">
-              {popupBlocked
-                ? t('popupBlocked', {
-                    defaultValue:
-                      'Pop-ups are blocked. The briefing pack was downloaded as an HTML file instead.',
-                  })
-                : t('success', {
-                    defaultValue: 'Export complete. The briefing pack opened in a new tab.',
-                  })}
+              {popupBlocked ? t('popupBlocked') : t('success')}
             </span>
           </div>
         )}
@@ -263,7 +252,6 @@ export function ExportDossierDialog({
             <AlertTriangle className="h-5 w-5 shrink-0 text-[var(--warn)]" />
             <span className="text-sm text-[var(--ink)] text-start">
               {t('warning.failedSections', {
-                defaultValue: 'Some sections could not be generated: {{sections}}',
                 sections: failedSectionNames(failedSections),
               })}
             </span>
@@ -277,9 +265,7 @@ export function ExportDossierDialog({
             className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-[var(--danger)] bg-[var(--danger-soft)] p-4"
           >
             <AlertCircle className="h-5 w-5 shrink-0 text-[var(--danger)]" />
-            <span className="text-sm text-[var(--danger)]">
-              {t('error', { defaultValue: 'Export failed. Please try again.' })}
-            </span>
+            <span className="text-sm text-[var(--danger)]">{t('error')}</span>
           </div>
         )}
 
@@ -289,19 +275,12 @@ export function ExportDossierDialog({
             {/* Format info line (D-03) — replaces the PDF/Word picker */}
             <div className="flex items-start gap-2 text-start">
               <Info className="h-4 w-4 shrink-0 mt-0.5 text-[var(--ink-mute)]" />
-              <p className="text-sm text-[var(--ink-mute)]">
-                {t('format.html_info', {
-                  defaultValue:
-                    "Exports as a print-ready HTML briefing pack. To save as PDF, use your browser's print dialog.",
-                })}
-              </p>
+              <p className="text-sm text-[var(--ink-mute)]">{t('format.html_info')}</p>
             </div>
 
             {/* Language Selection */}
             <div className="space-y-3">
-              <Label className="text-sm font-medium">
-                {t('language.label', { defaultValue: 'Language' })}
-              </Label>
+              <Label className="text-sm font-medium">{t('language.label')}</Label>
               <RadioGroup
                 value={language}
                 onValueChange={(v) => setLanguage(v as ExportLanguage)}
@@ -334,7 +313,7 @@ export function ExportDossierDialog({
               className="w-full justify-between"
               onClick={() => setShowAdvanced(!showAdvanced)}
             >
-              <span>{t('advanced.label', { defaultValue: 'Advanced Options' })}</span>
+              <span>{t('advanced.label')}</span>
               {showAdvanced ? (
                 <ChevronUp className="h-4 w-4" />
               ) : (
@@ -354,7 +333,7 @@ export function ExportDossierDialog({
                       onCheckedChange={(c) => setIncludeCoverPage(c === true)}
                     />
                     <Label htmlFor="coverPage" className="text-sm cursor-pointer">
-                      {t('options.coverPage', { defaultValue: 'Include cover page' })}
+                      {t('options.coverPage')}
                     </Label>
                   </div>
                   <div className="flex items-center gap-3">
@@ -364,18 +343,14 @@ export function ExportDossierDialog({
                       onCheckedChange={(c) => setIncludeTableOfContents(c === true)}
                     />
                     <Label htmlFor="toc" className="text-sm cursor-pointer">
-                      {t('options.tableOfContents', {
-                        defaultValue: 'Include table of contents',
-                      })}
+                      {t('options.tableOfContents')}
                     </Label>
                   </div>
                 </div>
 
                 {/* Section Selection */}
                 <div className="space-y-3">
-                  <Label className="text-sm font-medium">
-                    {t('sections.label', { defaultValue: 'Include Sections' })}
-                  </Label>
+                  <Label className="text-sm font-medium">{t('sections.label')}</Label>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {sections.map((section) => (
                       <div key={section.type} className="flex items-center gap-2">
@@ -401,18 +376,18 @@ export function ExportDossierDialog({
 
         <DialogFooter thumbZone>
           <Button variant="outline" onClick={handleClose} disabled={isExporting}>
-            {t('cancel', { defaultValue: 'Close' })}
+            {t('cancel')}
           </Button>
           <Button onClick={handleExport} disabled={isExporting || isReady} className="gap-2">
             {isExporting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                {t('exporting', { defaultValue: 'Exporting...' })}
+                {t('exporting')}
               </>
             ) : (
               <>
                 <FileDown className="h-4 w-4" />
-                {t('export', { defaultValue: 'Export' })}
+                {t('export')}
               </>
             )}
           </Button>

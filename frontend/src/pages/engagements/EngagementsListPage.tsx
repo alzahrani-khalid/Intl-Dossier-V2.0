@@ -13,7 +13,9 @@
 
 import type { ReactNode } from 'react'
 import { useCallback, useMemo } from 'react'
-import { useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
+import { Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { useTranslation } from 'react-i18next'
 import {
   ListPageShell,
@@ -256,7 +258,7 @@ export default function EngagementsListPage({
         <ToolbarSearch
           value={search}
           onChange={onSearchChange}
-          placeholder={t('search.placeholder', { defaultValue: 'Search engagements...' })}
+          placeholder={t('search.placeholder')}
         />
         <div className="flex flex-wrap items-center gap-2">
           <FilterPopover
@@ -283,11 +285,18 @@ export default function EngagementsListPage({
 
   return (
     <ListPageShell
-      title={t('title', { ns: 'engagements', defaultValue: 'Engagements' })}
+      title={t('title', { ns: 'engagements' })}
       subtitle={t('subtitle', {
         ns: 'engagements',
-        defaultValue: 'Meetings, consultations, and visits',
       })}
+      actions={
+        <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">
+          <Link to="/dossiers/engagements/create">
+            <Plus className="h-4 w-4 me-2" />
+            {t('empty-states:list.engagement.cta')}
+          </Link>
+        </Button>
+      }
       isLoading={isLoading}
     >
       {toolbar}

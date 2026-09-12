@@ -50,6 +50,7 @@ import type { InteractionNoteResponse } from '@/services/interaction-api'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
 import { toast } from 'sonner'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 interface InteractionNoteFormProps {
   contactId: string
@@ -249,7 +250,7 @@ export function InteractionNoteForm({
                         >
                           <CalendarIcon className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
                           {field.value ? (
-                            format(field.value, 'PPP')
+                            formatDayFirstYear(field.value)
                           ) : (
                             <span>{t('contactDirectory.interactions.form.select_date')}</span>
                           )}

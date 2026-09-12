@@ -95,7 +95,7 @@ function TrendIndicator({
   }
 
   return (
-    <div className="flex items-center gap-1 sm:gap-2">
+    <div className="flex items-center gap-1 sm:gap-2" data-testid="kpi-trend">
       <span
         className={cn(
           'inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium',
@@ -173,13 +173,13 @@ export function KpiWidget({ config, data, isLoading }: KpiWidgetProps) {
     )
   }
 
-  const { value, trend, trendPercentage, sparklineData, target, targetProgress } = data
+  const { value, trend, sparklineData, target, targetProgress } = data
 
   // Sparkline color based on trend
   const sparklineColor =
-    trend === 'up'
+    trend?.direction === 'up'
       ? 'rgb(22, 163, 74)'
-      : trend === 'down'
+      : trend?.direction === 'down'
         ? 'rgb(220, 38, 38)'
         : 'rgb(156, 163, 175)'
 
@@ -210,11 +210,13 @@ export function KpiWidget({ config, data, isLoading }: KpiWidgetProps) {
 
       {/* Bottom Section: Trend or Target */}
       <div className="mt-2 space-y-2">
-        {/* Trend Indicator */}
-        {showTrend && (
+        {/* Trend Indicator — rendered ONLY from a comparison that settled with a real prior
+            count. On null the row is omitted entirely: no placeholder, no em-dash, no reserved
+            space styled as data. An unknown delta renders as nothing (DEAD-06). */}
+        {showTrend && trend !== null && (
           <TrendIndicator
-            direction={trend}
-            percentage={trendPercentage}
+            direction={trend.direction}
+            percentage={trend.percentage}
             period={comparisonPeriod}
           />
         )}

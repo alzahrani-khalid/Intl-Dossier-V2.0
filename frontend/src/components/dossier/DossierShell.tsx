@@ -12,10 +12,10 @@
 import type { ReactElement, ReactNode } from 'react'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from '@tanstack/react-router'
+import { Link, notFound, rootRouteId } from '@tanstack/react-router'
 import { useDirection } from '@/hooks/useDirection'
 import { useDossier } from '@/domains/dossiers/hooks/useDossier'
-import type { DossierType } from '@/services/dossier-api'
+import { DossierAPIError, type DossierType } from '@/services/dossier-api'
 import { useDossierPresence } from '@/hooks/useDossierPresence'
 import { useAddToDossierActions } from '@/hooks/useAddToDossierActions'
 import { useAuth } from '@/contexts/auth.context'
@@ -29,6 +29,7 @@ import {
 import { AddToDossierDialogs } from '@/components/dossier/AddToDossierDialogs'
 import { DossierAnalyzeButton } from '@/components/dossier/DossierAnalyzeButton'
 import { ExportDossierDialog } from '@/components/dossier/ExportDossierDialog'
+import { QueryErrorState } from '@/components/error-states/QueryErrorState'
 import { ActiveViewers, ActiveViewersCompact } from '@/components/collaboration'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -81,7 +82,7 @@ export function DossierShell({
   const { user } = useAuth()
 
   // Dossier data — useDossier returns DossierWithExtension directly
-  const { data: dossier, isLoading } = useDossier(dossierId)
+  const { data: dossier, isLoading, isError, error, isRefetching, refetch } = useDossier(dossierId)
 
   // Presence tracking
   const { viewers, isConnected, viewerCount } = useDossierPresence(dossierId, {
@@ -125,6 +126,28 @@ export function DossierShell({
     ? (dossier?.name_ar ?? dossier?.name_en ?? '')
     : (dossier?.name_en ?? '')
 
+  // D-05: absence and failure are DIFFERENT states with different renders. A well-formed id that
+  // resolves to no row is not a failed request — it throws into the root notFoundComponent
+  // (routes/__root.tsx:72), which until now had no thrower anywhere in frontend/src. Every other
+  // rejection renders the shared error state. Neither path may fall through to the chrome below,
+  // which would paint a titleless header for a dossier that has no identity to show.
+  if (isError) {
+    if (error instanceof DossierAPIError && error.status === 404) {
+      // `routeId: rootRouteId` is REQUIRED here, not decoration. This router sets a
+      // `defaultErrorComponent` (router/index.tsx:72), which gives EVERY match a CatchBoundary
+      // whose onCatch stamps `error.routeId ??= <innermost match>` on the way up. An unstamped
+      // notFound() therefore arrives at the root boundary claiming to belong to
+      // `/_protected/dossiers/countries/$id`, which has no notFoundComponent, and the root
+      // rejects it — the page then renders the router's raw "Something went wrong!" instead of
+      // the 404. Pre-stamping the root makes the `??=` a no-op. (This is the documented
+      // targeting option; `notFound({ global: true })` is its deprecated spelling.)
+      throw notFound({ routeId: rootRouteId })
+    }
+    return (
+      <QueryErrorState variant="page" onRetry={() => void refetch()} isRetrying={isRefetching} />
+    )
+  }
+
   return (
     <div
       dir={direction}
@@ -140,11 +163,11 @@ export function DossierShell({
         {/* Breadcrumbs */}
         <nav
           className="label mb-2 flex min-w-0 items-center gap-2 overflow-hidden"
-          aria-label={t('header.breadcrumb', { defaultValue: 'Breadcrumb' })}
+          aria-label={t('header.breadcrumb')}
         >
           <Link
             to="/dashboard"
-            aria-label={t('header.home', { defaultValue: 'Home' })}
+            aria-label={t('header.home')}
             className="flex min-h-9 shrink-0 items-center gap-1 text-[var(--ink-mute)] transition-colors hover:text-[var(--ink)]"
           >
             <Home className="h-4 w-4" />
@@ -154,7 +177,7 @@ export function DossierShell({
             to="/dossiers"
             className="flex min-h-9 shrink-0 items-center text-[var(--ink-mute)] transition-colors hover:text-[var(--ink)]"
           >
-            {t('header.dossierHub', { defaultValue: 'Dossier Hub' })}
+            {t('header.dossierHub')}
           </Link>
           <ChevronRight className="icon-flip h-4 w-4 shrink-0 text-[var(--ink-faint)]" />
           <span className="min-w-0 truncate font-medium text-[var(--ink)]">
@@ -213,9 +236,7 @@ export function DossierShell({
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
-                  {isConnected
-                    ? t('header.realtimeConnected', { defaultValue: 'Real-time connected' })
-                    : t('header.realtimeDisconnected', { defaultValue: 'Real-time disconnected' })}
+                  {isConnected ? t('header.realtimeConnected') : t('header.realtimeDisconnected')}
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -227,7 +248,7 @@ export function DossierShell({
               <Link to={`/dossiers/edit/${getDossierRouteSegment(dossierType)}/${dossierId}`}>
                 <Pencil className="h-4 w-4 sm:me-2" />
                 <span className="hidden sm:inline">
-                  {t('action.edit', { ns: 'dossier', defaultValue: 'Edit' })}
+                  {t('dossier:action.edit', { ns: 'dossier' })}
                 </span>
               </Link>
             </Button>
@@ -249,13 +270,11 @@ export function DossierShell({
                   >
                     <FileDown className="h-4 w-4 sm:me-2" />
                     <span className="hidden sm:inline">
-                      {t('action.export', { ns: 'dossier', defaultValue: 'Export' })}
+                      {t('dossier:action.export', { ns: 'dossier' })}
                     </span>
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>
-                  {t('header.exportTooltip', { defaultValue: 'Export briefing pack' })}
-                </TooltipContent>
+                <TooltipContent>{t('header.exportTooltip')}</TooltipContent>
               </Tooltip>
             </TooltipProvider>
 

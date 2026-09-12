@@ -20,8 +20,7 @@ import {
   AlertTriangle,
   Plus,
 } from 'lucide-react'
-import { formatDistanceToNow } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -109,10 +108,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
 
   // Format date
   const formatDate = (dateString: string) => {
-    return formatDistanceToNow(new Date(dateString), {
-      addSuffix: true,
-      locale: isRTL ? ar : enUS,
-    })
+    return formatDayFirstYear(dateString)
   }
 
   // Loading state
@@ -243,8 +239,6 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
                         <span>
                           {t('list.pageCount', {
                             count: book.pageCount,
-                            defaultValue_one: '{{count}} page',
-                            defaultValue_other: '{{count}} pages',
                           })}
                         </span>
                       )}
@@ -364,7 +358,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
               {isDeleting ? (
                 <>
                   <Loader2 className="h-4 w-4 me-2 animate-spin" />
-                  {t('confirmDelete.deleting', 'Deleting…')}
+                  {t('confirmDelete.deleting')}
                 </>
               ) : (
                 t('confirmDelete.confirm')

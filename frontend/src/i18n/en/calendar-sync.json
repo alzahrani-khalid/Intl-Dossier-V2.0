@@ -95,8 +95,8 @@
 
   "oauth": {
     "connecting": "Connecting Calendar",
-    "pleaseWait": "Please wait while we connect your calendar...",
-    "success": "Calendar Connected!",
+    "pleaseWait": "Connecting your calendar...",
+    "success": "Calendar Connected",
     "redirecting": "Redirecting to settings...",
     "error": "Connection Failed",
     "backToSettings": "Back to Settings"

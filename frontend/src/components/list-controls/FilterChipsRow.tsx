@@ -59,7 +59,7 @@ export function FilterChipsRow({
 
       {chips.length >= 2 ? (
         <button type="button" className="btn-ghost text-sm" onClick={onClearAll}>
-          {t('active-filters:clearAll', { defaultValue: 'Clear all' })}
+          {t('active-filters:clearAll')}
         </button>
       ) : null}
 
@@ -68,7 +68,6 @@ export function FilterChipsRow({
           {t('active-filters:showingFiltered', {
             count: showing,
             total,
-            defaultValue: 'Showing {{count}} of {{total}} results',
           })}
         </span>
       ) : null}

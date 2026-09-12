@@ -1,21 +1,22 @@
 /**
- * Route: /positions/:id/versions
- * Version history and comparison page
+ * Route: /positions/:id/versions — the "versions" tab PANEL.
+ *
+ * Phase 95 DEAD-08: renders through the $id.tsx layout's <Outlet/>; the page
+ * header and Back link that used to live here belong to the layout now (the
+ * tab strip must not remount the page header).
  */
 
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { ArrowLeft } from 'lucide-react'
 import { VersionComparison } from '@/components/version-comparison/VersionComparison'
 import { Skeleton } from '@/components/ui/skeleton'
-import { p } from '@/lib/navigation'
+import { formatDateTime } from '@/lib/format-date'
 
 export const Route = createFileRoute('/_protected/positions/$id/versions')({
   component: VersionHistoryPage,
@@ -44,7 +45,7 @@ async function fetchVersions(positionId: string) {
 
 function VersionHistoryPage() {
   const { id } = Route.useParams()
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const [selectedVersions, setSelectedVersions] = useState<[number | null, number | null]>([
     null,
     null,
@@ -69,7 +70,7 @@ function VersionHistoryPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-4">
+      <div className="space-y-4">
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-96" />
       </div>
@@ -77,29 +78,17 @@ function VersionHistoryPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link to="/positions/$id" params={p({ id })}>
-            <Button variant="outline" size="sm">
-              <ArrowLeft className="me-2 h-4 w-4" />
-              {t('common.back', 'Back')}
-            </Button>
-          </Link>
-          <h1 className="text-3xl font-bold">{t('positions:versions.title', 'Version History')}</h1>
-        </div>
-        {/* The comparison renders automatically below when two versions are
-            selected (canCompare), so a separate Compare button would be an inert
-            no-op (R15-04). */}
-      </div>
+    <div className="space-y-6">
+      {/* The comparison renders automatically below when two versions are
+          selected (canCompare), so a separate Compare button would be an inert
+          no-op (R15-04). */}
 
       {/* Version List */}
       {!canCompare && (
         <Card className="p-6">
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              {t('positions:versions.selectTwo', 'Select two versions to compare')}
+              {t('positions:versions.selectTwo')}
             </p>
 
             <div className="space-y-2">
@@ -117,16 +106,16 @@ function VersionHistoryPage() {
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <span className="font-semibold">
-                          {t('positions:versions.version', 'Version')} {version.version_number}
+                          {t('positions:versions.version')} {version.version_number}
                         </span>
                         {!version.superseded && (
                           <Badge variant="default">
-                            {t('positions:versions.current', 'Current')}
+                            {t('positions:versions.current')}
                           </Badge>
                         )}
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        {new Date(version.created_at).toLocaleString(toFormatLocale(i18n.language))}
+                        {formatDateTime(version.created_at)}
                       </p>
                     </div>
                   </div>
@@ -143,14 +132,14 @@ function VersionHistoryPage() {
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">
-                {t('positions:versions.comparing', 'Comparing versions')}:
+                {t('positions:versions.comparing')}:
               </span>
               <Badge>{selectedVersions[0]}</Badge>
               <span className="text-sm text-muted-foreground">vs</span>
               <Badge>{selectedVersions[1]}</Badge>
             </div>
             <Button variant="outline" onClick={() => setSelectedVersions([null, null])}>
-              {t('common.clear', 'Clear Selection')}
+              {t('common:clear')}
             </Button>
           </div>
 

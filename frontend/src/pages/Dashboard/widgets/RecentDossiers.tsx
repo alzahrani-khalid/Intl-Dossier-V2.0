@@ -1,7 +1,6 @@
 import { type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import { formatDistanceToNow } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
+import { formatRelativeTime } from '@/lib/format-date'
 import { DossierGlyph } from '@/components/signature-visuals'
 import { useDossierStore, type DossierEntry } from '@/store/dossierStore'
 import { useDossierDrawer } from '@/hooks/useDossierDrawer'
@@ -20,7 +19,6 @@ export function RecentDossiers(): ReactElement {
   const recentDossiers = useDossierStore((s) => s.recentDossiers)
   const { openDossier } = useDossierDrawer()
   const isArabic = i18n.language === 'ar'
-  const locale = isArabic ? ar : enUS
 
   if (recentDossiers.length === 0) {
     return (
@@ -65,7 +63,7 @@ export function RecentDossiers(): ReactElement {
                 <DossierGlyph type={d.type} name={name} size={20} />
                 <span className="text-sm text-ink text-start truncate flex-1">{name}</span>
                 <span className="text-xs text-ink-soft">
-                  {formatDistanceToNow(viewedAt, { addSuffix: true, locale })}
+                  {formatRelativeTime(new Date(viewedAt))}
                 </span>
               </button>
             </li>

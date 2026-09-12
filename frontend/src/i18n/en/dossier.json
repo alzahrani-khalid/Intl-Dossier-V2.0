@@ -1,6 +1,6 @@
 {
   "title": "Dossiers",
-  "untitled": "Untitled Dossier",
+  "untitled": "Untitled dossier",
   "id": "ID",
   "aiAssist": {
     "title": "AI Assistant",
@@ -11,25 +11,74 @@
     "minCharsHint": "Enter at least {{count}} more characters",
     "ready": "Ready to generate",
     "generating": "Generating...",
-    "generate": "Generate Fields",
+    "generate": "Generate fields",
     "clear": "Clear",
     "retry": "Retry",
-    "generatedFields": "Generated Fields:",
+    "generatedFields": "Generated fields:",
     "applied": "Applied",
     "nameEn": "Name (English)",
     "nameAr": "Name (Arabic)",
     "descriptionEn": "Description (English)",
     "descriptionAr": "Description (Arabic)",
-    "suggestedTags": "Suggested Tags",
-    "fieldsApplied": "Fields Applied",
+    "suggestedTags": "Suggested tags",
+    "fieldsApplied": "Fields applied",
     "applyToForm": "Apply to Form"
   },
   "typeGuide": {
     "whenToUse": "When to Use",
     "examples": "Examples",
-    "commonLinks": "Common Links",
-    "notFor": "Not For",
-    "createDossier": "Create {{type}} Dossier"
+    "commonLinks": "Common links",
+    "notFor": "Not for",
+    "learnMore": "Learn more about this dossier type",
+    "createDossier": "Create {{type}} dossier",
+    "country": {
+      "whenToUse": "Use a country dossier to track a sovereign state, its profile, and its international relationships over time.",
+      "examples": ["France", "Japan", "Brazil", "Kenya"],
+      "commonLinks": ["Organization dossiers", "Engagements", "Forums", "People"],
+      "notFor": "Not for regions, cities, or organizations that operate within a country."
+    },
+    "organization": {
+      "whenToUse": "Use an organization dossier to track an institution, its structure, contacts, and activities over time.",
+      "examples": ["UNICEF", "OECD", "Aramco", "Secretariat"],
+      "commonLinks": ["Country dossiers", "People", "Engagements", "Working groups"],
+      "notFor": "Not for informal forums, temporary teams, or individual contacts."
+    },
+    "forum": {
+      "whenToUse": "Use a forum dossier to track a recurring summit, conference, or multilateral platform and its participants.",
+      "examples": ["G20", "Policy summit", "Economic forum", "Regional conference"],
+      "commonLinks": ["Country dossiers", "Organization dossiers", "Engagements", "Topics"],
+      "notFor": "Not for a single meeting or a team formed to deliver a defined task."
+    },
+    "engagement": {
+      "whenToUse": "Use an engagement dossier to record a meeting, visit, consultation, or other time-bound interaction.",
+      "examples": ["Bilateral meeting", "Official visit", "Policy consultation", "Roundtable"],
+      "commonLinks": ["People", "Organizations", "Country dossiers", "Topics"],
+      "notFor": "Not for recurring forums or ongoing relationships without a specific interaction date."
+    },
+    "topic": {
+      "whenToUse": "Use a topic dossier to organize evidence, activity, and relationships around a policy or strategic subject.",
+      "examples": ["Trade policy", "Food security", "Digital regulation", "Climate finance"],
+      "commonLinks": ["Engagements", "Country dossiers", "Organizations", "Working groups"],
+      "notFor": "Not for a specific event, institution, person, or delivery team."
+    },
+    "working_group": {
+      "whenToUse": "Use a working group dossier to track a team with defined members, responsibilities, and shared deliverables.",
+      "examples": ["Statistics committee", "Policy task force", "Technical panel", "Steering team"],
+      "commonLinks": ["Organizations", "People", "Topics", "Engagements"],
+      "notFor": "Not for open conferences, permanent organizations, or one-off meetings."
+    },
+    "person": {
+      "whenToUse": "Use a person dossier to track a contact's role, background, relationships, and engagement history.",
+      "examples": ["Ambassador", "Policy adviser", "Technical expert", "Executive"],
+      "commonLinks": ["Organizations", "Country dossiers", "Engagements", "Working groups"],
+      "notFor": "Not for elected officeholders whose formal terms and offices require dedicated tracking."
+    },
+    "elected_official": {
+      "whenToUse": "Create one dossier per elected official whose office, term, or relationship you need to track over time.",
+      "examples": ["Ministers", "Members of parliament", "Governors", "Municipal council heads"],
+      "commonLinks": ["Country dossiers", "Engagements", "Positions", "Work items"],
+      "notFor": "Not for private-sector contacts or unelected officials — use a person dossier instead."
+    }
   },
   "type": {
     "country": "Country",
@@ -50,7 +99,11 @@
     "topic": "Policy areas, strategic priorities, and topical focus areas",
     "theme": "Policy areas, strategic priorities, and topical focus areas",
     "working_group": "Task forces, committees, and collaborative working bodies",
-    "person": "VIP individuals including ambassadors, ministers, and key contacts"
+    "person": "VIP individuals including ambassadors, ministers, and key contacts",
+    "elected_official": "Track elected officials — their offices, terms, and engagement history with the organization."
+  },
+  "typeStats": {
+    "percentOfActive": "% of total active dossiers"
   },
   "status": {
     "active": "Active",
@@ -60,10 +113,10 @@
   },
   "action": {
     "view": "View",
-    "viewDetails": "View Dossier",
+    "viewDetails": "View dossier",
     "edit": "Edit",
     "delete": "Delete",
-    "create": "Create Dossier",
+    "create": "Create dossier",
     "more": "More actions",
     "save": "Save",
     "cancel": "Cancel",
@@ -73,15 +126,15 @@
     "backToHub": "Back to Dossiers Hub",
     "backToList": "Back to List",
     "viewCorrectType": "View as {{type}}",
-    "exportGraph": "Export Graph",
-    "addRelationship": "Add Relationship",
-    "everythingAbout": "Everything About",
+    "exportGraph": "Export graph",
+    "addRelationship": "Add relationship",
+    "everythingAbout": "Everything about",
     "overview": "Overview",
     "export": "Export",
     "exportTooltip": "Export briefing pack"
   },
   "filter": {
-    "all": "All Types",
+    "all": "All types",
     "byType": "Filter by Type",
     "byStatus": "Filter by Status",
     "search": "Search dossiers...",
@@ -90,6 +143,7 @@
     "select_sensitivity": "Select sensitivity...",
     "type_selected": "type(s)",
     "status_selected": "status(es)",
+    "status_selected_count": "{{n}} status(es) selected",
     "sensitivity_selected": "level(s)",
     "search_type": "Search types...",
     "search_status": "Search statuses...",
@@ -108,7 +162,7 @@
     "5": "Restricted"
   },
   "form": {
-    "basicInformation": "Basic Information",
+    "basicInformation": "Basic information",
     "nameEn": "Name (English)",
     "nameAr": "Name (Arabic)",
     "nameEnPlaceholder": "Enter name in English",
@@ -118,23 +172,24 @@
     "abbreviationDescription": "Short code or acronym (max 20 characters)",
     "descriptionEn": "Description (English)",
     "descriptionAr": "Description (Arabic)",
+    "description": "Description",
     "descriptionEnPlaceholder": "Enter description in English",
     "descriptionArPlaceholder": "أدخل الوصف بالعربية",
     "status": "Status",
     "selectStatus": "Select status",
-    "sensitivityLevel": "Sensitivity Level",
+    "sensitivityLevel": "Sensitivity level",
     "selectSensitivity": "Select level",
     "sensitivityDescription": "Classification level for access control",
     "tags": "Tags",
     "tagsPlaceholder": "Add tags (comma separated)",
     "tagsDescription": "Add relevant tags for search and categorization",
-    "countryFields": "Country-Specific Information",
-    "organizationFields": "Organization-Specific Information",
-    "forumFields": "Forum-Specific Information",
-    "engagementFields": "Engagement-Specific Information",
-    "themeFields": "Theme-Specific Information",
-    "working_groupFields": "Working Group-Specific Information",
-    "personFields": "Person-Specific Information",
+    "countryFields": "Country-Specific information",
+    "organizationFields": "Organization-Specific information",
+    "forumFields": "Forum-Specific information",
+    "engagementFields": "Engagement-Specific information",
+    "themeFields": "Theme-Specific information",
+    "working_groupFields": "Working group-Specific information",
+    "personFields": "Person-Specific information",
     "typeSpecificFieldsPlaceholder": "Additional fields for {{type}} will be displayed here",
     "person": {
       "titleEn": "Title (English)",
@@ -151,29 +206,29 @@
       "biographyArPlaceholder": "أدخل السيرة الذاتية والمؤهلات"
     },
     "organization": {
-      "type": "Organization Type",
+      "type": "Organization type",
       "typePlaceholder": "Select organization type",
       "types": {
         "government": "Government",
         "ngo": "NGO",
         "international": "International",
-        "private": "Private Sector",
+        "private": "Private sector",
         "academic": "Academic"
       }
     },
     "forum": {
-      "organizingBody": "Organizing Body",
+      "organizingBody": "Organizing body",
       "organizingBodyDescription": "The organization responsible for organizing this forum",
       "selectOrganizingBody": "Select an organization...",
       "noOrganizingBody": "No organizing body selected",
-      "quickAddOrg": "Quick Add Organization",
+      "quickAddOrg": "Quick add organization",
       "quickAddOrgDescription": "Create a new organization dossier. You can add more details later.",
-      "createOrg": "Create Organization",
+      "createOrg": "Create organization",
       "orgCreated": "Organization \"{{name}}\" created successfully",
       "orgCreateFailed": "Failed to create organization"
     },
     "topic": {
-      "category": "Topic Category",
+      "category": "Topic category",
       "categoryPlaceholder": "Select category",
       "categoryDescription": "Classification of this topic",
       "categories": {
@@ -184,14 +239,14 @@
       }
     },
     "workingGroup": {
-      "status": "Working Group Status",
+      "status": "Working group status",
       "statusPlaceholder": "Select status",
       "statuses": {
         "active": "Active",
         "suspended": "Suspended",
         "disbanded": "Disbanded"
       },
-      "establishedDate": "Established Date",
+      "establishedDate": "Established date",
       "mandateEn": "Mandate (English)",
       "mandateAr": "Mandate (Arabic)",
       "mandateEnPlaceholder": "Enter the working group's mandate and objectives",
@@ -199,8 +254,8 @@
       "mandateDescription": "The official mandate and objectives of the working group"
     },
     "cancel": "Cancel",
-    "create": "Create Dossier",
-    "update": "Update Dossier",
+    "create": "Create dossier",
+    "update": "Update dossier",
     "creating": "Creating..."
   },
   "field": {
@@ -211,13 +266,13 @@
     "area": "Area (km²)",
     "gdp": "GDP",
     "languages": "Languages",
-    "governmentType": "Government Type"
+    "governmentType": "Government type"
   },
   "common": {
     "notAvailable": "N/A"
   },
   "list": {
-    "title": "All Dossiers",
+    "title": "All dossiers",
     "subtitle": "Browse and manage all your dossiers",
     "typeOverview": "Browse by Type",
     "empty": "No dossiers found",
@@ -229,18 +284,18 @@
     "pageInfo": "Page {{current}} of {{total}}",
     "searchPlaceholder": "Search dossiers...",
     "search": "Search",
-    "createNew": "Create New",
+    "createNew": "Create new",
     "filterByType": "Filter by Type",
     "filterByStatus": "Filter by Status",
-    "sortBy": "Sort By",
+    "sortBy": "Sort by",
     "sortOrder": "Order",
-    "sortUpdated": "Last Updated",
-    "sortCreated": "Date Created",
+    "sortUpdated": "Last updated",
+    "sortCreated": "Date created",
     "sortNameEn": "Name (English)",
     "sortNameAr": "Name (Arabic)",
     "sortDesc": "Descending",
     "sortAsc": "Ascending",
-    "activeFilters": "Active Filters",
+    "activeFilters": "Active filters",
     "clearFilter": "Clear filter",
     "searchQuery": "Search",
     "showing": "Showing {{from}} to {{to}} of {{total}}",
@@ -248,74 +303,74 @@
     "page": "Page {{current}} of {{total}}",
     "previous": "Previous",
     "next": "Next",
-    "errorTitle": "Error Loading Dossiers",
+    "errorTitle": "Error loading dossiers",
     "errorMessage": "Unable to load dossiers. Please try again.",
     "showActiveOnly": "Show only active dossiers (with relations)",
     "default": "Default",
     "withRelations": "with data",
     "statusFilterHint": "Select one or more statuses. Active filter shows only dossiers with relations by default.",
-    "exportDossiers": "Export Dossiers",
-    "importDossiers": "Import Dossiers"
+    "exportDossiers": "Export dossiers",
+    "importDossiers": "Import dossiers"
   },
   "stats": {
     "ofTotal": "of Total",
     "clickToFilter": "Click to filter by this type",
     "clickToShowAll": "Click to show all types",
-    "title": "Dossier Statistics",
+    "title": "Dossier statistics",
     "refreshedAt": "Last refreshed",
     "lastActivity": "Last activity",
-    "totalWorkItems": "Total Work Items",
-    "pendingWork": "Pending Work",
+    "totalWorkItems": "Total work items",
+    "pendingWork": "Pending work",
     "overdue": "Overdue",
     "tasks": "Tasks",
-    "pendingTasks": "Pending Tasks",
-    "overdueTasks": "Overdue Tasks",
+    "pendingTasks": "Pending tasks",
+    "overdueTasks": "Overdue tasks",
     "commitments": "Commitments",
-    "pendingCommitments": "Pending Commitments",
-    "overdueCommitments": "Overdue Commitments",
+    "pendingCommitments": "Pending commitments",
+    "overdueCommitments": "Overdue commitments",
     "intakes": "Intakes",
-    "pendingIntakes": "Pending Intakes",
+    "pendingIntakes": "Pending intakes",
     "positions": "Positions",
-    "publishedPositions": "Published Positions",
+    "publishedPositions": "Published positions",
     "relationships": "Relationships",
-    "activeRelationships": "Active Relationships",
+    "activeRelationships": "Active relationships",
     "events": "Events",
-    "upcomingEvents": "Upcoming Events",
+    "upcomingEvents": "Upcoming events",
     "documents": "Documents",
     "engagements": "Engagements",
     "mous": "MOUs",
     "activeMous": "Active MOUs",
     "dossiersWithPending": "Dossiers with Pending Work",
     "dossiersWithOverdue": "Dossiers with Overdue Items",
-    "byType": "By Type",
+    "byType": "By type",
     "noData": "No statistics available",
     "loading": "Loading statistics...",
     "error": "Failed to load statistics",
-    "viewDetails": "View Details",
+    "viewDetails": "View details",
     "summary": "Summary"
   },
   "detail": {
-    "title": "Dossier Details",
+    "title": "Dossier details",
     "loading": "Loading dossier...",
     "error": "Failed to load dossier",
     "errorGeneric": "An unexpected error occurred",
     "notFound": "Dossier not found",
-    "wrongType": "Incorrect Dossier Type",
+    "wrongType": "Incorrect dossier type",
     "wrongTypeDescription": "This dossier is a {{actualType}}, not a {{expectedType}}. You can view it as the correct type.",
-    "basicInfo": "Basic Information",
-    "hasRelations": "Has Data",
-    "extensionInfo": "Type-Specific Details",
+    "basicInfo": "Basic information",
+    "hasRelations": "Has data",
+    "extensionInfo": "Type-Specific details",
     "metadata": "Metadata",
     "relationships": "Relationships",
-    "calendar": "Calendar Events",
-    "documents": "Related Documents",
+    "calendar": "Calendar events",
+    "documents": "Related documents",
     "createdAt": "Created",
-    "updatedAt": "Last Updated",
+    "updatedAt": "Last updated",
     "id": "Dossier ID",
-    "updated": "Last Updated"
+    "updated": "Last updated"
   },
   "create": {
-    "title": "Create New Dossier",
+    "title": "Create new dossier",
     "subtitleSelectType": "Choose the type of dossier you want to create",
     "hubDescription": {
       "country": "Create a country dossier — flags, codes, region, capital",
@@ -329,14 +384,15 @@
     },
     "success": "Dossier created successfully",
     "error": "Failed to create dossier",
+    "duplicate": "A dossier with this name already exists.",
     "checkingDuplicates": "Checking for similar dossiers...",
     "duplicateWarning": {
       "highSimilarity": {
-        "title": "Potential Duplicate Detected",
+        "title": "Potential duplicate detected",
         "description": "A {{type}} with {{similarity}}% similar name already exists: \"{{name}}\""
       },
       "mediumSimilarity": {
-        "title": "Similar Dossiers Found",
+        "title": "Similar dossiers found",
         "description": "{{count}} dossier(s) with similar names were found. Please verify this is not a duplicate."
       },
       "viewExisting": "View existing dossier",
@@ -344,7 +400,7 @@
     }
   },
   "update": {
-    "title": "Edit Dossier",
+    "title": "Edit dossier",
     "success": "Dossier '{{name}}' updated successfully",
     "error": "Failed to update dossier: {{message}}"
   },
@@ -354,10 +410,16 @@
     "loadError": "Could not load this dossier for editing."
   },
   "delete": {
-    "title": "Delete Dossier",
+    "title": "Delete dossier",
     "confirm": "Are you sure you want to delete this dossier? This action cannot be undone.",
     "success": "Dossier deleted successfully",
     "error": "Failed to delete dossier: {{message}}"
+  },
+  "document": {
+    "linkSuccess": "Document linked successfully",
+    "linkError": "Failed to link document: {{message}}",
+    "unlinkSuccess": "Document unlinked successfully",
+    "unlinkError": "Failed to unlink document: {{message}}"
   },
   "dossier": {
     "nav": {
@@ -387,16 +449,16 @@
       "proactive": "Proactive support"
     },
     "overview": {
-      "title": "Dossier Overview",
+      "title": "Dossier overview",
       "subtitle": "Manage bilateral agreements, partnerships, and international cooperation",
-      "recent": "Recent Dossiers",
-      "deadlines": "Upcoming Deadlines"
+      "recent": "Recent dossiers",
+      "deadlines": "Upcoming deadlines"
     },
     "stats": {
-      "active": "Active Dossiers",
-      "pending": "Pending Review",
-      "completed": "Completed This Month",
-      "team": "Team Members"
+      "active": "Active dossiers",
+      "pending": "Pending review",
+      "completed": "Completed this month",
+      "team": "Team members"
     },
     "classification": {
       "notice": "This system contains classified information. Unauthorized access is prohibited."
@@ -411,86 +473,86 @@
     "yearsAgo": "{{count}} years ago"
   },
   "hub": {
-    "title": "Dossiers Hub",
+    "title": "Dossiers hub",
     "subtitle": "Central navigation for all dossier types",
-    "viewAll": "View All {{type}}",
+    "viewAll": "View all {{type}}",
     "count": "{{count}} dossiers",
     "noDossiers": "No dossiers found",
     "loading": "Loading dossiers hub..."
   },
   "engagement": {
-    "viewKanban": "View Kanban Board",
-    "logAfterAction": "Log After Action"
+    "viewKanban": "View kanban board",
+    "logAfterAction": "Log after action"
   },
   "sections": {
     "country": {
-      "geographicContext": "Geographic Context",
+      "geographicContext": "Geographic context",
       "geographicContextDescription": "Location, region, and demographic information",
       "geographicContextEmpty": "No geographic data available",
-      "worldMap": "World Map",
+      "worldMap": "World map",
       "worldMapDescription": "Visual location on world map",
       "worldMapPlaceholder": "Interactive map coming in future release",
-      "diplomaticRelations": "Diplomatic Relations",
+      "diplomaticRelations": "Diplomatic relations",
       "diplomaticRelationsDescription": "Network of international relationships",
       "diplomaticRelationsEmpty": "No diplomatic relations found",
       "diplomaticRelationsEmptyDescription": "Relationships with other countries will appear here",
       "diplomaticRelationsPlaceholder": "Network graph visualization coming in polish phase",
-      "bilateralAgreements": "Bilateral Agreements",
+      "bilateralAgreements": "Bilateral agreements",
       "bilateralAgreementsDescription": "Active and historical agreements",
       "bilateralAgreementsEmpty": "No bilateral agreements found",
       "bilateralAgreementsEmptyDescription": "Agreements between countries will appear here",
       "bilateralAgreementsPlaceholder": "Relationship data integration pending",
-      "keyOfficials": "Key Officials",
+      "keyOfficials": "Key officials",
       "keyOfficialsDescription": "Government representatives and contacts",
       "keyOfficialsEmpty": "No key officials found",
       "keyOfficialsEmptyDescription": "Important personnel and contacts will appear here",
       "keyOfficialsPlaceholder": "Person dossier relationships will populate this section"
     },
     "organization": {
-      "institutionalProfile": "Institutional Profile",
+      "institutionalProfile": "Institutional profile",
       "institutionalProfileDescription": "Organization overview and details",
-      "orgHierarchy": "Organization Hierarchy",
+      "orgHierarchy": "Organization hierarchy",
       "orgHierarchyDescription": "Organizational structure and reporting lines",
-      "showHierarchy": "Show Organization Hierarchy",
-      "hideHierarchy": "Hide Organization Hierarchy",
-      "keyContacts": "Key Contacts",
+      "showHierarchy": "Show organization hierarchy",
+      "hideHierarchy": "Hide organization hierarchy",
+      "keyContacts": "Key contacts",
       "keyContactsDescription": "Primary contacts and representatives",
-      "activeMous": "Active MoUs",
+      "activeMous": "Active moUs",
       "activeMousDescription": "Memorandums of Understanding and agreements",
       "fields": {
-        "orgCode": "Organization Code",
-        "orgType": "Organization Type",
+        "orgCode": "Organization code",
+        "orgType": "Organization type",
         "website": "Website",
         "email": "Email",
         "phone": "Phone",
         "address": "Address",
         "headquarters": "Headquarters",
-        "establishedDate": "Established Date",
-        "parentOrganization": "Parent Organization",
+        "establishedDate": "Established date",
+        "parentOrganization": "Parent organization",
         "logo": "Logo"
       },
       "orgType": {
         "government": "Government",
         "ngo": "NGO",
         "international": "International",
-        "private": "Private Sector",
+        "private": "Private sector",
         "academic": "Academic"
       }
     },
     "person": {
-      "professionalProfile": "Professional Profile",
+      "professionalProfile": "Professional profile",
       "professionalProfileDescription": "Biography, education, and current position",
-      "positionsHeld": "Positions Held",
+      "positionsHeld": "Positions held",
       "positionsHeldDescription": "Career history and roles",
       "positionsHeldEmpty": "No positions found",
       "positionsHeldEmptyDescription": "Career history will appear here",
       "positionsHeldPlaceholder": "Position links will populate this section",
-      "organizationAffiliations": "Organization Affiliations",
+      "organizationAffiliations": "Organization affiliations",
       "organizationAffiliationsDescription": "Associated organizations and memberships",
       "organizationAffiliationsEmpty": "No affiliations found",
       "organizationAffiliationsEmptyDescription": "Associated organizations will appear here",
       "organizationAffiliationsPlaceholder": "Organization relationships will populate this section",
-      "interactionHistory": "Interaction History",
+      "interactionHistory": "Interaction history",
       "interactionHistoryDescription": "Meetings, engagements, and communications",
       "interactionHistoryEmpty": "No interactions found",
       "interactionHistoryEmptyDescription": "Meetings and communications will appear here",
@@ -498,14 +560,14 @@
     },
     "engagement": {
       "information": "Information",
-      "informationDescription": "Engagement Information",
+      "informationDescription": "Engagement information",
       "positions": "Positions",
       "positionsDescription": "Attached positions and suggestions",
       "date": "Date",
       "location": "Location",
       "description": "Description",
-      "createdBy": "Created By",
-      "eventTimeline": "Event Timeline",
+      "createdBy": "Created by",
+      "eventTimeline": "Event timeline",
       "eventTimelineDescription": "Chronological sequence of events",
       "eventTimelineEmpty": "No events found",
       "eventTimelineEmptyDescription": "Timeline of events will appear here",
@@ -515,53 +577,53 @@
       "participantsListEmpty": "No participants found",
       "participantsListEmptyDescription": "List of attendees will appear here",
       "participantsListPlaceholder": "Person dossier relationships will populate this section",
-      "outcomesSummary": "Outcomes Summary",
+      "outcomesSummary": "Outcomes summary",
       "outcomesSummaryDescription": "Key decisions and results",
       "outcomesSummaryEmpty": "No outcomes recorded",
       "outcomesSummaryEmptyDescription": "Key decisions and results will appear here",
       "outcomesSummaryPlaceholder": "Decisions tracking integration coming soon",
-      "followUpActions": "Follow-Up Actions",
+      "followUpActions": "Follow-Up actions",
       "followUpActionsDescription": "Tasks and next steps",
       "followUpActionsEmpty": "No follow-up actions",
       "followUpActionsEmptyDescription": "Tasks and next steps will appear here",
       "followUpActionsPlaceholder": "Assignments system integration pending"
     },
     "forum": {
-      "memberOrganizations": "Member Organizations",
+      "memberOrganizations": "Member organizations",
       "memberOrganizationsDescription": "Participating entities",
-      "meetingSchedule": "Meeting Schedule",
+      "meetingSchedule": "Meeting schedule",
       "meetingScheduleDescription": "Upcoming and past meetings",
-      "deliverablesTracker": "Deliverables Tracker",
+      "deliverablesTracker": "Deliverables tracker",
       "deliverablesTrackerDescription": "Tasks, milestones, and outputs",
-      "decisionLogs": "Decision Logs",
+      "decisionLogs": "Decision logs",
       "decisionLogsDescription": "Formal decisions and resolutions"
     },
     "decisionLogs": {
-      "title": "Decision Logs",
-      "empty": "No Decision Logs",
+      "title": "Decision logs",
+      "empty": "No decision logs",
       "emptyDescription": "Formal decisions and resolutions from linked engagements will appear here.",
       "fromEngagement": "From engagement"
     },
     "workingGroup": {
-      "memberOrganizations": "Member Organizations",
+      "memberOrganizations": "Member organizations",
       "memberOrganizationsDescription": "Participating entities",
-      "meetingSchedule": "Meeting Schedule",
+      "meetingSchedule": "Meeting schedule",
       "meetingScheduleDescription": "Upcoming and past meetings",
-      "deliverablesTracker": "Deliverables Tracker",
+      "deliverablesTracker": "Deliverables tracker",
       "deliverablesTrackerDescription": "Tasks, milestones, and outputs",
-      "decisionLogs": "Decision Logs",
+      "decisionLogs": "Decision logs",
       "decisionLogsDescription": "Formal decisions and resolutions"
     },
     "topic": {
-      "policyOverview": "Policy Overview",
+      "policyOverview": "Policy overview",
       "policyOverviewDescription": "Strategic context and category",
       "category": "Category",
-      "parentTopic": "Parent Topic",
-      "relatedDossiers": "Related Dossiers",
+      "parentTopic": "Parent topic",
+      "relatedDossiers": "Related dossiers",
       "relatedDossiersDescription": "Countries, organizations, and engagements",
       "relatedDossiersPlaceholder": "Related dossiers will appear here as relationships are established",
       "noRelatedDossiers": "No related dossiers found",
-      "keyDocuments": "Key Documents",
+      "keyDocuments": "Key documents",
       "keyDocumentsDescription": "Policy papers, reports, and guidelines",
       "keyDocumentsPlaceholder": "Documents related to this topic will appear here",
       "noDocuments": "No documents found",
@@ -569,7 +631,7 @@
       "subtopicsDescription": "Child topics under this policy area",
       "subtopicsPlaceholder": "Subtopics will appear here as they are created",
       "noSubtopics": "No subtopics found",
-      "viewSubtopic": "View Subtopic"
+      "viewSubtopic": "View subtopic"
     },
     "shared": {
       "relationships": "Relationships",
@@ -582,7 +644,7 @@
       "overviewDescription": "Summary and key information"
     },
     "stakeholderTimeline": {
-      "title": "Interaction Timeline",
+      "title": "Interaction timeline",
       "description": "All interactions aggregated chronologically with annotations"
     },
     "collapsible": {
@@ -614,13 +676,13 @@
     "last_updated": "Updated",
     "sources_count_one": "{{count}} source",
     "sources_count_other": "{{count}} sources",
-    "detailed_analysis": "Detailed Analysis",
+    "detailed_analysis": "Detailed analysis",
     "loading": "Loading intelligence...",
     "error": "Failed to load intelligence",
     "empty": "No intelligence available for this entity",
     "retry": "Retry",
     "refresh": "Refresh",
-    "refreshAll": "Refresh All",
+    "refreshAll": "Refresh all",
     "refreshing": "Refreshing...",
     "refreshButtonLabel": "Refresh intelligence data",
     "refreshAllLabel": "Refresh all intelligence types",
@@ -669,19 +731,19 @@
     "area": "Area (km²)"
   },
   "timeline": {
-    "title": "Interactive Timeline",
+    "title": "Interactive timeline",
     "search_placeholder": "Search timeline events...",
     "filters": "Filters",
-    "event_types": "Event Types",
+    "event_types": "Event types",
     "priority_filter": "Priority",
-    "all_priorities": "All Priorities",
+    "all_priorities": "All priorities",
     "priority": {
-      "high": "High Priority",
-      "medium": "Medium Priority",
-      "low": "Low Priority"
+      "high": "High priority",
+      "medium": "Medium priority",
+      "low": "Low priority"
     },
     "status_filter": "Status",
-    "all_statuses": "All Statuses",
+    "all_statuses": "All statuses",
     "status": {
       "planned": "Planned",
       "ongoing": "Ongoing",
@@ -689,35 +751,35 @@
       "cancelled": "Cancelled",
       "postponed": "Postponed"
     },
-    "date_range": "Date Range",
-    "last_7_days": "Last 7 Days",
-    "last_30_days": "Last 30 Days",
-    "last_90_days": "Last 90 Days",
-    "last_year": "Last Year",
-    "all_time": "All Time",
-    "custom_range": "Custom Range",
-    "from_date": "From Date",
-    "to_date": "To Date",
-    "apply_custom_range": "Apply Range",
-    "reset_filters": "Reset All Filters",
+    "date_range": "Date range",
+    "last_7_days": "Last 7 days",
+    "last_30_days": "Last 30 days",
+    "last_90_days": "Last 90 days",
+    "last_year": "Last year",
+    "all_time": "All time",
+    "custom_range": "Custom range",
+    "from_date": "From date",
+    "to_date": "To date",
+    "apply_custom_range": "Apply range",
+    "reset_filters": "Reset all filters",
     "loading_more": "Loading more...",
-    "load_more": "Load More",
+    "load_more": "Load more",
     "end": "End of timeline",
     "location": "Location",
-    "join_virtual": "Join Virtual Meeting",
+    "join_virtual": "Join virtual meeting",
     "participants": "Participants",
     "more": "more",
     "attachments": "Attachments",
     "confidence": "Confidence",
-    "show_more": "Show More",
-    "show_less": "Show Less",
-    "view_details": "View Dossier",
+    "show_more": "Show more",
+    "show_less": "Show less",
+    "view_details": "View dossier",
     "error": {
       "title": "Error",
       "description": "Failed to load timeline"
     },
     "empty": {
-      "title": "No Events",
+      "title": "No events",
       "description": "No timeline events to display",
       "country": "No timeline events found for this country",
       "organization": "No timeline events found for this organization",
@@ -728,33 +790,33 @@
       "topic": "No timeline events found for this topic"
     },
     "zoom": {
-      "zoom_in": "Zoom In",
-      "zoom_out": "Zoom Out",
+      "zoom_in": "Zoom in",
+      "zoom_out": "Zoom out",
       "go_today": "Go to Today",
-      "scroll_back": "Scroll Back",
-      "scroll_forward": "Scroll Forward",
-      "fit_all": "Fit All Events",
+      "scroll_back": "Scroll back",
+      "scroll_forward": "Scroll forward",
+      "fit_all": "Fit all events",
       "day": "Day",
       "week": "Week",
       "month": "Month",
       "quarter": "Quarter",
       "year": "Year",
-      "all": "All Time"
+      "all": "All time"
     },
     "annotations": {
-      "toggle": "Toggle Annotations",
-      "create_title": "Add Annotation",
+      "toggle": "Toggle annotations",
+      "create_title": "Add annotation",
       "create_description": "Add a note, marker, or highlight to this event",
-      "edit_title": "Edit Annotation",
+      "edit_title": "Edit annotation",
       "edit_description": "Update your annotation",
-      "type": "Annotation Type",
+      "type": "Annotation type",
       "content_en": "Content (English)",
       "content_ar": "Content (Arabic)",
       "content_placeholder_en": "Enter your annotation...",
       "content_placeholder_ar": "أدخل ملاحظتك...",
       "color": "Color",
       "visibility": "Visibility",
-      "add": "Add Annotation",
+      "add": "Add annotation",
       "types": {
         "note": "Note",
         "marker": "Marker",
@@ -805,11 +867,11 @@
     }
   },
   "sessions": {
-    "title": "Forum Sessions",
+    "title": "Forum sessions",
     "subtitle": "Editions and instances of this recurring forum",
-    "addSession": "Add Session",
-    "createFirst": "Create First Session",
-    "empty": "No Sessions Yet",
+    "addSession": "Add session",
+    "createFirst": "Create first session",
+    "empty": "No sessions yet",
     "emptyDescription": "This forum has no sessions or editions yet. Create an engagement dossier to represent a specific instance of this forum.",
     "error": "Failed to load sessions",
     "totalCount": "{{count}} session(s) total",
@@ -823,15 +885,15 @@
     }
   },
   "schedule": {
-    "nextMeeting": "Next Meeting",
-    "meetingFrequency": "Meeting Frequency",
+    "nextMeeting": "Next meeting",
+    "meetingFrequency": "Meeting frequency",
     "noSchedule": "No schedule information available."
   },
   "documents": {
-    "noDocuments": "No Documents",
+    "noDocuments": "No documents",
     "emptyDescription": "No documents have been attached to this organization dossier yet.",
     "forumEmptyDescription": "No documents have been attached to this forum dossier yet.",
-    "upload": "Upload Document",
+    "upload": "Upload document",
     "comingSoon": "Document uploads coming soon"
   },
   "carousel": {
@@ -841,10 +903,10 @@
     "pagination": "Carousel pagination",
     "empty": "No items to display",
     "itemCount": "{{current}} of {{total}}",
-    "relatedDossiers": "Related Dossiers",
-    "linkedPersons": "Linked Persons",
-    "connectedOrganizations": "Connected Organizations",
-    "viewAll": "View All"
+    "relatedDossiers": "Related dossiers",
+    "linkedPersons": "Linked persons",
+    "connectedOrganizations": "Connected organizations",
+    "viewAll": "View all"
   },
   "views": {
     "carousel": "Carousel",
@@ -856,75 +918,75 @@
     "close": "Close menu",
     "subtitle": "Add item to {{name}}",
     "groups": {
-      "workItems": "Work Items",
+      "workItems": "Work items",
       "planning": "Planning & Scheduling",
       "content": "Content & Info"
     },
     "actions": {
       "intake": {
-        "label": "New Intake",
+        "label": "New intake",
         "description": "Create a new service request linked to this dossier"
       },
       "task": {
-        "label": "New Task",
+        "label": "New task",
         "description": "Create an internal task for this dossier"
       },
       "commitment": {
-        "label": "New Commitment",
+        "label": "New commitment",
         "description": "Record a commitment or promise"
       },
       "position": {
-        "label": "New Position",
+        "label": "New position",
         "description": "Add a position or role"
       },
       "event": {
-        "label": "Schedule Event",
+        "label": "Schedule event",
         "description": "Schedule a meeting or event"
       },
       "relationship": {
-        "label": "Add Relationship",
+        "label": "Add relationship",
         "description": "Link to another dossier"
       },
       "brief": {
-        "label": "Generate Brief",
+        "label": "Generate brief",
         "description": "Create an AI-generated briefing"
       },
       "document": {
-        "label": "Upload Document",
+        "label": "Upload document",
         "description": "Attach a file to this dossier"
       }
     },
     "dialogs": {
       "intake": {
-        "title": "New Intake Request",
+        "title": "New intake request",
         "description": "Create a new intake request linked to this dossier"
       },
       "task": {
-        "title": "New Task",
+        "title": "New task",
         "description": "Create a new task linked to this dossier"
       },
       "commitment": {
-        "title": "New Commitment",
+        "title": "New commitment",
         "description": "Record a new commitment for this dossier"
       },
       "position": {
-        "title": "New Position",
+        "title": "New position",
         "description": "Add a new position to this dossier"
       },
       "event": {
-        "title": "Schedule Event",
+        "title": "Schedule event",
         "description": "Schedule a new event for this dossier"
       },
       "relationship": {
-        "title": "Add Relationship",
+        "title": "Add relationship",
         "description": "Link this dossier to another entity"
       },
       "brief": {
-        "title": "Generate Brief",
+        "title": "Generate brief",
         "description": "Generate an AI-powered briefing for this dossier"
       },
       "document": {
-        "title": "Upload Document",
+        "title": "Upload document",
         "description": "Upload a document to this dossier"
       }
     },
@@ -959,13 +1021,13 @@
         "high": "High",
         "urgent": "Urgent"
       },
-      "dueDate": "Due Date",
-      "ownerType": "Owner Type",
+      "dueDate": "Deadline",
+      "ownerType": "Owner type",
       "ownerTypes": {
         "internal": "Internal",
         "external": "External"
       },
-      "requestType": "Request Type",
+      "requestType": "Request type",
       "requestTypes": {
         "engagement": "Engagement",
         "position": "Position",
@@ -979,16 +1041,16 @@
         "high": "High",
         "critical": "Critical"
       },
-      "entryType": "Event Type",
+      "entryType": "Event type",
       "entryTypes": {
-        "internal_meeting": "Internal Meeting",
+        "internal_meeting": "Internal meeting",
         "deadline": "Deadline",
         "reminder": "Reminder",
         "training": "Training",
         "review": "Review",
         "other": "Other"
       },
-      "documentType": "Document Type",
+      "documentType": "Document type",
       "documentTypes": {
         "report": "Report",
         "memo": "Memo",
@@ -998,11 +1060,11 @@
       },
       "targetDossier": "Target Dossier ID",
       "targetDossierPlaceholder": "Enter target dossier ID",
-      "relationshipType": "Relationship Type",
+      "relationshipType": "Relationship type",
       "relationshipTypes": {
-        "member_of": "Member Of",
-        "participates_in": "Participates In",
-        "collaborates_with": "Collaborates With",
+        "member_of": "Member of",
+        "participates_in": "Participates in",
+        "collaborates_with": "Collaborates with",
         "monitors": "Monitors",
         "hosts": "Hosts",
         "cooperates_with": "Cooperates with",
@@ -1038,7 +1100,7 @@
     "select": "Select",
     "selectDossier": "Select a dossier...",
     "change": "Change dossier",
-    "changeDossier": "Change Dossier Context",
+    "changeDossier": "Change dossier context",
     "changeDescription": "Select a different dossier to work within",
     "searchDossiers": "Search dossiers...",
     "clear": "Clear context",
@@ -1051,32 +1113,32 @@
     }
   },
   "templates": {
-    "title": "Dossier Templates",
+    "title": "Dossier templates",
     "subtitle": "Choose a pre-configured template to get started quickly",
     "gallery": {
-      "title": "Template Gallery",
+      "title": "Template gallery",
       "description": "Select a template to preview its structure before creating your dossier",
-      "viewAll": "View All Templates",
+      "viewAll": "View all templates",
       "startFromScratch": "Start from Scratch",
       "startFromScratchDescription": "Create a dossier without using a template"
     },
     "preview": {
-      "title": "Template Preview",
-      "useTemplate": "Use This Template",
+      "title": "Template preview",
+      "useTemplate": "Use this template",
       "sections": "Sections",
-      "requiredSections": "Required Sections",
-      "optionalSections": "Optional Sections",
-      "recommendedTags": "Recommended Tags",
-      "useCases": "Use Cases",
-      "exampleName": "Example Name",
-      "dossierType": "Dossier Type",
-      "close": "Close Preview"
+      "requiredSections": "Required sections",
+      "optionalSections": "Optional sections",
+      "recommendedTags": "Recommended tags",
+      "useCases": "Use cases",
+      "exampleName": "Example name",
+      "dossierType": "Dossier type",
+      "close": "Close preview"
     },
     "category": {
-      "all": "All Templates",
-      "bilateral": "Bilateral Relations",
-      "regional": "Regional Analysis",
-      "thematic": "Thematic Briefs",
+      "all": "All templates",
+      "bilateral": "Bilateral relations",
+      "regional": "Regional analysis",
+      "thematic": "Thematic briefs",
       "organizational": "Organizations & Forums"
     },
     "card": {
@@ -1096,21 +1158,21 @@
     "analytics": "Analytics",
     "analyticsError": "Unable to load analytics",
     "stats": {
-      "linkedDossiers": "Linked Dossiers",
-      "openWorkItems": "Open Work Items",
-      "upcomingEvents": "Upcoming Events",
-      "recentActivity": "Recent Activity"
+      "linkedDossiers": "Linked dossiers",
+      "openWorkItems": "Open work items",
+      "upcomingEvents": "Upcoming events",
+      "recentActivity": "Recent activity"
     },
     "bilateral": {
-      "title": "Bilateral Summary",
-      "partnerships": "Bilateral Partners",
-      "agreements": "Key Agreements",
-      "lastMeeting": "Last Meeting",
+      "title": "Bilateral summary",
+      "partnerships": "Bilateral partners",
+      "agreements": "Key agreements",
+      "lastMeeting": "Last meeting",
       "noMeeting": "None recorded",
       "empty": "No bilateral data available"
     },
     "contacts": {
-      "title": "Key Contacts",
+      "title": "Key contacts",
       "empty": "No contacts linked",
       "viewAll": "View all {{count}} contacts",
       "more": "+{{count}} more contacts"
@@ -1128,12 +1190,12 @@
       },
       "total": "{{count}} total engagements"
     },
-    "recentActivity": "Recent Activity",
+    "recentActivity": "Recent activity",
     "noRecentActivity": "No recent activity",
     "membership": {
-      "title": "Membership Structure",
+      "title": "Membership structure",
       "members": "Members",
-      "memberOf": "Member Of",
+      "memberOf": "Member of",
       "subUnits": "Sub-Units",
       "totalRelated": "{{count}} total related dossiers",
       "empty": "No membership data available",
@@ -1164,27 +1226,27 @@
       "empty": "No focal points recorded"
     },
     "mou": {
-      "title": "MoU Status",
+      "title": "MoU status",
       "active": "Active",
       "pending": "Pending",
       "expired": "Expired",
       "draft": "Draft",
       "total": "{{count}} total agreements",
       "empty": "No MoUs recorded",
-      "viewAll": "View MoUs"
+      "viewAll": "View moUs"
     },
     "representatives": {
-      "title": "Key Representatives",
+      "title": "Key representatives",
       "empty": "No representatives linked",
       "total": "{{count}} representatives total",
       "add": "Add representative",
       "more": "Showing first {{count}}"
     },
     "forum": {
-      "title": "Forum Details",
-      "type": "Forum Type",
+      "title": "Forum details",
+      "type": "Forum type",
       "frequency": "Frequency",
-      "host": "Host Organization",
+      "host": "Host organization",
       "participants": "Participants"
     },
     "sessions": {
@@ -1192,17 +1254,17 @@
       "empty": "No sessions recorded"
     },
     "positions": {
-      "title": "Position Tracker",
+      "title": "Position tracker",
       "empty": "No positions tracked yet. Add positions in the Positions tab.",
-      "addPositions": "Add Positions",
-      "ourStance": "Our Position",
+      "addPositions": "Add positions",
+      "ourStance": "Our position",
       "noOurStance": "Not defined",
-      "counterpart": "Counterpart Positions",
+      "counterpart": "Counterpart positions",
       "noCounterpart": "None recorded",
-      "viewAll": "View Positions"
+      "viewAll": "View positions"
     },
     "anchors": {
-      "title": "Connected Anchors",
+      "title": "Connected anchors",
       "empty": "No anchor dossiers connected",
       "viewSidebar": "View all in sidebar"
     },
@@ -1213,7 +1275,7 @@
       "more": "+{{count}} more members"
     },
     "meetings": {
-      "title": "Upcoming Meetings",
+      "title": "Upcoming meetings",
       "empty": "No upcoming meetings",
       "untitled": "Meeting"
     },
@@ -1221,36 +1283,36 @@
       "title": "Deliverables",
       "empty": "No deliverables tracked",
       "completed": "Completed",
-      "inProgress": "In Progress",
+      "inProgress": "In progress",
       "pending": "Pending"
     },
     "person": {
       "organization": "Organization",
       "role": "Role / Title",
-      "lastEngagement": "Last Engagement",
+      "lastEngagement": "Last engagement",
       "noEngagement": "None recorded",
       "title": "Profile"
     },
     "engagementHistory": {
-      "title": "Engagement History",
+      "title": "Engagement history",
       "empty": "No engagement history",
       "viewAll": "View all engagements"
     }
   },
   "analytics": {
     "engagementCount": "Engagements",
-    "activeTopics": "Active Topics",
-    "workItemsCount": "Work Items",
-    "memberCountries": "Member Countries",
-    "openWorkItems": "Open Work Items",
+    "activeTopics": "Active topics",
+    "workItemsCount": "Work items",
+    "memberCountries": "Member countries",
+    "openWorkItems": "Open work items",
     "sessionCount": "Sessions",
-    "linkedDossiers": "Linked Dossiers",
-    "connectedAnchors": "Connected Anchors",
+    "linkedDossiers": "Linked dossiers",
+    "connectedAnchors": "Connected anchors",
     "memberCount": "Members",
     "deliverableCount": "Deliverables",
     "interactionCount": "Interactions",
     "affiliationCount": "Affiliations",
     "committeeCount": "Committees",
-    "recentActivity": "Recent Activity"
+    "recentActivity": "Recent activity"
   }
 }

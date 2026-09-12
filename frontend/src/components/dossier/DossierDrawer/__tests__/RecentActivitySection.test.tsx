@@ -5,7 +5,9 @@
  *   1. With 6 activities, renders only top 4 rows
  *   2. With 0 activities, renders t('empty.recent_activity')
  *   3. Each row uses class act-row inside parent class act-list
- *   4. Time cell uses formatRelativeTimeShort(a.timestamp, lang) wrapped in LtrIsolate
+ *   4. Time cell uses the ONE shared localized helper (formatRelativeTime) wrapped
+ *      in LtrIsolate. Phase 98 (D-25 / RULING-P98A2-06) RETIRED the parallel
+ *      `lib/i18n/relativeTime.ts` short-format helper this test used to pin.
  *   5. Middle cell renders a dot icon
  *   6. Text cell renders a.actor.name + bilingual title (title_ar under AR if present, else title_en)
  *   7. When actor.name is empty/null, falls back to em-dash '—'
@@ -23,6 +25,11 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 const i18nState: { language: string } = { language: 'en' }
 
 vi.mock('react-i18next', () => ({
+  // Phase 98 (D-25): the component now imports `@/lib/format-date`, which imports the
+  // i18n SINGLETON to read the session language at call time. That module calls
+  // `.use(initReactI18next)` at import, so a partial react-i18next mock without this
+  // export fails the whole suite at import time rather than at an assertion.
+  initReactI18next: { type: '3rdParty', init: (): void => undefined },
   useTranslation: (): {
     t: (key: string) => string
     i18n: { language: string }
@@ -104,18 +111,19 @@ describe('RecentActivitySection', () => {
     expect(list?.querySelector('.act-row')).not.toBeNull()
   })
 
-  it('renders time HH:mm via formatRelativeTimeShort for same-day activities', () => {
-    // Build a same-calendar-day timestamp to force HH:mm format
-    const now = new Date()
-    const sameDay = new Date(now)
-    sameDay.setHours(9, 42, 0, 0)
+  it('renders a relative phrase from the ONE shared helper, not a second short-format helper', () => {
+    // A recent timestamp: the shared helper renders a recency phrase (`… ago`),
+    // never the retired `HH:mm` / `yday` / `2d` short forms.
+    const recent = new Date(Date.now() - 5 * 60 * 1000)
     const activity = buildActivity({
       id: 'act-time',
       title_en: 'Time test',
-      timestamp: sameDay.toISOString(),
+      timestamp: recent.toISOString(),
     })
-    render(<RecentActivitySection overview={buildOverview([activity])} />)
-    expect(screen.getByText('09:42')).toBeTruthy()
+    const { container } = render(<RecentActivitySection overview={buildOverview([activity])} />)
+    const cell = container.querySelector('.act-t')
+    expect(cell).not.toBeNull()
+    expect(cell?.textContent ?? '').toMatch(/ago/)
   })
 
   it('renders bilingual title — title_ar under AR when present, else title_en', () => {

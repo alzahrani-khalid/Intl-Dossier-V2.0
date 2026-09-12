@@ -26,6 +26,9 @@ vi.mock('@tanstack/react-router', () => ({
   }),
   useNavigate: (): typeof navigateSpy => navigateSpy,
   useSearch: (): Record<string, unknown> => ({}),
+  Link: ({ to, children }: { to: string; children: ReactNode }): ReactNode => (
+    <a href={to}>{children}</a>
+  ),
 }))
 
 // useCountries adapter + its extracted fetcher.
@@ -86,7 +89,7 @@ describe('Countries list route (Phase 87 wiring)', () => {
 
     const { container } = renderRoute()
 
-    expect(screen.getByRole('heading', { name: 'Countries' })).toBeTruthy()
+    expect(screen.getByRole('heading', { name: 'Countries overview' })).toBeTruthy()
     expect(screen.getAllByText('France').length).toBeGreaterThan(0)
     expect(screen.getByText('42')).toBeTruthy()
 

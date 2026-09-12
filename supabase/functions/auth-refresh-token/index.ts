@@ -1,6 +1,7 @@
 // T144 - Refresh token Edge Function
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
 import { createServiceClient } from '../_shared/auth.ts'
+import { writeAuditLog } from '../_shared/audit.ts'
 import {
   errorResponse,
   successResponse,
@@ -237,20 +238,37 @@ async function updateLastLogin(
       })
       .eq('id', userId)
 
-    // Create audit log
-    await supabase
-      .from('audit_logs')
-      .insert({
-        user_id: userId,
-        action: 'token_refresh',
-        entity_type: 'auth',
-        entity_id: userId,
-        details: {
-          device_id: deviceId,
-          timestamp: new Date().toISOString()
+    // Create audit log.
+    // Grade: LOG-LOUDLY-AND-CONTINUE (D-18). `user_role` is NOT NULL and this helper
+    // receives only a userId, so resolve it from `public.users`; unresolvable = loud
+    // skip, never a fabricated role.
+    const { data: auditActor } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', userId)
+      .maybeSingle()
+
+    if (!auditActor?.role) {
+      console.error(
+        `AUDIT-ZERO-01: audit write SKIPPED — no user_role resolves for ${userId} (auth-refresh-token:token_refresh)`
+      )
+    } else {
+      await writeAuditLog(
+        supabase,
+        {
+          entity_type: 'auth',
+          entity_id: userId,
+          action: 'token_refresh',
+          user_id: userId,
+          user_role: auditActor.role,
+          new_values: {
+            device_id: deviceId,
+            timestamp: new Date().toISOString()
+          }
         },
-        created_at: new Date().toISOString()
-      })
+        'auth-refresh-token'
+      )
+    }
 
   } catch (error) {
     log('error', 'Failed to update last login', {

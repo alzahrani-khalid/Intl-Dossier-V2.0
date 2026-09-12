@@ -4,7 +4,7 @@
   "description": "AI-driven suggestions for proactive engagement based on relationship health, upcoming events, and strategic priorities.",
 
   "noRecommendations": "No Recommendations",
-  "noRecommendationsDescription": "All caught up! There are no pending engagement recommendations at this time.",
+  "noRecommendationsDescription": "All caught up. There are no pending engagement recommendations at this time.",
   "noMatchingRecommendations": "No recommendations match your current filters. Try adjusting your filter criteria.",
   "noHighPriority": "No high-priority recommendations at this time.",
 
@@ -109,7 +109,7 @@
     "notHelpful": "This was not helpful",
     "additionalFeedback": "Additional feedback (optional)",
     "submit": "Submit Feedback",
-    "thankYou": "Thank you for your feedback!"
+    "thankYou": "Thank you for your feedback."
   },
 
   "generation": {

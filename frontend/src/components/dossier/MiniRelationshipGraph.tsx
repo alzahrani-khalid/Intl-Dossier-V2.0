@@ -241,9 +241,7 @@ function DossierQuickPreview({ node, isRTL, t }: DossierPreviewProps) {
       >
         {t(`status.${node.status}`, node.status)}
       </Badge>
-      <p className="text-xs text-muted-foreground">
-        {t('miniGraph.clickToNavigate', 'Click to view dossier')}
-      </p>
+      <p className="text-xs text-muted-foreground">{t('miniGraph.clickToNavigate')}</p>
     </div>
   )
 }
@@ -261,10 +259,7 @@ interface RelationshipListItemProps {
 
 function RelationshipListItem({ node, relationship, isRTL, t }: RelationshipListItemProps) {
   const displayName = isRTL ? node.name_ar || node.name_en : node.name_en
-  const relationshipLabel = t(
-    `relationship.${relationship.relationship_type}`,
-    relationship.relationship_type.replace(/_/g, ' '),
-  )
+  const relationshipLabel = t(`relationship.${relationship.relationship_type}`)
 
   return (
     <Link
@@ -371,7 +366,7 @@ function MiniGraphInner({ centerDossier, nodes, edges, height, isRTL, t }: MiniG
           height: 10,
           color: EDGE_COLORS[edge.relationship_type] || 'var(--ink-faint)',
         },
-        label: edge.relationship_type.replace(/_/g, ' '),
+        label: t(`relationship.${edge.relationship_type}`),
         labelStyle: {
           fontSize: 8,
           fill: 'var(--ink-faint)',
@@ -384,7 +379,7 @@ function MiniGraphInner({ centerDossier, nodes, edges, height, isRTL, t }: MiniG
     })
 
     return { flowNodes, flowEdges }
-  }, [centerDossier, nodes, edges, navigate])
+  }, [centerDossier, nodes, edges, navigate, t])
 
   const [reactFlowNodes] = useNodesState(flowNodes)
   const [reactFlowEdges] = useEdgesState(flowEdges)
@@ -456,7 +451,7 @@ function MiniGraphInner({ centerDossier, nodes, edges, height, isRTL, t }: MiniG
             position={isRTL ? 'top-left' : 'top-right'}
             className="bg-background/80 px-2 py-1 rounded text-[10px] text-muted-foreground"
           >
-            {flowNodes.length - 1} {t('miniGraph.connections', 'connections')}
+            {flowNodes.length - 1} {t('miniGraph.connections')}
           </Panel>
         </ReactFlow>
 
@@ -617,15 +612,15 @@ export function MiniRelationshipGraph({
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base">
             <Network className="size-4" />
-            {t('miniGraph.title', 'Relationships')}
+            {t('miniGraph.title')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-2 text-destructive text-sm p-3 bg-destructive/10 rounded-lg">
             <AlertCircle className="size-4 shrink-0" />
-            <span>{t('error', 'Failed to load graph data')}</span>
+            <span>{t('error')}</span>
             <Button variant="ghost" size="sm" onClick={() => refetch()} className="ms-auto">
-              {t('retry', 'Retry')}
+              {t('graph:miniGraph.retry')}
             </Button>
           </div>
         </CardContent>
@@ -641,7 +636,7 @@ export function MiniRelationshipGraph({
             <button className="flex items-center justify-between w-full text-start group">
               <CardTitle className="flex items-center gap-2 text-base">
                 <Network className="size-4" />
-                {t('miniGraph.title', 'Relationships')}
+                {t('miniGraph.title')}
                 {hasConnections && (
                   <Badge variant="secondary" className="ms-2 text-[10px]">
                     {(data?.nodes.length || 1) - 1}
@@ -665,9 +660,7 @@ export function MiniRelationshipGraph({
             {!hasConnections && !isLoading && (
               <div className="flex flex-col items-center justify-center py-6 text-center">
                 <Network className="size-10 text-muted-foreground/50 mb-3" />
-                <p className="text-sm text-muted-foreground">
-                  {t('miniGraph.noConnections', 'No relationships found')}
-                </p>
+                <p className="text-sm text-muted-foreground">{t('miniGraph.noConnections')}</p>
               </div>
             )}
 
@@ -710,7 +703,7 @@ export function MiniRelationshipGraph({
                     })}
                   {data.nodes.length > 6 && (
                     <p className="text-xs text-muted-foreground text-center pt-2">
-                      {t('miniGraph.moreConnections', '+{{count}} more', {
+                      {t('miniGraph.moreConnections', {
                         count: data.nodes.length - 6,
                       })}
                     </p>
@@ -723,7 +716,7 @@ export function MiniRelationshipGraph({
             <Button variant="outline" size="sm" className="w-full min-h-10" asChild>
               <Link to="/relationships/graph" search={{ dossierId: dossier.id }}>
                 <Network className={cn('size-4', isRTL ? 'ms-2' : 'me-2')} />
-                {t('miniGraph.viewFullGraph', 'View Full Graph')}
+                {t('miniGraph.viewFullGraph')}
                 <ExternalLink className={cn('size-3', isRTL ? 'me-2' : 'ms-2')} />
               </Link>
             </Button>

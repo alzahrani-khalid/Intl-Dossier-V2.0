@@ -145,9 +145,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
   if (isLoading) {
     return (
       <div className="space-y-6" role="status" aria-live="polite" aria-busy="true">
-        <span className="sr-only">
-          {t('intelligence.loadingDashboard', 'Loading intelligence dashboard...')}
-        </span>
+        <span className="sr-only">{t('intelligence.loadingDashboard')}</span>
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <Skeleton className="h-10 w-full sm:w-48" />
           <Skeleton className="h-10 w-full sm:w-48" />
@@ -168,9 +166,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
       <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>
-          {error instanceof Error
-            ? error.message
-            : t('intelligence.error', 'Failed to load intelligence dashboard')}
+          {error instanceof Error ? error.message : t('intelligence.error')}
         </AlertDescription>
       </Alert>
     )
@@ -207,21 +203,18 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
           />
 
           <h3 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2">
-            {t('intelligence.generating', 'Generating Intelligence...')}
+            {t('intelligence.generating')}
           </h3>
 
           <p className="text-sm sm:text-base text-muted-foreground mb-4 max-w-md">
-            {t(
-              'intelligence.generatingDescription',
-              'AI is analyzing available data to generate comprehensive intelligence insights. This may take 30-60 seconds.',
-            )}
+            {t('intelligence.generatingDescription')}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-2 text-xs text-muted-foreground">
-            <span>{t('intelligence.scopeEconomic', 'Economic indicators')}</span>
-            <span>{t('intelligence.scopePolitical', 'Political analysis')}</span>
-            <span>{t('intelligence.scopeSecurity', 'Security assessment')}</span>
-            <span>{t('intelligence.scopeBilateral', 'Bilateral relations')}</span>
+            <span>{t('intelligence.scopeEconomic')}</span>
+            <span>{t('intelligence.scopePolitical')}</span>
+            <span>{t('intelligence.scopeSecurity')}</span>
+            <span>{t('intelligence.scopeBilateral')}</span>
           </div>
         </div>
       )
@@ -240,14 +233,11 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
         />
 
         <h3 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2">
-          {t('intelligence.noData', 'No Intelligence Available')}
+          {t('intelligence.noData')}
         </h3>
 
         <p className="text-sm sm:text-base text-muted-foreground mb-8 max-w-md">
-          {t(
-            'intelligence.noDataDescription',
-            'Generate AI-powered intelligence insights for this country. The system will analyze available data to provide economic, political, security, and bilateral intelligence in both English and Arabic.',
-          )}
+          {t('intelligence.noDataDescription')}
         </p>
 
         <Button
@@ -257,8 +247,8 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
           className="h-11 sm:h-12 px-6 sm:px-8 gap-2 min-w-11"
           aria-label={
             refreshMutation.isPending
-              ? t('intelligence.generating', 'Generating intelligence...')
-              : t('intelligence.generateButton', 'Generate Intelligence')
+              ? t('intelligence.generating')
+              : t('intelligence.generateButton')
           }
         >
           <RefreshCw
@@ -267,8 +257,8 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
           />
           <span>
             {refreshMutation.isPending
-              ? t('intelligence.generating', 'Generating...')
-              : t('intelligence.generateButton', 'Generate Intelligence')}
+              ? t('intelligence.generating')
+              : t('intelligence.generateButton')}
           </span>
         </Button>
 
@@ -278,22 +268,14 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
             <AlertDescription>
               {refreshMutation.error instanceof Error
                 ? refreshMutation.error.message
-                : t(
-                    'intelligence.generateError',
-                    'Failed to generate intelligence. Please try again.',
-                  )}
+                : t('intelligence.generateError')}
             </AlertDescription>
           </Alert>
         )}
 
         {refreshMutation.isSuccess && (
           <Alert className="mt-6 max-w-md">
-            <AlertDescription>
-              {t(
-                'intelligence.generateSuccess',
-                'Intelligence generation started successfully. Data will appear shortly.',
-              )}
-            </AlertDescription>
+            <AlertDescription>{t('intelligence.generateSuccess')}</AlertDescription>
           </Alert>
         )}
       </div>
@@ -301,23 +283,16 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
   }
 
   return (
-    <div
-      className="space-y-6"
-      role="region"
-      aria-label={t('intelligence.dashboardLabel', 'Intelligence dashboard')}
-    >
+    <div className="space-y-6" role="region" aria-label={t('intelligence.dashboardLabel')}>
       {/* Header with Geographic Context */}
       <div className="flex flex-col gap-4">
         {/* Title */}
         <div>
           <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-foreground">
-            {t('intelligence.dashboardTitle', 'Intelligence Dashboard')}
+            {t('intelligence.dashboardTitle')}
           </h2>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-            {t(
-              'intelligence.dashboardDescription',
-              'Comprehensive analysis across economic, political, security, and bilateral dimensions',
-            )}
+            {t('intelligence.dashboardDescription')}
           </p>
         </div>
 
@@ -328,9 +303,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
             <div className="flex items-start gap-2">
               <Globe className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
               <div className="min-w-0">
-                <p className="text-xs text-muted-foreground">
-                  {t('geographic.isoCode', 'ISO Code')}
-                </p>
+                <p className="text-xs text-muted-foreground">{t('geographic.isoCode')}</p>
                 <p className="text-sm font-semibold truncate">
                   {dossier.extension.iso_code_2 || dossier.extension.iso_code_3 || 'N/A'}
                 </p>
@@ -341,7 +314,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
             <div className="flex items-start gap-2">
               <MapPin className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
               <div className="min-w-0">
-                <p className="text-xs text-muted-foreground">{t('geographic.region', 'Region')}</p>
+                <p className="text-xs text-muted-foreground">{t('geographic.region')}</p>
                 <p className="text-sm font-semibold truncate">
                   {dossier.extension.region || 'N/A'}
                 </p>
@@ -352,9 +325,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
             <div className="flex items-start gap-2">
               <MapPin className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
               <div className="min-w-0">
-                <p className="text-xs text-muted-foreground">
-                  {t('geographic.capital', 'Capital')}
-                </p>
+                <p className="text-xs text-muted-foreground">{t('geographic.capital')}</p>
                 <p className="text-sm font-semibold truncate">
                   {(isRTL ? dossier.extension.capital_ar : dossier.extension.capital_en) ||
                     dossier.extension.capital_en ||
@@ -368,9 +339,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
             <div className="flex items-start gap-2">
               <Users className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
               <div className="min-w-0">
-                <p className="text-xs text-muted-foreground">
-                  {t('geographic.population', 'Population')}
-                </p>
+                <p className="text-xs text-muted-foreground">{t('geographic.population')}</p>
                 <p className="text-sm font-semibold truncate">
                   {dossier.extension.population
                     ? dossier.extension.population.toLocaleString(
@@ -385,9 +354,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
             <div className="flex items-start gap-2">
               <Maximize2 className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
               <div className="min-w-0">
-                <p className="text-xs text-muted-foreground">
-                  {t('geographic.area', 'Area (km²)')}
-                </p>
+                <p className="text-xs text-muted-foreground">{t('geographic.area')}</p>
                 <p className="text-sm font-semibold truncate">
                   {dossier.extension.area_sq_km
                     ? dossier.extension.area_sq_km.toLocaleString(
@@ -402,7 +369,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
 
         {/* Report Count */}
         <div className="text-xs text-muted-foreground">
-          {t('intelligence.showingReports', 'Showing {{count}} of {{total}} reports', {
+          {t('intelligence.showingReports', {
             count: filteredReports.length,
             total: intelligenceData.data.length,
           })}
@@ -413,7 +380,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
       <div
         className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6"
         role="list"
-        aria-label={t('intelligence.dashboardSectionsLabel', 'Intelligence sections')}
+        aria-label={t('intelligence.dashboardSectionsLabel')}
       >
         {/* Economic Dashboard */}
         <EconomicDashboard reports={economicReports} dossierId={dossierId} />

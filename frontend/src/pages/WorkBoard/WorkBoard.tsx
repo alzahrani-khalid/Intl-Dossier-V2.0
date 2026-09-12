@@ -52,7 +52,11 @@ import {
   type ListControlsConfig,
 } from '@/components/list-controls/useListControls'
 import { ListEmptyState } from '@/components/empty-states/ListEmptyState'
-import { useUnifiedKanban, useUnifiedKanbanStatusUpdate } from '@/hooks/useUnifiedKanban'
+import {
+  useUnifiedKanban,
+  useUnifiedKanbanStatusUpdate,
+  showCommitmentRejectToast,
+} from '@/hooks/useUnifiedKanban'
 import { useCommitmentDrawer } from '@/hooks/useCommitmentDrawer'
 import { useWorkCreation } from '@/components/work-creation'
 import { usePeekStore } from '@/store/peekStore'
@@ -61,6 +65,7 @@ import type { KanbanColumnMode, Priority, WorkflowStage, WorkSource } from '@/ty
 
 import { BoardColumn } from './BoardColumn'
 import { BoardToolbar } from './BoardToolbar'
+import { resolveCommitmentDropDecision } from './commitment-stage-guard'
 import type { KCardItem } from './KCard'
 import './board.css'
 
@@ -75,7 +80,10 @@ const PRIORITY_RANK: Record<Priority, number> = {
 }
 
 // Map workflow stage → task_status enum value (per useUnifiedKanban DB notes).
-const STAGE_TO_STATUS: Record<WorkflowStage, string> = {
+// Phase 96 Plan 08 (COUNT-03): exported so __tests__/stage-status-parity.test.ts can
+// pin it cell-for-cell against the live `trg_sync_task_status` CASE. This is a client
+// COPY of a DB-enforced mapping, never the source of truth.
+export const STAGE_TO_STATUS: Record<WorkflowStage, string> = {
   todo: 'pending',
   in_progress: 'in_progress',
   review: 'review',
@@ -89,13 +97,19 @@ function isCancelled(item: KCardItem): boolean {
   return item.workflow_stage === 'cancelled' || item.status === 'cancelled'
 }
 
+// Reverse mapping (D-31): where each live commitment status renders.
+//   pending → todo · in_progress → in_progress · completed → done
+//   cancelled → filtered out above (isCancelled), never bucketed
+//   overdue → todo, via the default branch, indistinguishable from
+//             never-started. Undesigned and stated; handling it is Phase 96's
+//             COUNT-04, not this plan's work.
+// There is no `review` branch: the commitment CHECK constraint has five values
+// and `review` is not one of them, so `item.status === 'review'` was dead.
 function resolveBoardStage(item: KCardItem): WorkflowStage {
   if (item.source === 'task') return (item.workflow_stage as WorkflowStage | null) ?? 'todo'
   switch (item.status) {
     case 'in_progress':
       return 'in_progress'
-    case 'review':
-      return 'review'
     case 'completed':
       return 'done'
     case 'cancelled':
@@ -230,6 +244,14 @@ export function WorkBoard(): ReactElement {
     return sortBoardItems(next, search.sort, search.dir)
   }, [visibleItems, searchQuery, search.source, search.priority, search.sort, search.dir])
 
+  // Phase 96 Plan 09 (COUNT-04, D-09): ONE signal. `is_overdue` arrives from
+  // get_unified_work_kanban — the STORED aa_commitments.status='overdue' for commitments,
+  // the per-source computed comparison for tasks/intake (96-02's winning-notion record) —
+  // and KCard's overdue badge reads the SAME field. So the chip below and the badged cards
+  // are the same set counted twice, never two notions.
+  // SEAM: this counts `visibleItems` (cancelled removed) while the columns render
+  // `filtered`. Under default filters the two populations are identical; an active
+  // search/source/priority filter can shrink the rendered set below the chip.
   const overdueCount = useMemo(
     () => visibleItems.filter((it) => it.is_overdue).length,
     [visibleItems],
@@ -260,13 +282,20 @@ export function WorkBoard(): ReactElement {
     return ids
   }, [byStage])
 
+  // 94-08 (D-33): `homeStage` is the SAME `resolveBoardStage` call as `column`,
+  // snapshotted under a name nothing mutates. BoardColumn's drop-affordance
+  // carve-out must not read `column`, because KanbanProvider.handleDragOver
+  // (`KanbanProvider.tsx:223`) assigns `newData[activeIndex].column = overColumn`
+  // on the shared item object mid-drag — so `column` drifts to whatever the
+  // pointer last hovered. A carve-out keyed on it would move the "home" column
+  // during the gesture and re-disable the real one, which is precisely the
+  // closestCenter-retarget failure the carve-out exists to prevent.
   const kanbanItems = useMemo<WorkBoardKanbanItem[]>(
     () =>
-      filtered.map((it) => ({
-        ...it,
-        name: it.title,
-        column: resolveBoardStage(it) as string,
-      })),
+      filtered.map((it) => {
+        const homeStage = resolveBoardStage(it)
+        return { ...it, name: it.title, column: homeStage as string, homeStage }
+      }),
     [filtered],
   )
 
@@ -302,16 +331,32 @@ export function WorkBoard(): ReactElement {
           }
         }
       }
-      if (targetStage === undefined || targetStage === item.workflow_stage) return
+      // The no-op guard must compare against the stage that PLACED the card.
+      // `workflow_stage` is null for every commitment, so comparing it made an
+      // own-column drop look like a move — a mutation and a success toast for
+      // a gesture that changed nothing (D-05).
+      if (targetStage === undefined || targetStage === resolveBoardStage(item)) return
+
+      // Gesture-layer enforcement point (D-33). Same module the mutation layer
+      // uses, so the condition cannot drift; refusing here means no mutation is
+      // ever enqueued. 94-08 adds the droppable affordance on top of this.
+      if (item.source === 'commitment') {
+        const decision = resolveCommitmentDropDecision(item, targetStage)
+        if (!decision.ok) {
+          showCommitmentRejectToast(decision.reason, t)
+          return
+        }
+      }
 
       update.mutate({
         itemId: item.id,
         source: item.source,
         newStatus: STAGE_TO_STATUS[targetStage],
         newWorkflowStage: targetStage,
+        deadline: item.deadline,
       })
     },
-    [visibleItems, update],
+    [visibleItems, update, t],
   )
 
   const handleItemClick = useCallback(
@@ -399,7 +444,7 @@ export function WorkBoard(): ReactElement {
 
   return (
     <div className="workboard-page" dir={isRTL ? 'rtl' : 'ltr'}>
-      <h1 className="sr-only">{t('title', { defaultValue: 'Work Board' })}</h1>
+      <h1 className="sr-only">{t('title')}</h1>
       <BoardToolbar
         config={boardListConfig}
         controls={controls}

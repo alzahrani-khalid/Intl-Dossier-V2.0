@@ -180,7 +180,7 @@
       "formatting": "Formatting document...",
       "generating": "Generating {{format}}...",
       "uploading": "Uploading file...",
-      "complete": "Generation complete!",
+      "complete": "Generation complete",
       "error": "Generation failed"
     },
     "processingEntity": "Processing {{entity}}...",
@@ -234,7 +234,8 @@
       "failed": "Failed"
     },
     "pageCount_one": "{{count}} page",
-    "pageCount_other": "{{count}} pages"
+    "pageCount_other": "{{count}} pages",
+    "pageCount": "{{count}} pages"
   },
   "topics": {
     "statistics": "Statistics",
@@ -284,5 +285,9 @@
     "confirm": "Delete",
     "cancel": "Cancel",
     "deleting": "Deleting…"
+  },
+  "progress": {
+    "starting": "Starting briefing book generation...",
+    "generated": "Briefing book generated successfully"
   }
 }

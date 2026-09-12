@@ -293,9 +293,7 @@ export function PositionsLibraryPage() {
             className="bg-danger/5 dark:bg-danger/20 border border-danger/20 dark:border-danger/70 rounded-lg p-6 text-center"
             role="alert"
           >
-            <p className="text-sm text-danger">
-              {error instanceof Error ? error.message : t('positions:library.error_loading')}
-            </p>
+            <p className="text-sm text-danger">{t('positions:library.error_loading')}</p>
           </div>
         ) : (
           <PositionList
@@ -305,8 +303,8 @@ export function PositionsLibraryPage() {
             layout="grid"
             onPositionClick={(position) => {
               navigate({
-                to: '/positions/$positionId' as any,
-                params: { positionId: position.id } as any,
+                to: '/positions/$id',
+                params: { id: position.id },
               })
             }}
             emptyMessage={

@@ -74,6 +74,8 @@ test.describe('Positions Accessibility (English)', () => {
   test('positions list should support keyboard navigation', async ({ page }) => {
     await page.goto('/positions')
     await page.waitForLoadState('networkidle')
+    // networkidle is not a render signal (P101-12): wait for the shell before pressing Tab.
+    await expect(page.locator('main, [role="main"]').first()).toBeAttached({ timeout: 15_000 })
 
     // Tab into the page and confirm focus lands on a real interactive element.
     await page.keyboard.press('Tab')
@@ -98,6 +100,8 @@ test.describe('Positions Accessibility (English)', () => {
   test('positions list should expose a main landmark and a single h1', async ({ page }) => {
     await page.goto('/positions')
     await page.waitForLoadState('networkidle')
+    // networkidle is not a render signal (P101-12): wait for the page before reading the DOM.
+    await expect(page.locator('main h1').first()).toBeAttached({ timeout: 15_000 })
 
     const landmarks = await page.evaluate(() => ({
       hasMain: !!document.querySelector('main, [role="main"]'),

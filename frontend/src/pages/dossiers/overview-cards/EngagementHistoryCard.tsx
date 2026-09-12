@@ -10,9 +10,8 @@
 import { useTranslation } from 'react-i18next'
 import { useDossierOverview } from '@/hooks/useDossierOverview'
 import { Skeleton } from '@/components/ui/skeleton'
-import { format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
 import { History } from 'lucide-react'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 interface EngagementHistoryCardProps {
   dossierId: string
@@ -25,7 +24,6 @@ export function EngagementHistoryCard({
 }: EngagementHistoryCardProps): React.ReactElement {
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
-  const dateLocale = isRTL ? ar : enUS
 
   const { data, isLoading, isError } = useDossierOverview(dossierId, {
     includeSections: ['related_dossiers', 'calendar_events'],
@@ -73,19 +71,17 @@ export function EngagementHistoryCard({
       <div className="flex items-center gap-2 mb-4">
         <History className="h-4 w-4 text-muted-foreground" />
         <h3 className="text-base font-semibold leading-tight text-start">
-          {t('overview.engagementHistory.title', { defaultValue: 'Engagement History' })}
+          {t('overview.engagementHistory.title')}
         </h3>
       </div>
 
       {isError && data === null ? (
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('overview.sectionError')}
         </p>
       ) : timelineEntries.length === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">
-          {t('overview.engagementHistory.empty', { defaultValue: 'No engagement history' })}
+          {t('overview.engagementHistory.empty')}
         </p>
       ) : (
         <div className="relative">
@@ -101,9 +97,7 @@ export function EngagementHistoryCard({
                   <p className="text-sm truncate">{entry.name}</p>
                   <div className="flex items-center gap-2 mt-0.5">
                     <span className="text-xs text-muted-foreground">
-                      {entry.date !== ''
-                        ? format(new Date(entry.date), 'PP', { locale: dateLocale })
-                        : '-'}
+                      {entry.date !== '' ? formatDayFirstYear(new Date(entry.date)) : '-'}
                     </span>
                     {entry.stage != null && entry.stage !== '' && (
                       <span className="bg-muted text-muted-foreground text-xs px-2 py-0.5 rounded-full">
@@ -118,9 +112,7 @@ export function EngagementHistoryCard({
 
           {hasMore && (
             <p className="text-xs text-accent-ink cursor-pointer hover:underline pt-3 ps-6">
-              {t('overview.engagementHistory.viewAll', {
-                defaultValue: 'View all engagements',
-              })}
+              {t('overview.engagementHistory.viewAll')}
             </p>
           )}
         </div>

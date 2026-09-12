@@ -26,7 +26,8 @@
       "engagement": "Engagements",
       "forum": "Forums",
       "working_group": "Working Groups",
-      "topic": "Topics"
+      "topic": "Topics",
+      "elected_official": "Elected Officials"
     }
   },
 
@@ -166,6 +167,20 @@
     "topic": {
       "topic_category": "Category",
       "parent_topic_id": "Parent Topic"
+    },
+    "elected_official": {
+      "office_name_en": "Office (English)",
+      "office_name_ar": "Office (Arabic)",
+      "office_type": "Office type",
+      "district_en": "District (English)",
+      "district_ar": "District (Arabic)",
+      "party_en": "Party (English)",
+      "party_ar": "Party (Arabic)",
+      "party_abbreviation": "Party abbreviation",
+      "party_ideology": "Party ideology",
+      "term_start": "Term start",
+      "term_end": "Term end",
+      "is_current_term": "Current term"
     }
   },
 

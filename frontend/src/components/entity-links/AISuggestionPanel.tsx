@@ -129,12 +129,11 @@ export function AISuggestionPanel({
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-start">
             <Sparkles className={`h-5 w-5 text-secondary-foreground ${isRTL ? 'ms-2' : 'me-2'}`} />
-            {t('entityLinks.aiSuggestions.title', 'AI-Powered Suggestions')}
+            {t('entityLinks.aiSuggestions.title')}
           </CardTitle>
           <CardDescription className="text-start">
             {t(
               'entityLinks.aiSuggestions.description',
-              'Let AI analyze your intake content and suggest relevant entities to link',
             )}
           </CardDescription>
         </CardHeader>
@@ -145,7 +144,7 @@ export function AISuggestionPanel({
             variant="default"
           >
             <Sparkles className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-            {t('entityLinks.aiSuggestions.getButton', 'Get AI Suggestions')}
+            {t('entityLinks.aiSuggestions.getButton')}
           </Button>
         </CardContent>
       </Card>
@@ -161,10 +160,10 @@ export function AISuggestionPanel({
             <RefreshCw
               className={`h-5 w-5 animate-spin text-secondary-foreground ${isRTL ? 'ms-2' : 'me-2'}`}
             />
-            {t('entityLinks.aiSuggestions.loading', 'Analyzing intake content...')}
+            {t('entityLinks.aiSuggestions.loading')}
           </CardTitle>
           <CardDescription className="text-start">
-            {t('entityLinks.aiSuggestions.loadingDescription', 'This usually takes 2-3 seconds')}
+            {t('entityLinks.aiSuggestions.loadingDescription')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -193,7 +192,7 @@ export function AISuggestionPanel({
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-start text-destructive">
             <AlertCircle className={`h-5 w-5 ${isRTL ? 'ms-2' : 'me-2'}`} />
-            {t('entityLinks.aiSuggestions.error', 'AI Service Unavailable')}
+            {t('entityLinks.aiSuggestions.error')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -202,7 +201,6 @@ export function AISuggestionPanel({
               {errorData?.details ||
                 t(
                   'entityLinks.aiSuggestions.errorDescription',
-                  'Unable to generate AI suggestions at this time',
                 )}
             </AlertDescription>
           </Alert>
@@ -211,7 +209,7 @@ export function AISuggestionPanel({
             <div className="flex flex-col sm:flex-row gap-2">
               <Button onClick={handleFallbackToManualSearch} variant="default" className="flex-1 ">
                 <Search className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                {t('entityLinks.aiSuggestions.manualSearch', 'Use Manual Search')}
+                {t('entityLinks.aiSuggestions.manualSearch')}
               </Button>
 
               {errorData?.retry_after && (
@@ -224,7 +222,7 @@ export function AISuggestionPanel({
                   className=""
                 >
                   <RefreshCw className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                  {t('entityLinks.aiSuggestions.retry', 'Retry')}
+                  {t('entityLinks.aiSuggestions.retry')}
                 </Button>
               )}
             </div>
@@ -242,12 +240,11 @@ export function AISuggestionPanel({
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="text-start">
-            {t('entityLinks.aiSuggestions.noResults', 'No Suggestions Found')}
+            {t('entityLinks.aiSuggestions.noResults')}
           </CardTitle>
           <CardDescription className="text-start">
             {t(
               'entityLinks.aiSuggestions.noResultsDescription',
-              'AI could not find relevant entities. Try manual search.',
             )}
           </CardDescription>
         </CardHeader>
@@ -258,7 +255,7 @@ export function AISuggestionPanel({
             className="w-full sm:w-auto "
           >
             <Search className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-            {t('entityLinks.aiSuggestions.manualSearch', 'Use Manual Search')}
+            {t('entityLinks.aiSuggestions.manualSearch')}
           </Button>
         </CardContent>
       </Card>
@@ -270,12 +267,11 @@ export function AISuggestionPanel({
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-start">
           <CheckCircle2 className={`h-5 w-5 text-success ${isRTL ? 'ms-2' : 'me-2'}`} />
-          {t('entityLinks.aiSuggestions.resultsTitle', 'AI Suggestions')}
+          {t('entityLinks.aiSuggestions.resultsTitle')}
         </CardTitle>
         <CardDescription className="text-start">
           {t('entityLinks.aiSuggestions.resultsDescription', {
             count: suggestions.length,
-            defaultValue: `Found ${suggestions.length} relevant entities. Click to create link.`,
           })}
         </CardDescription>
       </CardHeader>
@@ -290,10 +286,7 @@ export function AISuggestionPanel({
                     {suggestion.suggested_entity_id}
                   </h4>
                   <p className="text-xs text-muted-foreground text-start mt-1">
-                    {t(
-                      `entityTypes.${suggestion.suggested_entity_type}`,
-                      suggestion.suggested_entity_type,
-                    )}
+                    {t(`common:entityLinks.entityTypes.${suggestion.suggested_entity_type}`)}
                   </p>
                 </div>
 
@@ -303,7 +296,7 @@ export function AISuggestionPanel({
                     {formatConfidence(suggestion.confidence)}
                   </Badge>
                   <span className="text-xs text-muted-foreground">
-                    {t('entityLinks.aiSuggestions.confidence', 'Confidence')}
+                    {t('common:entityLinks.aiSuggestions.confidence')}
                   </span>
                 </div>
 
@@ -322,10 +315,10 @@ export function AISuggestionPanel({
                   {acceptMutation.isPending ? (
                     <>
                       <RefreshCw className={`h-3 w-3 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
-                      {t('entityLinks.aiSuggestions.accepting', 'Creating...')}
+                      {t('entityLinks.aiSuggestions.accepting')}
                     </>
                   ) : (
-                    <>{t('entityLinks.aiSuggestions.accept', 'Create Link')}</>
+                    <>{t('entityLinks.aiSuggestions.accept')}</>
                   )}
                 </Button>
               </div>
@@ -341,7 +334,7 @@ export function AISuggestionPanel({
             className="w-full sm:w-auto "
           >
             <Search className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-            {t('entityLinks.aiSuggestions.stillUseManualSearch', 'Or use manual search')}
+            {t('entityLinks.aiSuggestions.stillUseManualSearch')}
           </Button>
         </div>
       </CardContent>

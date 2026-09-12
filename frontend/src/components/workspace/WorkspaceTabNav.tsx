@@ -28,6 +28,7 @@ const WORKSPACE_TABS: WorkspaceTab[] = [
   { key: 'context', labelKey: 'tabs.context', path: 'context' },
   { key: 'positions', labelKey: 'tabs.positions', path: 'positions' },
   { key: 'signals', labelKey: 'tabs.signals', path: 'signals' },
+  { key: 'digests', labelKey: 'tabs.digests', path: 'digests' },
   { key: 'tasks', labelKey: 'tabs.tasks', path: 'tasks' },
   { key: 'calendar', labelKey: 'tabs.calendar', path: 'calendar' },
   { key: 'docs', labelKey: 'tabs.docs', path: 'docs' },

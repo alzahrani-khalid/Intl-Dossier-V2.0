@@ -20,7 +20,7 @@
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // ============================================================================
@@ -223,8 +223,8 @@ async function generateAlerts(
       severity: healthData.breakdown.days_since_engagement >= 90 ? 'high' : 'medium',
       title_en: 'Engagement Gap Detected',
       title_ar: 'تم اكتشاف فجوة في التفاعل',
-      description_en: `No engagement with this relationship for ${healthData.breakdown.days_since_engagement} days.`,
-      description_ar: `لا يوجد تفاعل مع هذه العلاقة منذ ${healthData.breakdown.days_since_engagement} يومًا.`,
+      description_en: `No engagement in T+${healthData.breakdown.days_since_engagement} days.`,
+      description_ar: `لا يوجد تفاعل خلال T+${healthData.breakdown.days_since_engagement} يوم.`,
       alert_data: { days: healthData.breakdown.days_since_engagement },
       expires_at: expiresAt.toISOString(),
     });
@@ -426,8 +426,7 @@ serve(async (req) => {
           const relationshipId = secondPart;
 
           const { data, error } = await supabase
-            .from('relationship_health_summary')
-            .select('*')
+            .rpc('get_relationship_health_summary')
             .eq('relationship_id', relationshipId)
             .single();
 
@@ -497,7 +496,7 @@ serve(async (req) => {
         const sortBy = url.searchParams.get('sort_by') || 'overall_score';
         const sortOrder = url.searchParams.get('sort_order') || 'desc';
 
-        let query = supabase.from('relationship_health_summary').select('*');
+        let query = supabase.rpc('get_relationship_health_summary');
 
         if (trendFilter) {
           query = query.eq('trend', trendFilter);

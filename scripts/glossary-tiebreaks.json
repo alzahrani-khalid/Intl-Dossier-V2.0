@@ -1,0 +1,384 @@
+{
+  "version": 1,
+  "criterionSemantics": "Agreement means the same sense-consistent object term, not byte equality.",
+  "ruling": "RULING-P99-05 §3",
+  "rows": [
+    {
+      "labelKey": "navigation.countries",
+      "titleAnchor": "countries:title",
+      "objectTerm": "دولة / الدول",
+      "disposition": "requirement-ruled-repair",
+      "before": {
+        "label": "البلدان",
+        "title": "نظرة عامة على الدول"
+      },
+      "after": {
+        "label": "الدول",
+        "title": "نظرة عامة على الدول"
+      },
+      "expected": {
+        "labelAr": "الدول",
+        "titleAr": "نظرة عامة على الدول"
+      }
+    },
+    {
+      "labelKey": "navigation.engagements",
+      "titleAnchor": "engagements:title",
+      "objectTerm": "مشاركة / المشاركات",
+      "disposition": "requirement-ruled-repair",
+      "before": {
+        "label": "الارتباطات",
+        "title": "المشاركات"
+      },
+      "after": {
+        "label": "المشاركات",
+        "title": "المشاركات"
+      },
+      "expected": {
+        "labelAr": "المشاركات",
+        "titleAr": "المشاركات"
+      }
+    },
+    {
+      "labelKey": "navigation.persons",
+      "titleAnchor": "persons:title",
+      "objectTerm": "الأشخاص",
+      "disposition": "ruled-tiebreak-persons-wins",
+      "before": {
+        "labelAr": "الأشخاص",
+        "titleAr": "جهات الاتصال الرئيسية",
+        "titleEn": "Key Contacts"
+      },
+      "after": {
+        "labelAr": "الأشخاص",
+        "titleAr": "الأشخاص",
+        "titleEn": "Persons"
+      },
+      "expected": {
+        "labelAr": "الأشخاص",
+        "titleAr": "الأشخاص"
+      }
+    },
+    {
+      "labelKey": "navigation.positions",
+      "titleAnchor": "positions:library.title",
+      "objectTerm": "موقف / المواقف",
+      "disposition": "ruled-conformant-no-edit",
+      "before": {
+        "label": "المواقف",
+        "title": "مكتبة المواقف"
+      },
+      "after": {
+        "label": "المواقف",
+        "title": "مكتبة المواقف"
+      },
+      "expected": {
+        "labelAr": "المواقف",
+        "titleAr": "مكتبة المواقف"
+      }
+    },
+    {
+      "labelKey": "navigation.mous",
+      "titleAnchor": "common:mous.pageTitle",
+      "objectTerm": "مذكرات التفاهم",
+      "disposition": "ruled-anchor-repoint",
+      "sourcePath": "frontend/src/pages/MoUs/MousPage.tsx",
+      "before": {
+        "sourceKey": "common:mous.title",
+        "genericValueAr": "العنوان",
+        "genericValueEn": "Title"
+      },
+      "after": {
+        "sourceKey": "common:mous.pageTitle",
+        "valueAr": "مذكرات التفاهم",
+        "valueEn": "MoUs"
+      },
+      "expected": {
+        "labelAr": "مذكرات التفاهم",
+        "titleAr": "مذكرات التفاهم"
+      }
+    },
+    {
+      "labelKey": "navigation.intake",
+      "titleAnchor": "intake:queue.title",
+      "objectTerm": "قائمة الاستقبال",
+      "disposition": "ruled-queue-collision-repair",
+      "before": {
+        "label": "قائمة الاستقبال",
+        "title": "قائمة الانتظار"
+      },
+      "after": {
+        "label": "قائمة الاستقبال",
+        "title": "قائمة الاستقبال"
+      },
+      "expected": {
+        "labelAr": "قائمة الاستقبال",
+        "titleAr": "قائمة الاستقبال"
+      }
+    },
+    {
+      "labelKey": "navigation.dashboardOverview",
+      "titleAnchor": "dashboard:title",
+      "objectTerm": "دوسيه / الدوسيهات",
+      "disposition": "ruled-tiebreak-dashboard",
+      "before": {
+        "label": "نظرة عامة على لوحة الدوسيهات",
+        "title": "لوحة الملفات"
+      },
+      "after": {
+        "label": "لوحة الدوسيهات",
+        "title": "لوحة الدوسيهات"
+      },
+      "expected": {
+        "labelAr": "لوحة الدوسيهات",
+        "titleAr": "لوحة الدوسيهات"
+      }
+    },
+    {
+      "labelKey": "navigation.organizations",
+      "titleAnchor": "organizations:title",
+      "objectTerm": "المنظمات",
+      "disposition": "agrees-as-is",
+      "expected": {
+        "labelAr": "المنظمات",
+        "titleAr": "المنظمات والتفويضات"
+      }
+    },
+    {
+      "labelKey": "navigation.forums",
+      "titleAnchor": "forums:pageTitle",
+      "objectTerm": "منتدى / المنتديات",
+      "disposition": "agrees-as-is",
+      "expected": {
+        "labelAr": "المنتديات",
+        "titleAr": "المنتديات"
+      }
+    },
+    {
+      "labelKey": "navigation.workingGroups",
+      "titleAnchor": "working-groups:title",
+      "objectTerm": "مجموعات العمل",
+      "disposition": "agrees-as-is",
+      "expected": {
+        "labelAr": "مجموعات العمل",
+        "titleAr": "مجموعات العمل"
+      }
+    },
+    {
+      "labelKey": "navigation.tasks",
+      "titleAnchor": "tasks-page:title",
+      "objectTerm": "مكتبي",
+      "disposition": "agrees-as-is",
+      "expected": {
+        "labelAr": "مكتبي",
+        "titleAr": "مكتبي"
+      }
+    },
+    {
+      "labelKey": "navigation.calendar",
+      "titleAnchor": "calendar:page.title",
+      "objectTerm": "التقويم",
+      "disposition": "agrees-as-is",
+      "expected": {
+        "labelAr": "التقويم",
+        "titleAr": "التقويم"
+      }
+    },
+    {
+      "labelKey": "navigation.briefs",
+      "titleAnchor": "briefs-page:title",
+      "objectTerm": "ملخص / الملخصات",
+      "disposition": "agrees-as-is",
+      "expected": {
+        "labelAr": "الملخصات",
+        "titleAr": "الملخصات"
+      }
+    },
+    {
+      "labelKey": "navigation.events",
+      "titleAnchor": "common:navigation.events",
+      "objectTerm": "فعالية / الفعاليات",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/pages/events/EventsPage.tsx",
+      "expected": {
+        "labelAr": "الفعاليات",
+        "titleAr": "الفعاليات"
+      }
+    },
+    {
+      "labelKey": "navigation.reports",
+      "titleAnchor": "common:navigation.reports",
+      "objectTerm": "تقرير / التقارير",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/pages/reports/ReportsPage.tsx",
+      "expected": {
+        "labelAr": "التقارير",
+        "titleAr": "التقارير"
+      }
+    },
+    {
+      "labelKey": "navigation.scheduledReports",
+      "titleAnchor": "scheduled-reports:title",
+      "objectTerm": "التقارير المجدولة",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/components/scheduled-reports/ScheduledReportsManager.tsx",
+      "expected": {
+        "labelAr": "التقارير المجدولة",
+        "titleAr": "التقارير المجدولة"
+      }
+    },
+    {
+      "labelKey": "navigation.analytics",
+      "titleAnchor": "analytics:title",
+      "objectTerm": "التحليلات",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/pages/analytics/AnalyticsDashboardPage.tsx",
+      "expected": {
+        "labelAr": "التحليلات",
+        "titleAr": "لوحة التحليلات"
+      }
+    },
+    {
+      "labelKey": "navigation.intelligence",
+      "titleAnchor": "common:navigation.intelligence",
+      "objectTerm": "الاستخبارات",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/pages/intelligence/IntelligencePage.tsx",
+      "expected": {
+        "labelAr": "الاستخبارات",
+        "titleAr": "الاستخبارات"
+      }
+    },
+    {
+      "labelKey": "navigation.monitoring",
+      "titleAnchor": "source:frontend/src/pages/monitoring/Dashboard.tsx",
+      "objectTerm": "المراقبة / Monitoring",
+      "disposition": "agrees-bilingual-source-literal",
+      "sourcePath": "frontend/src/pages/monitoring/Dashboard.tsx",
+      "expected": {
+        "labelAr": "المراقبة",
+        "titleAr": "Monitoring Dashboard"
+      }
+    },
+    {
+      "labelKey": "navigation.dataLibrary",
+      "titleAnchor": "common:navigation.dataLibrary",
+      "objectTerm": "مكتبة البيانات",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/pages/data-library/DataLibraryPage.tsx",
+      "expected": {
+        "labelAr": "مكتبة البيانات",
+        "titleAr": "مكتبة البيانات"
+      }
+    },
+    {
+      "labelKey": "navigation.wordAssistant",
+      "titleAnchor": "common:navigation.wordAssistant",
+      "objectTerm": "مساعد الوثائق",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/pages/word-assistant/WordAssistantPage.tsx",
+      "expected": {
+        "labelAr": "مساعد الوثائق",
+        "titleAr": "مساعد الوثائق"
+      }
+    },
+    {
+      "labelKey": "navigation.users",
+      "titleAnchor": "user-management:usersList.title",
+      "objectTerm": "المستخدمون",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/pages/users/UsersListPage.tsx",
+      "expected": {
+        "labelAr": "إدارة المستخدمين",
+        "titleAr": "قائمة المستخدمين"
+      }
+    },
+    {
+      "labelKey": "navigation.settings",
+      "titleAnchor": "settings:pageTitle",
+      "objectTerm": "الإعدادات",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/components/settings/SettingsLayout.tsx",
+      "expected": {
+        "labelAr": "الإعدادات",
+        "titleAr": "الإعدادات"
+      }
+    },
+    {
+      "labelKey": "navigation.help",
+      "titleAnchor": "source:frontend/src/pages/help/HelpPage.tsx",
+      "objectTerm": "المساعدة",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/pages/help/HelpPage.tsx",
+      "expected": {
+        "labelAr": "المساعدة",
+        "titleAr": "كيف يمكننا مساعدتك؟"
+      }
+    },
+    {
+      "labelKey": "navigation.admin",
+      "titleAnchor": "ai-admin:settings.title",
+      "objectTerm": "الإدارة",
+      "disposition": "escalate-unruled",
+      "sourcePath": "frontend/src/routes/_protected/admin/ai-settings.tsx",
+      "candidates": {
+        "label": "الإدارة",
+        "title": "إعدادات الذكاء الاصطناعي"
+      },
+      "expected": {
+        "labelAr": "الإدارة",
+        "titleAr": "إعدادات الذكاء الاصطناعي"
+      },
+      "ruling": "RULING-P99-535",
+      "rulingVerdict": "no-arabic-edit-mirrors-source-divergence",
+      "rulingReason": "EN diverges identically: nav \"Admin\" -> page \"AI Settings\". The Arabic mirrors its source exactly. Repairing the Arabic pair would make it disagree with the English it translates. Contrast navigation.intake, where EN AGREED (\"Intake Queue\"/\"Intake Queue\") and only the Arabic diverged -- that one was correctly repaired. The divergence here is in the SOURCE pair and belongs to a terminology phase, not an Arabic-coverage phase. Stays escalate-unruled so it remains visible on the D-19 tie-break list at the P99-41 operator checkpoint rather than being silently closed."
+    },
+    {
+      "labelKey": "navigation.taskQueue",
+      "titleAnchor": "assignments:queue.title",
+      "objectTerm": "قائمة المهام",
+      "disposition": "escalate-unruled",
+      "sourcePath": "frontend/src/pages/AssignmentQueue.tsx",
+      "candidates": {
+        "label": "قائمة المهام",
+        "title": "قائمة انتظار التعيينات"
+      },
+      "expected": {
+        "labelAr": "قائمة المهام",
+        "titleAr": "قائمة انتظار التعيينات"
+      },
+      "ruling": "RULING-P99-535",
+      "rulingVerdict": "no-arabic-edit-mirrors-source-divergence",
+      "rulingReason": "EN diverges identically: nav \"Task Queue\" -> page \"Assignment Queue\". The Arabic mirrors its source exactly. Repairing the Arabic pair would make it disagree with the English it translates. Contrast navigation.intake, where EN AGREED (\"Intake Queue\"/\"Intake Queue\") and only the Arabic diverged -- that one was correctly repaired. The divergence here is in the SOURCE pair and belongs to a terminology phase, not an Arabic-coverage phase. Stays escalate-unruled so it remains visible on the D-19 tie-break list at the P99-41 operator checkpoint rather than being silently closed."
+    },
+    {
+      "labelKey": "navigation.taskEscalations",
+      "titleAnchor": "assignments:escalations.title",
+      "objectTerm": "تصعيدات المهام",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/pages/Escalations.tsx",
+      "expected": {
+        "labelAr": "تصعيدات المهام",
+        "titleAr": "التصعيدات"
+      }
+    },
+    {
+      "labelKey": "navigation.newEvent",
+      "titleAnchor": "calendar:new_event.title",
+      "objectTerm": "فعالية جديدة",
+      "disposition": "escalate-unruled",
+      "sourcePath": "frontend/src/routes/_protected/calendar/new.tsx",
+      "candidates": {
+        "label": "فعالية جديدة",
+        "title": "إدخال تقويم جديد"
+      },
+      "expected": {
+        "labelAr": "فعالية جديدة",
+        "titleAr": "إدخال تقويم جديد"
+      },
+      "ruling": "RULING-P99-535",
+      "rulingVerdict": "no-arabic-edit-mirrors-source-divergence",
+      "rulingReason": "EN diverges identically: nav \"New event\" -> page \"New calendar entry\". The Arabic mirrors its source exactly. Repairing the Arabic pair would make it disagree with the English it translates. Contrast navigation.intake, where EN AGREED (\"Intake Queue\"/\"Intake Queue\") and only the Arabic diverged -- that one was correctly repaired. The divergence here is in the SOURCE pair and belongs to a terminology phase, not an Arabic-coverage phase. Stays escalate-unruled so it remains visible on the D-19 tie-break list at the P99-41 operator checkpoint rather than being silently closed."
+    }
+  ]
+}

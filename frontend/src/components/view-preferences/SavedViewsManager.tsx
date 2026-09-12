@@ -260,8 +260,8 @@ export function SavedViewsManager({
             disabled={isLoading}
           >
             <Bookmark className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
-            <span className="hidden sm:inline">{t('savedViews', 'Saved Views')}</span>
-            <span className="sm:hidden">{t('views', 'Views')}</span>
+            <span className="hidden sm:inline">{t('savedViews')}</span>
+            <span className="sm:hidden">{t('views')}</span>
             {savedViews.length > 0 && (
               <Badge variant="secondary" className={cn('text-xs', isRTL ? 'me-2' : 'ms-2')}>
                 {savedViews.length}
@@ -276,7 +276,7 @@ export function SavedViewsManager({
             <>
               <div className="px-3 py-2">
                 <p className="text-xs text-muted-foreground mb-2">
-                  {t('unsavedChanges', 'You have unsaved changes')}
+                  {t('unsavedChanges')}
                 </p>
                 <div className="flex gap-2">
                   <Button
@@ -286,7 +286,7 @@ export function SavedViewsManager({
                     onClick={handleOpenSaveDialog}
                   >
                     <Plus className={cn('h-3 w-3', isRTL ? 'ms-1' : 'me-1')} />
-                    {t('saveAsNew', 'Save as New')}
+                    {t('saveAsNew')}
                   </Button>
                   {currentView && (
                     <Button
@@ -297,7 +297,7 @@ export function SavedViewsManager({
                       disabled={isSaving}
                     >
                       <Save className={cn('h-3 w-3', isRTL ? 'ms-1' : 'me-1')} />
-                      {t('update', 'Update')}
+                      {t('update')}
                     </Button>
                   )}
                 </div>
@@ -311,12 +311,11 @@ export function SavedViewsManager({
             <div className="px-3 py-4 text-center">
               <BookmarkCheck className="h-8 w-8 mx-auto text-muted-foreground/50 mb-2" />
               <p className="text-sm text-muted-foreground">
-                {t('noSavedViews', 'No saved views yet')}
+                {t('noSavedViews')}
               </p>
               <p className="text-xs text-muted-foreground/70 mt-1">
                 {t(
                   'noSavedViewsHint',
-                  'Save your current filters and sort settings for quick access',
                 )}
               </p>
             </div>
@@ -360,7 +359,7 @@ export function SavedViewsManager({
                         e.stopPropagation()
                         onTogglePinned(view.id)
                       }}
-                      title={view.is_pinned ? t('unpin', 'Unpin') : t('pin', 'Pin')}
+                      title={view.is_pinned ? t('unpin') : t('pin')}
                     >
                       {view.is_pinned ? (
                         <PinOff className="h-3.5 w-3.5" />
@@ -381,8 +380,8 @@ export function SavedViewsManager({
                       disabled={view.is_default}
                       title={
                         view.is_default
-                          ? t('isDefault', 'Default view')
-                          : t('setDefault', 'Set as default')
+                          ? t('isDefault')
+                          : t('setDefault')
                       }
                     >
                       {view.is_default ? (
@@ -399,7 +398,7 @@ export function SavedViewsManager({
                         e.stopPropagation()
                         handleOpenEditDialog(view)
                       }}
-                      title={t('edit', 'Edit')}
+                      title={t('edit')}
                     >
                       <Edit2 className="h-3.5 w-3.5" />
                     </Button>
@@ -411,7 +410,7 @@ export function SavedViewsManager({
                         e.stopPropagation()
                         handleOpenDeleteDialog(view)
                       }}
-                      title={t('delete', 'Delete')}
+                      title={t('delete')}
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </Button>
@@ -432,7 +431,7 @@ export function SavedViewsManager({
               onClick={handleOpenSaveDialog}
             >
               <Plus className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
-              {t('saveCurrentView', 'Save Current View')}
+              {t('saveCurrentView')}
             </Button>
           </div>
         </DropdownMenuContent>
@@ -442,36 +441,35 @@ export function SavedViewsManager({
       <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>{t('saveView', 'Save View')}</DialogTitle>
+            <DialogTitle>{t('saveView')}</DialogTitle>
             <DialogDescription>
               {t(
                 'saveViewDescription',
-                'Save your current filters and settings as a named view for quick access.',
               )}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <label htmlFor="view-name" className="text-sm font-medium">
-                {t('viewName', 'View Name')} *
+                {t('viewName')} *
               </label>
               <Input
                 id="view-name"
                 value={viewName}
                 onChange={(e) => setViewName(e.target.value)}
-                placeholder={t('viewNamePlaceholder', 'e.g., Active Countries')}
+                placeholder={t('viewNamePlaceholder')}
                 className="h-10"
               />
             </div>
             <div className="space-y-2">
               <label htmlFor="view-description" className="text-sm font-medium">
-                {t('description', 'Description')}
+                {t('description')}
               </label>
               <Textarea
                 id="view-description"
                 value={viewDescription}
                 onChange={(e) => setViewDescription(e.target.value)}
-                placeholder={t('descriptionPlaceholder', 'Optional description...')}
+                placeholder={t('descriptionPlaceholder')}
                 rows={2}
               />
             </div>
@@ -483,7 +481,7 @@ export function SavedViewsManager({
                   onChange={(e) => setSetAsDefault(e.target.checked)}
                   className="h-4 w-4 rounded border-line"
                 />
-                <span className="text-sm">{t('setAsDefault', 'Set as default')}</span>
+                <span className="text-sm">{t('setAsDefault')}</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -492,7 +490,7 @@ export function SavedViewsManager({
                   onChange={(e) => setPinView(e.target.checked)}
                   className="h-4 w-4 rounded border-line"
                 />
-                <span className="text-sm">{t('pinToQuickAccess', 'Pin to quick access')}</span>
+                <span className="text-sm">{t('pinToQuickAccess')}</span>
               </label>
             </div>
           </div>
@@ -502,14 +500,14 @@ export function SavedViewsManager({
               onClick={() => setSaveDialogOpen(false)}
               className="w-full sm:w-auto"
             >
-              {t('cancel', 'Cancel')}
+              {t('cancel')}
             </Button>
             <Button
               onClick={handleSaveView}
               disabled={!viewName.trim() || isSaving}
               className="w-full sm:w-auto"
             >
-              {isSaving ? t('saving', 'Saving...') : t('save', 'Save')}
+              {isSaving ? t('saving') : t('save')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -519,15 +517,15 @@ export function SavedViewsManager({
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>{t('editView', 'Edit View')}</DialogTitle>
+            <DialogTitle>{t('editView')}</DialogTitle>
             <DialogDescription>
-              {t('editViewDescription', 'Update the name and settings for this saved view.')}
+              {t('editViewDescription')}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <label htmlFor="edit-view-name" className="text-sm font-medium">
-                {t('viewName', 'View Name')} *
+                {t('viewName')} *
               </label>
               <Input
                 id="edit-view-name"
@@ -538,7 +536,7 @@ export function SavedViewsManager({
             </div>
             <div className="space-y-2">
               <label htmlFor="edit-view-description" className="text-sm font-medium">
-                {t('description', 'Description')}
+                {t('description')}
               </label>
               <Textarea
                 id="edit-view-description"
@@ -555,7 +553,7 @@ export function SavedViewsManager({
                   onChange={(e) => setSetAsDefault(e.target.checked)}
                   className="h-4 w-4 rounded border-line"
                 />
-                <span className="text-sm">{t('setAsDefault', 'Set as default')}</span>
+                <span className="text-sm">{t('setAsDefault')}</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -564,7 +562,7 @@ export function SavedViewsManager({
                   onChange={(e) => setPinView(e.target.checked)}
                   className="h-4 w-4 rounded border-line"
                 />
-                <span className="text-sm">{t('pinToQuickAccess', 'Pin to quick access')}</span>
+                <span className="text-sm">{t('pinToQuickAccess')}</span>
               </label>
             </div>
           </div>
@@ -574,14 +572,14 @@ export function SavedViewsManager({
               onClick={() => setEditDialogOpen(false)}
               className="w-full sm:w-auto"
             >
-              {t('cancel', 'Cancel')}
+              {t('cancel')}
             </Button>
             <Button
               onClick={handleUpdateView}
               disabled={!viewName.trim() || isSaving}
               className="w-full sm:w-auto"
             >
-              {isSaving ? t('saving', 'Saving...') : t('saveChanges', 'Save Changes')}
+              {isSaving ? t('saving') : t('saveChanges')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -591,11 +589,10 @@ export function SavedViewsManager({
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t('deleteView', 'Delete View')}</AlertDialogTitle>
+            <AlertDialogTitle>{t('deleteView')}</AlertDialogTitle>
             <AlertDialogDescription>
               {t(
                 'deleteViewConfirmation',
-                'Are you sure you want to delete "{{name}}"? This action cannot be undone.',
                 {
                   name: selectedView?.name,
                 },
@@ -604,14 +601,14 @@ export function SavedViewsManager({
           </AlertDialogHeader>
           <AlertDialogFooter className="flex-col sm:flex-row gap-2">
             <AlertDialogCancel className="w-full sm:w-auto">
-              {t('cancel', 'Cancel')}
+              {t('cancel')}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteView}
               disabled={isSaving}
               className="w-full sm:w-auto bg-destructive hover:bg-destructive/90"
             >
-              {isSaving ? t('deleting', 'Deleting...') : t('delete', 'Delete')}
+              {isSaving ? t('deleting') : t('delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

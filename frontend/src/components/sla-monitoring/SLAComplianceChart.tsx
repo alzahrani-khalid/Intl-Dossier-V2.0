@@ -7,7 +7,7 @@
 
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { format } from 'date-fns'
+import { formatDayMonth } from '@/lib/format-date'
 import {
   LineChart,
   Line,
@@ -57,7 +57,7 @@ interface SLAComplianceChartProps {
 }
 
 export function SLAComplianceChart({ data, isLoading, className }: SLAComplianceChartProps) {
-  const { t } = useTranslation('sla')
+  const { t, i18n } = useTranslation('sla')
   const { isRTL } = useDirection()
   const chartData = useMemo(() => {
     if (!data || data.length === 0) {
@@ -67,10 +67,10 @@ export function SLAComplianceChart({ data, isLoading, className }: SLACompliance
 
     return data.map((point) => ({
       ...point,
-      date: format(new Date(point.date), 'd MMM'),
+      date: formatDayMonth(new Date(point.date)),
       compliance: point.compliance_pct,
     }))
-  }, [data])
+  }, [data, i18n.language])
 
   if (isLoading) {
     return (

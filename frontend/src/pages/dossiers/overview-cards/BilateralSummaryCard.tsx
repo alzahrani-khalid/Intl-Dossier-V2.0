@@ -9,10 +9,9 @@
 import { useTranslation } from 'react-i18next'
 import { useDossierOverview } from '@/hooks/useDossierOverview'
 import { Skeleton } from '@/components/ui/skeleton'
-import { format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
 import { Handshake, FileSignature, CalendarCheck } from 'lucide-react'
 import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 interface BilateralSummaryCardProps {
   dossierId: string
@@ -45,12 +44,10 @@ export function BilateralSummaryCard({ dossierId }: BilateralSummaryCardProps): 
     return (
       <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
         <h3 className="text-base font-semibold leading-tight text-start mb-4">
-          {t('overview.bilateral.title', { defaultValue: 'Bilateral Summary' })}
+          {t('overview.bilateral.title')}
         </h3>
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('overview.sectionError')}
         </p>
       </div>
     )
@@ -65,34 +62,32 @@ export function BilateralSummaryCard({ dossierId }: BilateralSummaryCardProps): 
   const items = [
     {
       icon: <Handshake className="h-4 w-4 text-muted-foreground flex-shrink-0" />,
-      label: t('overview.bilateral.partnerships', { defaultValue: 'Bilateral Partners' }),
+      label: t('overview.bilateral.partnerships'),
       value: numberFormat.format(bilateralRelations.length),
     },
     {
       icon: <FileSignature className="h-4 w-4 text-muted-foreground flex-shrink-0" />,
-      label: t('overview.bilateral.agreements', { defaultValue: 'Key Agreements' }),
+      label: t('overview.bilateral.agreements'),
       value: numberFormat.format(mouCount),
     },
     {
       icon: <CalendarCheck className="h-4 w-4 text-muted-foreground flex-shrink-0" />,
-      label: t('overview.bilateral.lastMeeting', { defaultValue: 'Last Meeting' }),
+      label: t('overview.bilateral.lastMeeting'),
       value: lastMeeting
-        ? format(new Date(lastMeeting.start_datetime), 'PP', {
-            locale: isRTL ? ar : enUS,
-          })
-        : t('overview.bilateral.noMeeting', { defaultValue: 'None recorded' }),
+        ? formatDayFirstYear(new Date(lastMeeting.start_datetime))
+        : t('overview.bilateral.noMeeting'),
     },
   ]
 
   return (
     <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
       <h3 className="text-base font-semibold leading-tight text-start mb-4">
-        {t('overview.bilateral.title', { defaultValue: 'Bilateral Summary' })}
+        {t('overview.bilateral.title')}
       </h3>
 
       {bilateralRelations.length === 0 && mouCount === 0 && !lastMeeting ? (
         <p className="text-muted-foreground text-sm text-center py-8">
-          {t('overview.bilateral.empty', { defaultValue: 'No bilateral data available' })}
+          {t('overview.bilateral.empty')}
         </p>
       ) : (
         <div className="space-y-3">

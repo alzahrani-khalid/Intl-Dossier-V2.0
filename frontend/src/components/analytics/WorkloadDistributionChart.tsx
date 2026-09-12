@@ -27,7 +27,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
 import type { WorkloadDistribution } from '@/types/analytics.types'
 import { PRIORITY_COLORS } from '@/types/analytics.types'
-import { AnalyticsPreviewOverlay } from './AnalyticsPreviewOverlay'
 import { useDirection } from '@/hooks/useDirection'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 import { toFormatLocale } from '@/lib/format-locale'
@@ -75,18 +74,12 @@ interface WorkloadDistributionChartProps {
   data?: WorkloadDistribution
   isLoading?: boolean
   className?: string
-  /** Show preview overlay when no data */
-  showPreview?: boolean
-  /** Callback when user wants to see sample data */
-  onShowSampleData?: () => void
 }
 
 export function WorkloadDistributionChart({
   data,
   isLoading,
   className,
-  showPreview = true,
-  onShowSampleData,
 }: WorkloadDistributionChartProps) {
   const { t } = useTranslation('analytics')
   const { isRTL } = useDirection()
@@ -135,15 +128,6 @@ export function WorkloadDistributionChart({
   }
 
   if (!data) {
-    if (showPreview) {
-      return (
-        <AnalyticsPreviewOverlay
-          chartType="workload"
-          onShowSampleData={onShowSampleData}
-          className={className}
-        />
-      )
-    }
     return (
       <Card className={className}>
         <CardHeader>

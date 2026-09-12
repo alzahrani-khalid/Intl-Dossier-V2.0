@@ -24,6 +24,9 @@ vi.mock('@tanstack/react-router', () => ({
   }),
   useNavigate: (): typeof navigateSpy => navigateSpy,
   useSearch: (): Record<string, unknown> => ({}),
+  Link: ({ to, children }: { to: string; children: ReactNode }): ReactNode => (
+    <a href={to}>{children}</a>
+  ),
 }))
 
 const useOrganizationsMock = vi.fn()
@@ -81,7 +84,7 @@ describe('Organizations list route (Phase 87 wiring)', () => {
 
     const { container } = renderRoute()
 
-    expect(screen.getByRole('heading', { name: 'Organizations' })).toBeTruthy()
+    expect(screen.getByRole('heading', { name: 'Organizations & delegations' })).toBeTruthy()
     expect(screen.getAllByText('WHO').length).toBeGreaterThan(0)
     expect(screen.getByText('17')).toBeTruthy()
     expect(container.querySelector('.chip')).toBeTruthy()

@@ -133,33 +133,27 @@ export function AfterActionForm({
     setIsDirty(true)
   }, [formData, initialData])
 
-  // Surface an unsaved-changes signal to the parent. Unlike the edit-mode
-  // `isDirty` above (which gates the save button), this reflects whether the
-  // form currently holds any user-entered content, so create-mode pages can
-  // warn before navigation/unload.
+  // Content-derived dirtiness: whether the form currently holds any user-entered
+  // content. Two consumers: create-mode pages warn before navigation/unload
+  // (`onDirtyChange` below), and create mode gates the save button on it — the
+  // `isDirty` effect above is edit-mode only, so in create mode it never fires and
+  // Save would stay disabled forever (WRITE-01). Deleting that guard instead would
+  // enable Save on an untouched form, which UI-SPEC §5 forbids.
+  const hasContent =
+    formData.attendees.length > 0 ||
+    attendeesInput.trim().length > 0 ||
+    (formData.notes ?? '').trim().length > 0 ||
+    formData.decisions.length > 0 ||
+    formData.commitments.length > 0 ||
+    formData.risks.length > 0 ||
+    formData.follow_ups.length > 0 ||
+    formData.attachment_ids.length > 0
+
+  // Surface an unsaved-changes signal to the parent.
   useEffect(() => {
     if (!onDirtyChange) return
-    const hasContent =
-      formData.attendees.length > 0 ||
-      attendeesInput.trim().length > 0 ||
-      (formData.notes ?? '').trim().length > 0 ||
-      formData.decisions.length > 0 ||
-      formData.commitments.length > 0 ||
-      formData.risks.length > 0 ||
-      formData.follow_ups.length > 0 ||
-      formData.attachment_ids.length > 0
     onDirtyChange(hasContent)
-  }, [
-    formData.attendees,
-    attendeesInput,
-    formData.notes,
-    formData.decisions,
-    formData.commitments,
-    formData.risks,
-    formData.follow_ups,
-    formData.attachment_ids,
-    onDirtyChange,
-  ])
+  }, [hasContent, onDirtyChange])
 
   // B-6: an internal commitment with no assignee leaves owner_user_id undefined,
   // which violates the aa_commitments valid_owner CHECK on insert. Block the
@@ -479,7 +473,7 @@ export function AfterActionForm({
             <div className="flex gap-4">
               <Button
                 type="submit"
-                disabled={saving || publishing || !isDirty}
+                disabled={saving || publishing || (initialData ? !isDirty : !hasContent)}
                 className="flex-1"
                 variant="outline"
               >

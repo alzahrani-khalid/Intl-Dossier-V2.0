@@ -233,11 +233,7 @@ export function useCreateDossier() {
     },
     onError: (error: DossierAPIError) => {
       if (error.status === 409 || error.code === 'DUPLICATE_DOSSIER') {
-        toast.error(
-          t('create.duplicate', {
-            defaultValue: error.message || 'A dossier with this name already exists.',
-          }),
-        )
+        toast.error(t('create.duplicate'))
       } else {
         toast.error(t('create.error', { message: error.message }))
       }
@@ -305,7 +301,7 @@ export function useUpdateDossier() {
       // so byType(type) never matched a paginated byType list query.
       queryClient.invalidateQueries({ queryKey: [...dossierKeys.all, 'type', data.type] })
 
-      toast.success(t('dossier.update.success', { name: data.name_en }))
+      toast.success(t('dossier:update.success', { name: data.name_en }))
     },
     onError: (error: DossierAPIError, { id }, context) => {
       // Rollback optimistic update on error
@@ -313,7 +309,7 @@ export function useUpdateDossier() {
         queryClient.setQueryData(dossierKeys.detail(id), context.previousDossier)
       }
 
-      toast.error(t('dossier.update.error', { message: error.message }))
+      toast.error(t('dossier:update.error', { message: error.message }))
     },
   })
 }
@@ -360,7 +356,7 @@ export function useDeleteDossier() {
       queryClient.invalidateQueries({ queryKey: dossierKeys.lists() })
       queryClient.invalidateQueries({ queryKey: dossierKeys.all })
 
-      toast.success(t('dossier.delete.success'))
+      toast.success(t('dossier:delete.success'))
     },
     onError: (error: DossierAPIError, id, context) => {
       // Restore the previous value on error
@@ -368,7 +364,7 @@ export function useDeleteDossier() {
         queryClient.setQueryData(dossierKeys.detail(id), context.previousDossier)
       }
 
-      toast.error(t('dossier.delete.error', { message: error.message }))
+      toast.error(t('dossier:delete.error', { message: error.message }))
     },
   })
 }
@@ -506,10 +502,10 @@ export function useLinkDocument() {
       queryClient.invalidateQueries({
         queryKey: documentLinksKeys.forDossier(variables.dossierId),
       })
-      toast.success(t('document.linkSuccess'))
+      toast.success(t('dossier:document.linkSuccess'))
     },
     onError: (error: DossierAPIError) => {
-      toast.error(t('document.linkError', { message: error.message }))
+      toast.error(t('dossier:document.linkError', { message: error.message }))
     },
   })
 }
@@ -552,10 +548,10 @@ export function useUnlinkDocument() {
       queryClient.invalidateQueries({
         queryKey: documentLinksKeys.forDossier(variables.dossierId),
       })
-      toast.success(t('document.unlinkSuccess'))
+      toast.success(t('dossier:document.unlinkSuccess'))
     },
     onError: (error: DossierAPIError) => {
-      toast.error(t('document.unlinkError', { message: error.message }))
+      toast.error(t('dossier:document.unlinkError', { message: error.message }))
     },
   })
 }
@@ -676,33 +672,13 @@ export function useDossierCounts(
 ) {
   return useQuery({
     queryKey: dossierCountsKeys.all,
+    // TRUST-01 / D-01: the rejection propagates. `getDossierCountsByType` already throws a
+    // `DossierAPIError` when PostgREST reports one, and every consumer reads this through
+    // TanStack Query, whose `isError` only fires on a REJECTED promise. Catching here and
+    // returning all-zero counts made a failed request indistinguishable from an empty database.
     queryFn: async () => {
-      try {
-        const counts = await getDossierCountsByType()
-        return counts as Record<TypeGuardDossierType, DossierTypeCount>
-      } catch (error) {
-        console.warn('Failed to fetch dossier counts:', error)
-        // Return empty counts on error
-        const types: TypeGuardDossierType[] = [
-          'country',
-          'organization',
-          'person',
-          'engagement',
-          'forum',
-          'working_group',
-        ]
-        const emptyCounts: Record<TypeGuardDossierType, DossierTypeCount> = {} as any
-        types.forEach((type) => {
-          emptyCounts[type] = {
-            type: type as DossierType,
-            total: 0,
-            active: 0,
-            inactive: 0,
-            archived: 0,
-          }
-        })
-        return emptyCounts
-      }
+      const counts = await getDossierCountsByType()
+      return counts as Record<TypeGuardDossierType, DossierTypeCount>
     },
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
     ...options,
@@ -731,14 +707,11 @@ export function useDossierCountByType(
 ) {
   return useQuery({
     queryKey: dossierCountsKeys.byType(type),
+    // TRUST-01 / D-01: same rule as `useDossierCounts` above — `getDossiersByType` throws, so
+    // returning 0 on a rejection asserted a fact the app does not have.
     queryFn: async () => {
-      try {
-        const response = await getDossiersByType(type, 1, 1)
-        return response.pagination?.total_count || 0
-      } catch (error) {
-        console.warn(`Failed to fetch count for ${type}:`, error)
-        return 0
-      }
+      const response = await getDossiersByType(type, 1, 1)
+      return response.pagination?.total_count || 0
     },
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
     ...options,

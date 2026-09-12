@@ -1,6 +1,6 @@
 {
   "wizard": {
-    "title": "Let's Create Your First Relationship",
+    "title": "Create your first relationship",
     "subtitle": "Relationships help you track connections between {{name}} and other entities in your system.",
     "dismiss": "Dismiss",
     "skipForNow": "Skip for now",
@@ -108,6 +108,18 @@
     "engagement": "Engagement",
     "working_group": "Working Group",
     "topic": "Topic"
+  },
+  "navigator": {
+    "title": "Relationship Navigator",
+    "description": "Browse and filter connected entities by degree and type",
+    "search": "Search entities...",
+    "degree": "Degree",
+    "allDegrees": "All Degrees",
+    "separation": "separation",
+    "type": "Entity Type",
+    "allTypes": "All Types",
+    "results": "{{count}} entities found",
+    "noResults": "No entities match your filters"
   },
   "graph": {
     "controls": {
@@ -274,7 +286,7 @@
     "subtitle": "Found {{count}} potential connections for {{name}}",
     "loading": "Finding potential connections...",
     "noSuggestions": "No Suggestions Available",
-    "noSuggestionsDescription": "We couldn't find potential connections based on available data. You can add relationships manually.",
+    "noSuggestionsDescription": "No potential connections found in the available data. You can add relationships manually.",
     "selected": "selected",
     "selectAll": "Select All",
     "deselectAll": "Deselect All",

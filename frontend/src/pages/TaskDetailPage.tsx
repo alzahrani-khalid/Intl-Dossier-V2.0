@@ -47,8 +47,8 @@ export function TaskDetailPage() {
   const handleDeleteSuccess = useCallback(() => {
     // Show delete confirmation toast
     toast({
-      title: t('tasks.deleted', 'Task Deleted'),
-      description: t('tasks.deletedRedirecting', 'Task deleted. Redirecting...'),
+      title: t('tasks-page:page.deleted'),
+      description: t('tasks-page:page.deletedRedirecting'),
       duration: 3000,
     })
 
@@ -63,12 +63,10 @@ export function TaskDetailPage() {
       <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
         <Alert variant="destructive">
           <AlertCircle className="size-4" />
-          <AlertDescription>
-            {error.message || t('failed_to_load_task', 'Failed to load task. Please try again.')}
-          </AlertDescription>
+          <AlertDescription>{t('tasks-page:page.failed_to_load_task')}</AlertDescription>
         </Alert>
         <Button variant="outline" onClick={() => navigate({ to: '/tasks' })} className="mt-4">
-          {t('back_to_tasks', 'Back to Tasks')}
+          {t('tasks-page:page.back_to_tasks')}
         </Button>
       </div>
     )
@@ -106,7 +104,7 @@ export function TaskDetailPage() {
               <ChevronRight
                 className={`size-4 ${isRTL ? '' : 'rotate-180'} ${isRTL ? 'ms-2' : 'me-2'}`}
               />
-              {t('back_to_tasks', 'Back to Tasks')}
+              {t('tasks-page:page.back_to_tasks')}
             </Button>
           </div>
 

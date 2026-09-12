@@ -15,7 +15,7 @@
       },
       "comprehensive": {
         "name": "تقرير شامل",
-        "description": "ملف كامل مع جميع الأقسام والمستندات"
+        "description": "دوسيه كامل مع جميع الأقسام والمستندات"
       },
       "quickReference": {
         "name": "مرجع سريع",
@@ -180,7 +180,7 @@
       "formatting": "جاري تنسيق المستند...",
       "generating": "جاري إنشاء {{format}}...",
       "uploading": "جاري رفع الملف...",
-      "complete": "اكتمل الإنشاء!",
+      "complete": "اكتمل الإنشاء",
       "error": "فشل الإنشاء"
     },
     "processingEntity": "جاري معالجة {{entity}}...",
@@ -234,7 +234,8 @@
       "failed": "فشل"
     },
     "pageCount_one": "صفحة {{count}}",
-    "pageCount_other": "{{count}} صفحات"
+    "pageCount_other": "{{count}} صفحات",
+    "pageCount": "{{count}} صفحات"
   },
   "topics": {
     "statistics": "الإحصاءات",
@@ -284,5 +285,9 @@
     "confirm": "حذف",
     "cancel": "إلغاء",
     "deleting": "جارٍ الحذف…"
+  },
+  "progress": {
+    "starting": "جاري بدء إنشاء كتاب الإحاطة...",
+    "generated": "تم إنشاء كتاب الإحاطة بنجاح"
   }
 }

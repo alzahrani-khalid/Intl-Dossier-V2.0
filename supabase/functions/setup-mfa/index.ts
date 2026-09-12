@@ -5,6 +5,7 @@ import * as OTPAuth from 'https://esm.sh/otpauth@9.1.4'
 import { QRCode } from 'https://deno.land/x/qrcode@v2.0.0/mod.ts'
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
 import { encryptMfaSecret } from '../_shared/mfa-crypto.ts'
+import { writeAuditLog } from '../_shared/audit.ts'
 
 interface SetupMFARequest {
   userId: string
@@ -176,18 +177,32 @@ serve(async (req) => {
       })
     }
 
-    // Log audit trail
-    await supabaseClient.from('audit_logs').insert({
-      user_id: user.id,
-      action: 'mfa_setup_initiated',
-      resource_type: 'user',
-      resource_id: userId,
-      changes: {
-        mfa_setup_pending: true,
-      },
-      ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown',
-      user_agent: req.headers.get('user-agent') || 'unknown',
-    })
+    // Log audit trail.
+    // Grade: LOG-LOUDLY-AND-CONTINUE (D-18) — the MFA secret is already stored.
+    // `currentUser` is read via the caller-scoped client and can be null, so the
+    // role is checked rather than assumed; unresolvable = loud skip.
+    if (!currentUser?.role) {
+      console.error(
+        `AUDIT-ZERO-01: audit write SKIPPED — no user_role resolves for ${user.id} (setup-mfa:mfa_setup_initiated)`,
+      )
+    } else {
+      await writeAuditLog(
+        supabaseClient,
+        {
+          entity_type: 'user',
+          entity_id: userId,
+          action: 'mfa_setup_initiated',
+          user_id: user.id,
+          user_role: currentUser.role,
+          new_values: {
+            mfa_setup_pending: true,
+            ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip'),
+          },
+          user_agent: req.headers.get('user-agent') || 'unknown',
+        },
+        'setup-mfa',
+      )
+    }
 
     const response: SetupMFAResponse = {
       success: true,

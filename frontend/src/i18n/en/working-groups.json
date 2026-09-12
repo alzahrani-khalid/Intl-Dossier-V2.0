@@ -4,13 +4,13 @@
   "pageDescription": "Track membership, mandates, deliverables, and meetings for all working groups",
 
   "metrics": {
-    "totalGroups": "Total Groups",
-    "activeGroups": "Active Groups",
-    "totalMembers": "Total Members",
+    "totalGroups": "Total groups",
+    "activeGroups": "Active groups",
+    "totalMembers": "Total members",
     "totalMembersHint": "Across all working groups",
-    "totalDeliverables": "Total Deliverables",
-    "completedDeliverables": "Completed Deliverables",
-    "upcomingMeetings": "Upcoming Meetings"
+    "totalDeliverables": "Total deliverables",
+    "completedDeliverables": "Completed deliverables",
+    "upcomingMeetings": "Upcoming meetings"
   },
 
   "filters": {
@@ -21,9 +21,9 @@
     "allStatuses": "All statuses",
     "type": "Type",
     "allTypes": "All types",
-    "parentForum": "Parent Forum",
+    "parentForum": "Parent forum",
     "allForums": "All forums",
-    "leadOrganization": "Lead Organization",
+    "leadOrganization": "Lead organization",
     "allOrganizations": "All organizations",
     "clearFilters": "Clear filters"
   },
@@ -38,16 +38,16 @@
 
   "types": {
     "committee": "Committee",
-    "task_force": "Task Force",
-    "advisory_board": "Advisory Board",
-    "technical_group": "Technical Group",
-    "steering_committee": "Steering Committee"
+    "task_force": "Task force",
+    "advisory_board": "Advisory board",
+    "technical_group": "Technical group",
+    "steering_committee": "Steering committee"
   },
 
   "memberRoles": {
     "chair": "Chair",
     "co_chair": "Co-Chair",
-    "vice_chair": "Vice Chair",
+    "vice_chair": "Vice chair",
     "secretary": "Secretary",
     "member": "Member",
     "observer": "Observer",
@@ -64,8 +64,8 @@
 
   "deliverableStatus": {
     "pending": "Pending",
-    "in_progress": "In Progress",
-    "review": "Under Review",
+    "in_progress": "In progress",
+    "review": "Under review",
     "completed": "Completed",
     "cancelled": "Cancelled",
     "deferred": "Deferred"
@@ -85,7 +85,7 @@
     "standard": "Standard",
     "guideline": "Guideline",
     "framework": "Framework",
-    "action_plan": "Action Plan",
+    "action_plan": "Action plan",
     "other": "Other"
   },
 
@@ -96,12 +96,12 @@
     "quarterly": "Quarterly",
     "biannually": "Bi-annually",
     "annually": "Annually",
-    "as_needed": "As Needed"
+    "as_needed": "As needed"
   },
 
   "meetingStatus": {
     "scheduled": "Scheduled",
-    "in_progress": "In Progress",
+    "in_progress": "In progress",
     "completed": "Completed",
     "cancelled": "Cancelled",
     "postponed": "Postponed"
@@ -125,13 +125,13 @@
   "actions": {
     "add": "Add Working Group",
     "edit": "Edit",
-    "view": "View Details",
+    "view": "View details",
     "archive": "Archive",
     "restore": "Restore",
     "delete": "Delete",
-    "addMember": "Add Member",
-    "addDeliverable": "Add Deliverable",
-    "scheduleMeeting": "Schedule Meeting"
+    "addMember": "Add member",
+    "addDeliverable": "Add deliverable",
+    "scheduleMeeting": "Schedule meeting"
   },
 
   "createDialog": {
@@ -145,24 +145,24 @@
   },
 
   "viewDialog": {
-    "title": "Working Group Details"
+    "title": "Working group details"
   },
 
   "memberDialog": {
-    "title": "Add Member",
-    "editTitle": "Edit Member",
+    "title": "Add member",
+    "editTitle": "Edit member",
     "description": "Add an organization or person as a member"
   },
 
   "deliverableDialog": {
-    "title": "Add Deliverable",
-    "editTitle": "Edit Deliverable",
+    "title": "Add deliverable",
+    "editTitle": "Edit deliverable",
     "description": "Track a deliverable for this working group"
   },
 
   "meetingDialog": {
-    "title": "Schedule Meeting",
-    "editTitle": "Edit Meeting",
+    "title": "Schedule meeting",
+    "editTitle": "Edit meeting",
     "description": "Schedule a new meeting for this working group"
   },
 
@@ -173,7 +173,7 @@
     "nameArPlaceholder": "e.g., اللجنة الفنية لمعايير البيانات",
     "summaryEn": "Summary (English)",
     "summaryAr": "Summary (Arabic)",
-    "type": "Working Group Type",
+    "type": "Working group type",
     "typePlaceholder": "Select type...",
     "status": "Status",
     "statusPlaceholder": "Select status...",
@@ -182,21 +182,21 @@
     "mandateAr": "Mandate (Arabic)",
     "descriptionEn": "Description (English)",
     "descriptionAr": "Description (Arabic)",
-    "meetingFrequency": "Meeting Frequency",
+    "meetingFrequency": "Meeting frequency",
     "meetingFrequencyPlaceholder": "Select frequency...",
-    "establishedDate": "Established Date",
-    "disbandmentDate": "Disbandment Date",
-    "parentForum": "Parent Forum",
+    "establishedDate": "Established date",
+    "disbandmentDate": "Disbandment date",
+    "parentForum": "Parent forum",
     "parentForumPlaceholder": "Select parent forum (optional)...",
-    "leadOrganization": "Lead Organization",
+    "leadOrganization": "Lead organization",
     "leadOrganizationPlaceholder": "Select lead organization (optional)...",
-    "chairPerson": "Chair Person",
+    "chairPerson": "Chair person",
     "chairPersonPlaceholder": "Select chair person (optional)...",
     "secretaryPerson": "Secretary",
     "secretaryPersonPlaceholder": "Select secretary (optional)...",
-    "objectives": "Key Objectives",
+    "objectives": "Key objectives",
     "objectivesPlaceholder": "Add key objectives (one per line)...",
-    "sensitivityLevel": "Sensitivity Level",
+    "sensitivityLevel": "Sensitivity level",
     "tags": "Tags",
     "tagsPlaceholder": "Add tags...",
     "save": "Save",
@@ -206,7 +206,7 @@
   },
 
   "memberForm": {
-    "memberType": "Member Type",
+    "memberType": "Member type",
     "organization": "Organization",
     "person": "Person",
     "selectOrganization": "Select organization...",
@@ -214,12 +214,12 @@
     "role": "Role",
     "rolePlaceholder": "Select role...",
     "status": "Status",
-    "joinedDate": "Joined Date",
-    "leftDate": "Left Date",
-    "representingCountry": "Representing Country",
+    "joinedDate": "Joined date",
+    "leftDate": "Left date",
+    "representingCountry": "Representing country",
     "representingCountryPlaceholder": "Select country...",
-    "canVote": "Can Vote",
-    "canPropose": "Can Propose",
+    "canVote": "Can vote",
+    "canPropose": "Can propose",
     "notes": "Notes"
   },
 
@@ -228,12 +228,12 @@
     "titleAr": "Title (Arabic)",
     "descriptionEn": "Description (English)",
     "descriptionAr": "Description (Arabic)",
-    "type": "Deliverable Type",
+    "type": "Deliverable type",
     "priority": "Priority",
     "status": "Status",
-    "dueDate": "Due Date",
-    "plannedStartDate": "Planned Start Date",
-    "plannedEndDate": "Planned End Date",
+    "dueDate": "Deadline",
+    "plannedStartDate": "Planned start date",
+    "plannedEndDate": "Planned end date",
     "assignedToMember": "Assigned to Member",
     "assignedToOrg": "Assigned to Organization",
     "progress": "Progress (%)",
@@ -250,10 +250,10 @@
     "endDate": "End Date & Time",
     "locationEn": "Location (English)",
     "locationAr": "Location (Arabic)",
-    "isVirtual": "Virtual Meeting",
+    "isVirtual": "Virtual meeting",
     "meetingUrl": "Meeting URL",
     "agendaUrl": "Agenda URL",
-    "expectedAttendees": "Expected Attendees",
+    "expectedAttendees": "Expected attendees",
     "notes": "Notes"
   },
 
@@ -322,34 +322,34 @@
   },
 
   "memberSuggestions": {
-    "title": "Smart Member Suggestions",
+    "title": "Smart member suggestions",
     "description": "Found {{count}} potential members for {{name}}",
     "findingMembers": "Finding potential members...",
     "failedToLoad": "Failed to load suggestions",
-    "noSuggestions": "No Suggestions Available",
-    "noSuggestionsDesc": "We couldn't find potential members based on available data. You can add members manually.",
+    "noSuggestions": "No suggestions available",
+    "noSuggestionsDesc": "No potential members found in the available data. You can add members manually.",
     "suggestions": "suggestions",
     "highlyRecommended": "highly recommended",
     "selected": "selected",
-    "selectAll": "Select All",
-    "deselectAll": "Deselect All",
+    "selectAll": "Select all",
+    "deselectAll": "Deselect all",
     "skipForNow": "Skip for now",
-    "assignRoles": "Assign Roles",
+    "assignRoles": "Assign roles",
     "review": "Review",
     "back": "Back",
     "adding": "Adding...",
-    "addMembers": "Add {{count}} Members",
-    "noMembersYet": "No Members Yet",
+    "addMembers": "Add {{count}} members",
+    "noMembersYet": "No members yet",
     "membersWillAppear": "Member organizations will appear here once added.",
-    "showSmartSuggestions": "Show Smart Suggestions",
+    "showSmartSuggestions": "Show smart suggestions",
 
-    "assignRolesTitle": "Assign Roles",
+    "assignRolesTitle": "Assign roles",
     "assignRolesDescription": "Assign roles for {{count}} members in {{name}}",
     "role": "Role",
     "notesOptional": "Notes (optional)",
     "addNotes": "Add notes...",
 
-    "reviewTitle": "Review Members",
+    "reviewTitle": "Review members",
     "reviewDescription": "Adding {{count}} members to {{name}}",
     "organizations": "organizations",
     "people": "people",
@@ -361,18 +361,18 @@
     },
 
     "suggestionTypes": {
-      "parent_forum_member": "Forum Member",
-      "related_engagement": "Related Engagement",
-      "past_collaboration": "Past Collaboration",
-      "lead_org_affiliate": "Lead Organization",
-      "topic_expertise": "Topic Expert",
-      "country_representation": "Country Rep",
-      "organizational_mandate": "Mandate Match",
-      "role_seniority": "Senior Role"
+      "parent_forum_member": "Forum member",
+      "related_engagement": "Related engagement",
+      "past_collaboration": "Past collaboration",
+      "lead_org_affiliate": "Lead organization",
+      "topic_expertise": "Topic expert",
+      "country_representation": "Country rep",
+      "organizational_mandate": "Mandate match",
+      "role_seniority": "Senior role"
     },
 
     "confidence": {
-      "high": "Highly Recommended",
+      "high": "Highly recommended",
       "medium": "Recommended",
       "low": "Suggested"
     },

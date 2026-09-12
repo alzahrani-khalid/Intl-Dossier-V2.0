@@ -323,7 +323,22 @@ the DB):
   `critical`) — `critical` is correct here; it is the `urgency_level` enum, NOT
   the work-item `priority` (which uses `urgent`).
 - **Commitments** (`aa_commitments`) use `due_date` and `owner_type` /
-  `owner_user_id` / `owner_contact_id` (not `deadline` / `assignee_id`).
+  `owner_user_id` / `owner_contact_id` (not `deadline` / `assignee_id`). Their
+  `status` lifecycle is **five values**, verified by live catalog query against
+  staging `zkrcjzdemdmwhearhfgg` on 2026-08-16 (`RULING-P94-01` order 2):
+  `aa_commitments_status_check` is
+  `status IN ('pending','in_progress','completed','cancelled','overdue')`.
+  This paragraph previously implied four by omission and `REQUIREMENTS.md`
+  WRITE-04 stated four outright; both were corrected in the same commit. There
+  is **no `review`** — the kanban board has a `review` column and mapping a
+  commitment into it writes a value the constraint rejects. Derive the list
+  before relying on it:
+
+  ```sql
+  SELECT pg_get_constraintdef(oid) FROM pg_constraint
+  WHERE conrelid = 'public.aa_commitments'::regclass AND conname = 'aa_commitments_status_check';
+  ```
+
 - **Tasks** (`tasks`) use `sla_deadline` (not `deadline`) and `workflow_stage`
   (`todo`, `in_progress`, `review`, `done`, `cancelled`).
 
@@ -460,7 +475,23 @@ For local development, set these in `.env.test` (not committed to git).
 
 ### Tag signing setup
 
-Phase 53 (BUNDLE-06) introduced SSH-signed phase-base tags so `git tag -v <name>` succeeds for `phase-47-base`, `phase-48-base`, `phase-49-base`, and every `phase-NN-base` tag created from Phase 54 onward.
+Phase 53 (BUNDLE-06) introduced SSH-signed phase-base tags so `git tag -v <name>` succeeds for `phase-47-base`, `phase-48-base`, `phase-49-base`, and every `phase-NN-base` tag that exists.
+
+> **The convention LAPSED and is being resumed — corrected 2026-08-15 (`RULING-P92-24`).** This
+> section previously claimed a tag was created "from Phase 54 onward". That is false. Derive the real
+> state rather than trusting this sentence:
+>
+> ```bash
+> git tag -l 'phase-*-base' | sort -V
+> ```
+>
+> As of 2026-08-15 that returns **11** tags — 47, 48, 49, 51, 54–59, 68 — and the highest is
+> **`phase-68-base`**. **Phases 69–91 have none**; the convention lapsed for 23 phases while the
+> document went on asserting it held. Phase 92 resumes it.
+>
+> **Tags for 69–91 were deliberately NOT created retroactively.** A tag placed today at a commit
+> chosen today would pretend to mark a phase base it never marked — fabricating history. The gap is
+> recorded instead.
 
 The signing config is user-local (`~/.gitconfig` and `~/.ssh/allowed_signers`) and is NOT committed to the repo. Run these three commands once per machine to enable signing:
 

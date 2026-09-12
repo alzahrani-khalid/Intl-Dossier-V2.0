@@ -17,6 +17,7 @@ import * as bcrypt from 'https://deno.land/x/bcrypt@v0.4.1/mod.ts'
 import * as OTPAuth from 'https://esm.sh/otpauth@9.1.4'
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
 import { decryptMfaSecret } from '../_shared/mfa-crypto.ts'
+import { writeAuditLog } from '../_shared/audit.ts'
 
 // Initialize Supabase client
 const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
@@ -251,20 +252,38 @@ serve(async (req) => {
       }
     }
 
-    // Log audit event
-    await supabase.from('audit_logs').insert({
-      event_type: 'password_reset_completed',
-      user_id: userId,
-      resource_type: 'user',
-      resource_id: userId,
-      action: 'update',
-      metadata: {
-        email,
-        mfa_verified: mfaEnabled,
-        sessions_terminated: true,
-      },
-      created_at: new Date().toISOString(),
-    })
+    // Log audit event.
+    // Grade: LOG-LOUDLY-AND-CONTINUE (D-18) — the password is already reset.
+    // `user_role` is NOT NULL and the reset token payload carries no role, so
+    // resolve it from `public.users`; unresolvable = loud skip.
+    const { data: auditActor } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', userId)
+      .maybeSingle()
+
+    if (!auditActor?.role) {
+      console.error(
+        `AUDIT-ZERO-01: audit write SKIPPED — no user_role resolves for ${userId} (reset-password:password_reset_completed)`,
+      )
+    } else {
+      await writeAuditLog(
+        supabase,
+        {
+          entity_type: 'user',
+          entity_id: userId,
+          action: 'password_reset_completed',
+          user_id: userId,
+          user_role: auditActor.role,
+          mfa_verified: Boolean(mfaEnabled),
+          new_values: {
+            email,
+            sessions_terminated: true,
+          },
+        },
+        'reset-password',
+      )
+    }
 
     return new Response(
       JSON.stringify({

@@ -32,7 +32,7 @@ function CreateCountryPage(): ReactElement {
         className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground min-h-11"
       >
         <ChevronLeft className="h-4 w-4 me-1" />
-        {t('country.back_to_list', 'Back to Countries')}
+        {t('country.back_to_list')}
       </Link>
       <h1 className="text-lg font-semibold">{t('country.page_title')}</h1>
       <CreateWizardShell wizard={wizard}>

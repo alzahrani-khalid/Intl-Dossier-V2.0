@@ -28,8 +28,8 @@
 
 import { type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import { isToday, isPast, format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
+import { isToday, isPast } from 'date-fns'
+import { formatDayMonth } from '@/lib/format-date'
 
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
@@ -53,7 +53,7 @@ interface DueLabel {
   intent: 'default' | 'destructive'
 }
 
-function dueLabel(deadline: string | null, t: (k: string) => string, lang: string): DueLabel {
+function dueLabel(deadline: string | null, t: (k: string) => string): DueLabel {
   if (deadline === null || deadline === undefined || deadline === '') {
     return { text: '', intent: 'default' }
   }
@@ -67,12 +67,11 @@ function dueLabel(deadline: string | null, t: (k: string) => string, lang: strin
   if (isToday(d)) {
     return { text: t('myTasks.due.today'), intent: 'default' }
   }
-  const locale = lang === 'ar' ? ar : enUS
-  return { text: format(d, 'd MMM', { locale }), intent: 'default' }
+  return { text: formatDayMonth(d), intent: 'default' }
 }
 
 export function MyTasks(): ReactElement {
-  const { t, i18n } = useTranslation('dashboard-widgets')
+  const { t } = useTranslation('dashboard-widgets')
   const { user } = useAuth()
   const userId = user?.id ?? ''
   // `enabled` guard: without it the first render fetched with an empty
@@ -129,7 +128,7 @@ export function MyTasks(): ReactElement {
       <ul className="space-y-2">
         {rawTasks.slice(0, 6).map((task): ReactElement => {
           const done = task.status === 'completed'
-          const due = dueLabel(task.sla_deadline ?? null, t, i18n.language)
+          const due = dueLabel(task.sla_deadline ?? null, t)
           const iso =
             task.work_item_type === 'dossier' && typeof task.work_item_id === 'string'
               ? task.work_item_id.toLowerCase()

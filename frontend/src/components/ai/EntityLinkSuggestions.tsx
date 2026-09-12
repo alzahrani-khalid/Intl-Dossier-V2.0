@@ -210,9 +210,9 @@ function EntityLinkSuggestions({ ticketId, onLinkClick, className }: EntityLinkS
   }
 
   const getConfidenceLabel = (score: number) => {
-    if (score >= 90) return t('confidence.high', 'High')
-    if (score >= 70) return t('confidence.medium', 'Medium')
-    return t('confidence.low', 'Low')
+    if (score >= 90) return t('confidence.high')
+    if (score >= 70) return t('confidence.medium')
+    return t('confidence.low')
   }
 
   const isLoading = proposalsLoading || linksLoading
@@ -226,7 +226,7 @@ function EntityLinkSuggestions({ ticketId, onLinkClick, className }: EntityLinkS
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Link2 className="h-5 w-5 text-primary" />
-            <CardTitle className="text-lg">{t('title', 'Entity Links')}</CardTitle>
+            <CardTitle className="text-lg">{t('title')}</CardTitle>
           </div>
           <Button
             variant="outline"
@@ -239,12 +239,10 @@ function EntityLinkSuggestions({ ticketId, onLinkClick, className }: EntityLinkS
             ) : (
               <Sparkles className={cn('h-4 w-4 me-1', isRTL && 'rotate-180')} />
             )}
-            {t('suggestLinks', 'Suggest Links')}
+            {t('suggestLinks')}
           </Button>
         </div>
-        <CardDescription>
-          {t('description', 'AI-suggested and manually linked entities')}
-        </CardDescription>
+        <CardDescription>{t('description')}</CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-4">
@@ -260,7 +258,7 @@ function EntityLinkSuggestions({ ticketId, onLinkClick, className }: EntityLinkS
               <div className="space-y-3">
                 <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                   <Sparkles className="h-4 w-4" />
-                  {t('pendingProposals', 'AI Suggestions')} ({pendingProposals.length})
+                  {t('pendingProposals')} ({pendingProposals.length})
                 </h4>
                 {pendingProposals.map((proposal) => (
                   <ProposalCard
@@ -284,7 +282,7 @@ function EntityLinkSuggestions({ ticketId, onLinkClick, className }: EntityLinkS
               <div className="space-y-3">
                 <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                   <Check className="h-4 w-4" />
-                  {t('linkedEntities', 'Linked Entities')} ({links?.length})
+                  {t('linkedEntities')} ({links?.length})
                 </h4>
                 {links?.map((link) => (
                   <LinkCard
@@ -302,10 +300,8 @@ function EntityLinkSuggestions({ ticketId, onLinkClick, className }: EntityLinkS
             {!hasProposals && !hasLinks && (
               <div className="text-center py-8 text-muted-foreground">
                 <Link2 className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p className="text-sm">{t('noLinks', 'No linked entities yet')}</p>
-                <p className="text-xs mt-1">
-                  {t('noLinksHint', 'Click "Suggest Links" to get AI recommendations')}
-                </p>
+                <p className="text-sm">{t('noLinks')}</p>
+                <p className="text-xs mt-1">{t('noLinksHint')}</p>
               </div>
             )}
 
@@ -313,10 +309,10 @@ function EntityLinkSuggestions({ ticketId, onLinkClick, className }: EntityLinkS
             {generateMutation.isError && (
               <Alert variant="destructive">
                 <AlertDescription className="flex items-center justify-between">
-                  <span>{t('errors.generateFailed', 'Failed to generate suggestions')}</span>
+                  <span>{t('errors.generateFailed')}</span>
                   <Button variant="ghost" size="sm" onClick={handleGenerate}>
                     <RefreshCw className="h-4 w-4 me-1" />
-                    {t('retry', 'Retry')}
+                    {t('retry')}
                   </Button>
                 </AlertDescription>
               </Alert>
@@ -380,8 +376,7 @@ function ProposalCard({
                     </div>
                   </TooltipTrigger>
                   <TooltipContent>
-                    {getConfidenceLabel(proposal.confidence_score)}{' '}
-                    {t('confidence.label', 'confidence')}
+                    {getConfidenceLabel(proposal.confidence_score)} {t('confidence.label')}
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -398,7 +393,7 @@ function ProposalCard({
             className="h-8 w-8 text-success hover:text-success hover:bg-success/10"
             onClick={onApprove}
             disabled={isApproving || isRejecting}
-            aria-label={t('common:common.actions.approve', { defaultValue: 'Approve' })}
+            aria-label={t('common:actions.approve')}
           >
             {isApproving ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -412,7 +407,7 @@ function ProposalCard({
             className="h-8 w-8 text-danger hover:text-danger hover:bg-danger/10"
             onClick={onReject}
             disabled={isApproving || isRejecting}
-            aria-label={t('common:common.actions.reject', { defaultValue: 'Reject' })}
+            aria-label={t('common:actions.reject')}
           >
             {isRejecting ? <Loader2 className="h-4 w-4 animate-spin" /> : <X className="h-4 w-4" />}
           </Button>
@@ -477,7 +472,7 @@ function LinkCard({ link, onDelete, onClick, isDeleting }: LinkCardProps) {
           onDelete()
         }}
         disabled={isDeleting}
-        aria-label={t('common:common.delete')}
+        aria-label={t('common:delete')}
       >
         {isDeleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
       </Button>

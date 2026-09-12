@@ -11,33 +11,46 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { ReactNode } from 'react'
+import enWorkCreation from '@/i18n/en/work-creation.json'
+import arWorkCreation from '@/i18n/ar/work-creation.json'
 
 // ---------- Mocks ----------
 
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string, defaultOrOpts?: unknown, maybeOpts?: unknown) => {
-      // t('chip.remove', { name, defaultValue: 'Remove ${name}' }) → return defaultValue
-      if (
-        typeof defaultOrOpts === 'object' &&
-        defaultOrOpts !== null &&
-        'defaultValue' in (defaultOrOpts as Record<string, unknown>)
-      ) {
-        return (defaultOrOpts as { defaultValue: string }).defaultValue
-      }
-      if (typeof defaultOrOpts === 'string') return defaultOrOpts
-      if (
-        typeof maybeOpts === 'object' &&
-        maybeOpts !== null &&
-        'defaultValue' in (maybeOpts as Record<string, unknown>)
-      ) {
-        return (maybeOpts as { defaultValue: string }).defaultValue
-      }
-      return key
-    },
-    i18n: { language: 'en' },
-  }),
+const { mockLocale } = vi.hoisted(() => ({
+  mockLocale: { current: 'en' as 'en' | 'ar' },
 }))
+
+vi.mock('react-i18next', async () => {
+  const [{ default: enBundle }, { default: arBundle }] = await Promise.all([
+    vi.importActual<typeof import('@/i18n/en/work-creation.json')>('@/i18n/en/work-creation.json'),
+    vi.importActual<typeof import('@/i18n/ar/work-creation.json')>('@/i18n/ar/work-creation.json'),
+  ])
+  const bundles = { en: enBundle, ar: arBundle }
+  const resolve = (key: string): unknown =>
+    key
+      .split('.')
+      .reduce(
+        (value, segment) => (value as Record<string, unknown>)?.[segment],
+        bundles[mockLocale.current] as unknown,
+      )
+
+  return {
+    useTranslation: () => ({
+      t: (key: string, opts: Record<string, unknown> = {}): string => {
+        const value = resolve(key)
+        if (typeof value !== 'string') throw new Error(`Missing test translation: ${key}`)
+        return value.replace(/\{\{(\w+)\}\}/g, (match, name: string) =>
+          name in opts ? String(opts[name]) : match,
+        )
+      },
+      i18n: {
+        get language(): 'en' | 'ar' {
+          return mockLocale.current
+        },
+      },
+    }),
+  }
+})
 
 vi.mock('@/hooks/useDirection', () => ({
   useDirection: () => ({ direction: 'ltr', isRTL: false }),
@@ -123,6 +136,7 @@ vi.mock('@/components/ui/badge', () => ({
 beforeEach(() => {
   autocompleteMock.mockReset()
   autocompleteMock.mockResolvedValue({ suggestions: [] })
+  mockLocale.current = 'en'
   localStorage.clear()
 })
 
@@ -190,6 +204,27 @@ describe('DossierPicker — single-select regression', () => {
 // ---------- Multi-select ----------
 
 describe('DossierPicker — multi-select', () => {
+  it("KEYS are byte-untouched. The diff contains deletions of default arguments and nothing else — no key string, no namespace prefix, no hook, no import moves. Spot-diff a sample and state it. COMPANION TEST FIXTURES, OWNED AND CONDITIONALLY REPAIRABLE (RULING-P99-429). The companion tests named in files_modified are owned by this lane. TRIGGER: if this lane's deletions cause one of them to render or assert a BARE i18n KEY as visible text or accessible name, it MUST be repaired as below; OTHERWISE it MUST be left BYTE-UNCHANGED - ownership grants authority to repair a break this lane causes, never a mandate to rewrite a test that still passes. WHEN REPAIRED: (a) expected copy comes from a STATIC top-level import of the relevant frontend/src/i18n/{en,ar}/<ns>.json, as DossierEngagementsTab.test.tsx:6-7 does, and any hand-copied copy object is deleted; (b) the react-i18next mock RESOLVES keys against the real bundle loaded with await vi.importActual of that same JSON INSIDE the vi.mock factory - a static import cannot serve this side because vi.mock is hoisted above it - with no private copy, no default-argument fallback and no key fallback; (c) the resolved en AND ar values are both asserted, the ar assertion being what proves the fallback is gone; (d) the rendered output must NOT contain the bare key; (e) existing assertions still exist and still run, not deleted, skipped, .only-ed or loosened. AND NO PRODUCTION-SIDE ESCAPE: the suite is made green by repairing the TEST. No production change may be made whose EFFECT is that an assertion passes independently of whether the key resolves - that covers a literal second-argument default, an object-form default option, and any conditional, wrapper, concatenation or logical-or that substitutes for or augments the value returned by t(). If a key fails to resolve, production must render the failure, not disguise it. || NO i18n JSON changes in this lane — a JSON edit here means the gatekeeper's proof was wrong or scope broke", () => {
+    const expectedEn = enWorkCreation.chip.remove.replace('{{name}}', france.name_en)
+    const expectedAr = arWorkCreation.chip.remove.replace('{{name}}', france.name_en)
+    const props = {
+      multiple: true as const,
+      values: [france.id],
+      selectedDossiers: [france],
+      onValuesChange: vi.fn(),
+    }
+
+    const english = render(<DossierPicker {...props} />)
+    expect(screen.getByRole('button', { name: expectedEn })).toBeTruthy()
+    expect(english.container.innerHTML).not.toContain('chip.remove')
+    english.unmount()
+
+    mockLocale.current = 'ar'
+    const arabic = render(<DossierPicker {...props} />)
+    expect(screen.getByRole('button', { name: expectedAr })).toBeTruthy()
+    expect(arabic.container.innerHTML).not.toContain('chip.remove')
+  })
+
   it('renders one chip per selected dossier with its localized name', () => {
     render(
       <DossierPicker

@@ -7,11 +7,11 @@
  * Handles fetching multiple entities and generating comparison results.
  */
 
-import { useQueries } from '@tanstack/react-query'
+import { useQueries, useQuery } from '@tanstack/react-query'
 import { STALE_TIME } from '@/lib/query-tiers'
 import { useMemo, useCallback, useState } from 'react'
 import { getDossier } from '@/services/dossier-api'
-import type { DossierType, Dossier } from '@/lib/dossier-type-guards'
+import type { DossierType, DossierCardType, Dossier } from '@/lib/dossier-type-guards'
 import type {
   EntityComparisonResult,
   FieldComparison,
@@ -20,7 +20,20 @@ import type {
   FieldDisplayConfig,
   ComparisonFilters,
 } from '@/types/entity-comparison.types'
-import { dossierKeys } from '@/hooks/useDossier'
+import { dossierKeys, useDossiersByType } from '@/hooks/useDossier'
+import {
+  electedOfficialKeys,
+  fetchElectedOfficialsPage,
+} from '@/domains/elected-officials/hooks/useElectedOfficials'
+
+/**
+ * `elected_official` is a UI card type, NOT a `dossiers.type` value — an elected official
+ * is a row whose dossier type is `person` and whose `persons.person_subtype` is
+ * `elected_official`. Every arm below that touches the eighth type reads these two
+ * constants rather than restating the relationship.
+ */
+const ELECTED_OFFICIAL_CARD_TYPE = 'elected_official' as const
+const ELECTED_OFFICIAL_DOSSIER_TYPE = 'person' as const
 
 /**
  * Field configuration for base dossier fields
@@ -94,7 +107,7 @@ const BASE_FIELD_CONFIGS: FieldDisplayConfig[] = [
 /**
  * Field configuration registry for extension fields by dossier type
  */
-const EXTENSION_FIELD_CONFIGS: Record<DossierType, FieldDisplayConfig[]> = {
+const EXTENSION_FIELD_CONFIGS: Record<DossierCardType, FieldDisplayConfig[]> = {
   country: [
     {
       key: 'iso_code_2',
@@ -396,6 +409,98 @@ const EXTENSION_FIELD_CONFIGS: Record<DossierType, FieldDisplayConfig[]> = {
       renderType: 'text',
     },
   ],
+  // Office, term, party and district — the fields that distinguish an elected official from
+  // any other person, taken from domains/elected-officials/types/elected-official.types.ts.
+  // They are real `persons` columns: dossiers-get selects * from persons for a person
+  // dossier, so these resolve through the same `extension` bag every other arm reads.
+  // Deliberately NOT a copy of the person arm's list, and nothing is filled in for a field
+  // with no counterpart on the elected-official shape.
+  elected_official: [
+    {
+      key: 'office_name_en',
+      labelKey: 'fields.elected_official.office_name_en',
+      category: 'extension',
+      defaultVisible: true,
+      renderType: 'text',
+    },
+    {
+      key: 'office_name_ar',
+      labelKey: 'fields.elected_official.office_name_ar',
+      category: 'extension',
+      defaultVisible: true,
+      renderType: 'text',
+    },
+    {
+      key: 'office_type',
+      labelKey: 'fields.elected_official.office_type',
+      category: 'extension',
+      defaultVisible: true,
+      renderType: 'text',
+    },
+    {
+      key: 'district_en',
+      labelKey: 'fields.elected_official.district_en',
+      category: 'extension',
+      defaultVisible: true,
+      renderType: 'text',
+    },
+    {
+      key: 'district_ar',
+      labelKey: 'fields.elected_official.district_ar',
+      category: 'extension',
+      defaultVisible: true,
+      renderType: 'text',
+    },
+    {
+      key: 'party_en',
+      labelKey: 'fields.elected_official.party_en',
+      category: 'extension',
+      defaultVisible: true,
+      renderType: 'text',
+    },
+    {
+      key: 'party_ar',
+      labelKey: 'fields.elected_official.party_ar',
+      category: 'extension',
+      defaultVisible: true,
+      renderType: 'text',
+    },
+    {
+      key: 'party_abbreviation',
+      labelKey: 'fields.elected_official.party_abbreviation',
+      category: 'extension',
+      defaultVisible: false,
+      renderType: 'text',
+    },
+    {
+      key: 'party_ideology',
+      labelKey: 'fields.elected_official.party_ideology',
+      category: 'extension',
+      defaultVisible: true,
+      renderType: 'text',
+    },
+    {
+      key: 'term_start',
+      labelKey: 'fields.elected_official.term_start',
+      category: 'extension',
+      defaultVisible: true,
+      renderType: 'date',
+    },
+    {
+      key: 'term_end',
+      labelKey: 'fields.elected_official.term_end',
+      category: 'extension',
+      defaultVisible: true,
+      renderType: 'date',
+    },
+    {
+      key: 'is_current_term',
+      labelKey: 'fields.elected_official.is_current_term',
+      category: 'extension',
+      defaultVisible: true,
+      renderType: 'boolean',
+    },
+  ],
 }
 
 /**
@@ -460,7 +565,10 @@ function getDifferenceType(values: unknown[]): FieldDifferenceType {
 /**
  * Generate field comparisons for a list of entities
  */
-function generateFieldComparisons(entities: Dossier[], entityType: DossierType): FieldComparison[] {
+function generateFieldComparisons(
+  entities: Dossier[],
+  entityType: DossierCardType,
+): FieldComparison[] {
   const comparisons: FieldComparison[] = []
 
   // Add base field comparisons
@@ -527,8 +635,99 @@ function generateComparisonSummary(fieldComparisons: FieldComparison[]): Compari
  */
 export const entityComparisonKeys = {
   all: ['entityComparison'] as const,
-  comparison: (type: DossierType, ids: string[]) =>
+  comparison: (type: DossierCardType, ids: string[]) =>
     [...entityComparisonKeys.all, 'compare', type, ids.sort().join(',')] as const,
+}
+
+/**
+ * The only fields the selection list reads off a candidate. Kept narrow so the
+ * dossiers arm and the elected-officials arm — which return different row shapes from
+ * different endpoints — can both feed the same list without either being cast into the
+ * other's type.
+ */
+export interface ComparisonCandidate {
+  id: string
+  name_en: string
+  name_ar: string | null
+}
+
+/**
+ * Does this fetched dossier actually belong to the selected card type?
+ *
+ * Every type but one answers this with `dossiers.type`. `elected_official` is the
+ * exception and the reason this helper exists: the row's type is `person`, and the
+ * SUBTYPE is the whole of the distinction. Comparing on `type` alone would accept any
+ * person into an elected-officials comparison.
+ */
+function matchesCardType(entity: Dossier, entityType: DossierCardType): boolean {
+  if (entityType !== ELECTED_OFFICIAL_CARD_TYPE) {
+    return entity.type === entityType
+  }
+  const extension = (entity as unknown as { extension?: { person_subtype?: string } }).extension
+  return (
+    entity.type === ELECTED_OFFICIAL_DOSSIER_TYPE &&
+    extension?.person_subtype === ELECTED_OFFICIAL_CARD_TYPE
+  )
+}
+
+/**
+ * Hook to fetch the entities selectable for a given card type.
+ *
+ * Two arms. The dossiers arm filters on `dossiers.type` and covers the seven DB types.
+ * The elected-officials arm is the only SUBTYPE-filtered one: it reads
+ * `/api/elected-officials`, which is `persons` restricted to
+ * `person_subtype = 'elected_official'` server-side
+ * (`backend/src/api/elected-officials.ts:155`). Filtering a page of persons client-side
+ * instead would report "no elected officials" whenever the first page happened to hold
+ * none — a fabricated zero.
+ *
+ * Exactly one arm is enabled at a time, and `isLoading` is read off that arm, so a
+ * pending query renders the LOADING treatment. An in-flight query that rendered the
+ * empty state would say "there are none" when the truth is "we do not know yet".
+ *
+ * @param entityType - The selected card type, or null when nothing is selected
+ * @param page - 1-based page number
+ * @param pageSize - Rows per page
+ */
+export function useComparisonCandidates(
+  entityType: DossierCardType | null,
+  page: number,
+  pageSize: number,
+): { candidates: ComparisonCandidate[]; isLoading: boolean; isError: boolean } {
+  const isElectedOfficial = entityType === ELECTED_OFFICIAL_CARD_TYPE
+
+  // `useDossiersByType` takes a DB type, so the disabled arm still needs a valid one to
+  // name; the query never runs while `enabled` is false.
+  const dossierType: DossierType =
+    entityType !== null && entityType !== ELECTED_OFFICIAL_CARD_TYPE ? entityType : 'country'
+
+  const dossierQuery = useDossiersByType(dossierType, page, pageSize, undefined, {
+    enabled: entityType !== null && !isElectedOfficial,
+  })
+
+  const electedOfficialQuery = useQuery({
+    queryKey: electedOfficialKeys.list({ page, limit: pageSize }),
+    queryFn: () => fetchElectedOfficialsPage({ page, limit: pageSize }),
+    enabled: isElectedOfficial,
+    staleTime: STALE_TIME.NORMAL,
+  })
+
+  const activeQuery = isElectedOfficial ? electedOfficialQuery : dossierQuery
+
+  const candidates = useMemo<ComparisonCandidate[]>(() => {
+    const rows = isElectedOfficial ? electedOfficialQuery.data?.data : dossierQuery.data?.data
+    return (rows ?? []).map((row) => ({
+      id: row.id,
+      name_en: row.name_en,
+      name_ar: row.name_ar,
+    }))
+  }, [isElectedOfficial, electedOfficialQuery.data, dossierQuery.data])
+
+  return {
+    candidates,
+    isLoading: entityType !== null && activeQuery.isPending,
+    isError: activeQuery.isError,
+  }
 }
 
 /**
@@ -538,7 +737,7 @@ export const entityComparisonKeys = {
  * @param entityIds - Array of entity IDs to compare
  * @returns Comparison result with field-by-field analysis
  */
-export function useEntityComparison(entityType: DossierType | null, entityIds: string[]) {
+export function useEntityComparison(entityType: DossierCardType | null, entityIds: string[]) {
   // Fetch all entities in parallel
   const entityQueries = useQueries({
     queries: entityIds.map((id) => ({
@@ -563,8 +762,9 @@ export function useEntityComparison(entityType: DossierType | null, entityIds: s
       return null
     }
 
-    // Validate all entities are of the expected type
-    const allSameType = entities.every((e) => e.type === entityType)
+    // Validate all entities are of the expected type. For elected officials this is the
+    // subtype predicate, not a type-string equality — see `matchesCardType`.
+    const allSameType = entities.every((e) => matchesCardType(e, entityType))
     if (!allSameType) {
       return null
     }
@@ -666,7 +866,7 @@ export function useComparisonFilters(initialFilters?: Partial<ComparisonFilters>
  * Hook for entity selection state management
  */
 export function useEntitySelection(maxSelections: number = 5, minSelections: number = 2) {
-  const [selectedType, setSelectedType] = useState<DossierType | null>(null)
+  const [selectedType, setSelectedType] = useState<DossierCardType | null>(null)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState('')
 

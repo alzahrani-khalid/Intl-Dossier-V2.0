@@ -62,9 +62,7 @@ export function ElectedOfficialCommitteesCard({
 
       {isError && official === undefined ? (
         <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
-          {t('dossier:overview.sectionError', {
-            defaultValue: 'Failed to load this section. Check your connection and try again.',
-          })}
+          {t('dossier:overview.sectionError')}
         </p>
       ) : committees.length === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">{t('committees.empty')}</p>

@@ -202,7 +202,7 @@ export function WhatIfScenarioPanel({
                     onClick={() => setCreateDialogOpen(false)}
                     className="w-full sm:w-auto"
                   >
-                    {t('common.cancel')}
+                    {t('common:cancel')}
                   </Button>
                   <Button
                     onClick={handleCreate}

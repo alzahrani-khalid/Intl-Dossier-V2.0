@@ -12,8 +12,6 @@ import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
 import { CalendarIcon, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { AdaptiveDialog } from '@/components/ui/adaptive-dialog'
@@ -40,6 +38,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { UserPicker } from '@/components/forms/UserPicker'
 import { useUpdateTask } from '@/hooks/useTasks'
 import type { Database } from '../../../../backend/src/types/database.types'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 type Task = Database['public']['Tables']['tasks']['Row']
 
@@ -122,7 +121,7 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
         onClick={() => onOpenChange(false)}
         className="min-h-11 w-full sm:w-auto sm:min-w-[100px]"
       >
-        {t('common.cancel', 'Cancel')}
+        {t('common:cancel')}
       </Button>
       <Button
         type="submit"
@@ -131,7 +130,7 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
         className="min-h-11 w-full sm:w-auto sm:min-w-[100px]"
       >
         {updateTask.isPending && <Loader2 className="me-2 size-4 animate-spin" />}
-        {t('common.save', 'Save')}
+        {t('common:save')}
       </Button>
     </>
   )
@@ -220,15 +219,15 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="low">{t('unified-kanban:priority.low', 'Low')}</SelectItem>
+                      <SelectItem value="low">{t('unified-kanban:priority.low')}</SelectItem>
                       <SelectItem value="medium">
-                        {t('unified-kanban:priority.medium', 'Medium')}
+                        {t('unified-kanban:priority.medium')}
                       </SelectItem>
                       <SelectItem value="high">
-                        {t('unified-kanban:priority.high', 'High')}
+                        {t('unified-kanban:priority.high')}
                       </SelectItem>
                       <SelectItem value="urgent">
-                        {t('unified-kanban:priority.urgent', 'Urgent')}
+                        {t('unified-kanban:priority.urgent')}
                       </SelectItem>
                     </SelectContent>
                   </Select>
@@ -251,19 +250,19 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="todo">
-                        {t('unified-kanban:columns.todo', 'To Do')}
+                        {t('unified-kanban:columns.todo')}
                       </SelectItem>
                       <SelectItem value="in_progress">
-                        {t('unified-kanban:columns.in_progress', 'In Progress')}
+                        {t('unified-kanban:columns.in_progress')}
                       </SelectItem>
                       <SelectItem value="review">
-                        {t('unified-kanban:columns.review', 'Review')}
+                        {t('unified-kanban:columns.review')}
                       </SelectItem>
                       <SelectItem value="done">
-                        {t('unified-kanban:columns.done', 'Done')}
+                        {t('unified-kanban:columns.done')}
                       </SelectItem>
                       <SelectItem value="cancelled">
-                        {t('unified-kanban:columns.cancelled', 'Cancelled')}
+                        {t('unified-kanban:columns.cancelled')}
                       </SelectItem>
                     </SelectContent>
                   </Select>
@@ -292,7 +291,7 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
                       >
                         <CalendarIcon className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
                         {field.value
-                          ? format(field.value, 'PPP', { locale: isRTL ? ar : enUS })
+                          ? formatDayFirstYear(field.value)
                           : t('tasks-page:form.selectDeadline')}
                       </Button>
                     </FormControl>

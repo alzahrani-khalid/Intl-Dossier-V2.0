@@ -35,13 +35,13 @@ describe('DecisionList', () => {
       render(<DecisionList decisions={[]} onChange={mockOnChange} />)
 
       expect(screen.getByText('Decisions')).toBeInTheDocument()
-      expect(screen.getByText('Add Decision')).toBeInTheDocument()
+      expect(screen.getByText('Add decision')).toBeInTheDocument()
     })
 
     it('shows empty state when no decisions', () => {
       render(<DecisionList decisions={[]} onChange={mockOnChange} />)
 
-      expect(screen.getByText('No decisions yet')).toBeInTheDocument()
+      expect(screen.getByText('No decisions recorded')).toBeInTheDocument()
     })
 
     it('renders all decisions with correct data', () => {
@@ -96,7 +96,7 @@ describe('DecisionList', () => {
       const user = userEvent.setup()
       render(<DecisionList decisions={[]} onChange={mockOnChange} />)
 
-      await user.click(screen.getByText('Add Decision'))
+      await user.click(screen.getByText('Add decision'))
 
       expect(mockOnChange).toHaveBeenCalledWith([
         {
@@ -111,7 +111,7 @@ describe('DecisionList', () => {
       const user = userEvent.setup()
       render(<DecisionList decisions={mockDecisions} onChange={mockOnChange} />)
 
-      await user.click(screen.getByText('Add Decision'))
+      await user.click(screen.getByText('Add decision'))
 
       expect(mockOnChange).toHaveBeenCalledWith([
         ...mockDecisions,
@@ -194,7 +194,7 @@ describe('DecisionList', () => {
       const user = userEvent.setup()
       render(<DecisionList decisions={mockDecisions} onChange={mockOnChange} />)
 
-      const removeButtons = screen.getAllByRole('button', { name: 'Remove decision' })
+      const removeButtons = screen.getAllByRole('button', { name: 'Delete decision' })
       await user.click(removeButtons[0]!)
       await confirmRemoval(user)
 
@@ -215,7 +215,7 @@ describe('DecisionList', () => {
 
       render(<DecisionList decisions={threeDecisions} onChange={mockOnChange} />)
 
-      const removeButtons = screen.getAllByRole('button', { name: 'Remove decision' })
+      const removeButtons = screen.getAllByRole('button', { name: 'Delete decision' })
       await user.click(removeButtons[1]!)
       await confirmRemoval(user)
 
@@ -227,13 +227,13 @@ describe('DecisionList', () => {
     it('hides add button in read-only mode', () => {
       render(<DecisionList decisions={mockDecisions} onChange={mockOnChange} readOnly />)
 
-      expect(screen.queryByText('Add Decision')).not.toBeInTheDocument()
+      expect(screen.queryByText('Add decision')).not.toBeInTheDocument()
     })
 
     it('hides delete buttons in read-only mode', () => {
       render(<DecisionList decisions={mockDecisions} onChange={mockOnChange} readOnly />)
 
-      const deleteButtons = screen.queryAllByRole('button', { name: 'Remove decision' })
+      const deleteButtons = screen.queryAllByRole('button', { name: 'Delete decision' })
 
       expect(deleteButtons).toHaveLength(0)
     })
@@ -274,8 +274,8 @@ describe('DecisionList', () => {
       render(<DecisionList decisions={mockDecisions} onChange={mockOnChange} />)
 
       expect(screen.getAllByText(/Description \*/)).toHaveLength(2)
-      expect(screen.getAllByText(/Decision Maker \*/)).toHaveLength(2)
-      expect(screen.getAllByText(/Decision Date \*/)).toHaveLength(2)
+      expect(screen.getAllByText(/Decision maker \*/)).toHaveLength(2)
+      expect(screen.getAllByText(/Decision date \*/)).toHaveLength(2)
     })
 
     it('sets required attribute on mandatory fields', () => {

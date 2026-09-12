@@ -265,7 +265,7 @@ export function EditingLockIndicator({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex-col-reverse sm:flex-row gap-2">
-            <AlertDialogCancel>{t('cancel', { ns: 'common' })}</AlertDialogCancel>
+            <AlertDialogCancel>{t('common:cancel', { ns: 'common' })}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleForceEditConfirm}
               className="bg-warning hover:bg-warning"

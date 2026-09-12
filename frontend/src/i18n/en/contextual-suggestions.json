@@ -2,7 +2,7 @@
   "title": "Suggested for You",
   "urgentBadge": "Urgent",
   "emptyTitle": "No Suggestions",
-  "emptyDescription": "You're all caught up! Check back later for personalized recommendations.",
+  "emptyDescription": "You're all caught up. Check back later for personalized recommendations.",
   "loading": "Loading suggestions...",
   "error": "Unable to load suggestions",
   "retry": "Try Again",

@@ -1,54 +1,57 @@
 {
   "search": {
     "noQuery": {
-      "title": "Start Your Search",
+      "title": "Start your search",
       "description": "Enter a search term to find documents, dossiers, engagements, and more across the system.",
       "hint": "Try searching for country names, organization names, or keywords from documents"
     },
     "noResults": {
-      "title": "No Results Found",
+      "title": "No results found",
       "description": "Nothing matches your search criteria.",
       "descriptionWithQuery": "No results found for \"{{query}}\"",
       "hint": "Try using different keywords or check your spelling",
       "hintWithFilters": "You have {{count}} active filters that may be limiting results",
-      "clearFilters": "Clear Filters"
+      "clearFilters": "Clear filters"
     },
     "error": {
-      "title": "Search Failed",
+      "title": "Search failed",
       "description": "Something went wrong while searching. Try again.",
-      "retry": "Retry Search"
+      "retry": "Retry search"
     }
   },
   "list": {
     "generic": {
-      "title": "No Items Found",
-      "firstTitle": "Get Started",
+      "title": "No items found",
+      "firstTitle": "Get started",
       "description": "There are no items to display at this time.",
       "firstDescription": "Create your first item to get started with this section.",
       "hint": "Items you create or import will appear here",
-      "create": "Create New",
-      "createFirst": "Create First Item",
+      "cta": "Create item",
+      "create": "Create new",
+      "createFirst": "Create first item",
       "import": "Import"
     },
     "document": {
-      "title": "No Documents",
-      "firstTitle": "Add Your First Document",
+      "title": "No documents",
+      "firstTitle": "Add your first document",
       "description": "No documents have been added to this section yet.",
       "firstDescription": "Upload documents to keep all your important files organized and accessible.",
       "hint": "Supported formats: PDF, DOCX, XLSX, images, and more",
-      "create": "Upload Document",
-      "createFirst": "Upload First Document",
+      "cta": "Upload document",
+      "create": "Upload document",
+      "createFirst": "Upload first document",
       "import": "Import from Drive"
     },
     "dossier": {
-      "title": "No Dossiers",
-      "firstTitle": "Create Your First Dossier",
+      "title": "No dossiers",
+      "firstTitle": "Create your first dossier",
       "description": "Dossiers help you organize information about countries, organizations, and topics.",
       "firstDescription": "Start by creating a dossier to track important relationships and activities.",
       "hint": "Dossiers can contain documents, engagements, MOUs, and intelligence signals",
-      "create": "Create Dossier",
-      "createFirst": "Create First Dossier",
-      "import": "Import Dossiers"
+      "cta": "Create dossier",
+      "create": "Create dossier",
+      "createFirst": "Create first dossier",
+      "import": "Import dossiers"
     },
     "engagement": {
       "title": "No engagements",
@@ -62,14 +65,15 @@
       "import": "Import engagements"
     },
     "commitment": {
-      "title": "No Commitments",
-      "firstTitle": "Track Your First Commitment",
+      "title": "No commitments",
+      "firstTitle": "Track your first commitment",
       "description": "No commitments have been recorded from engagements.",
       "firstDescription": "Commitments help you track promises and deliverables from meetings and events.",
       "hint": "Commitments are automatically created from after-action records",
-      "create": "Add Commitment",
-      "createFirst": "Add First Commitment",
-      "import": "Import Commitments"
+      "cta": "Add commitment",
+      "create": "Add commitment",
+      "createFirst": "Add first commitment",
+      "import": "Import commitments"
     },
     "organization": {
       "title": "No organization dossiers",
@@ -105,24 +109,26 @@
       "import": "Import forums"
     },
     "event": {
-      "title": "No Events",
-      "firstTitle": "Schedule Your First Event",
+      "title": "No events",
+      "firstTitle": "Schedule your first event",
       "description": "Upcoming events and meetings will appear here.",
       "firstDescription": "Add events to your calendar to stay organized and track deadlines.",
       "hint": "Events can be linked to engagements and dossiers",
-      "create": "Create Event",
-      "createFirst": "Create First Event",
-      "import": "Import Events"
+      "cta": "Create event",
+      "create": "Create event",
+      "createFirst": "Create first event",
+      "import": "Import events"
     },
     "task": {
-      "title": "No Tasks",
-      "firstTitle": "Create Your First Task",
+      "title": "No tasks",
+      "firstTitle": "Create your first task",
       "description": "Your tasks and assignments will appear here.",
       "firstDescription": "Create tasks to track your work and stay organized.",
       "hint": "Tasks can be assigned, prioritized, and tracked through completion",
-      "create": "Create Task",
-      "createFirst": "Create First Task",
-      "import": "Import Tasks"
+      "cta": "Create task",
+      "create": "Create task",
+      "createFirst": "Create first task",
+      "import": "Import tasks"
     },
     "person": {
       "title": "No person dossiers",
@@ -136,44 +142,70 @@
       "import": "Import persons"
     },
     "position": {
-      "title": "No Positions",
-      "firstTitle": "Create Your First Position",
+      "title": "No positions",
+      "firstTitle": "Create your first position",
       "description": "Policy positions and stances will be listed here.",
       "firstDescription": "Document official positions on international topics and issues.",
       "hint": "Positions help maintain consistency across engagements",
-      "create": "Create Position",
-      "createFirst": "Create First Position",
-      "import": "Import Positions"
+      "cta": "Create position",
+      "create": "Create position",
+      "createFirst": "Create first position",
+      "import": "Import positions"
     },
     "mou": {
       "title": "No MOUs",
-      "firstTitle": "Add Your First MOU",
+      "firstTitle": "Add your first MOU",
       "description": "Memoranda of Understanding will be tracked here.",
       "firstDescription": "Track agreements, their status, and renewal dates.",
       "hint": "Get notified when MOUs are approaching expiration",
+      "cta": "Add MOU",
       "create": "Add MOU",
-      "createFirst": "Add First MOU",
+      "createFirst": "Add first MOU",
       "import": "Import MOUs"
     },
     "topic": {
       "title": "No topic dossiers",
+      "firstTitle": "Add your first topic dossier",
       "description": "Topic dossiers follow policy areas and strategic initiatives.",
-      "cta": "Add topic"
+      "firstDescription": "Create a topic dossier to follow a policy area or strategic initiative.",
+      "hint": "Topic dossiers keep related policy activity and evidence together",
+      "cta": "Add topic",
+      "create": "Add topic",
+      "createFirst": "Add first topic",
+      "import": "Import topics"
     },
     "working_group": {
       "title": "No working groups",
+      "firstTitle": "Add your first working group",
       "description": "Working-group dossiers track committees and task forces.",
-      "cta": "Add working group"
+      "firstDescription": "Create a working-group dossier to track a committee or task force.",
+      "hint": "Working-group dossiers keep mandates, members, and activity together",
+      "cta": "Add working group",
+      "create": "Add working group",
+      "createFirst": "Add first working group",
+      "import": "Import working groups"
     },
     "elected_official": {
       "title": "No elected officials",
+      "firstTitle": "Add your first elected official",
       "description": "Elected-official dossiers hold office and term details for government contacts.",
-      "cta": "Add elected official"
+      "firstDescription": "Create an elected-official dossier to track office, term, and contact details.",
+      "hint": "Elected-official dossiers keep office and term information current",
+      "cta": "Add elected official",
+      "create": "Add elected official",
+      "createFirst": "Add first elected official",
+      "import": "Import elected officials"
     },
     "work_item": {
       "title": "No work items",
+      "firstTitle": "Create your first work item",
       "description": "Work items collect tasks, commitments, and intake requests across dossiers.",
-      "cta": "Create work item"
+      "firstDescription": "Create a work item to organize a task, commitment, or intake request.",
+      "hint": "Work items keep ownership, priority, and progress visible",
+      "cta": "Create work item",
+      "create": "Create work item",
+      "createFirst": "Create first work item",
+      "import": "Import work items"
     },
     "filtered": {
       "title": "No matching rows",
@@ -181,90 +213,90 @@
       "clear": "Clear filters"
     },
     "relationship": {
-      "title": "No Relationships",
-      "firstTitle": "Create Your First Relationship",
+      "title": "No relationships",
+      "firstTitle": "Create your first relationship",
       "description": "Relationships between entities will appear here.",
       "firstDescription": "Connect dossiers together to build a network of linked information.",
       "hint": "Relationships can be visualized in a network graph view",
-      "create": "Add Relationship",
-      "createFirst": "Add First Relationship",
-      "import": "Import Relationships"
+      "create": "Add relationship",
+      "createFirst": "Add first relationship",
+      "import": "Import relationships"
     },
     "brief": {
-      "title": "No Briefs",
-      "firstTitle": "Generate Your First Brief",
+      "title": "No briefs",
+      "firstTitle": "Generate your first brief",
       "description": "AI-generated briefing documents will appear here.",
       "firstDescription": "Generate comprehensive briefings using AI to summarize your dossier data.",
       "hint": "Briefs pull together information from documents, engagements, and relationships",
-      "create": "Generate Brief",
-      "createFirst": "Generate First Brief",
-      "import": "Import Briefs"
+      "create": "Generate brief",
+      "createFirst": "Generate first brief",
+      "import": "Import briefs"
     }
   },
   "dashboard": {
     "generic": {
-      "title": "No Data Available",
+      "title": "No data available",
       "description": "Data will appear here once activities are recorded in the system.",
       "hint": "Start by creating engagements, logging commitments, or adding dossiers",
-      "action": "Get Started"
+      "action": "Get started"
     },
     "overview": {
       "title": "Welcome to Your Dashboard",
       "description": "Your dashboard provides a comprehensive overview of activities and metrics.",
       "hint": "Data will populate as you add engagements, dossiers, and track commitments",
-      "action": "Configure Dashboard"
+      "action": "Configure dashboard"
     },
     "analytics": {
-      "title": "No Analytics Data",
+      "title": "No analytics data",
       "description": "Analytics will be available once there's enough activity data to analyze.",
       "hint": "Record engagements and track commitments to see trends and insights",
-      "action": "View Analytics"
+      "action": "View analytics"
     },
     "activity": {
-      "title": "No Recent Activity",
+      "title": "No recent activity",
       "description": "Recent activities will be shown here as you use the system.",
       "hint": "Create engagements, update dossiers, or log commitments to see activity",
-      "action": "Create Engagement"
+      "action": "Create engagement"
     },
     "notifications": {
-      "title": "No Notifications",
+      "title": "No notifications",
       "description": "You're all caught up. New notifications will appear here.",
       "hint": "Notifications include reminders, updates, and alerts from the system",
-      "action": "Notification Settings"
+      "action": "Notification settings"
     },
     "calendar": {
-      "title": "No Upcoming Events",
+      "title": "No upcoming events",
       "description": "Your calendar is empty. Schedule events to see them here.",
       "hint": "Add meetings, deadlines, and important dates to stay organized",
-      "action": "Add Event"
+      "action": "Add event"
     },
     "tasks": {
-      "title": "No Pending Tasks",
+      "title": "No pending tasks",
       "description": "Great work. You have no pending tasks.",
       "hint": "Tasks from commitments and assignments will appear here",
-      "action": "Create Task"
+      "action": "Create task"
     },
     "metrics": {
-      "title": "No Metrics Available",
+      "title": "No metrics available",
       "description": "Key performance metrics will be displayed once data is available.",
       "hint": "Track commitments and engagements to see your performance metrics",
-      "action": "View Settings"
+      "action": "View settings"
     },
     "recent": {
-      "title": "No Recent Items",
+      "title": "No recent items",
       "description": "Items you've recently viewed or edited will appear here.",
       "hint": "This section updates automatically as you work",
-      "action": "Browse Dossiers"
+      "action": "Browse dossiers"
     },
     "configure": "Configure"
   },
   "video": {
-    "replayLabel": "Watch Again",
-    "transcriptToggle": "Toggle Transcript",
+    "replayLabel": "Watch again",
+    "transcriptToggle": "Toggle transcript",
     "transcriptTitle": "Transcript",
     "dismiss": "Dismiss",
     "durationLabel": "{{duration}} video",
-    "watchTutorial": "Watch Tutorial",
+    "watchTutorial": "Watch tutorial",
     "close": "Close",
     "previous": "Previous",
     "next": "Next",
@@ -297,7 +329,7 @@
       },
       "commitment": {
         "track": {
-          "title": "Tracking Commitments",
+          "title": "Tracking commitments",
           "description": "Follow up on promises and deliverables from meetings and events.",
           "transcript": {
             "0": "Commitments help you track promises made during engagements.",
@@ -309,7 +341,7 @@
       },
       "document": {
         "upload": {
-          "title": "Uploading Documents",
+          "title": "Uploading documents",
           "description": "Quick guide to uploading and organizing documents in the system.",
           "transcript": {
             "0": "Uploading documents is simple and keeps your files organized.",
@@ -321,7 +353,7 @@
       },
       "organization": {
         "manage": {
-          "title": "Managing Organizations",
+          "title": "Managing organizations",
           "description": "Add and link international organizations to your dossiers.",
           "transcript": {
             "0": "Organizations represent the entities you work with internationally.",
@@ -333,7 +365,7 @@
       },
       "country": {
         "portfolio": {
-          "title": "Building Your Country Portfolio",
+          "title": "Building your country portfolio",
           "description": "How diplomats organize and track countries in their portfolio.",
           "transcript": {
             "0": "Your country portfolio is the hub for all bilateral relationships.",
@@ -345,7 +377,7 @@
       },
       "mou": {
         "trackRenewals": {
-          "title": "Tracking MOU Renewals",
+          "title": "Tracking MOU renewals",
           "description": "Never miss an MOU expiration with automated renewal tracking.",
           "transcript": {
             "0": "MOUs require careful tracking to ensure timely renewals.",
@@ -373,8 +405,8 @@
     "requester": {
       "badge": "Requester",
       "title": "Ready to Submit a Request?",
-      "description": "Submit support requests for engagement support, position development, MoU actions, or foresight analysis. Our team will review and process your request promptly.",
-      "examplesTitle": "Example Requests You Can Submit",
+      "description": "Submit support requests for engagement support, position development, MoU actions, or foresight analysis. Requests are reviewed and processed promptly.",
+      "examplesTitle": "Example requests you can submit",
       "hint": "Click on any example above to start with a pre-filled template, or create a new request from scratch.",
       "examples": {
         "engagement": {
@@ -382,94 +414,94 @@
           "description": "Need support for an upcoming bilateral meeting with a partner organization on data sharing protocols."
         },
         "position": {
-          "title": "Policy Position Development",
+          "title": "Policy position development",
           "description": "Requesting development of an official stance on emerging international data governance standards."
         },
         "mou": {
-          "title": "MoU Renewal Support",
+          "title": "MoU renewal support",
           "description": "The agreement with Organization X expires in 3 months. Need to initiate renewal discussions."
         },
         "foresight": {
-          "title": "Trend Analysis Request",
+          "title": "Trend analysis request",
           "description": "Requesting analysis of emerging statistical methodologies and their implications for our operations."
         }
       },
       "actions": {
-        "create": "Submit New Request",
+        "create": "Submit new request",
         "createDescription": "Create a new support request",
-        "viewStatus": "View My Requests",
+        "viewStatus": "View my requests",
         "viewStatusDescription": "Check the status of your submitted requests"
       }
     },
     "reviewer": {
       "badge": "Reviewer",
-      "title": "No Pending Reviews",
+      "title": "No pending reviews",
       "description": "When new requests are submitted, they'll appear here for your review and triage. Use the evaluation criteria below to ensure consistent processing.",
-      "criteriaTitle": "Evaluation Criteria",
+      "criteriaTitle": "Evaluation criteria",
       "hint": "New requests will be sorted by urgency and submission time. AI suggestions will help speed up your review process.",
       "criteria": {
         "completeness": {
-          "title": "Completeness Check",
+          "title": "Completeness check",
           "description": "Verify all required information is provided and clear"
         },
         "urgency": {
-          "title": "Urgency Assessment",
+          "title": "Urgency assessment",
           "description": "Evaluate priority based on deadlines and impact"
         },
         "classification": {
-          "title": "Type Classification",
+          "title": "Type classification",
           "description": "Confirm or adjust the request type category"
         },
         "routing": {
-          "title": "Assignment Routing",
+          "title": "Assignment routing",
           "description": "Identify the appropriate team or individual"
         }
       },
       "actions": {
-        "accessQueue": "Access Review Queue",
+        "accessQueue": "Access review queue",
         "accessQueueDescription": "View all requests pending review",
-        "viewAll": "View All Tickets",
+        "viewAll": "View all tickets",
         "viewAllDescription": "Browse the complete ticket history"
       }
     },
     "assignee": {
       "badge": "Assignee",
-      "title": "No Assigned Tasks",
+      "title": "No assigned tasks",
       "description": "Great work. You currently have no pending assignments. When requests are assigned to you, they'll appear here with all the details you need to take action.",
-      "workflowTitle": "How Your Tasks Will Appear",
+      "workflowTitle": "How your tasks will appear",
       "hint": "You'll receive notifications when new tasks are assigned. Priority tasks will be highlighted for immediate attention.",
       "steps": {
         "notification": {
-          "title": "Receive Notification",
+          "title": "Receive notification",
           "description": "Get alerted when a new task is assigned to you"
         },
         "review": {
-          "title": "Review Details",
+          "title": "Review details",
           "description": "Access the full request with context and attachments"
         },
         "action": {
-          "title": "Take Action",
+          "title": "Take action",
           "description": "Work on the request and update its progress"
         },
         "complete": {
-          "title": "Mark Complete",
+          "title": "Mark complete",
           "description": "Close the task and provide resolution notes"
         }
       },
       "actions": {
-        "viewAssignments": "View My Assignments",
+        "viewAssignments": "View my assignments",
         "viewAssignmentsDescription": "See all tasks assigned to you",
-        "browse": "Browse All Tickets",
+        "browse": "Browse all tickets",
         "browseDescription": "View the complete ticket list"
       }
     },
     "viewer": {
       "badge": "Viewer",
-      "title": "Intake Queue Overview",
+      "title": "Intake queue overview",
       "description": "You have view access to the intake system. Browse tickets and track request statuses, but submissions and reviews require appropriate permissions.",
       "hint": "Contact your administrator to request additional permissions if needed.",
       "actions": {
-        "browse": "Browse Tickets",
+        "browse": "Browse tickets",
         "browseDescription": "View all tickets in the system"
       }
     }
@@ -478,29 +510,29 @@
     "teamActivity": {
       "title": "Your team is active",
       "description": "Others on your team have created {{entityType}}. Consider collaborating to share knowledge and best practices.",
-      "statsLabel": "Team Activity",
+      "statsLabel": "Team activity",
       "totalCreated": "{{count}} {{entityType}} created by team",
       "recentlyAdded": "{{count}} added in the last 30 days",
       "contributors": "{{count}} team members contributing"
     },
     "topContributors": {
-      "title": "Top Contributors",
+      "title": "Top contributors",
       "viewProfile": "View profile",
       "contributions": "{{count}} contributions"
     },
     "invite": {
-      "title": "Invite Team Members",
+      "title": "Invite team members",
       "description": "Invite colleagues to collaborate and share their expertise.",
-      "buttonLabel": "Invite Colleague",
+      "buttonLabel": "Invite colleague",
       "searchPlaceholder": "Search by name or email...",
-      "suggestedUsers": "Suggested Team Members",
+      "suggestedUsers": "Suggested team members",
       "noSuggestions": "No suggestions available",
-      "sendInvitation": "Send Invitation",
+      "sendInvitation": "Send invitation",
       "sending": "Sending...",
       "selectTemplate": "Select a message template",
       "customMessage": "Add a personal message (optional)",
       "customMessagePlaceholder": "Add a note to your invitation...",
-      "preview": "Preview Message",
+      "preview": "Preview message",
       "emailLabel": "Email address",
       "emailPlaceholder": "colleague@example.com"
     },
@@ -508,7 +540,7 @@
       "title": "Invite to Collaborate",
       "subtitle": "Send an invitation to collaborate on {{entityType}}",
       "cancel": "Cancel",
-      "send": "Send Invitation",
+      "send": "Send invitation",
       "success": "Invitation sent.",
       "error": "Failed to send invitation"
     },
@@ -517,7 +549,7 @@
       "description": "You'll be the first to create {{entityType}} in your team. Start building and invite others to contribute."
     },
     "encouragement": {
-      "title": "Build Together",
+      "title": "Build together",
       "description": "Collaboration strengthens your organization's knowledge base. Every contribution counts."
     }
   }

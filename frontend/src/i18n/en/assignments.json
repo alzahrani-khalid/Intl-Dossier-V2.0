@@ -1,22 +1,28 @@
 {
-  "my_assignments": "My Assignments",
+  "my_assignments": "My assignments",
   "my_assignments_description": "View and manage your assigned work items across all types",
-  "active_assignments": "Active Assignments",
-  "completed_assignments": "Completed Assignments",
-  "total_active": "Total Active",
-  "at_risk": "At Risk",
+  "active_assignments": "Active assignments",
+  "completed_assignments": "Completed assignments",
+  "total_active": "Total active",
+  "at_risk": "At risk",
   "breached": "SLA Breached",
   "error_loading": "Failed to load assignments. Please try again.",
   "no_assignments": "No assignments found",
-  "work_item": "Work Item",
+  "work_item": {
+    "label": "Work item",
+    "dossier": "Dossier",
+    "ticket": "Ticket",
+    "position": "Position",
+    "task": "Task"
+  },
   "type": "Type",
   "sla_remaining": "SLA Remaining",
-  "assigned_at": "Assigned At",
-  "all_statuses": "All Statuses",
-  "all_priorities": "All Priorities",
-  "all_types": "All Types",
+  "assigned_at": "Assigned at",
+  "all_statuses": "All statuses",
+  "all_priorities": "All priorities",
+  "all_types": "All types",
   "work_type": {
-    "label": "Work Type",
+    "label": "Work type",
     "dossier": "Dossier",
     "ticket": "Ticket",
     "position": "Position",
@@ -29,15 +35,15 @@
   },
   "autoAssign": {
     "queued": {
-      "title": "Work Item Queued",
+      "title": "Work item queued",
       "description": "Position {{position}} in queue. {{reason}}"
     },
     "success": {
-      "title": "Assignment Successful",
+      "title": "Assignment successful",
       "description": "{{workItemId}} has been assigned"
     },
     "error": {
-      "title": "Assignment Failed"
+      "title": "Assignment failed"
     }
   },
   "sla": {
@@ -57,43 +63,43 @@
   },
   "escalate": {
     "success": {
-      "title": "Assignment Escalated",
+      "title": "Assignment escalated",
       "description": "Assignment {{assignmentId}} has been escalated to supervisor"
     },
     "error": {
-      "title": "Escalation Failed"
+      "title": "Escalation failed"
     }
   },
   "availability": {
-    "title": "Availability Status",
+    "title": "Availability status",
     "description": "Update your availability status and manage assignments",
-    "currentStatus": "Current Status",
-    "newStatus": "New Status",
-    "unavailableUntil": "Unavailable Until",
+    "currentStatus": "Current status",
+    "newStatus": "New status",
+    "unavailableUntil": "Unavailable until",
     "selectDate": "Select a date",
     "reason": "Reason",
     "reasonPlaceholder": "Please provide a reason for your status change...",
-    "updateStatus": "Update Status",
+    "updateStatus": "Update status",
     "statuses": {
       "available": "Available",
-      "on_leave": "On Leave",
+      "on_leave": "On leave",
       "unavailable": "Unavailable"
     },
-    "reassignmentSummary": "Assignment Reassignment Summary",
+    "reassignmentSummary": "Assignment reassignment summary",
     "reassignedCount": "Reassigned",
     "flaggedCount": "Flagged for Review",
     "reassignmentNote": "Urgent/high priority items were automatically reassigned. Normal/low priority items flagged for supervisor review.",
     "updated": {
-      "title": "Availability Updated",
+      "title": "Availability updated",
       "description": "{{reassignedCount}} items reassigned, {{flaggedCount}} flagged for review"
     },
     "returnedToWork": "Status updated to available",
     "flagged": {
-      "title": "Items Need Review",
+      "title": "Items need review",
       "description": "{{count}} normal/low priority items flagged for supervisor review"
     },
     "error": {
-      "title": "Update Failed"
+      "title": "Update failed"
     },
     "validation": {
       "dateRequired": "Please select an unavailable until date",
@@ -104,15 +110,15 @@
     "title": "Capacity",
     "staffDescription": "Current assignment capacity for this staff member",
     "unitDescription": "Current assignment capacity for this organizational unit",
-    "currentAssignments": "Current Assignments",
+    "currentAssignments": "Current assignments",
     "utilization": "Utilization",
     "available": "Available",
     "limit": "Limit",
     "status": {
       "available": "Available",
-      "warning": "Near Capacity",
-      "nearCapacity": "Near Capacity",
-      "atCapacity": "At Capacity"
+      "warning": "Near capacity",
+      "nearCapacity": "Near capacity",
+      "atCapacity": "At capacity"
     },
     "error": {
       "title": "Failed to Load Capacity",
@@ -120,13 +126,14 @@
     }
   },
   "queue": {
-    "title": "Assignment Queue",
+    "title": "Assignment queue",
     "description": "Manage queued work items awaiting capacity",
-    "queuedItems": "Queued Items",
+    "queuedItems": "Queued items",
     "normalLow": "Normal/Low",
     "clearFilters": "Clear filters",
     "assign": "Assign",
     "assignNotAvailable": "Manual assignment is not available yet",
+    "failedAttempts": "{{count}} failed attempts",
     "failedAttempts_one": "{{count}} failed attempt",
     "failedAttempts_other": "{{count}} failed attempts",
     "types": {
@@ -136,11 +143,11 @@
       "task": "Task"
     },
     "filterPriority": "Filter by Priority",
-    "allPriorities": "All Priorities",
+    "allPriorities": "All priorities",
     "filterWorkItemType": "Filter by Type",
-    "allTypes": "All Types",
+    "allTypes": "All types",
     "pageSize": "Items per Page",
-    "totalItems": "Total Items",
+    "totalItems": "Total items",
     "showing": "Showing",
     "loading": "Loading queue...",
     "error": "Error loading queue",
@@ -151,26 +158,26 @@
     "workItemId": "Work Item ID",
     "workItemType": "Type",
     "priority": "Priority",
-    "requiredSkills": "Required Skills",
-    "createdAt": "Queued At",
+    "requiredSkills": "Required skills",
+    "createdAt": "Queued at",
     "page": "Page"
   },
   "manualOverride": {
-    "title": "Manual Assignment Override",
+    "title": "Manual assignment override",
     "description": "Manually assign {{workItemId}} to a specific staff member",
-    "selectAssignee": "Select Assignee",
+    "selectAssignee": "Select assignee",
     "selectStaffPlaceholder": "Choose a staff member",
     "noStaffAvailable": "No staff available",
-    "overrideReason": "Override Reason",
+    "overrideReason": "Override reason",
     "reasonPlaceholder": "Explain why manual assignment is needed (minimum 10 characters)...",
     "reasonHint": "Minimum 10 characters required",
     "submit": "Assign",
     "success": {
-      "title": "Assignment Overridden",
+      "title": "Assignment overridden",
       "description": "{{workItemId}} has been manually assigned to {{assigneeName}}"
     },
     "error": {
-      "title": "Override Failed"
+      "title": "Override failed"
     },
     "validation": {
       "reasonTooShort": "Override reason must be at least 10 characters",
@@ -180,39 +187,41 @@
   "status": {
     "pending": "Pending",
     "assigned": "Assigned",
-    "in_progress": "In Progress",
+    "in_progress": "In progress",
     "completed": "Completed",
-    "cancelled": "Cancelled"
+    "cancelled": "Cancelled",
+    "review": "Review"
   },
   "priority": {
     "urgent": "Urgent",
     "high": "High",
     "normal": "Normal",
+    "medium": "Medium",
     "low": "Low"
   },
   "slaStatus": {
-    "ok": "On Track",
-    "warning": "At Risk",
+    "ok": "On track",
+    "warning": "At risk",
     "breached": "Breached"
   },
   "sla_breached": "SLA Breached",
   "escalation_dashboard": {
-    "title": "Escalation Dashboard",
+    "title": "Escalation dashboard",
     "description": "Monitor and analyze escalation trends and patterns",
     "error_loading": "Failed to load escalation data. Please try again.",
     "select_date_range": "Select date range",
-    "group_by_day": "By Day",
-    "group_by_week": "By Week",
-    "total_escalations": "Total Escalations",
+    "group_by_day": "By day",
+    "group_by_week": "By week",
+    "total_escalations": "Total escalations",
     "avg_per_day": "Average per Day",
-    "most_common_reason": "Most Common Reason",
-    "affected_assignments": "Affected Assignments",
+    "most_common_reason": "Most common reason",
+    "affected_assignments": "Affected assignments",
     "from_previous_period": "from previous period",
     "timeline": "Timeline",
-    "by_unit": "By Unit",
-    "by_staff": "By Staff",
-    "by_work_type": "By Work Type",
-    "escalation_timeline": "Escalation Timeline",
+    "by_unit": "By unit",
+    "by_staff": "By staff",
+    "by_work_type": "By work type",
+    "escalation_timeline": "Escalation timeline",
     "escalation_timeline_description": "Daily or weekly escalation counts over the selected period",
     "by_unit_description": "Escalations grouped by organizational unit",
     "by_staff_description": "Top staff members by escalation count and rate",
@@ -221,9 +230,9 @@
     "assignments": "assignments",
     "reason": {
       "sla_breach": "SLA Breach",
-      "capacity_exceeded": "Capacity Exceeded",
-      "skill_mismatch": "Skill Mismatch",
-      "manual_escalation": "Manual Escalation",
+      "capacity_exceeded": "Capacity exceeded",
+      "skill_mismatch": "Skill mismatch",
+      "manual_escalation": "Manual escalation",
       "none": "No escalations"
     }
   },
@@ -232,7 +241,7 @@
     "breadcrumb": "Assignment #{{id}}",
     "loading": "Loading assignment details...",
     "metadata": {
-      "assigned_date": "Assigned Date",
+      "assigned_date": "Assigned date",
       "assignee": "Assignee",
       "priority": "Priority",
       "status": "Status",
@@ -241,32 +250,32 @@
     "sla": {
       "title": "SLA Tracking",
       "deadline": "Deadline",
-      "time_remaining": "Time Remaining",
-      "health_status": "Health Status",
+      "time_remaining": "Time remaining",
+      "health_status": "Health status",
       "safe": "Safe",
       "warning": "Warning",
       "breached": "Breached",
       "percentage_elapsed": "{{percent}}% elapsed"
     },
     "work_item": {
-      "title": "Work Item Preview",
+      "title": "Work item preview",
       "type": "Type",
       "preview": "Preview",
-      "required_skills": "Required Skills",
-      "view_full": "View Full {{type}}"
+      "required_skills": "Required skills",
+      "view_full": "View full {{type}}"
     },
     "engagement": {
-      "context": "Engagement Context",
+      "context": "Engagement context",
       "title": "Engagement",
       "type": "Type",
-      "date_range": "Date Range",
+      "date_range": "Date range",
       "progress": "Progress",
       "completed": "{{completed}} of {{total}} tasks complete",
-      "view_full": "View Full Engagement",
-      "show_kanban": "Show Kanban"
+      "view_full": "View full engagement",
+      "show_kanban": "Show Kanban board"
     },
     "keyboard_shortcuts": {
-      "title": "Keyboard Shortcuts",
+      "title": "Keyboard shortcuts",
       "escalate": "E - Escalate assignment",
       "comment": "C - Focus comment input",
       "kanban": "K - Open kanban board"
@@ -274,9 +283,9 @@
   },
   "comments": {
     "title": "Comments",
-    "add_comment": "Add Comment",
+    "add_comment": "Add comment",
     "placeholder": "Add a comment... Use @username to mention someone",
-    "submit": "Post Comment",
+    "submit": "Post comment",
     "empty": "No comments yet",
     "character_count": "{{current}}/{{max}} characters",
     "mentioned_you": "mentioned you",
@@ -287,16 +296,16 @@
     "title": "Checklist",
     "progress": "Progress",
     "completed": "{{completed}} of {{total}} complete",
-    "add_item": "Add Item",
-    "import_template": "Import Template",
+    "add_item": "Add item",
+    "import_template": "Import template",
     "empty": "No checklist items yet",
     "completed_by": "Completed by {{name}}",
     "completed_at": "Completed {{date}}",
     "template_selector": {
-      "title": "Select Checklist Template",
+      "title": "Select checklist template",
       "description": "Choose a template to import items",
-      "preview": "Preview Items",
-      "import": "Import Template",
+      "preview": "Preview items",
+      "import": "Import template",
       "cancel": "Cancel"
     }
   },
@@ -309,33 +318,33 @@
       "other": "Observer"
     },
     "actions": {
-      "accept": "Accept Assignment",
+      "accept": "Accept assignment",
       "reassign": "Reassign",
-      "continue_observing": "Continue Observing"
+      "continue_observing": "Continue observing"
     }
   },
   "timeline": {
     "title": "Timeline",
     "empty": "No events yet",
     "event_types": {
-      "created": "Assignment Created",
-      "status_changed": "Status Changed",
-      "escalated": "Assignment Escalated",
-      "completed": "Assignment Completed",
-      "commented": "Comment Added",
-      "checklist_updated": "Checklist Updated",
-      "observer_added": "Observer Added",
-      "reassigned": "Assignment Reassigned",
-      "workflow_stage_changed": "Workflow Stage Changed"
+      "created": "Assignment created",
+      "status_changed": "Status changed",
+      "escalated": "Assignment escalated",
+      "completed": "Assignment completed",
+      "commented": "Comment added",
+      "checklist_updated": "Checklist updated",
+      "observer_added": "Observer added",
+      "reassigned": "Assignment reassigned",
+      "workflow_stage_changed": "Workflow stage changed"
     },
     "aria_label": "Assignment timeline with {{count}} events"
   },
   "related_tasks": {
-    "title": "Related Tasks",
+    "title": "Related tasks",
     "empty": "No related tasks",
-    "sibling_assignments": "Sibling Assignments",
-    "same_engagement": "Same Engagement",
-    "same_dossier": "Same Dossier"
+    "sibling_assignments": "Sibling assignments",
+    "same_engagement": "Same engagement",
+    "same_dossier": "Same dossier"
   },
   "kanban": {
     "title": "Kanban Board - {{engagement}}",
@@ -344,36 +353,36 @@
     "error_loading": "Failed to load Kanban board",
     "no_assignments": "No assignments in this stage",
     "sort_by": "Sort by",
-    "sort_created": "Created Date",
+    "sort_created": "Created date",
     "sort_sla": "SLA Deadline",
     "sort_priority": "Priority",
     "stage_transition_error": "Failed to move assignment",
-    "stage_todo": "To Do",
-    "stage_in_progress": "In Progress",
+    "stage_todo": "To do",
+    "stage_in_progress": "In progress",
     "stage_review": "Review",
     "stage_done": "Done",
     "stage_cancelled": "Cancelled",
     "sla_overdue": "Overdue",
     "sla_urgent": "Urgent",
-    "sla_warning": "Due Soon",
+    "sla_warning": "Due soon",
     "columns": {
-      "todo": "To Do",
-      "in_progress": "In Progress",
+      "todo": "To do",
+      "in_progress": "In progress",
       "review": "Review",
       "done": "Done",
       "cancelled": "Cancelled"
     },
     "column_count": "{{count}} tasks",
-    "current_assignment": "Current Assignment",
+    "current_assignment": "Current assignment",
     "drag_to_move": "Drag to change stage",
     "click_to_open": "Click to open",
     "keyboard_navigation": "Use Tab and Arrow keys to navigate"
   },
   "actions": {
     "escalate": "Escalate",
-    "complete": "Mark Complete",
-    "view_details": "View Details",
-    "add_observer": "Add Observer"
+    "complete": "Mark complete",
+    "view_details": "View details",
+    "add_observer": "Add observer"
   },
   "errors": {
     "load_failed": "Failed to load assignment details. Please try again.",
@@ -388,9 +397,9 @@
   },
   "dialogs": {
     "escalate": {
-      "title": "Escalate Assignment",
+      "title": "Escalate assignment",
       "description": "Escalate this assignment to your supervisor for review",
-      "reason": "Escalation Reason",
+      "reason": "Escalation reason",
       "reason_placeholder": "Explain why this assignment needs escalation...",
       "confirm": "Escalate",
       "cancel": "Cancel",
@@ -398,13 +407,129 @@
       "already_escalated": "This assignment has already been escalated"
     },
     "complete": {
-      "title": "Complete Assignment",
+      "title": "Complete assignment",
       "description": "Mark this assignment as complete",
-      "notes": "Completion Notes",
+      "notes": "Completion notes",
       "notes_placeholder": "Add any final notes or comments...",
       "confirm": "Complete",
       "cancel": "Cancel",
       "warning": "This action cannot be undone"
     }
+  },
+  "waitingQueue": {
+    "assignmentDetails": {
+      "assignedAt": "Assigned at",
+      "assignee": "Assignee",
+      "daysWaiting": "Days waiting",
+      "lastReminder": "Last reminder",
+      "noReminderSent": "No reminder sent",
+      "statusAndPriority": "Status & Priority",
+      "timeline": "Timeline",
+      "title": "Assignment details",
+      "viewFullDetails": "View full details",
+      "workItemNotAvailable": "The work item for this assignment is not available.",
+      "description": "Description",
+      "dialogDescription": "View complete details for assignment {{id}}, assigned to {{assignee}}",
+      "linkedItems": "Linked items",
+      "taskActions": "Task",
+      "viewTask": "View task",
+      "viewLinkedItems": "View linked items"
+    },
+    "escalation": {
+      "autoResolve": "Auto-resolve from organizational hierarchy",
+      "error": "Failed to escalate assignment",
+      "escalate": "Escalate",
+      "escalateAssignment": "Escalate assignment",
+      "escalating": "Escalating...",
+      "noEscalationPathMessage": "Could not find a manager for {{user}} in the organizational hierarchy.",
+      "reason": "Reason (Optional)",
+      "reasonPlaceholder": "Why are you escalating this assignment?",
+      "selectRecipient": "Select recipient",
+      "success": "Assignment escalated successfully",
+      "dialogDescription": "Escalate this assignment to higher management for attention",
+      "immediateManager": "Immediate manager",
+      "reasonAriaLabel": "Reason",
+      "reasonHint": "Explain why escalation is needed",
+      "reasonRequired": "Please provide a reason for escalation",
+      "successDesc": "The manager has been notified and will review the assignment."
+    },
+    "aging": {
+      "ok": "Recent",
+      "warning": "Needs attention",
+      "danger": "Overdue"
+    },
+    "days": "days",
+    "relatedTo": "Related to: ",
+    "reminder": {
+      "noAssignee": {
+        "title": "No assignee",
+        "description": "This assignment has no assignee. Please assign it first."
+      },
+      "cooldown": {
+        "title": "Cooldown active",
+        "description": "Please wait {{hours}} more hours before sending another reminder."
+      },
+      "success": {
+        "title": "Reminder sent",
+        "description": "Follow-up reminder has been sent successfully."
+      },
+      "error": {
+        "title": "Failed to Send Reminder",
+        "description": "An error occurred while sending the reminder. Please try again."
+      },
+      "rateLimit": {
+        "title": "Rate limit exceeded",
+        "description": "You have sent too many reminders. Please wait a few minutes and try again."
+      },
+      "notFound": {
+        "title": "Assignment not found",
+        "description": "The assignment could not be found. It may have been deleted."
+      },
+      "conflict": {
+        "title": "Assignment changed",
+        "description": "This assignment was modified by another user. Please refresh and try again."
+      },
+      "button": {
+        "label": "Send follow-up reminder",
+        "sending": "Sending...",
+        "sent": "Sent!",
+        "send": "Send reminder"
+      }
+    },
+    "status": {
+      "pending": "Pending",
+      "assigned": "Assigned",
+      "in_progress": "In progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "priority": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "urgent": "Urgent"
+    },
+    "entityType": {
+      "dossier": "Dossier",
+      "ticket": "Ticket",
+      "position": "Position"
+    }
+  },
+  "waiting": {
+    "description": "Items pending or assigned but not yet started",
+    "dossiers": "Dossiers",
+    "tickets": "Tickets",
+    "positions": "Positions",
+    "tasks": "Tasks",
+    "empty": "No waiting items",
+    "emptyDescription": "All work items are progressing",
+    "emptyCategory": "No items waiting for this reason",
+    "waitingFor": "Waiting for",
+    "day": "day",
+    "days": "days",
+    "assignee": "Assignee",
+    "status": "Status",
+    "assignmentUpdated": "Assignment updated",
+    "assignmentCompletedDesc": "Assignment for work item {{id}} is no longer in the waiting queue."
   }
 }

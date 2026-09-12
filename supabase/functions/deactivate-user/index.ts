@@ -2,6 +2,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
 import { withRateLimit, ADMIN_RATE_LIMIT } from '../_shared/rate-limiter.ts'
+import { writeAuditLog } from '../_shared/audit.ts'
 
 interface DeactivateUserRequest {
   userId: string
@@ -156,14 +157,16 @@ serve(async (req) => {
       // Table might not exist yet
     }
 
-    // Count active delegations granted by the user. The delegations table is not
-    // present in every environment — skip gracefully when it is absent.
+    // Count active delegations granted by the user.
     {
+      const now = new Date().toISOString()
       const { count, error } = await supabaseAdmin
-        .from('delegations')
+        .from('permission_delegations')
         .select('*', { count: 'exact', head: true })
         .eq('grantor_id', userId)
-        .eq('status', 'active')
+        .eq('revoked', false)
+        .lte('valid_from', now)
+        .gte('valid_until', now)
       if (error && !isMissingTable(error)) {
         console.error('Delegation count error:', error)
       }
@@ -219,25 +222,30 @@ serve(async (req) => {
     // Revoke active delegations (granted and received), when the table exists.
     let delegationsRevoked = 0
     {
+      const now = new Date().toISOString()
       const { data: activeDelegations, error } = await supabaseAdmin
-        .from('delegations')
+        .from('permission_delegations')
         .select('id')
         .or(`grantor_id.eq.${userId},grantee_id.eq.${userId}`)
-        .eq('status', 'active')
+        .eq('revoked', false)
+        .lte('valid_from', now)
+        .gte('valid_until', now)
       if (error) {
         if (!isMissingTable(error)) {
           console.error('Delegation lookup error:', error)
         }
       } else if (activeDelegations && activeDelegations.length > 0) {
         const { error: revokeError } = await supabaseAdmin
-          .from('delegations')
+          .from('permission_delegations')
           .update({
-            status: 'revoked',
-            revoked_at: new Date().toISOString(),
-            revocation_reason: 'user_deactivated',
+            revoked: true,
+            revoked_at: now,
+            revoked_by: user.id,
           })
           .or(`grantor_id.eq.${userId},grantee_id.eq.${userId}`)
-          .eq('status', 'active')
+          .eq('revoked', false)
+          .lte('valid_from', now)
+          .gte('valid_until', now)
         if (revokeError && !isMissingTable(revokeError)) {
           console.error('Delegation revoke error:', revokeError)
         } else if (!revokeError) {
@@ -277,22 +285,37 @@ serve(async (req) => {
       })
     }
 
-    // Log audit trail with deactivation reason
-    await supabaseAdmin.from('audit_logs').insert({
-      user_id: user.id,
-      action: 'user_deactivated',
-      resource_type: 'user',
-      resource_id: userId,
-      changes: {
-        is_active: false,
-        reason: reason || 'No reason provided',
-        sessions_terminated: sessionsTerminated,
-        delegations_revoked: delegationsRevoked,
-        orphaned_items: orphanedItems,
+    // Log audit trail with deactivation reason. Grade: PRECONDITION (PARK-94-08 (a),
+    // D-18) — a privileged account deactivation that leaves no audit record is
+    // refused. Stated tension: the deactivation is already persisted, so the caller
+    // sees a 500 for an action that took effect. That is the intended trade.
+    const deactivationAudit = await writeAuditLog(
+      supabaseAdmin,
+      {
+        entity_type: 'user',
+        entity_id: userId,
+        action: 'user_deactivated',
+        user_id: user.id,
+        user_role: adminUser.role,
+        old_values: { is_active: true },
+        new_values: {
+          is_active: false,
+          reason: reason || 'No reason provided',
+          sessions_terminated: sessionsTerminated,
+          delegations_revoked: delegationsRevoked,
+          orphaned_items: orphanedItems,
+          ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip'),
+        },
+        user_agent: req.headers.get('user-agent') || 'unknown',
       },
-      ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown',
-      user_agent: req.headers.get('user-agent') || 'unknown',
-    })
+      'deactivate-user',
+    )
+    if (!deactivationAudit.ok) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Failed to record audit entry' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      )
+    }
 
     const response: DeactivateUserResponse = {
       success: true,

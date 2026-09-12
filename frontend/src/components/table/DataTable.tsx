@@ -95,7 +95,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const [sorting, setSorting] = useState<SortingState>([])
+  const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = useState('')
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -224,7 +224,7 @@ const [sorting, setSorting] = useState<SortingState>([])
               type="text"
               value={globalFilter ?? ''}
               onChange={(e) => setGlobalFilter(e.target.value)}
-              placeholder={searchPlaceholder || t('common.search', 'Search...')}
+              placeholder={searchPlaceholder || t('common:search.label')}
               className={cn('w-full h-8 text-sm', isRTL ? 'pe-2.5 ps-8' : 'ps-8 pe-2.5')}
             />
           </div>
@@ -240,7 +240,7 @@ const [sorting, setSorting] = useState<SortingState>([])
                 size="sm"
                 className="h-7 w-7 p-0"
                 onClick={() => setViewMode('card')}
-                aria-label={t('common.cardView', 'Card view')}
+                aria-label={t('common:cardView')}
               >
                 <LayoutGrid className="h-3.5 w-3.5" />
               </Button>
@@ -249,7 +249,7 @@ const [sorting, setSorting] = useState<SortingState>([])
                 size="sm"
                 className="h-7 w-7 p-0"
                 onClick={() => setViewMode('table')}
-                aria-label={t('common.tableView', 'Table view')}
+                aria-label={t('common:tableView')}
               >
                 <TableIcon className="h-3.5 w-3.5" />
               </Button>
@@ -262,12 +262,12 @@ const [sorting, setSorting] = useState<SortingState>([])
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
                   <SlidersHorizontal className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">{t('common.columns', 'Columns')}</span>
+                  <span className="hidden sm:inline">{t('common:columns')}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="w-44">
                 <DropdownMenuLabel className="text-xs">
-                  {t('common.toggleColumns', 'Toggle columns')}
+                  {t('common:toggleColumns')}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {table
@@ -300,7 +300,7 @@ const [sorting, setSorting] = useState<SortingState>([])
         ) : (
           <Card>
             <CardContent className="py-12 text-center text-muted-foreground">
-              {emptyMessage || t('common.noResults', 'No results found.')}
+              {emptyMessage || t('common:noResults')}
             </CardContent>
           </Card>
         )}
@@ -384,7 +384,7 @@ const [sorting, setSorting] = useState<SortingState>([])
                   colSpan={columns.length}
                   className="h-20 text-center text-sm text-muted-foreground"
                 >
-                  {emptyMessage || t('common.noResults', 'No results found.')}
+                  {emptyMessage || t('common:noResults')}
                 </td>
               </tr>
             )}
@@ -398,14 +398,14 @@ const [sorting, setSorting] = useState<SortingState>([])
           {/* Results info & Page size */}
           <div className="flex items-center gap-2">
             <p className="text-xs text-muted-foreground whitespace-nowrap">
-              {t('common.showing', 'Showing')}{' '}
+              {t('common:showing')}{' '}
               {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
               {' - '}
               {Math.min(
                 (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
                 data.length,
               )}{' '}
-              {t('common.of', 'of')} {data.length}
+              {t('common:of')} {data.length}
             </p>
 
             {/* Page size selector */}
@@ -434,7 +434,7 @@ const [sorting, setSorting] = useState<SortingState>([])
               className="h-7 w-7"
               onClick={() => table.setPageIndex(0)}
               disabled={!table.getCanPreviousPage()}
-              aria-label={t('common.firstPage', 'First page')}
+              aria-label={t('common:firstPage')}
             >
               {isRTL ? (
                 <ChevronsRight className="h-3.5 w-3.5" />
@@ -448,7 +448,7 @@ const [sorting, setSorting] = useState<SortingState>([])
               className="h-7 w-7"
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
-              aria-label={t('common.previousPage', 'Previous page')}
+              aria-label={t('common:previousPage')}
             >
               {isRTL ? (
                 <ChevronRight className="h-3.5 w-3.5" />
@@ -458,7 +458,7 @@ const [sorting, setSorting] = useState<SortingState>([])
             </Button>
 
             <span className="px-1.5 text-xs text-muted-foreground whitespace-nowrap">
-              {t('common.page', 'Page')} {table.getState().pagination.pageIndex + 1} /{' '}
+              {t('common:page')} {table.getState().pagination.pageIndex + 1} /{' '}
               {table.getPageCount() || 1}
             </span>
 
@@ -468,7 +468,7 @@ const [sorting, setSorting] = useState<SortingState>([])
               className="h-7 w-7"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
-              aria-label={t('common.nextPage', 'Next page')}
+              aria-label={t('common:nextPage')}
             >
               {isRTL ? (
                 <ChevronLeft className="h-3.5 w-3.5" />
@@ -482,7 +482,7 @@ const [sorting, setSorting] = useState<SortingState>([])
               className="h-7 w-7"
               onClick={() => table.setPageIndex(table.getPageCount() - 1)}
               disabled={!table.getCanNextPage()}
-              aria-label={t('common.lastPage', 'Last page')}
+              aria-label={t('common:lastPage')}
             >
               {isRTL ? (
                 <ChevronsLeft className="h-3.5 w-3.5" />

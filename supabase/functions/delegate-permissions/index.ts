@@ -13,7 +13,7 @@
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
+import { createClient } from 'jsr:@supabase/supabase-js@2'
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
 
 interface DelegatePermissionsRequest {
@@ -84,6 +84,8 @@ serve(async (req) => {
       },
     )
 
+    const token = authHeader.replace('Bearer ', '')
+
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
@@ -98,7 +100,7 @@ serve(async (req) => {
     const {
       data: { user: grantor },
       error: userError,
-    } = await supabaseClient.auth.getUser()
+    } = await supabaseClient.auth.getUser(token)
 
     if (userError || !grantor) {
       return new Response(
@@ -247,15 +249,20 @@ serve(async (req) => {
     }
 
     // Check for duplicate active delegation
-    const { data: existingDelegation, error: duplicateError } = await supabaseAdmin
-      .from('delegations')
+    let duplicateQuery = supabaseAdmin
+      .from('permission_delegations')
       .select('id')
       .eq('grantor_id', grantor.id)
       .eq('grantee_id', body.grantee_id)
-      .eq('resource_type', body.resource_type || null)
-      .eq('resource_id', body.resource_id || null)
-      .eq('is_active', true)
-      .maybeSingle()
+      .eq('resource_type', body.resource_type || 'all')
+      .eq('revoked', false)
+      .gte('valid_until', new Date().toISOString())
+
+    duplicateQuery = body.resource_id
+      ? duplicateQuery.eq('resource_id', body.resource_id)
+      : duplicateQuery.is('resource_id', null)
+
+    const { data: existingDelegation, error: duplicateError } = await duplicateQuery.maybeSingle()
 
     if (existingDelegation) {
       return new Response(
@@ -272,15 +279,15 @@ serve(async (req) => {
 
     // Create delegation
     const { data: delegation, error: createError } = await supabaseAdmin
-      .from('delegations')
+      .from('permission_delegations')
       .insert({
         grantor_id: grantor.id,
         grantee_id: body.grantee_id,
-        source: 'direct',
-        resource_type: body.resource_type || null,
+        resource_type: body.resource_type || 'all',
         resource_id: body.resource_id || null,
+        permissions: ['read'],
         reason: body.reason,
-        is_active: true,
+        revoked: false,
         valid_from: validFrom.toISOString(),
         valid_until: validUntil.toISOString(),
       })

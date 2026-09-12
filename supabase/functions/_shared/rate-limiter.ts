@@ -182,10 +182,5 @@ export async function withRateLimit(
     return createRateLimitResponse(result, corsHeaders);
   }
 
-  // Add rate limit headers to successful requests
-  req.headers.set("X-RateLimit-Limit", String(config.maxRequests));
-  req.headers.set("X-RateLimit-Remaining", String(result.remaining));
-  req.headers.set("X-RateLimit-Reset", result.resetAt.toISOString());
-
   return null; // No error, proceed with request
 }

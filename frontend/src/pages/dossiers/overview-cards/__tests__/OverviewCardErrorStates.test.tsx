@@ -16,14 +16,50 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { DossierOverviewResponse } from '@/types/dossier-overview.types'
+import enDossier from '@/i18n/en/dossier.json'
+import arDossier from '@/i18n/ar/dossier.json'
 
-// --- Shared i18n echo: resolve keys to their English defaultValue --------------
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string, opts?: { defaultValue?: string; count?: number }) => opts?.defaultValue ?? key,
-    i18n: { language: 'en' },
-  }),
+// --- Shared i18n fixture: resolve keys from the production locale bundles ------
+const { mockLocale } = vi.hoisted(() => ({
+  mockLocale: { current: 'en' as 'en' | 'ar' },
 }))
+
+vi.mock('react-i18next', async () => {
+  const [{ default: enBundle }, { default: arBundle }] = await Promise.all([
+    vi.importActual<typeof import('@/i18n/en/dossier.json')>('@/i18n/en/dossier.json'),
+    vi.importActual<typeof import('@/i18n/ar/dossier.json')>('@/i18n/ar/dossier.json'),
+  ])
+  const bundles = { en: enBundle, ar: arBundle }
+  const resolve = (key: string): unknown =>
+    key
+      .split('.')
+      .reduce(
+        (value, segment) => (value as Record<string, unknown>)?.[segment],
+        bundles[mockLocale.current] as unknown,
+      )
+
+  return {
+    // Phase 98 (D-25): the component now imports `@/lib/format-date`, which imports the
+    // i18n SINGLETON to read the session language at call time. That module calls
+    // `.use(initReactI18next)` at import, so a partial react-i18next mock without this
+    // export fails the whole suite at import time rather than at an assertion.
+    initReactI18next: { type: '3rdParty', init: (): void => undefined },
+    useTranslation: () => ({
+      t: (key: string, opts: Record<string, unknown> = {}): string => {
+        const value = resolve(key)
+        if (typeof value !== 'string') throw new Error(`Missing test translation: ${key}`)
+        return value.replace(/\{\{(\w+)\}\}/g, (match, name: string) =>
+          name in opts ? String(opts[name]) : match,
+        )
+      },
+      i18n: {
+        get language(): 'en' | 'ar' {
+          return mockLocale.current
+        },
+      },
+    }),
+  }
+})
 
 // --- useDossierOverview mock: mutable hoisted state read on every render --------
 const overviewState = vi.hoisted(() => ({
@@ -107,7 +143,7 @@ import { KeyRepresentativesCard } from '../KeyRepresentativesCard'
 import { MembershipStructureCard } from '../MembershipStructureCard'
 import { MoUStatusCard } from '../MoUStatusCard'
 
-const SECTION_ERROR = /failed to load this section/i
+const SECTION_ERROR = enDossier.overview.sectionError
 
 // Minimal nonzero overview fixture — only `stats` is read on the SummaryStats
 // render path under test; the rest of the response is irrelevant to that branch.
@@ -142,6 +178,7 @@ const allZeroStatsResponse = {
 } as unknown as DossierOverviewResponse
 
 beforeEach(() => {
+  mockLocale.current = 'en'
   overviewState.data = null
   overviewState.isLoading = false
   overviewState.isError = false
@@ -158,28 +195,32 @@ beforeEach(() => {
 const overviewCards: ReadonlyArray<{
   name: string
   Component: (props: { dossierId: string }) => React.ReactElement
-  emptyCopy: RegExp
+  emptyCopy: string
 }> = [
   {
     name: 'SharedSummaryStatsCard',
     Component: SharedSummaryStatsCard,
-    emptyCopy: /no data available/i,
+    emptyCopy: enDossier.overview.noData,
   },
   {
     name: 'BilateralSummaryCard',
     Component: BilateralSummaryCard,
-    emptyCopy: /no bilateral data available/i,
+    emptyCopy: enDossier.overview.bilateral.empty,
   },
-  { name: 'KeyContactsCard', Component: KeyContactsCard, emptyCopy: /no contacts linked/i },
+  {
+    name: 'KeyContactsCard',
+    Component: KeyContactsCard,
+    emptyCopy: enDossier.overview.contacts.empty,
+  },
   {
     name: 'EngagementsByStageCard',
     Component: EngagementsByStageCard,
-    emptyCopy: /no engagements linked/i,
+    emptyCopy: enDossier.overview.engagements.empty,
   },
   {
     name: 'MembershipStructureCard',
     Component: MembershipStructureCard,
-    emptyCopy: /no membership data available/i,
+    emptyCopy: enDossier.overview.membership.empty,
   },
 ]
 
@@ -204,7 +245,7 @@ describe('Overview card forced-error states (OVRERR-01)', () => {
     render(<SharedSummaryStatsCard dossierId="d1" />)
 
     expect(screen.queryByRole('alert')).toBeNull()
-    expect(screen.getByText(/linked dossiers/i)).toBeTruthy()
+    expect(screen.getByText(enDossier.overview.stats.linkedDossiers)).toBeTruthy()
   })
 
   it('SharedSummaryStatsCard renders the empty line, not an alert, on genuinely all-zero stats (empty ≠ error)', () => {
@@ -214,7 +255,22 @@ describe('Overview card forced-error states (OVRERR-01)', () => {
     render(<SharedSummaryStatsCard dossierId="d1" />)
 
     expect(screen.queryByRole('alert')).toBeNull()
-    expect(screen.getByText(/no data available/i)).toBeTruthy()
+    expect(screen.getByText(enDossier.overview.noData)).toBeTruthy()
+  })
+
+  it('resolves the section error in English and Arabic without rendering the bare key', () => {
+    overviewState.isError = true
+    overviewState.data = null
+
+    const englishRender = render(<BilateralSummaryCard dossierId="d1" />)
+    expect(screen.getByRole('alert').textContent).toBe(enDossier.overview.sectionError)
+    expect(englishRender.container.textContent).not.toContain('overview.sectionError')
+    englishRender.unmount()
+
+    mockLocale.current = 'ar'
+    const arabicRender = render(<BilateralSummaryCard dossierId="d1" />)
+    expect(screen.getByRole('alert').textContent).toBe(arDossier.overview.sectionError)
+    expect(arabicRender.container.textContent).not.toContain('overview.sectionError')
   })
 })
 
@@ -226,7 +282,7 @@ describe('KeyRepresentativesCard forced-error state (OVRERR-01)', () => {
     render(<KeyRepresentativesCard dossierId="d1" />)
 
     expect(screen.getByRole('alert').textContent).toMatch(SECTION_ERROR)
-    expect(screen.queryByText(/no representatives linked/i)).toBeNull()
+    expect(screen.queryByText(enDossier.overview.representatives.empty)).toBeNull()
   })
 })
 
@@ -239,7 +295,7 @@ describe('SharedRecentActivityCard forced-error state (OVRERR-01)', () => {
     return import('../SharedRecentActivityCard').then(({ SharedRecentActivityCard }) => {
       render(<SharedRecentActivityCard dossierId="d1" />)
       expect(screen.getByRole('alert').textContent).toMatch(SECTION_ERROR)
-      expect(screen.queryByText(/no recent activity/i)).toBeNull()
+      expect(screen.queryByText(enDossier.overview.noRecentActivity)).toBeNull()
     })
   })
 })
@@ -269,6 +325,6 @@ describe('MoUStatusCard forced-error state (OVRERR-01)', () => {
     await waitFor(() => {
       expect(screen.getByRole('alert').textContent).toMatch(SECTION_ERROR)
     })
-    expect(screen.queryByText(/no mous recorded/i)).toBeNull()
+    expect(screen.queryByText(enDossier.overview.mou.empty)).toBeNull()
   })
 })

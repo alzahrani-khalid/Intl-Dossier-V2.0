@@ -222,11 +222,11 @@ export function WorkCreationPalette({
               onClick={handleBack}
             >
               <ArrowLeft className={cn('size-4', isRTL && 'rotate-180')} />
-              <span className="sr-only">{t('actions.back', 'Back')}</span>
+              <span className="sr-only">{t('actions.back')}</span>
             </Button>
             <span className="text-sm font-medium">
               {step === 'context-select'
-                ? t('palette.selectDossier', 'Select Dossier')
+                ? t('palette.selectDossier')
                 : selectedType &&
                   t(WORK_TYPE_OPTIONS.find((o) => o.type === selectedType)!.labelKey)}
             </span>
@@ -237,13 +237,13 @@ export function WorkCreationPalette({
         {step === 'type-select' && (
           <Command shouldFilter={false} className="rounded-lg">
             <CommandInput
-              placeholder={t('palette.placeholder', 'What would you like to create?')}
+              placeholder={t('palette.placeholder')}
               value={searchQuery}
               onValueChange={setSearchQuery}
             />
             <CommandList>
-              <CommandEmpty>{t('palette.noResults', 'No results found')}</CommandEmpty>
-              <CommandGroup heading={t('palette.workTypes', 'Work Item Types')}>
+              <CommandEmpty>{t('palette.noResults')}</CommandEmpty>
+              <CommandGroup heading={t('palette.workTypes')}>
                 {filteredTypes.map((option) => {
                   const Icon = option.icon
                   return (
@@ -274,12 +274,7 @@ export function WorkCreationPalette({
         {/* Step: Context Selection (Dossier Picker) - US4 T036/T037 */}
         {step === 'context-select' && (
           <div className="p-4 space-y-4">
-            <p className="text-sm text-muted-foreground">
-              {t(
-                'palette.dossierRequiredGeneric',
-                'All work items must be linked to a dossier. Please select one:',
-              )}
-            </p>
+            <p className="text-sm text-muted-foreground">{t('palette.dossierRequiredGeneric')}</p>
             <DossierPicker
               value={selectedDossier?.id}
               onChange={handleDossierSelect}
@@ -288,10 +283,7 @@ export function WorkCreationPalette({
             {/* Validation message - T037 */}
             {!selectedDossier && (
               <p className="text-xs text-muted-foreground">
-                {t(
-                  'dossier-context:validation.dossier_required',
-                  'At least one dossier is required',
-                )}
+                {t('dossier-context:validation.dossier_required')}
               </p>
             )}
             <div className="flex gap-3 pt-2">
@@ -301,7 +293,7 @@ export function WorkCreationPalette({
                 onClick={handleCancel}
                 className="flex-1 min-h-11"
               >
-                {t('actions.cancel', 'Cancel')}
+                {t('actions.cancel')}
               </Button>
               <Button
                 type="button"
@@ -309,7 +301,7 @@ export function WorkCreationPalette({
                 disabled={!selectedDossier}
                 className="flex-1 min-h-11"
               >
-                {t('actions.continue', 'Continue')}
+                {t('actions.continue')}
               </Button>
             </div>
           </div>

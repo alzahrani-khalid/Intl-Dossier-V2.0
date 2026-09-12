@@ -6,7 +6,11 @@
  *   2. Row child order: .act-t (mono time) → <Icon/> → sentence span
  *   3. Icon mapping per action_type (6+ glyphs from Wave 0 IconName union)
  *   4. .act-where element renders inside the sentence (CSS class drives color)
- *   5. AR locale renders Latin time digits with a localized Arabic suffix (policy D)
+ *   5. The time cell comes from the ONE shared localized helper, Latin digits (policy D).
+ *      Phase 98 (D-25 / RULING-P98A2-06) RETIRED the local short-suffix formatter this
+ *      test used to pin (`5د` / `5m`): the helper reads the session language from the
+ *      i18n SINGLETON at call time, not from this file's react-i18next mock, so the
+ *      locale leg is driven through the singleton and asserted on the emitted phrase.
  *   6. R-05 conditional click: relative `/...` URLs are interactive; absent → not interactive
  *   7. R-05 open-redirect guard: external/protocol-relative/javascript:/empty URLs render NON-interactive
  *
@@ -31,6 +35,11 @@ vi.mock('@tanstack/react-router', () => ({
 // Override the global tests/setup.ts mock. We need <Trans> to actually render
 // the `components` slots so `.act-where` is in the DOM.
 vi.mock('react-i18next', () => ({
+  // Phase 98 (D-25): the component now imports `@/lib/format-date`, which imports the
+  // i18n SINGLETON to read the session language at call time. That module calls
+  // `.use(initReactI18next)` at import, so a partial react-i18next mock without this
+  // export fails the whole suite at import time rather than at an assertion.
+  initReactI18next: { type: '3rdParty', init: (): void => undefined },
   useTranslation: (): {
     t: (key: string) => string
     i18n: { language: string }
@@ -149,18 +158,34 @@ describe('ActivityList', () => {
     expect(container.querySelector('.act-where')).not.toBeNull()
   })
 
-  it('Test 5 — AR locale renders Latin time digits with Arabic suffix', () => {
-    i18nLanguage = 'ar'
-    // 5 minutes ago → "5m" in EN, "5د" in AR (formatRelativeTime branches on locale)
+  it("Test 5 — the time cell renders the shared helper's phrase, Latin digits, both locales", async () => {
+    const { default: i18n } = await import('@/i18n')
     const activities = [
       makeActivity({ created_at: new Date(Date.now() - 5 * 60_000).toISOString() }),
     ]
-    const { container } = render(<ActivityList activities={activities} />)
-    const t = container.querySelector('.act-t')
-    expect(t).not.toBeNull()
-    // Policy D: Latin digit "5" with the localized Arabic minute suffix "د".
-    expect(t!.textContent ?? '').toMatch(/5د/)
-    expect(t!.textContent ?? '').not.toMatch(/[٠-٩]/)
+
+    // EN leg: the helper's English recency phrase.
+    await i18n.changeLanguage('en')
+    const en = render(<ActivityList activities={activities} />)
+    const enCell = en.container.querySelector('.act-t')
+    expect(enCell).not.toBeNull()
+    expect(enCell!.textContent ?? '').toMatch(/ago/)
+    expect(enCell!.textContent ?? '').toMatch(/5/)
+    expect(enCell!.textContent ?? '').not.toMatch(/[٠-٩]/)
+    en.unmount()
+
+    // AR leg: the SAME helper, localized. `منذ` is the date-fns `ar` recency prefix —
+    // the token the 98-copy05 oracle's ARABIC_RELATIVE alternation looks for.
+    i18nLanguage = 'ar'
+    await i18n.changeLanguage('ar')
+    const ar = render(<ActivityList activities={activities} />)
+    const arCell = ar.container.querySelector('.act-t')
+    expect(arCell).not.toBeNull()
+    expect(arCell!.textContent ?? '').toMatch(/منذ/)
+    // Policy D: the count stays a Latin digit in BOTH locales.
+    expect(arCell!.textContent ?? '').toMatch(/5/)
+    expect(arCell!.textContent ?? '').not.toMatch(/[٠-٩]/)
+    await i18n.changeLanguage('en')
   })
 
   it('Test 6 — R-05 row click: relative path is interactive; absent metadata is not', async () => {

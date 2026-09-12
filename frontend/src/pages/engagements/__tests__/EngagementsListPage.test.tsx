@@ -44,33 +44,57 @@ function Harness(): ReactElement {
   )
 }
 
-// react-i18next: project-wide pattern for per-file mock (prevents global afterActions-only map).
+// Resolve the production resources; fallback arguments are intentionally ignored.
 const i18nLanguageRef = { current: 'en' }
-vi.mock('react-i18next', () => ({
-  useTranslation: (): {
-    t: (k: string, opts?: Record<string, unknown>) => string
-    i18n: { language: string }
-  } => ({
-    i18n: { language: i18nLanguageRef.current },
-    t: (k: string, opts?: Record<string, unknown>): string => {
-      if (
-        opts !== undefined &&
-        opts !== null &&
-        typeof opts === 'object' &&
-        'defaultValue' in opts &&
-        typeof opts.defaultValue === 'string'
-      ) {
-        return opts.defaultValue
-      }
-      return k
-    },
-  }),
-  Trans: ({ children }: { children: React.ReactNode }): React.ReactNode => children,
-}))
+vi.mock('react-i18next', async () => {
+  const [{ default: engagements }, { default: listPages }, { default: emptyStates }] =
+    await Promise.all([
+      vi.importActual<typeof import('@/i18n/en/engagements.json')>('@/i18n/en/engagements.json'),
+      vi.importActual<typeof import('@/i18n/en/list-pages.json')>('@/i18n/en/list-pages.json'),
+      vi.importActual<typeof import('@/i18n/en/empty-states.json')>('@/i18n/en/empty-states.json'),
+    ])
+  const resources: Readonly<Record<string, unknown>> = {
+    engagements,
+    'list-pages': listPages,
+    'empty-states': emptyStates,
+  }
+  const resolve = (namespace: string, path: string): unknown =>
+    path
+      .split('.')
+      .reduce(
+        (value, segment) => (value as Record<string, unknown> | undefined)?.[segment],
+        resources[namespace],
+      )
+  const translate = (key: string, opts: Record<string, unknown> = {}): string => {
+    const separator = key.indexOf(':')
+    const namespace =
+      separator >= 0
+        ? key.slice(0, separator)
+        : typeof opts.ns === 'string'
+          ? opts.ns
+          : 'engagements'
+    const path = separator >= 0 ? key.slice(separator + 1) : key
+    const value = resolve(namespace, path)
+    return typeof value === 'string'
+      ? value.replace(/\{\{(\w+)\}\}/g, (match, name: string) => String(opts[name] ?? match))
+      : key
+  }
+  return {
+    initReactI18next: { type: '3rdParty', init: (): void => undefined },
+    useTranslation: () => ({
+      i18n: { language: i18nLanguageRef.current },
+      t: translate,
+    }),
+    Trans: ({ children }: { children: React.ReactNode }): React.ReactNode => children,
+  }
+})
 
 // Navigate spy.
 const navigateSpy = vi.fn()
 vi.mock('@tanstack/react-router', () => ({
+  Link: ({ children, to }: { children: React.ReactNode; to: string }): ReactElement => (
+    <a href={to}>{children}</a>
+  ),
   useNavigate: (): typeof navigateSpy => navigateSpy,
 }))
 
@@ -149,7 +173,7 @@ beforeEach(() => {
 describe('EngagementsListPage', () => {
   it('renders the Engagements title from ListPageShell', () => {
     render(<Harness />)
-    expect(screen.getByRole('heading', { name: /Engagements/i, level: 1 })).toBeTruthy()
+    expect(screen.getByRole('heading', { name: /Engagement Dossiers/i, level: 1 })).toBeTruthy()
   })
 
   it('renders 3 filter pills (no call pill — nothing maps to it)', () => {
@@ -216,7 +240,7 @@ describe('EngagementsListPage', () => {
     render(<Harness />)
     // GlobeSpinner SVG carries `.globe-spinner` class.
     expect(document.querySelector('.globe-spinner')).not.toBeNull()
-    // Loading… default value used by the primitive (translation key `engagements.loadMore.loading`).
+    // Loading… comes from the primitive's `engagements.loadMore.loading` resource key.
     const loadingText = document.body.textContent ?? ''
     expect(loadingText.includes('Loading')).toBe(true)
   })
@@ -241,5 +265,13 @@ describe('EngagementsListPage', () => {
         filtered: false,
       }),
     )
+  })
+
+  it("A mask site found in a file OUTSIDE this lane's list means the tree moved between the gatekeeper's manifest and this lane: STOP and record it, do not widen scope || This lane's estimated logic-diff size is **~44512 bytes** against the engine's 60,000-byte gates.diffCap, measured with the committed audit's MULTI-LINE matcher over the actual file text — never with the line-bound grep whose blindness produced the original floor. The budget is ~45,000 per lane, deliberately below the cap because these numbers are FLOORS. A diff-cap trip returns park:\"human\" with the engine's own note that the diff cannot shrink by retrying — it is un-retryable, after the work is done, which is why the lane is this size.", () => {
+    render(<Harness />)
+
+    expect(screen.getByRole('group', { name: 'Filter engagements' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'All' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'Travel' })).toBeTruthy()
   })
 })
