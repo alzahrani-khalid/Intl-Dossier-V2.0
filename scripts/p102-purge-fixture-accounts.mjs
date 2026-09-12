@@ -154,10 +154,11 @@ const exportCsv = (directory, file, table, userColumn) => {
 
 // Reproduce research §1.6 from the catalog. No blocking FK names are maintained by hand.
 const generatedCensus = (userPredicate) => {
+  const formatPredicate = userPredicate.replaceAll("'", "''").replaceAll('%', '%%')
   const union = psql(`
     select string_agg(
       format(
-        'select %L::text as fk, count(*)::bigint as n from %I.%I where %I in (select id from auth.users where ${userPredicate})',
+        'select %L::text as fk, count(*)::bigint as n from %I.%I where %I in (select id from auth.users where ${formatPredicate})',
         n.nspname || '.' || c.relname || '.' || a.attname,
         n.nspname,
         c.relname,
@@ -206,22 +207,6 @@ console.log(
   `keep-list pre-delete outside_delete=${outsideDelete} keep_list_outside_delete=${keepOutsideDelete}`,
 )
 
-mkdirSync(EXPORT_ROOT, { recursive: true })
-const exportDirectory = join(EXPORT_ROOT, `p102-prepurge-${utcStamp()}`)
-mkdirSync(exportDirectory)
-console.log(`export_path=${exportDirectory}`)
-
-const exportCounts = new Map()
-for (const [file, table, userColumn] of EXPORTS) {
-  exportCounts.set(table, exportCsv(exportDirectory, file, table, userColumn))
-}
-const exportCompletedEpoch = Math.floor(Date.now() / 1000)
-if (exportCounts.get('auth.users') !== fixtureUsers.length) {
-  throw new Error(
-    `fixture population changed during export: selected=${fixtureUsers.length} exported=${exportCounts.get('auth.users')}`,
-  )
-}
-
 const fixtureCensus = generatedCensus(DELETE_PREDICATE)
 console.log(`BLOCKING_FK_TOTAL_CONSTRAINTS=${fixtureCensus.total}`)
 console.log(`BLOCKING_FK_WITH_ROWS=${fixtureCensus.offenders.length}`)
@@ -237,6 +222,22 @@ if (controlCensus.offenders.length === 0) {
 if (fixtureCensus.offenders.length > 0) {
   throw new Error(
     `fixture users are referenced by blocking FKs: ${fixtureCensus.offenders.join(', ')}`,
+  )
+}
+
+mkdirSync(EXPORT_ROOT, { recursive: true })
+const exportDirectory = join(EXPORT_ROOT, `p102-prepurge-${utcStamp()}`)
+mkdirSync(exportDirectory)
+console.log(`export_path=${exportDirectory}`)
+
+const exportCounts = new Map()
+for (const [file, table, userColumn] of EXPORTS) {
+  exportCounts.set(table, exportCsv(exportDirectory, file, table, userColumn))
+}
+const exportCompletedEpoch = Math.floor(Date.now() / 1000)
+if (exportCounts.get('auth.users') !== fixtureUsers.length) {
+  throw new Error(
+    `fixture population changed during export: selected=${fixtureUsers.length} exported=${exportCounts.get('auth.users')}`,
   )
 }
 
