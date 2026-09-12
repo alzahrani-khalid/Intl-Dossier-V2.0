@@ -11,7 +11,7 @@ All three staging-writing specs now delete their own run-scoped rows, and the fi
 
 ## Changes
 
-- `tests/e2e/97-elected-officials-reachable.spec.ts`: module-scoped `RUN_EPOCH` / `EO_NAME_PREFIX`; `afterAll` uses `getSupabaseAdmin()` (service role from `.env.test`) to delete `persons` then `dossiers` by prefix. The final repair fixes the stuck submit locator: the button is sentence-case `Create dossier`, not `Create Dossier`; the timeout was returned to 120 s.
+- `tests/e2e/97-elected-officials-reachable.spec.ts`: module-scoped `RUN_EPOCH` / `EO_NAME_PREFIX`; `afterAll` uses `getSupabaseAdmin()` (service role from `.env.test`) to delete `persons`, then the `embedding_update_queue` rows the dossier INSERT enqueued (`entity_type='dossiers'`, no FK/cascade — see Retry-a4), then `dossiers`, all by prefix. The final repair fixes the stuck submit locator: the button is sentence-case `Create dossier`, not `Create Dossier`; the timeout was returned to 120 s.
 - `frontend/tests/e2e/user-management.spec.ts`: module-scoped `RUN_EPOCH` / `CREATED_EMAIL`; `afterAll` finds the created `public.users.id`, deletes that user's `audit_logs` rows (`entity_type='user'` + `entity_id=id` — the table has no FK/cascade, so these outlive `deleteUser`), then calls `auth.admin.deleteUser(id)`. The create timeout cause remains the `withRateLimit` immutable-header bug fixed below; status checks keep exact `Active` / `Inactive` with 30 s assertion budgets for the unset-Upstash fail-open stall. The admin-role step asserts the dual-approval toast and NOTHING else — the earlier accepted-500 branch is deleted and its root cause is repaired by migration `20260912000001` below. The status loop runs reactivate → deactivate because the deployed create-user v8 creates accounts `is_active=false` (observed, below).
 - `frontend/tests/e2e/mou-create.spec.ts`: module-scoped `RUN_EPOCH` / `UNIQUE_TITLE`; `afterAll` deletes `mou_notification_queue` then `mous` by created title. The final repair clicks the real submit label, `Create an MoU`.
 - `supabase/functions/_shared/rate-limiter.ts`: only the three immutable `req.headers.set(...)` mutations and their comment were removed.
@@ -345,6 +345,73 @@ Teardown stderr (from the archived report):
 `[mou-create teardown] title=E2E MoU 1789171714718 queue_deleted=1 mous_deleted=1`.
 The 5 deleted audit rows are exactly the run's own five actions; the post-run census shows zero
 `entity_type='user'` audit rows created at or after the run's start, zero accounts, zero MoUs.
+
+## Retry-a4 (this attempt): EO teardown now covers embedding_update_queue
+
+Review finding (material): the EO teardown deleted persons then dossiers but left the
+`embedding_update_queue` rows the dossier INSERT enqueues. The live staging table is polymorphic
+(`id, entity_type, entity_id, priority, created_at, processed_at, error_message, retry_count`
+— verified via `information_schema.columns`, 2026-09-12T00:49:54Z) with NO FK to `dossiers`, and
+its processor is not running on staging, so rows persist unprocessed forever.
+
+### The rows the run writes
+
+The dossier INSERT fires two AFTER-INSERT triggers — `trg_queue_dossier_embedding`
+(`20260111500001_semantic_search_expansion.sql:328`, `AFTER INSERT OR UPDATE`) and
+`trg_dossiers_embedding_update` (`20260122000001_embedding_queue_cron_and_expansion.sql:152`,
+`AFTER INSERT OR UPDATE OF name_en, name_ar, ...`; current body in
+`20260629000100_fix_dossier_embedding_enqueue_secdef.sql`) — each inserting
+`entity_type='dossiers', entity_id=NEW.id`, deduped to one row per create by the partial unique
+index `(entity_type, entity_id) WHERE processed_at IS NULL`. Neither trigger fires on DELETE, so
+deleting the queue rows leaves no successor. Live orphan census before the repair (2026-09-12T00:49:54Z):
+88 rows with `entity_type='dossiers'` whose entity_id no longer exists in dossiers, newest at
+`2026-09-12 00:15:40Z` — one per prior EO run, matching the reviewer's finding. Fix (spec
+`afterAll`): delete `embedding_update_queue where entity_type='dossiers' and entity_id in (ids)`
+after the persons delete and BEFORE the dossiers delete (mirroring the audit_logs repair). The
+88 historical orphans predate this run's epoch and are left for the same historical-cleanup lane
+as 102-06's rows.
+
+### EO oracle, rerun verbatim after the repair, plus a queue census
+
+Command: the plan's EO `oracle: command` block verbatim (`PWRUN . tests/e2e/97-elected-officials-reachable.spec.ts --project=chromium-en --no-deps` + post-run census), followed by
+`select count(*) from embedding_update_queue where entity_type='dossiers' and created_at >= T0`.
+
+```
+run_start=2026-09-12T00:50:50Z
+pw-run-reaped: playwright exited code=0 signal=null; session reaped; verdict clean
+P102-07-EO wrapper_rc=0 rows_left_from_this_run=0 queue_rows_left_from_this_run=0
+census_ts=2026-09-12T00:51:23Z
+```
+
+Report `test-results/pw-reaped-cd31760beb10fe8e3fbf76d18c625a49.json` (startTime
+`2026-09-12T00:50:51.464Z`): `expected=5 unexpected=0 skipped=0 flaky=0`. Teardown stderr (from
+the archived report):
+`[97-01 teardown] prefix=e2e-97-01-elected-official-1789174256659 persons_deleted=1 queue_deleted=1 dossiers_deleted=1`.
+`queue_deleted=1` proves the census is a measurement, not a blind instrument: the run created
+exactly one queue row (one dossier create) and the teardown deleted it.
+
+### FE oracle, rerun verbatim against the final tree
+
+Command: the plan's FE `oracle: command` block verbatim (`PWRUN frontend e2e/user-management.spec.ts e2e/mou-create.spec.ts --project=chromium` + post-run census), plus the audit census.
+One aborted start (00:51:53Z, exit 1 in ~3 s, zero tests run: `http://localhost:5173 is already
+used` — the EO run's webServer was still releasing the port; nothing was listening seconds later)
+was retried; the retry is the recorded run.
+
+```
+run_start=2026-09-12T00:52:20Z
+pw-run-reaped: playwright exited code=0 signal=null; session already-empty; verdict clean
+P102-07-FE wrapper_rc=0 rows_left=0 0
+audit_logs_user_rows_since_run_start=0
+census_ts=2026-09-12T00:53:26Z
+```
+
+Report `frontend/test-results/pw-reaped-4284d3d7db3ff01344ceff2b0efa4849.json` (startTime
+`2026-09-12T00:52:21.207Z`, duration 63 s): `expected=3 unexpected=0 skipped=0 flaky=0` —
+including `create → list → detail → role/status, plus IDOR smoke and AR pass` with the strict
+dual-approval assertion. Teardown stderr (from the archived report):
+`[mou-create teardown] title=E2E MoU 1789174348339 queue_deleted=1 mous_deleted=1`,
+`[user-management teardown] email=e2e-1789174350339@example.test id=ee8d40ff-3dd4-424b-9453-a101968a70e3 audit_logs_deleted=5`,
+`[user-management teardown] email=e2e-1789174350339@example.test accounts_deleted=1`.
 
 ## Static checks
 
