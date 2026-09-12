@@ -113,6 +113,18 @@ test.beforeAll(async () => {
 
 // Call after `page.clock.install` so the dashboard's first frame already sees the frozen clock.
 async function openDashboard(page: Page): Promise<void> {
+  // The frozen clock runs ahead of the wall clock whenever the suite runs before 12:00Z (18:00Z for
+  // the second clock of the date-change test). GoTrue stamps `expires_at` from its own clock, so
+  // supabase-js read each fresh 3600 s token as already expired and looped on refresh grants to 429
+  // and /login (P102-15 att0). With `expires_at` dropped from the token response, auth-js derives it
+  // from `expires_in` against the page clock (`_sessionResponse`), so the token lives 3600 s on
+  // whichever clock is installed. GoTrue still validates the JWT itself against real time.
+  await page.route(/\/auth\/v1\/token\?/, async (route) => {
+    const response = await route.fetch()
+    const json = (await response.json()) as Record<string, unknown>
+    delete json.expires_at
+    await route.fulfill({ response, json })
+  })
   // Phase 77-01 (VERIFY-01): pin id.theme=light so this pre-swap baseline stays
   // light after the Phase-77 default flips to dark; Phase 80 re-compares
   // like-for-like. Runs before every navigation, before bootstrap.js reads
