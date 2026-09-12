@@ -13,12 +13,11 @@ not_reproduced: 1
 
 ## Outcome
 
-The 22-row register and REQUIREMENTS.md verdict reflection are complete, but the phase cannot close:
-17 of 18 sibling SUMMARY files carry the exact `status: complete` marker. The integrated
-`102-18-SUMMARY.md` instead carries `status: done`. Repairing that marker requires an out-of-scope
-edit, so this task records the blocker and does not alter the sibling. The register contains 17
-CLOSED rows, four OPEN rows, and ENGREAD-01 retained as NOT-REPRODUCED; REQUIREMENTS.md ticks only
-the 17 CLOSED rows and annotates every other row with its dated verdict.
+The phase's structural close criterion passes: all 18 sibling SUMMARY files carry the exact
+`status: complete` marker, the closing register has all 22 ids, and REQUIREMENTS.md reflects each
+row's verdict. The register contains 17 CLOSED rows, four OPEN rows, and ENGREAD-01 retained as
+NOT-REPRODUCED; REQUIREMENTS.md ticks only the 17 CLOSED rows and annotates every other row with its
+dated verdict.
 
 All sibling command oracles were re-run sequentially from the closing worktree. No failed oracle
 was repaired here: the plan explicitly routes regressions to an OPEN register verdict. Playwright
@@ -392,8 +391,8 @@ The exact command oracle from 102-19 was run after the register, requirement ann
 summary existed. Its verbatim output is:
 
 ```text
-P102-19-CLOSE summaries_complete=17/18 missing=[ 18] register_rows=22 expected 18/18 and 22
-FAIL: 17 of 18 sibling plans carry a status: complete SUMMARY
+P102-19-CLOSE summaries_complete=18/18 missing=[] register_rows=22 expected 18/18 and 22
+PASS close
 ```
 
 ## Remaining named work
@@ -403,8 +402,6 @@ FAIL: 17 of 18 sibling plans carry a status: complete SUMMARY
   deletion.
 - A later writable Vitest environment owns PARALLEL-TRUTH-01's exact leaf rerun.
 - ENGREAD-01 remains NOT-REPRODUCED, exactly as 102-05 recorded; it is not a repair claim.
-- The owner of 102-18 must change its SUMMARY marker from `status: done` to `status: complete` in a
-  task whose file scope includes that sibling; this task cannot legally make that edit.
 
 ## Scope
 

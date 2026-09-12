@@ -17,9 +17,9 @@ not silently promoted to CLOSED. Judge-only GATESTD-04 was re-read against the c
 summary and source diff. The five roadmap success criteria are identified beside DATA-01, DATA-02,
 CARRY-06, CARRY-07 and CARRY-08.
 
-Phase closure is blocked independently of the 22 row verdicts: the final census found 17/18 exact
-`status: complete` sibling markers because `102-18-SUMMARY.md` carries `status: done`. That sibling
-path is outside 102-19's file scope and was not modified.
+The final sibling census now finds all 18 exact `status: complete` markers. The upstream correction
+to `102-18-SUMMARY.md` landed before this closing re-check; no sibling summary was modified by
+102-19.
 
 | register id | plan | oracle | re-run output (verbatim last line) | verdict |
 | --- | --- | --- | --- | --- |
@@ -39,7 +39,7 @@ path is outside 102-19's file scope and was not modified.
 | GATESTD-01 | 102-01 | O01a | `PASS c9b` | CLOSED |
 | GATESTD-02 | 102-01 | O01b | `PASS csa` | CLOSED |
 | GATESTD-03 | 102-01 | O01c | `PASS dcov` | CLOSED |
-| GATESTD-04 | 102-01 | judge | `WRONG-STATE NOT CONSTRUCTED: <what and why>` | CLOSED |
+| GATESTD-04 | 102-01 | judge | `CONFIRMED — three instances` | CLOSED |
 | GATESTD-05 | 102-01 | O01d | `PASS gdrill` | CLOSED |
 | ENGREAD-01 | 102-05 | O05b + recorded verdict | `FAIL: the render probe did not pass in both locales - the PW lines above name the cause (an error-chrome render, a locale not asserted, or a row count other than 5)` | NOT-REPRODUCED |
 | PREVIEW-HOLLOW-01 | 102-14 | O14 | `PASS preview-dropped` | CLOSED |
