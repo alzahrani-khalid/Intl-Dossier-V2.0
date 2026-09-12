@@ -109,30 +109,14 @@ const ARABIC_CHAR_RE = /[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻿]/;
 const BIDI_CONTROL_RE = /[\u061C\u200E\u200F\u202A-\u202E]/g;
 const ISOLATE_RE = /[\u2066-\u2069]/g;
 
-// UTF-16BE hex with BOM, code-point safe (surrogate pairs for astral characters).
-function toActualTextHex(text: string): string {
-  let hex = 'FEFF';
-  for (const char of text) {
-    const cp = char.codePointAt(0) ?? 0;
-    if (cp > 0xffff) {
-      const hi = 0xd800 + ((cp - 0x10000) >> 10);
-      const lo = 0xdc00 + ((cp - 0x10000) & 0x3ff);
-      hex += hi.toString(16).toUpperCase().padStart(4, '0') + lo.toString(16).toUpperCase().padStart(4, '0');
-    } else {
-      hex += cp.toString(16).toUpperCase().padStart(4, '0');
-    }
-  }
-  return hex;
-}
-
 // pdfkit/fontkit shapes each Arabic-script run and then reverses it internally
 // (Arabic letters and Arabic-Indic digits alike), but keeps the run order of the
 // input string. So: reorder the logical line to UAX#9 visual order with bidi-js,
 // then hand pdfkit each Arabic-script token char-reversed so its internal flip
 // lands the shaped glyphs in correct visual order — words right-to-left, digit
 // runs reading left-to-right. Returns the visual string alongside: it is exactly
-// the glyph sequence drawn on the page, and it is what the marked-content
-// ActualText span carries so text extraction matches the rendered page.
+// the glyph sequence drawn on the page (and the measure used for the
+// trailing-whitespace seam guard below).
 function toVisualOrder(line: string): { visual: string; pdfkitInput: string } {
   const levels = bidi.getEmbeddingLevels(line, 'rtl');
   const visual = bidi.getReorderedString(line, levels).replace(ISOLATE_RE, '');
@@ -146,9 +130,11 @@ function toVisualOrder(line: string): { visual: string; pdfkitInput: string } {
 
 // Generate a structurally valid PDF (xref/trailer, embedded subset fonts). Arabic
 // lines are reordered to UAX#9 visual order before drawing so the rendered page
-// reads correctly (words right-to-left, Arabic-Indic digit runs left-to-right),
-// and the ActualText span carries that same visual string so extraction matches
-// the rendered page.
+// reads correctly (words right-to-left, Arabic-Indic digit runs left-to-right).
+// Extraction carries no marked-content ActualText span: pdfkit's ToUnicode CMap
+// maps every drawn glyph back to its logical code point, and each reader
+// reassembles the logical line with its own bidi pass (verified for poppler
+// pdftotext and Apple PDFKit).
 async function generatePDFContent(
   record: AfterActionRecord,
   language: string,
@@ -196,9 +182,7 @@ async function generatePDFContent(
       }
       const width = doc.widthOfString(ordered.pdfkitInput);
       const x = Math.max(margin, pageWidth - margin - width);
-      doc.addContent(`/Span <</ActualText <${toActualTextHex(ordered.visual)}>>> BDC`);
       doc.text(ordered.pdfkitInput, x, y, { lineBreak: false });
-      doc.addContent('EMC');
     } else {
       doc.font('Helvetica');
       doc.text(line, margin, y, { lineBreak: false });
