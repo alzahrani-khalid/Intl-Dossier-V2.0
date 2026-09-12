@@ -1,7 +1,7 @@
 ---
 phase: 102-staging-data-debt-tail
 plan: 18
-status: done
+status: complete
 completed: 2026-09-12
 ---
 
