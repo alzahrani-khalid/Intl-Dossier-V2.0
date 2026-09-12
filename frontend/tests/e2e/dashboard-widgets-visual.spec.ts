@@ -167,6 +167,25 @@ async function openDashboard(page: Page): Promise<void> {
   await page.clock.runFor(100)
 }
 
+// The weekday of the two week-ahead tests. groupEventsByDay files every row after tomorrow with
+// date-fns isThisWeek / startOfWeek / endOfWeek (Sunday week start), which read Date#getDay, so on the
+// real calendar the +2/+3/+5 day rows split between THIS WEEK and NEXT WEEK four ways across a week
+// (Sun–Mon 4/0, Tue–Wed 3/1, Thu 2/2, Fri–Sat 0/4; P102-15 review). Those group headers sit outside
+// the `.week-date` mask, so a baseline taken on one weekday failed on the others. Shifting getDay so
+// the frozen day reads as a Saturday puts every row after tomorrow under NEXT WEEK, the baseline's
+// layout, on every real weekday. The clock is untouched (today 12:00Z / 18:00Z), and the only weekday
+// on screen is the `.week-day` label inside the masked `.week-date`.
+async function pinWeekdayToSaturday(page: Page, time: Date): Promise<void> {
+  await page.addInitScript((ms): void => {
+    const proto = Object.getPrototypeOf(new Date(ms)) as Date
+    const getDay = proto.getDay
+    const shift = 6 - getDay.call(new Date(ms))
+    proto.getDay = function (this: Date): number {
+      return (getDay.call(this) + shift) % 7
+    }
+  }, time.getTime())
+}
+
 // FIXTURE-01 (CI-04, 2026-08-13, ruling RUL120) — HONEST QUARANTINE. The seed is deliberately NOT
 // restored: these baselines pin mutable staging content, so reseeding deepens the dependency rather
 // than removing it (tracked separately as VISUAL-DEBT-01).
@@ -182,8 +201,9 @@ async function openDashboard(page: Page): Promise<void> {
 // divergence: the browser clock was frozen to a constant capture date while get_upcoming_events
 // filters by real NOW(), so every row fell outside the frozen window. Both sides now follow today:
 // FROZEN_TIME is today 12:00Z at run time, the beforeAll re-anchors the b0000002/b0000006 rows to
-// today-relative dates (seed 072, the 060 offsets), the `.week-date` column is masked, and the
-// browser runs at WEEK_AHEAD_TIMEZONE so no row changes group with the server hour.
+// today-relative dates (seed 072, the 060 offsets), the `.week-date` column is masked, the browser
+// runs at WEEK_AHEAD_TIMEZONE so no row changes group with the server hour, and pinWeekdayToSaturday
+// keeps every row in its group on every real weekday.
 const FIXTURE_BLOCKED: Partial<Record<(typeof WIDGETS)[number][1], string>> = {
   'vip-visits':
     'FIXTURE-01 — no `.vip-row` renders. The widget shows its empty state, which names its own fix ' +
@@ -198,6 +218,7 @@ for (const [selector, name] of WIDGETS) {
       const blockedReason = FIXTURE_BLOCKED[name]
       test.fixme(blockedReason !== undefined, blockedReason ?? '')
       await page.clock.install({ time: FROZEN_TIME })
+      if (name === 'week-ahead') await pinWeekdayToSaturday(page, FROZEN_TIME)
       await openDashboard(page)
       await page.waitForSelector(`[data-testid="${selector}"]`)
       const widget = page.getByTestId(selector)
@@ -220,10 +241,10 @@ for (const [selector, name] of WIDGETS) {
 // expired, so supabase-js looped on refresh grants until GoTrue answered 429 and the page landed on
 // /login; and a shifted date re-buckets the server-anchored rows under other TODAY/TOMORROW/NEXT
 // WEEK headers, which sit outside the `.week-date` mask. Day-shift invariance comes from the
-// beforeAll re-anchor and is re-proven on every real day the suite runs. The three b0000002
-// engagement titles are asserted on `.week-title` before each capture (a bare getByText also
-// matches the `.week-meta` copy of the same name), so a match can never come from an empty or
-// masked-over widget.
+// beforeAll re-anchor plus pinWeekdayToSaturday and is re-proven on every real day the suite runs.
+// The three b0000002 engagement titles are asserted on `.week-title` before each capture (a bare
+// getByText also matches the `.week-meta` copy of the same name), so a match can never come from
+// an empty or masked-over widget.
 test.describe(() => {
   test.use({ timezoneId: WEEK_AHEAD_TIMEZONE })
   test('dashboard snapshots survive a date change', async ({ context }) => {
@@ -231,6 +252,7 @@ test.describe(() => {
     for (const time of [FROZEN_TIME, new Date(FROZEN_TIME.getTime() + 6 * HOUR_MS)]) {
       const page = await context.newPage()
       await page.clock.install({ time })
+      await pinWeekdayToSaturday(page, time)
       await openDashboard(page)
       const widget = page.getByTestId('dashboard-widget-week-ahead')
       await expect(widget.locator('.week-row').first()).toBeVisible({ timeout: 15_000 })
