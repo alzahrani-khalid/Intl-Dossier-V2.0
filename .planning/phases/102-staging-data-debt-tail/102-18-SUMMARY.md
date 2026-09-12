@@ -9,7 +9,8 @@ completed: 2026-09-12
 
 ## Result
 
-The purge did not run. The worker's filesystem sandbox rejected creation of the mandatory export
+The purge did not run. The repair worker re-ran the mandatory precondition and purge command after the
+reported gate failure, but its filesystem sandbox again rejected creation of the mandatory export
 directory outside the worktree with `EPERM`. The script stopped before its first export and before
 any `auth.admin.deleteUser` call. Staging remains at the deliberately red pre-purge state: 415 auth
 users, all 13 keep-list users present, 415 public users, and 415 profiles.
@@ -74,7 +75,7 @@ node:fs:1651
   const result = binding.mkdir(
                          ^
 
-Error: EPERM: operation not permitted, mkdir '/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/overseer/p102-prepurge-20260912T021147Z'
+Error: EPERM: operation not permitted, mkdir '/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/overseer/p102-prepurge-20260912T021649Z'
     at mkdirSync (node:fs:1651:26)
     at file:///Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260911-181854-0000000000000083--P102-18/scripts/p102-purge-fixture-accounts.mjs:211:1
     at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
@@ -83,7 +84,7 @@ Error: EPERM: operation not permitted, mkdir '/Users/khalidalzahrani/Desktop/Cod
   errno: -1,
   code: 'EPERM',
   syscall: 'mkdir',
-  path: '/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/overseer/p102-prepurge-20260912T021147Z'
+  path: '/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/overseer/p102-prepurge-20260912T021649Z'
 }
 
 Node.js v26.7.0
@@ -91,6 +92,9 @@ Node.js v26.7.0
 
 No export directory was created, so there is no export path, no export row count, no first-delete
 epoch, and no final magnitudes line to record. This is the blocking condition, not an omitted run.
+
+The repair gate's frontend test findings name only paths outside this task's fixed file scope. Neither
+reviewed commit changes frontend code or configuration, and this worker made no out-of-scope edits.
 
 ## Population re-derived after the stopped attempt
 
