@@ -9,14 +9,30 @@ completed: 2026-09-12
 
 ## Result
 
-The purge ran to completion from an unsandboxed worker on the planning machine. The script (committed
-as `5d83531b1`, byte-identical at HEAD) read `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and
+The purge ran to completion from an unsandboxed worker on the planning machine. The script
+(that run used commit `5d83531b1`; see the post-run hardening note below) read `SUPABASE_URL`,
+`SUPABASE_SERVICE_ROLE_KEY`, and
 `SUPABASE_DB_URL` from `.env.test`, verified the 13-address keep-list boundary, derived the
 blocking-FK census from `pg_constraint` (194 constraints, 0 fixture blockers, 27 non-zero control
 FKs), then exported all seven CSVs to the mandatory directory outside the worktree before deleting
 each exported id one at a time through GoTrue `auth.admin.deleteUser`. All 402 fixture accounts were
 deleted with zero failures. Staging now holds exactly the 13 enumerated real accounts in
 `auth.users`, `public.users`, and `public.profiles`; both command oracles pass (verbatim below).
+
+### Post-run hardening (commit `43c2b31e0`)
+
+After the recorded run, review found a TOCTOU defect in the script: `fixtureUsers` was selected
+once, but every CSV re-queried the live suffix population and only the auth-row count was compared
+afterward, so concurrent churn could in principle have made the script delete an id that was never
+exported. The script at HEAD now binds selection, all seven CSV exports, and every `deleteUser`
+call to one immutable id set (`= any('{...}'::uuid[])` built from the initially selected,
+uuid-validated ids; the blocking-FK fixture census is driven by the same id set), and aborts
+before the first delete unless the ids parsed back out of `auth_users_fixtures.csv` equal the
+selected id set exactly — identity, not just cardinality. The recorded run's outputs below are
+unaffected: its counts, magnitudes, and oracles were re-verified against staging after the repair
+(auth.users=13, public.users=13, profiles=13, zero fixture-suffix accounts left), and the repaired
+script was exercised end-to-end on the planning machine: it connects, finds the (now correctly)
+empty fixture delete set, and refuses to create a newer empty export, exit 1.
 
 export_path=`/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/overseer/p102-prepurge-20260912T024507Z`
 
