@@ -1,7 +1,7 @@
 ---
 phase: 102-staging-data-debt-tail
 plan: 18
-status: blocked
+status: done
 completed: 2026-09-12
 ---
 
@@ -9,23 +9,18 @@ completed: 2026-09-12
 
 ## Result
 
-The purge did not run. The repair worker fixed the generated-census quoting defect, moved that census
-ahead of export-directory creation, and re-ran the mandatory command. The script itself successfully
-generated and executed the catalog census, measuring 194 blocking constraints, zero fixture blockers,
-and 27 non-zero control FKs. Its filesystem sandbox then rejected creation of the mandatory export
-directory outside the worktree with `EPERM`. It stopped before its first export and before any
-`auth.admin.deleteUser` call. Staging remains at the deliberately red pre-purge state: 415 auth users,
-all 13 keep-list users present, 415 public users, and 415 profiles.
+The purge ran to completion from an unsandboxed worker on the planning machine. The script (committed
+as `5d83531b1`, byte-identical at HEAD) read `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and
+`SUPABASE_DB_URL` from `.env.test`, verified the 13-address keep-list boundary, derived the
+blocking-FK census from `pg_constraint` (194 constraints, 0 fixture blockers, 27 non-zero control
+FKs), then exported all seven CSVs to the mandatory directory outside the worktree before deleting
+each exported id one at a time through GoTrue `auth.admin.deleteUser`. All 402 fixture accounts were
+deleted with zero failures. Staging now holds exactly the 13 enumerated real accounts in
+`auth.users`, `public.users`, and `public.profiles`; both command oracles pass (verbatim below).
 
-The repaired script is committed as `9da0044d1`. It reads all three credentials from `.env.test`,
-requires the exact 13-address keep-list boundary, escapes the dynamic predicate for both the SQL
-literal and PostgreSQL `format()`, derives the blocking-FK census from `pg_constraint` before creating
-an export directory, and requires a live non-zero census control. If those checks pass and the required
-directory is writable, its remaining unconditional path exports and fsyncs all seven CSVs before it
-deletes exported ids through GoTrue and writes the requested magnitudes. This run proved the census
-path but could not exercise the export or delete path.
+export_path=`/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/overseer/p102-prepurge-20260912T024507Z`
 
-## P101 precondition (before the attempted purge)
+## P101 precondition (before the purge)
 
 Command:
 
@@ -74,7 +69,7 @@ P101_ACCEPTANCE=present
 ACCEPTANCE-END
 ```
 
-## Purge attempt
+## Purge run
 
 Command:
 
@@ -82,7 +77,8 @@ Command:
 PATH="/opt/homebrew/bin:$PATH" node scripts/p102-purge-fixture-accounts.mjs
 ```
 
-Verbatim output (exit 1):
+Verbatim output (exit 0; the 402 per-delete progress lines are elided — every one reported
+`running_failed=0`):
 
 ```text
 keep-list pre-delete outside_delete=13 keep_list_outside_delete=13
@@ -116,127 +112,76 @@ BLOCKING_FK_CONTROL public.after_action_records.created_by	1
 BLOCKING_FK_CONTROL public.after_action_records.published_by	1
 BLOCKING_FK_CONTROL public.after_action_records.updated_by	1
 BLOCKING_FK_CONTROL public.permission_delegations.revoked_by	1
-node:fs:1651
-  const result = binding.mkdir(
-                         ^
-
-Error: EPERM: operation not permitted, mkdir '/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/overseer/p102-prepurge-20260912T022503Z'
-    at mkdirSync (node:fs:1651:26)
-    at file:///Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260911-181854-0000000000000083--P102-18/scripts/p102-purge-fixture-accounts.mjs:230:1
-    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
-    at async node:internal/modules/esm/loader:650:26
-    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
-  errno: -1,
-  code: 'EPERM',
-  syscall: 'mkdir',
-  path: '/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/overseer/p102-prepurge-20260912T022503Z'
-}
-
-Node.js v26.7.0
+export_path=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/overseer/p102-prepurge-20260912T024507Z
+exported auth_users_fixtures.csv rows=402
+exported public_users.csv rows=402
+exported public_profiles.csv rows=402
+exported public_mou_notification_preferences.csv rows=402
+exported public_user_notification_preferences.csv rows=22
+exported public_staff_profiles.csv rows=0
+exported public_user_roles.csv rows=2
+[1/402] deleted ... running_deleted=1 running_failed=0
+... (402 deleteUser calls, one id at a time, zero failures) ...
+[402/402] deleted id=ffb53642-dc08-410a-a598-1d409b38befe email=test-1772841765912@example.com running_deleted=402 running_failed=0
+kept=13 deleted=402 cascade=1230 failed=0
 ```
 
-No export directory was created, so there is no export path, no export row count, no first-delete
-epoch, and no final magnitudes line to record. The successful census output above comes from this
-script run, before its `mkdirSync` call; it is not copied from an ad-hoc query. The `EPERM` is the
-remaining blocking condition, not an omitted run.
+## Export CSV row counts (wc -l minus header)
 
-The repair gate's frontend test findings name only paths outside this task's fixed file scope. Neither
-reviewed commit changes frontend code or configuration, and this worker made no out-of-scope edits.
+| CSV | data rows |
+| --- | --- |
+| auth_users_fixtures.csv | 402 |
+| public_users.csv | 402 |
+| public_profiles.csv | 402 |
+| public_mou_notification_preferences.csv | 402 |
+| public_user_notification_preferences.csv | 22 |
+| public_staff_profiles.csv | 0 |
+| public_user_roles.csv | 2 |
 
-## Population re-derived after the stopped attempt
-
-Command: the research §1.1 count block, with `.env.test` sourced and `psql
-"$SUPABASE_DB_URL" -Atq`.
-
-Verbatim output:
+## magnitudes.txt (verbatim)
 
 ```text
-A auth_users_total=415
-B example_com=338
-C gastat_test=64
-D test_pat=5
-E e2e_pat=3
-F fixture_pat=0
-G playwright_pat=0
-H non_fixture=13
-L example_test=0
-I public_users_total=415
-J public_users_example=402
-K profiles_total=415
-DOMAINS example.com = 338
-DOMAINS gastat.test = 64
-DOMAINS stats.gov.sa = 6
-DOMAINS e2e.test = 3
-DOMAINS gastat.gov.sa = 1
-DOMAINS gmail.com = 1
-DOMAINS gastat-intake.local = 1
-DOMAINS gstats.gov.sa = 1
+kept=13
+deleted=402
+cascade=1230
+failed=0
+first_delete_epoch=1789181118
+export_completed_epoch=1789181118
 ```
 
-## Earlier ad-hoc blocking-FK census
+## Required command oracles after the completed run
 
-Before the quoting repair, an earlier repair worker ran the research §1.6 query independently of the
-script. It was regenerated from `pg_constraint` for all three suffixes, with a control regenerated
-from the same catalog query using `kazahrani@stats.gov.sa`. This historical output did not prove the
-old script path; the current script-run proof is recorded under **Purge attempt** above.
-
-Verbatim output:
+Positive end-state oracle, run under `bash` (exit 0), verbatim:
 
 ```text
-BLOCKING_FK_TOTAL_CONSTRAINTS=194
-BLOCKING_FK_WITH_ROWS=0
-BLOCKING_FK_CONTROL_WITH_ROWS=27
-BLOCKING_FK_CONTROL public.work_item_dossiers.created_by = 31
-BLOCKING_FK_CONTROL public.work_item_dossiers.updated_by = 25
-BLOCKING_FK_CONTROL public.dossiers.created_by = 24
-BLOCKING_FK_CONTROL public.assignments.assignee_id = 14
-BLOCKING_FK_CONTROL public.aa_commitments.owner_user_id = 9
-BLOCKING_FK_CONTROL public.assignments.assigned_by = 8
-BLOCKING_FK_CONTROL public.calendar_entries.organizer_id = 8
-BLOCKING_FK_CONTROL public.dossiers.updated_by = 7
-BLOCKING_FK_CONTROL public.tasks.assignee_id = 7
-BLOCKING_FK_CONTROL public.positions.author_id = 6
-BLOCKING_FK_CONTROL public.aa_commitments.updated_by = 4
-BLOCKING_FK_CONTROL public.commitment_status_history.changed_by = 4
-BLOCKING_FK_CONTROL public.tasks.updated_by = 4
-BLOCKING_FK_CONTROL public.calendar_entries.created_by = 3
-BLOCKING_FK_CONTROL public.intake_tickets.created_by = 3
-BLOCKING_FK_CONTROL public.intake_tickets.updated_by = 3
-BLOCKING_FK_CONTROL public.lifecycle_transitions.user_id = 3
-BLOCKING_FK_CONTROL public.tasks.completed_by = 3
-BLOCKING_FK_CONTROL public.dossier_relationships.created_by = 2
-BLOCKING_FK_CONTROL public.position_audience_groups.granted_by = 2
-BLOCKING_FK_CONTROL public.position_dossier_links.created_by = 2
-BLOCKING_FK_CONTROL public.position_versions_2026.author_id = 2
-BLOCKING_FK_CONTROL public.position_versions.author_id = 2
-BLOCKING_FK_CONTROL public.after_action_records.created_by = 1
-BLOCKING_FK_CONTROL public.after_action_records.published_by = 1
-BLOCKING_FK_CONTROL public.after_action_records.updated_by = 1
-BLOCKING_FK_CONTROL public.permission_delegations.revoked_by = 1
+P102-18-PURGE auth_users=13 keep_list_present=13 public_users=13 profiles=13 expected 13 13 13 13
+PASS purge
 ```
 
-Thus the earlier ad-hoc measurement also saw the fixture zero beside a control that detects 27
-non-zero blocking FKs. It agrees with the repaired script's own run.
-
-## Required command oracles after the stopped attempt
-
-Positive end-state oracle, run under `bash` (exit 1), verbatim:
+Export-before-delete oracle (exit 0), verbatim:
 
 ```text
-P102-18-PURGE auth_users=415 keep_list_present=13 public_users=415 profiles=415 expected 13 13 13 13
-FAIL: auth.users=415 public.users=415 profiles=415 - fixture accounts (or their mirror rows) remain beyond the 13 real accounts
+P102-18-EXPORT dir=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/overseer/p102-prepurge-20260912T024507Z csv_rows=402 deleted=402 csv_mtime=1789181108 first_delete_epoch=1789181118
+P102-18-EXPORT fixtures_left_in_auth_users=0
+PASS export-before-delete
 ```
 
-Export-before-delete oracle (exit 1), verbatim:
+The export CSV's mtime (1789181108) precedes `first_delete_epoch` (1789181118), the CSV data-row
+count (402) equals the `deleted=` magnitude, and zero fixture-suffix accounts remain in `auth.users`.
 
-```text
-P102-18-EXPORT export_dir=absent
-FAIL: no p102-prepurge-* export directory exists under /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/overseer - the purge script never exported before deleting (or never ran)
-```
+## History of prior attempts
+
+Four earlier attempts repaired the generated-census quoting defect and moved the census ahead of
+export-directory creation, but each stopped at `mkdirSync` of the outside-worktree export directory
+with `EPERM` under the Codex sandbox (`writable_roots` replaces config-file roots, so the mandatory
+D-26 path was unreachable by construction). This run executed the unchanged script from the pinned
+unsandboxed worker, exactly as the anchored review prescribed. The census numbers recorded in the
+earlier blocked SUMMARY revisions came from script runs that stopped at the `EPERM`; the successful
+end-to-end run above supersedes them.
 
 ## Handoff
 
-No later task should treat DATA-01 as complete. The generated-census defect is repaired and its exact
-script path now parses and executes. Re-run this plan from a worker whose writable roots include
-`/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/overseer`; do not redirect the
-mandatory export into this worktree.
+DATA-01 is satisfied: the 402 fixture accounts are purged from staging, their rows survive as CSVs
+under the export path above, and the staging auth surface holds exactly the 13 enumerated real
+accounts. No follow-up task should re-run this script — its pre-delete check now refuses an empty
+fixture delete set.
